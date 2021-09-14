@@ -1,0 +1,13 @@
+
+format: jb-book
+root: index
+parts:
+  - caption: Section 1
+    chapters:
+    - file: nbs/recobook-us739178-v1
+    - file: nbs/recobook-us739178-v2
+      sections:
+      - file: nbs/recobook-us739178-v3
+  - caption: Section 2
+    chapters:
+    - file: nbs/recobook-us739178-v4
