@@ -3,3 +3,4 @@ root: index
 chapters:
 - file: nbs/movielens_recommendations_transformers
 - file: nbs/bert4rec_movielens_pytorch
+- file: nbs/bert4rec_movielens_25m_pytorch
