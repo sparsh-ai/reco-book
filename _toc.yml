@@ -1,5 +1,4 @@
 format: jb-book
 root: index
 chapters:
-- file: nbs/T212223
-- file: nbs/T324555
+- file: nbs/movielens_recommendations_transformers
