@@ -18,3 +18,7 @@ chapters:
 - file: nbs/T611050_Node2vec_PyG
 - file: nbs/T186367_Node2vec_library
 - file: nbs/T331379_bayesian_personalized_ranking
+- file: nbs/T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering
+- file: nbs/T102448_Adversarial_Learning_for_Recommendation
+- file: nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender
+- file: nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset
