@@ -22,3 +22,4 @@ chapters:
 - file: nbs/T102448_Adversarial_Learning_for_Recommendation
 - file: nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender
 - file: nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset
+- file: nbs/T873451_Statistics_fundamentals
