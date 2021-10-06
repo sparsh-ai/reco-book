@@ -28,3 +28,4 @@ chapters:
 - file: nbs/T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation
 - file: nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation
 - file: nbs/T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset
+- file: nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset
