@@ -26,3 +26,4 @@ chapters:
 - file: nbs/T890478_Batch_Learning_from_Bandit_Feedback_(BLBF)
 - file: nbs/T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems
 - file: nbs/T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation
+- file: nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation
