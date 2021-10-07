@@ -33,3 +33,4 @@ chapters:
 - file: nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies
 - file: nbs/T632722_PyTorch_Fundamentals_Part_1
 - file: nbs/T472467_PyTorch_Fundamentals_Part_2
+- file: nbs/T206654_PyTorch_Fundamentals_Part_3
