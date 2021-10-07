@@ -31,4 +31,5 @@ chapters:
 - file: nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset
 - file: nbs/T031893_OBP_Library_Workshop_Tutorial_on_Off_Policy_Simulations
 - file: nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies
+- file: nbs/T632722_PyTorch_Fundamentals_Part_1
 - file: nbs/T472467_PyTorch_Fundamentals_Part_2
