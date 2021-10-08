@@ -38,3 +38,4 @@ chapters:
 - file: nbs/T206654_PyTorch_Fundamentals_Part_3
 - file: nbs/T536348_Attention_Mechanisms
 - file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
+- file: nbs/T611432_Image_Analysis_with_Tensorflow
