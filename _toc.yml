@@ -52,3 +52,8 @@ chapters:
 - file: nbs/T051777_image_similarity_recommendations
 - file: nbs/T990172_recobook_diversity_aware_book_recommender
 - file: nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender
+- file: nbs/T023535_Kafka_MongoDB_Real_time_Streaming
+- file: nbs/T622304_Session_based_Recommender_Using_Word2vec
+- file: nbs/T416854_bandit_based_recommender_using_thompson_sampling_app
+- file: nbs/T198578_Booking_dot_com_Trip_Recommendation
+- file: nbs/T519734_Vowpal_Wabbit_Contextual_Bandit
