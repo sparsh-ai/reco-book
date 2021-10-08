@@ -60,6 +60,9 @@ chapters:
 - file: nbs/T871537_Recommendation_Systems_using_Olist_Dataset
 - file: nbs/T057885_Offline_Replayer_Evaluation
 - file: nbs/T915054_method_for_effective_online_testing
-- file: nbs/Recsys_2020_Feature_Engineering_Tutorial
+- file: nbs/T513987_Recsys_2020_Feature_Engineering_Tutorial
 - file: nbs/T227901_amazon_personalize_batch_job
 - file: nbs/T022961_Amazon_Personalize_Workshop
+- file: nbs/T424437_Collaborative_Filtering_on_ML_latest_small
+- file: nbs/T539160_Building_and_Deploying_ASOS_Fashion_Recommender
+- file: nbs/T757697_Simple_Similarity_based_Recommender
