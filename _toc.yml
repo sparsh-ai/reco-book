@@ -41,3 +41,5 @@ chapters:
 - file: nbs/T611432_Image_Analysis_with_Tensorflow
 - file: nbs/T925716_MongoDB_to_CSV_Conversion
 - file: nbs/T396469_PDF_to_Word_Cloud_via_Email
+- file: nbs/T030890_Job_Scraping_and_Clustering
+- file: nbs/T897054_Scene_Text_Recognition
