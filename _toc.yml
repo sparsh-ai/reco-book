@@ -37,3 +37,4 @@ chapters:
 - file: nbs/T472467_PyTorch_Fundamentals_Part_2
 - file: nbs/T206654_PyTorch_Fundamentals_Part_3
 - file: nbs/T536348_Attention_Mechanisms
+- file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
