@@ -40,3 +40,4 @@ chapters:
 - file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
 - file: nbs/T611432_Image_Analysis_with_Tensorflow
 - file: nbs/T925716_MongoDB_to_CSV_Conversion
+- file: nbs/T396469_PDF_to_Word_Cloud_via_Email
