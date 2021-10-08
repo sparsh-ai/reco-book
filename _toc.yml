@@ -43,3 +43,12 @@ chapters:
 - file: nbs/T396469_PDF_to_Word_Cloud_via_Email
 - file: nbs/T030890_Job_Scraping_and_Clustering
 - file: nbs/T897054_Scene_Text_Recognition
+- file: nbs/T034809_Large_scale_Document_Retrieval_with_Elastic_Search
+- file: nbs/T467251_vowpal_wabbit_contextual_recommender
+- file: nbs/T686684_similar_product_recommender
+- file: nbs/T132203_Retail_Product_Recommendations_using_Word2vec
+- file: nbs/T501828_Recommender_Implicit_Negative_Feedback
+- file: nbs/T315965_Sequence_Aware_Recommenders_Music
+- file: nbs/T051777_image_similarity_recommendations
+- file: nbs/T990172_recobook_diversity_aware_book_recommender
+- file: nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender
