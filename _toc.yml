@@ -57,3 +57,9 @@ chapters:
 - file: nbs/T416854_bandit_based_recommender_using_thompson_sampling_app
 - file: nbs/T198578_Booking_dot_com_Trip_Recommendation
 - file: nbs/T519734_Vowpal_Wabbit_Contextual_Bandit
+- file: nbs/T871537_Recommendation_Systems_using_Olist_Dataset
+- file: nbs/T057885_Offline_Replayer_Evaluation
+- file: nbs/T915054_method_for_effective_online_testing
+- file: nbs/Recsys_2020_Feature_Engineering_Tutorial
+- file: nbs/T227901_amazon_personalize_batch_job
+- file: nbs/T022961_Amazon_Personalize_Workshop
