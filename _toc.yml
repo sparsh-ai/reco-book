@@ -22,6 +22,7 @@ chapters:
 - file: nbs/T102448_Adversarial_Learning_for_Recommendation
 - file: nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender
 - file: nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset
+- file: nbs/T355514_Black_box_Attack_on_Sequential_Recs
 - file: nbs/T873451_Statistics_fundamentals
 - file: nbs/T890478_Batch_Learning_from_Bandit_Feedback_(BLBF)
 - file: nbs/T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems
@@ -29,8 +30,11 @@ chapters:
 - file: nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation
 - file: nbs/T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset
 - file: nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset
-- file: nbs/T031893_OBP_Library_Workshop_Tutorial_on_Off_Policy_Simulations
 - file: nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies
+- file: nbs/T167249_Offline_Policy_Evaluation_with_VW_Command_Line
+- file: nbs/T966055_OBP_Library_Workshop_Tutorials
 - file: nbs/T632722_PyTorch_Fundamentals_Part_1
 - file: nbs/T472467_PyTorch_Fundamentals_Part_2
 - file: nbs/T206654_PyTorch_Fundamentals_Part_3
+- file: nbs/T536348_Attention_Mechanisms
+- file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
