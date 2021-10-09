@@ -77,3 +77,4 @@ chapters:
 - file: nbs/T460437_Building_Models_From_Scratch
 - file: nbs/T855971_Conet_Model_for_Movie_Recommender
 - file: nbs/T996996_content_based_and_collaborative_movielens
+- file: nbs/T239418_Simple_Movie_Recommenders
