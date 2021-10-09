@@ -78,3 +78,6 @@ chapters:
 - file: nbs/T855971_Conet_Model_for_Movie_Recommender
 - file: nbs/T996996_content_based_and_collaborative_movielens
 - file: nbs/T239418_Simple_Movie_Recommenders
+- file: nbs/T138337_Simple_Movie_Recommender
+- file: nbs/T935440_The_importance_of_Rating_Normalization
+- file: nbs/T612622_cornac_examples
