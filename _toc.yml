@@ -73,3 +73,7 @@ chapters:
 - file: nbs/T822164_movielens_milvus_redis_efficient_retrieval
 - file: nbs/T845186_Anime_Recommender
 - file: nbs/T855843_kafka_spark_streaming_colab
+- file: nbs/T051594_Analytics_Zoo
+- file: nbs/T460437_Building_Models_From_Scratch
+- file: nbs/T855971_Conet_Model_for_Movie_Recommender
+- file: nbs/T996996_content_based_and_collaborative_movielens
