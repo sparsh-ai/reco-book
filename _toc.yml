@@ -73,7 +73,6 @@ chapters:
 - file: nbs/T822164_movielens_milvus_redis_efficient_retrieval
 - file: nbs/T845186_Anime_Recommender
 - file: nbs/T855843_kafka_spark_streaming_colab
-- file: nbs/T051594_Analytics_Zoo
 - file: nbs/T460437_Building_Models_From_Scratch
 - file: nbs/T855971_Conet_Model_for_Movie_Recommender
 - file: nbs/T996996_content_based_and_collaborative_movielens
@@ -103,3 +102,18 @@ chapters:
 - file: nbs/T990000_rnn_cnn_basics
 - file: nbs/T990000_tf_serving_in_action
 - file: nbs/T990000_training_indexing_movie_recommender
+- file: nbs/T207114_EduRec_MOOCCube_Course_Recommender
+- file: nbs/T273184_Multi_Task_Learning
+- file: nbs/T661108_Book_Recommender_API
+- file: nbs/T912764_Simple_Movie_Recommender_App
+- file: nbs/T964554_Career_Village_Questions_Recommendation
+- file: nbs/T990001_amazon_women_apparel_tfidf_word2vec
+- file: nbs/T990001_anime_recommender_graph_network
+- file: nbs/T990001_concept_self_attention
+- file: nbs/T990001_course_recommender_svd_flask
+- file: nbs/T990001_data_mining_similarity_measures
+- file: nbs/T990001_jaccard_recommender
+- file: nbs/T990001_live_streamer_recommender
+- file: nbs/T990001_songs_embedding_skipgram_recommender
+- file: nbs/T990001_toy_example_car_recommender_knn
+- file: nbs/T990001_wikirecs_recommender
