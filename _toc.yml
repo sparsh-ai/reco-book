@@ -66,3 +66,10 @@ chapters:
 - file: nbs/T424437_Collaborative_Filtering_on_ML_latest_small
 - file: nbs/T539160_Building_and_Deploying_ASOS_Fashion_Recommender
 - file: nbs/T757697_Simple_Similarity_based_Recommender
+- file: nbs/T051594_Analytics_Zoo
+- file: nbs/T313645_A_B_Testing
+- file: nbs/T475711_PinSage_Graph_based_Recommender
+- file: nbs/T516490_Graph_Embeddings
+- file: nbs/T822164_movielens_milvus_redis_efficient_retrieval
+- file: nbs/T845186_Anime_Recommender
+- file: nbs/T855843_kafka_spark_streaming_colab
