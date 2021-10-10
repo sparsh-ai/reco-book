@@ -9,6 +9,7 @@ chapters:
 - file: nbs/T881207_BST_PTLightning_ML1M
 - file: nbs/T757997_SASRec_PyTorch
 - file: nbs/T225287_SASRec_PaddlePaddle
+- file: nbs/T701627_SR_SAN_Session_based_Model
 - file: nbs/T975104_SSEPT_ML1M_Tensorflow1x
 - file: nbs/T382881_DeepWalk_Karateclub
 - file: nbs/T384270_DeepWalk_pure_python
