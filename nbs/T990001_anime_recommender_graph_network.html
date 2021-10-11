@@ -1,0 +1,1974 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anime Recommender with Bi-partite Graph Network &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Self-Attention" href="T990001_concept_self_attention.html" />
+    <link rel="prev" title="Amazon Product Recommender" href="T990001_amazon_women_apparel_tfidf_word2vec.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990001_anime_recommender_graph_network.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990001_anime_recommender_graph_network.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#some-terminology">
+   Some terminology
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#finding-relations-between-users">
+   Finding relations between users
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recommended-anime-list">
+   Recommended anime list
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fetch-anime-title">
+   Fetch anime title
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#testing">
+   Testing
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#actual-data">
+   Actual data
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="anime-recommender-with-bi-partite-graph-network">
+<h1>Anime Recommender with Bi-partite Graph Network<a class="headerlink" href="#anime-recommender-with-bi-partite-graph-network" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Loading Anime dataset from Kaggle and building bipartite graph using NetworkX, then finding similar users and recommending animes to the target user.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="some-terminology">
+<h2>Some terminology<a class="headerlink" href="#some-terminology" title="Permalink to this headline">¶</a></h2>
+<p>User looking for recommendation: <strong>Main user</strong> <br/>
+Other users: <strong>Other users/ users</strong></p>
+</div>
+<div class="section" id="finding-relations-between-users">
+<h2>Finding relations between users<a class="headerlink" href="#finding-relations-between-users" title="Permalink to this headline">¶</a></h2>
+<p>We will generate relationships (weights) between the main user and other users. The suggestions/ratings of a user having a better relationship with main user will have more weightage over that of other users. <br />
+The relationship will be denotated by a directed edge from the main user to the other user.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">relationship_among_users</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">deg</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        description:</span>
+<span class="sd">            given main user, add weighted edges between </span>
+<span class="sd">            main user and other users based on common nodes</span>
+<span class="sd">    </span>
+<span class="sd">        parameters:</span>
+<span class="sd">            G: the bipartite graph (directed, weighted)</span>
+<span class="sd">            user: user who is looking for recommendations (main user)</span>
+<span class="sd">            deg: no. of anime main user has reviwed</span>
+
+<span class="sd">        returns: </span>
+<span class="sd">            void</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">user</span>
+
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">u</span><span class="p">):</span> 
+            <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;anime&#39;</span> <span class="ow">and</span> <span class="n">G</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+                <span class="n">weight</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">G</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+        <span class="n">weight</span> <span class="o">/=</span> <span class="n">deg</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">weight</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommended-anime-list">
+<h2>Recommended anime list<a class="headerlink" href="#recommended-anime-list" title="Permalink to this headline">¶</a></h2>
+<p>Based on main user’s relationships and the ratings given to anime by other users, a list of anime_ids is returned in sorted order (most recommended anime first)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recommendation_list</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">deg</span><span class="p">,</span> <span class="n">include_already_watched</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        description: </span>
+<span class="sd">            Given a graph with connections (weghted, directed) among users</span>
+<span class="sd">            and the user who needs recommendations,</span>
+<span class="sd">            returns sorted list of recommended animes </span>
+
+<span class="sd">        parameters:</span>
+<span class="sd">            G: Graphs with connection among users </span>
+<span class="sd">                (graph after implementing &#39;relationship_among_users()&#39;)</span>
+<span class="sd">            user: User who is looking for recommendations (main user)</span>
+<span class="sd">            deg: number of anime main user has reviewed</span>
+<span class="sd">            include_already_watched: (default = false)</span>
+<span class="sd">                if true, the list of anime main user has already watched will </span>
+<span class="sd">                also be included in the recommendation list</span>
+<span class="sd">            top_n: (default = None)</span>
+<span class="sd">                returns only the &#39;top_n&#39; animes</span>
+
+<span class="sd">        returns: </span>
+<span class="sd">            sorted list of recommended anime</span>
+<span class="sd">                eg. [(anime1, score1), (anime2, score2), (anime3, score3)]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="n">possible_anime</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;anime&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">other_users</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">anime</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">other_users</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">anime</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;anime&#39;</span><span class="p">:</span>
+                        <span class="n">possible_anime</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">anime</span><span class="p">)</span>
+
+    <span class="n">suggestion_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">anime</span> <span class="ow">in</span> <span class="n">possible_anime</span><span class="p">:</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">anime</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+                <span class="c1"># score += (G[u][w][&#39;weight&#39;] * G[w][anime][&#39;rating&#39;] / (deg if w==u else G.out_degree(w)))</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">w</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">G</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">anime</span><span class="p">][</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span> <span class="p">)</span><span class="o">/</span> <span class="p">(</span><span class="n">deg</span> <span class="k">if</span> <span class="n">w</span><span class="o">==</span><span class="n">u</span> <span class="k">else</span> <span class="n">G</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span>
+
+        <span class="n">suggestion_dict</span><span class="p">[</span><span class="n">anime</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+
+    <span class="c1"># remove already watched anime</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">include_already_watched</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">already_watched</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">already_watched</span><span class="p">][</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;anime&#39;</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">suggestion_dict</span><span class="p">[</span><span class="n">already_watched</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">suggestion_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="fetch-anime-title">
+<h2>Fetch anime title<a class="headerlink" href="#fetch-anime-title" title="Permalink to this headline">¶</a></h2>
+<p>Based on the ids returned in ‘recommendation_list()’ function, the respective anime titles and plots are returned.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Let us try the above algorithms over a small network to understand how it works.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+<span class="n">users</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">anime</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">,</span><span class="s1">&#39;m&#39;</span><span class="p">,</span><span class="s1">&#39;n&#39;</span><span class="p">,</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">]</span>
+
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">anime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;anime&#39;</span><span class="p">)</span>
+
+<span class="c1"># pattern - user 1 and 3 are similar, user 2 and 4 are similar</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}),</span> 
+                  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}),</span>
+                  <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;rating&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}),</span>
+                  <span class="p">])</span>
+
+<span class="n">main_user</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">deg</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">main_user</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">bipartite_layout</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">users</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># generating relationships among users</span>
+<span class="n">relationship_among_users</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">main_user</span><span class="p">,</span> <span class="n">deg</span><span class="p">)</span>
+
+<span class="n">edge_weights</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_edge_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">===================================&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;weights among users:&#39;</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;===================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edge_labels</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="n">edge_weights</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1">#getting the recommended list of anime ids</span>
+<span class="n">recommended_anime_ids</span> <span class="o">=</span> <span class="n">recommendation_list</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">main_user</span><span class="p">,</span> <span class="n">deg</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">===================================&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recommended list of anime ids:&#39;</span><span class="p">,</span> <span class="n">recommended_anime_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;===================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_anime_recommender_graph_network_8_0.png" src="../_images/T990001_anime_recommender_graph_network_8_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===================================
+weights among users: {(4, 2): 0.5, (4, 4): 0.5}
+===================================
+</pre></div>
+</div>
+<img alt="../_images/T990001_anime_recommender_graph_network_8_2.png" src="../_images/T990001_anime_recommender_graph_network_8_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===================================
+Recommended list of anime ids: [(&#39;o&#39;, 0.125), (&#39;q&#39;, 0.125)]
+===================================
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="actual-data">
+<h2>Actual data<a class="headerlink" href="#actual-data" title="Permalink to this headline">¶</a></h2>
+<p>Lets try it on our actual data now.</p>
+<p>user ratings dataset: <a class="reference external" href="https://www.kaggle.com/hernan4444/anime-recommendation-database-2020?select=rating_complete.csv">https://www.kaggle.com/hernan4444/anime-recommendation-database-2020?select=rating_complete.csv</a></p>
+<blockquote>
+<div><p>(contains ratings given by various users to anime)</p>
+</div></blockquote>
+<p>anime dataset: <a class="reference external" href="https://www.kaggle.com/hernan4444/anime-recommendation-database-2020?select=anime.csv">https://www.kaggle.com/hernan4444/anime-recommendation-database-2020?select=anime.csv</a></p>
+<blockquote>
+<div><p>(contains list of anime)</p>
+</div></blockquote>
+<p>I made some changes to the dataset</p>
+<ol class="simple">
+<li><p>Added a prefix ‘a’ to the anime_ids (and MAL_IDS) so they dont mix up with the user_ids</p></li>
+<li><p>Added my anime ratings with user_id = -1</p></li>
+<li><p>I used only the top 500000 rows as the process is time consuming</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># anime data (anime.csv)</span>
+<span class="n">anime_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;anime.csv&#39;</span><span class="p">)</span>
+<span class="n">anime_data</span><span class="p">[</span><span class="s1">&#39;MAL_ID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">+</span> <span class="n">anime_data</span><span class="p">[</span><span class="s1">&#39;MAL_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">anime_data</span> <span class="o">=</span> <span class="n">anime_data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Score&#39;</span> <span class="p">:</span> <span class="s1">&#39;Community rating&#39;</span><span class="p">})</span>
+
+<span class="c1"># user ratings data (rating_complete.csv)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;rating_complete.csv&#39;</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">500000</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;anime_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;anime_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">data_users</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span>
+<span class="n">data_anime</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;anime_id&#39;</span><span class="p">]</span>
+
+<span class="c1"># lets look at my anime list and ratings</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">temp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">anime_data</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;anime_id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;MAL_ID&#39;</span><span class="p">)[[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;anime_id&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;English name&#39;</span><span class="p">,</span> <span class="s1">&#39;rating&#39;</span><span class="p">,</span> <span class="s1">&#39;Community rating&#39;</span><span class="p">]]</span>
+<span class="n">display</span><span class="p">(</span><span class="n">temp</span><span class="p">[</span><span class="n">temp</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Given MAL_ID, fetches the anime details</span>
+<span class="n">anime_data</span> <span class="o">=</span> <span class="n">anime_data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;MAL_ID&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fetch_anime_titles</span><span class="p">(</span><span class="n">anime_list</span><span class="p">):</span>
+    <span class="k">return</span>  <span class="n">anime_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">anime_list</span><span class="p">][[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;English name&#39;</span><span class="p">,</span> <span class="s1">&#39;Genres&#39;</span><span class="p">,</span> <span class="s1">&#39;Community rating&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>anime_id</th>
+      <th>Name</th>
+      <th>English name</th>
+      <th>rating</th>
+      <th>Community rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-1</td>
+      <td>a1535</td>
+      <td>Death Note</td>
+      <td>Death Note</td>
+      <td>8</td>
+      <td>8.63</td>
+    </tr>
+    <tr>
+      <th>1674</th>
+      <td>-1</td>
+      <td>a1575</td>
+      <td>Code Geass: Hangyaku no Lelouch</td>
+      <td>Code Geass:Lelouch of the Rebellion</td>
+      <td>10</td>
+      <td>8.72</td>
+    </tr>
+    <tr>
+      <th>2948</th>
+      <td>-1</td>
+      <td>a1953</td>
+      <td>Code Geass: Hangyaku no Lelouch Picture Drama</td>
+      <td>Code Geass:Lelouch of the Rebellion Picture Dr...</td>
+      <td>10</td>
+      <td>6.97</td>
+    </tr>
+    <tr>
+      <th>3016</th>
+      <td>-1</td>
+      <td>a15197</td>
+      <td>Code Geass: Boukoku no Akito 2 - Hikisakareshi...</td>
+      <td>Code Geass:Akito the Exiled - The Wyvern Divided</td>
+      <td>9</td>
+      <td>7.54</td>
+    </tr>
+    <tr>
+      <th>3138</th>
+      <td>-1</td>
+      <td>a15199</td>
+      <td>Code Geass: Boukoku no Akito 3 - Kagayaku Mono...</td>
+      <td>Code Geass:Akito the Exiled - The Brightness F...</td>
+      <td>9</td>
+      <td>7.33</td>
+    </tr>
+    <tr>
+      <th>3222</th>
+      <td>-1</td>
+      <td>a15201</td>
+      <td>Code Geass: Boukoku no Akito 4 - Nikushimi no ...</td>
+      <td>Code Geass:Akito the Exiled - Memories of Hatred</td>
+      <td>9</td>
+      <td>7.27</td>
+    </tr>
+    <tr>
+      <th>3300</th>
+      <td>-1</td>
+      <td>a20</td>
+      <td>Naruto</td>
+      <td>Naruto</td>
+      <td>8</td>
+      <td>7.91</td>
+    </tr>
+    <tr>
+      <th>4464</th>
+      <td>-1</td>
+      <td>a1735</td>
+      <td>Naruto: Shippuuden</td>
+      <td>Naruto:Shippuden</td>
+      <td>8</td>
+      <td>8.16</td>
+    </tr>
+    <tr>
+      <th>4987</th>
+      <td>-1</td>
+      <td>a32182</td>
+      <td>Mob Psycho 100</td>
+      <td>Mob Psycho 100</td>
+      <td>8</td>
+      <td>8.49</td>
+    </tr>
+    <tr>
+      <th>5710</th>
+      <td>-1</td>
+      <td>a20583</td>
+      <td>Haikyuu!!</td>
+      <td>Haikyu!!</td>
+      <td>8</td>
+      <td>8.53</td>
+    </tr>
+    <tr>
+      <th>6426</th>
+      <td>-1</td>
+      <td>a28891</td>
+      <td>Haikyuu!! Second Season</td>
+      <td>Haikyu!! 2nd Season</td>
+      <td>8</td>
+      <td>8.73</td>
+    </tr>
+    <tr>
+      <th>6991</th>
+      <td>-1</td>
+      <td>a38883</td>
+      <td>Haikyuu!!: To the Top</td>
+      <td>Unknown</td>
+      <td>8</td>
+      <td>8.39</td>
+    </tr>
+    <tr>
+      <th>7253</th>
+      <td>-1</td>
+      <td>a40776</td>
+      <td>Haikyuu!!: To the Top 2nd Season</td>
+      <td>Unknown</td>
+      <td>8</td>
+      <td>8.57</td>
+    </tr>
+    <tr>
+      <th>7420</th>
+      <td>-1</td>
+      <td>a23755</td>
+      <td>Nanatsu no Taizai</td>
+      <td>The Seven Deadly Sins</td>
+      <td>7</td>
+      <td>7.89</td>
+    </tr>
+    <tr>
+      <th>8237</th>
+      <td>-1</td>
+      <td>a38000</td>
+      <td>Kimetsu no Yaiba</td>
+      <td>Demon Slayer:Kimetsu no Yaiba</td>
+      <td>8</td>
+      <td>8.62</td>
+    </tr>
+    <tr>
+      <th>8910</th>
+      <td>-1</td>
+      <td>a40356</td>
+      <td>Tate no Yuusha no Nariagari Season 2</td>
+      <td>The Rising of the Shield Hero Season 2</td>
+      <td>9</td>
+      <td>Unknown</td>
+    </tr>
+    <tr>
+      <th>8911</th>
+      <td>-1</td>
+      <td>a37210</td>
+      <td>Isekai Maou to Shoukan Shoujo no Dorei Majutsu</td>
+      <td>How Not to Summon a Demon Lord</td>
+      <td>5</td>
+      <td>6.98</td>
+    </tr>
+    <tr>
+      <th>9201</th>
+      <td>-1</td>
+      <td>a29803</td>
+      <td>Overlord</td>
+      <td>Overlord</td>
+      <td>7</td>
+      <td>7.96</td>
+    </tr>
+    <tr>
+      <th>9907</th>
+      <td>-1</td>
+      <td>a35073</td>
+      <td>Overlord II</td>
+      <td>Overlord II</td>
+      <td>6</td>
+      <td>7.78</td>
+    </tr>
+    <tr>
+      <th>10381</th>
+      <td>-1</td>
+      <td>a37675</td>
+      <td>Overlord III</td>
+      <td>Overlord III</td>
+      <td>6</td>
+      <td>7.95</td>
+    </tr>
+    <tr>
+      <th>10771</th>
+      <td>-1</td>
+      <td>a37520</td>
+      <td>Dororo</td>
+      <td>Dororo</td>
+      <td>10</td>
+      <td>8.19</td>
+    </tr>
+    <tr>
+      <th>11052</th>
+      <td>-1</td>
+      <td>a30484</td>
+      <td>Steins;Gate 0</td>
+      <td>Steins;Gate 0</td>
+      <td>10</td>
+      <td>8.51</td>
+    </tr>
+    <tr>
+      <th>11315</th>
+      <td>-1</td>
+      <td>a31964</td>
+      <td>Boku no Hero Academia</td>
+      <td>My Hero Academia</td>
+      <td>8</td>
+      <td>8.11</td>
+    </tr>
+    <tr>
+      <th>12418</th>
+      <td>-1</td>
+      <td>a33486</td>
+      <td>Boku no Hero Academia 2nd Season</td>
+      <td>My Hero Academia 2</td>
+      <td>8</td>
+      <td>8.33</td>
+    </tr>
+    <tr>
+      <th>13307</th>
+      <td>-1</td>
+      <td>a36456</td>
+      <td>Boku no Hero Academia 3rd Season</td>
+      <td>My Hero Academia 3</td>
+      <td>8</td>
+      <td>8.25</td>
+    </tr>
+    <tr>
+      <th>13975</th>
+      <td>-1</td>
+      <td>a38699</td>
+      <td>Boku no Hero Academia the Movie: Futari no Her...</td>
+      <td>My Hero Academia:All Might Rising</td>
+      <td>8</td>
+      <td>7.45</td>
+    </tr>
+    <tr>
+      <th>14020</th>
+      <td>-1</td>
+      <td>a5114</td>
+      <td>Fullmetal Alchemist: Brotherhood</td>
+      <td>Fullmetal Alchemist:Brotherhood</td>
+      <td>10</td>
+      <td>9.19</td>
+    </tr>
+    <tr>
+      <th>15246</th>
+      <td>-1</td>
+      <td>a38777</td>
+      <td>Jujutsu Kaisen</td>
+      <td>Jujutsu Kaisen</td>
+      <td>10</td>
+      <td>6.95</td>
+    </tr>
+    <tr>
+      <th>15248</th>
+      <td>-1</td>
+      <td>a40748</td>
+      <td>Jujutsu Kaisen (TV)</td>
+      <td>Unknown</td>
+      <td>10</td>
+      <td>8.54</td>
+    </tr>
+    <tr>
+      <th>15250</th>
+      <td>-1</td>
+      <td>a38691</td>
+      <td>Dr. Stone</td>
+      <td>Dr. Stone</td>
+      <td>10</td>
+      <td>8.34</td>
+    </tr>
+    <tr>
+      <th>15681</th>
+      <td>-1</td>
+      <td>a40852</td>
+      <td>Dr. Stone: Stone Wars</td>
+      <td>Unknown</td>
+      <td>9</td>
+      <td>8.29</td>
+    </tr>
+    <tr>
+      <th>15682</th>
+      <td>-1</td>
+      <td>a43555</td>
+      <td>Dr. Stone: Stone Wars - Kaisen Zenya Special E...</td>
+      <td>Dr. Stone:Stone Wars Eve of the Battle Special...</td>
+      <td>9</td>
+      <td>7.13</td>
+    </tr>
+    <tr>
+      <th>15699</th>
+      <td>-1</td>
+      <td>a38659</td>
+      <td>Shinchou Yuusha: Kono Yuusha ga Ore Tueee Kuse...</td>
+      <td>Cautious Hero:The Hero Is Overpowered but Over...</td>
+      <td>2</td>
+      <td>7.54</td>
+    </tr>
+    <tr>
+      <th>15931</th>
+      <td>-1</td>
+      <td>a37430</td>
+      <td>Tensei shitara Slime Datta Ken</td>
+      <td>That Time I Got Reincarnated as a Slime</td>
+      <td>6</td>
+      <td>8.07</td>
+    </tr>
+    <tr>
+      <th>16380</th>
+      <td>-1</td>
+      <td>a39551</td>
+      <td>Tensei shitara Slime Datta Ken 2nd Season</td>
+      <td>That Time I Got Reincarnated as a Slime Season 2</td>
+      <td>6</td>
+      <td>8.06</td>
+    </tr>
+    <tr>
+      <th>16381</th>
+      <td>-1</td>
+      <td>a11757</td>
+      <td>Sword Art Online</td>
+      <td>Sword Art Online</td>
+      <td>9</td>
+      <td>7.25</td>
+    </tr>
+    <tr>
+      <th>17838</th>
+      <td>-1</td>
+      <td>a21881</td>
+      <td>Sword Art Online II</td>
+      <td>Sword Art Online II</td>
+      <td>6</td>
+      <td>6.79</td>
+    </tr>
+    <tr>
+      <th>18798</th>
+      <td>-1</td>
+      <td>a22535</td>
+      <td>Kiseijuu: Sei no Kakuritsu</td>
+      <td>Parasyte -the maxim-</td>
+      <td>10</td>
+      <td>8.4</td>
+    </tr>
+    <tr>
+      <th>19650</th>
+      <td>-1</td>
+      <td>a34572</td>
+      <td>Black Clover</td>
+      <td>Black Clover</td>
+      <td>8</td>
+      <td>7.38</td>
+    </tr>
+    <tr>
+      <th>19651</th>
+      <td>-1</td>
+      <td>a37779</td>
+      <td>Yakusoku no Neverland</td>
+      <td>The Promised Neverland</td>
+      <td>8</td>
+      <td>8.65</td>
+    </tr>
+    <tr>
+      <th>20219</th>
+      <td>-1</td>
+      <td>a39617</td>
+      <td>Yakusoku no Neverland 2nd Season</td>
+      <td>The Promised Neverland Season 2</td>
+      <td>6</td>
+      <td>7.49</td>
+    </tr>
+    <tr>
+      <th>20220</th>
+      <td>-1</td>
+      <td>a37521</td>
+      <td>Vinland Saga</td>
+      <td>Unknown</td>
+      <td>10</td>
+      <td>8.71</td>
+    </tr>
+    <tr>
+      <th>20549</th>
+      <td>-1</td>
+      <td>a38671</td>
+      <td>Enen no Shouboutai</td>
+      <td>Fire Force</td>
+      <td>8</td>
+      <td>7.68</td>
+    </tr>
+    <tr>
+      <th>20835</th>
+      <td>-1</td>
+      <td>a40956</td>
+      <td>Enen no Shouboutai: Ni no Shou</td>
+      <td>Fire Force Season 2</td>
+      <td>8</td>
+      <td>7.78</td>
+    </tr>
+    <tr>
+      <th>20959</th>
+      <td>-1</td>
+      <td>a31478</td>
+      <td>Bungou Stray Dogs</td>
+      <td>Bungo Stray Dogs</td>
+      <td>7</td>
+      <td>7.79</td>
+    </tr>
+    <tr>
+      <th>21400</th>
+      <td>-1</td>
+      <td>a32867</td>
+      <td>Bungou Stray Dogs 2nd Season</td>
+      <td>Bungo Stray Dogs 2</td>
+      <td>6</td>
+      <td>8.2</td>
+    </tr>
+    <tr>
+      <th>21740</th>
+      <td>-1</td>
+      <td>a6702</td>
+      <td>Fairy Tail</td>
+      <td>Fairy Tail</td>
+      <td>6</td>
+      <td>7.68</td>
+    </tr>
+    <tr>
+      <th>22348</th>
+      <td>-1</td>
+      <td>a22043</td>
+      <td>Fairy Tail (2014)</td>
+      <td>Fairy Tail Series 2</td>
+      <td>6</td>
+      <td>7.73</td>
+    </tr>
+    <tr>
+      <th>22658</th>
+      <td>-1</td>
+      <td>a30276</td>
+      <td>One Punch Man</td>
+      <td>One Punch Man</td>
+      <td>9</td>
+      <td>8.57</td>
+    </tr>
+    <tr>
+      <th>23905</th>
+      <td>-1</td>
+      <td>a34134</td>
+      <td>One Punch Man 2nd Season</td>
+      <td>Unknown</td>
+      <td>9</td>
+      <td>7.41</td>
+    </tr>
+    <tr>
+      <th>24389</th>
+      <td>-1</td>
+      <td>a136</td>
+      <td>Hunter x Hunter</td>
+      <td>Hunter x Hunter</td>
+      <td>8</td>
+      <td>8.42</td>
+    </tr>
+    <tr>
+      <th>24648</th>
+      <td>-1</td>
+      <td>a137</td>
+      <td>Hunter x Hunter: Original Video Animation</td>
+      <td>Unknown</td>
+      <td>9</td>
+      <td>8.33</td>
+    </tr>
+    <tr>
+      <th>24769</th>
+      <td>-1</td>
+      <td>a138</td>
+      <td>Hunter x Hunter: Greed Island</td>
+      <td>Unknown</td>
+      <td>8</td>
+      <td>8.21</td>
+    </tr>
+    <tr>
+      <th>24893</th>
+      <td>-1</td>
+      <td>a139</td>
+      <td>Hunter x Hunter: Greed Island Final</td>
+      <td>Unknown</td>
+      <td>8</td>
+      <td>8.29</td>
+    </tr>
+    <tr>
+      <th>25016</th>
+      <td>-1</td>
+      <td>a43692</td>
+      <td>Gokushufudou</td>
+      <td>The Way of the Househusband</td>
+      <td>9</td>
+      <td>Unknown</td>
+    </tr>
+    <tr>
+      <th>25017</th>
+      <td>-1</td>
+      <td>a24833</td>
+      <td>Ansatsu Kyoushitsu</td>
+      <td>Assassination Classroom</td>
+      <td>7</td>
+      <td>8.12</td>
+    </tr>
+    <tr>
+      <th>25720</th>
+      <td>-1</td>
+      <td>a30654</td>
+      <td>Ansatsu Kyoushitsu 2nd Season</td>
+      <td>Assassination Classroom Second Season</td>
+      <td>6</td>
+      <td>8.54</td>
+    </tr>
+    <tr>
+      <th>26227</th>
+      <td>-1</td>
+      <td>a16498</td>
+      <td>Shingeki no Kyojin</td>
+      <td>Attack on Titan</td>
+      <td>10</td>
+      <td>8.48</td>
+    </tr>
+    <tr>
+      <th>27761</th>
+      <td>-1</td>
+      <td>a25777</td>
+      <td>Shingeki no Kyojin Season 2</td>
+      <td>Attack on Titan Season 2</td>
+      <td>10</td>
+      <td>8.45</td>
+    </tr>
+    <tr>
+      <th>28662</th>
+      <td>-1</td>
+      <td>a35760</td>
+      <td>Shingeki no Kyojin Season 3</td>
+      <td>Attack on Titan Season 3</td>
+      <td>10</td>
+      <td>8.59</td>
+    </tr>
+    <tr>
+      <th>29313</th>
+      <td>-1</td>
+      <td>a38524</td>
+      <td>Shingeki no Kyojin Season 3 Part 2</td>
+      <td>Attack on Titan Season 3 Part 2</td>
+      <td>10</td>
+      <td>9.1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generating the graph</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_pandas_edgelist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;anime_id&#39;</span><span class="p">,</span> <span class="n">edge_attr</span><span class="o">=</span><span class="s1">&#39;rating&#39;</span><span class="p">)</span>
+
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">data_users</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;user&#39;</span><span class="p">)</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">data_anime</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;anime&#39;</span><span class="p">)</span>
+
+<span class="n">main_user</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="n">deg</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">main_user</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">deg</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c1">## plotting the graph takes a lot of time</span>
+
+<span class="c1"># pos = nx.bipartite_layout(G, data_users)</span>
+<span class="c1"># plt.figure(figsize=(50, 40))</span>
+<span class="c1"># # nx.draw_networkx(G, pos=pos, node_size=100, node_color=&#39;lightblue&#39;, edge_color=&#39;grey&#39; with_labels=False)</span>
+<span class="c1"># nx.draw_networkx(G, node_size=1000, node_color=&#39;lightblue&#39;, edge_color=&#39;grey&#39;, with_labels=False)</span>
+<span class="c1"># plt.show()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># generating relationships among users</span>
+<span class="n">relationship_among_users</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">main_user</span><span class="p">,</span> <span class="n">deg</span><span class="p">)</span>
+
+<span class="n">edge_weights</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_edge_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">===================================&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;weights among users:&#39;</span><span class="p">,</span> <span class="n">edge_weights</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;===================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1">## plotting the graph takes a lot of time</span>
+
+<span class="c1"># plt.figure(figsize=(10, 8))</span>
+<span class="c1"># nx.draw_networkx(G, pos=pos, node_size=800, node_color=&#39;lightblue&#39;)</span>
+<span class="c1"># nx.draw_networkx_edge_labels(G, pos=pos, edge_labels=edge_weights)</span>
+<span class="c1"># plt.show()</span>
+
+<span class="c1">#getting the recommended list of anime ids</span>
+<span class="n">recommended_anime_scores</span> <span class="o">=</span> <span class="n">recommendation_list</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">main_user</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">===================================&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recommended list of anime ids and their calculated scores: &#39;</span><span class="p">,</span> <span class="n">recommended_anime_scores</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;===================================</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">recommended_anime_ids</span> <span class="o">=</span> <span class="p">[</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">recommended_anime_scores</span><span class="p">]</span>
+
+<span class="c1"># fetch anime information from their ids</span>
+<span class="n">fetch_anime_titles</span><span class="p">(</span><span class="n">recommended_anime_ids</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>===================================
+weights among users: {(-1, 1): 0.0008864565435448475, (-1, 2): 0.00026534672405055694, (-1, 3): 8.439037029079238e-05}
+===================================
+
+
+===================================
+Recommended list of anime ids and their calculated scores:  [(&#39;a9253&#39;, 1.2608654903454946e-05), (&#39;a28171&#39;, 1.2389774632427958e-05), (&#39;a11061&#39;, 1.2332699656105028e-05), (&#39;a34599&#39;, 1.1990186240599003e-05), (&#39;a37450&#39;, 7.983875399305805e-06), (&#39;a32281&#39;, 7.983875399305805e-06), (&#39;a23273&#39;, 7.884528103406225e-06), (&#39;a4224&#39;, 7.884528103406225e-06), (&#39;a31043&#39;, 7.879744068809242e-06), (&#39;a37497&#39;, 7.768716044076472e-06), (&#39;a31240&#39;, 7.768716044076472e-06), (&#39;a35788&#39;, 7.768716044076472e-06), (&#39;a14813&#39;, 7.764995128278819e-06), (&#39;a23847&#39;, 7.764995128278819e-06), (&#39;a19815&#39;, 7.764995128278819e-06), (&#39;a5081&#39;, 7.764995128278819e-06), (&#39;a32282&#39;, 7.764995128278819e-06), (&#39;a9919&#39;, 7.764995128278819e-06), (&#39;a32188&#39;, 7.74573678825595e-06), (&#39;a199&#39;, 7.74573678825595e-06)]
+===================================
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>English name</th>
+      <th>Genres</th>
+      <th>Community rating</th>
+    </tr>
+    <tr>
+      <th>MAL_ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>a9253</th>
+      <td>Steins;Gate</td>
+      <td>Steins;Gate</td>
+      <td>Thriller, Sci-Fi</td>
+      <td>9.11</td>
+    </tr>
+    <tr>
+      <th>a28171</th>
+      <td>Shokugeki no Souma</td>
+      <td>Food Wars! Shokugeki no Soma</td>
+      <td>Ecchi, School, Shounen</td>
+      <td>8.29</td>
+    </tr>
+    <tr>
+      <th>a11061</th>
+      <td>Hunter x Hunter (2011)</td>
+      <td>Hunter x Hunter</td>
+      <td>Action, Adventure, Fantasy, Shounen, Super Power</td>
+      <td>9.1</td>
+    </tr>
+    <tr>
+      <th>a34599</th>
+      <td>Made in Abyss</td>
+      <td>Made in Abyss</td>
+      <td>Sci-Fi, Adventure, Mystery, Drama, Fantasy</td>
+      <td>8.74</td>
+    </tr>
+    <tr>
+      <th>a37450</th>
+      <td>Seishun Buta Yarou wa Bunny Girl Senpai no Yum...</td>
+      <td>Rascal Does Not Dream of Bunny Girl Senpai</td>
+      <td>Comedy, Supernatural, Drama, Romance, School</td>
+      <td>8.38</td>
+    </tr>
+    <tr>
+      <th>a32281</th>
+      <td>Kimi no Na wa.</td>
+      <td>Your Name.</td>
+      <td>Romance, Supernatural, School, Drama</td>
+      <td>8.96</td>
+    </tr>
+    <tr>
+      <th>a23273</th>
+      <td>Shigatsu wa Kimi no Uso</td>
+      <td>Your Lie in April</td>
+      <td>Drama, Music, Romance, School, Shounen</td>
+      <td>8.74</td>
+    </tr>
+    <tr>
+      <th>a4224</th>
+      <td>Toradora!</td>
+      <td>Toradora!</td>
+      <td>Slice of Life, Comedy, Romance, School</td>
+      <td>8.24</td>
+    </tr>
+    <tr>
+      <th>a31043</th>
+      <td>Boku dake ga Inai Machi</td>
+      <td>ERASED</td>
+      <td>Mystery, Psychological, Supernatural, Seinen</td>
+      <td>8.37</td>
+    </tr>
+    <tr>
+      <th>a37497</th>
+      <td>Irozuku Sekai no Ashita kara</td>
+      <td>Iroduku:The World in Colors</td>
+      <td>Drama, Magic, Romance, School</td>
+      <td>7.55</td>
+    </tr>
+    <tr>
+      <th>a31240</th>
+      <td>Re:Zero kara Hajimeru Isekai Seikatsu</td>
+      <td>Re:ZERO -Starting Life in Another World-</td>
+      <td>Psychological, Drama, Thriller, Fantasy</td>
+      <td>8.29</td>
+    </tr>
+    <tr>
+      <th>a35788</th>
+      <td>Shokugeki no Souma: San no Sara</td>
+      <td>Food Wars! The Third Plate</td>
+      <td>Ecchi, School, Shounen</td>
+      <td>8.14</td>
+    </tr>
+    <tr>
+      <th>a14813</th>
+      <td>Yahari Ore no Seishun Love Comedy wa Machigatt...</td>
+      <td>My Teen Romantic Comedy SNAFU</td>
+      <td>Slice of Life, Comedy, Drama, Romance, School</td>
+      <td>8.07</td>
+    </tr>
+    <tr>
+      <th>a23847</th>
+      <td>Yahari Ore no Seishun Love Comedy wa Machigatt...</td>
+      <td>My Teen Romantic Comedy SNAFU TOO!</td>
+      <td>Slice of Life, Comedy, Drama, Romance, School</td>
+      <td>8.27</td>
+    </tr>
+    <tr>
+      <th>a19815</th>
+      <td>No Game No Life</td>
+      <td>No Game, No Life</td>
+      <td>Game, Adventure, Comedy, Supernatural, Ecchi, ...</td>
+      <td>8.2</td>
+    </tr>
+    <tr>
+      <th>a5081</th>
+      <td>Bakemonogatari</td>
+      <td>Bakemonogatari</td>
+      <td>Romance, Supernatural, Mystery, Vampire</td>
+      <td>8.36</td>
+    </tr>
+    <tr>
+      <th>a32282</th>
+      <td>Shokugeki no Souma: Ni no Sara</td>
+      <td>Food Wars! The Second Plate</td>
+      <td>Ecchi, School, Shounen</td>
+      <td>8.21</td>
+    </tr>
+    <tr>
+      <th>a9919</th>
+      <td>Ao no Exorcist</td>
+      <td>Blue Exorcist</td>
+      <td>Action, Demons, Fantasy, Shounen, Supernatural</td>
+      <td>7.59</td>
+    </tr>
+    <tr>
+      <th>a32188</th>
+      <td>Steins;Gate: Kyoukaimenjou no Missing Link - D...</td>
+      <td>Unknown</td>
+      <td>Sci-Fi, Thriller</td>
+      <td>8.26</td>
+    </tr>
+    <tr>
+      <th>a199</th>
+      <td>Sen to Chihiro no Kamikakushi</td>
+      <td>Spirited Away</td>
+      <td>Adventure, Supernatural, Drama</td>
+      <td>8.83</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990001_amazon_women_apparel_tfidf_word2vec.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Amazon Product Recommender</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990001_concept_self_attention.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Self-Attention</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

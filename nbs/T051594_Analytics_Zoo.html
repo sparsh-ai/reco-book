@@ -1,0 +1,2718 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics Zoo &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="A/B Testing" href="T313645_A_B_Testing.html" />
+    <link rel="prev" title="Simple Similarity based Recommmendations" href="T757697_Simple_Similarity_based_Recommender.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T051594_Analytics_Zoo.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T051594_Analytics_Zoo.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-1">
+   Part 1
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#introduction">
+     Introduction
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#installation">
+     Installation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#install-java-8">
+       Install Java 8
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#install-analytics-zoo-from-pip">
+       Install Analytics Zoo from pip
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#initialize-context">
+       Initialize context
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#imports">
+     Imports
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#download-movielens-dataset">
+     Download movielens dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#read-the-dataset">
+     Read the dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#understand-the-data">
+     Understand the data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transformation">
+     Transformation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#split">
+     Split
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#build-model">
+     Build model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#compile-model">
+     Compile model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#collect-logs">
+     Collect logs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-model">
+     Train the model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prediction">
+     Prediction
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#predict-for-user-item-pairs">
+       Predict for user item pairs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#recommend-3-items-for-each-user-given-candidates-in-the-feature-rdds">
+       Recommend 3 items for each user given candidates in the feature RDDs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#recommend-3-users-for-each-item-given-candidates-in-the-feature-rdds">
+       Recommend 3 users for each item given candidates in the feature RDDs
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluation">
+     Evaluation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-2">
+   Part 2
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Introduction
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     Installation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id3">
+       Install Java 8
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id4">
+       Install Analytics Zoo from pip
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id5">
+       Initialize context
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     Imports
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#download-goodreads-dataset">
+     Download goodreads dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     Read the dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     Understand the data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     Transformation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     Split
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id11">
+     Build model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id12">
+     Compile model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id13">
+     Collect logs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id14">
+     Train the model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id15">
+     Prediction
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id16">
+       Predict for user item pairs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id17">
+       Recommend 3 items for each user given candidates in the feature RDDs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id18">
+       Recommend 3 users for each item given candidates in the feature RDDs
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id19">
+     Evaluation
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#part-3">
+   Part 3
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id20">
+     Introduction
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id21">
+     Installation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id22">
+       Install Java 8
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id23">
+       Install Analytics Zoo from pip
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id24">
+       Initialize context
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id25">
+     Imports
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id26">
+     Download movielens dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id27">
+     Read the dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id28">
+     Understand the data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id29">
+     Transformation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id30">
+     Build model
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#create-optimizer-and-train-the-model">
+       Create optimizer and train the model
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id31">
+     Prediction
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id32">
+       Predict for user item pairs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id33">
+       Recommend 3 items for each user given candidates in the feature RDDs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#id34">
+       Recommend 3 users for each item given candidates in the feature RDDs
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id35">
+     Evaluation
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="analytics-zoo">
+<h1>Analytics Zoo<a class="headerlink" href="#analytics-zoo" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="part-1">
+<h2>Part 1<a class="headerlink" href="#part-1" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Applying NCF on Movielens using Analytics Zoo library</p>
+</div></blockquote>
+<div class="section" id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
+<p>NCF Recommender with Explict Feedback</p>
+<p>In this notebook we demostrate how to build a neural network recommendation system, Neural Collaborative Filtering(NCF) with explict feedback. We use Recommender API in Analytics Zoo to build a model, and use optimizer of BigDL to train the model.</p>
+<p>The system (<a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S1110866515000341">Recommendation systems: Principles, methods and evaluation</a>) normally prompts the user through the system interface to provide ratings for items in order to construct and improve the model. The accuracy of recommendation depends on the quantity of ratings provided by the user.</p>
+<p>NCF(<a class="reference external" href="https://www.comp.nus.edu.sg/~xiangnan/papers/ncf.pdf">He, 2015</a>) leverages a multi-layer perceptrons to learn the user–item interaction function, at the mean time, NCF can express and generalize matrix factorization under its framework. includeMF(Boolean) is provided for users to build a NCF with or without matrix factorization.</p>
+<p>Data:</p>
+<ul class="simple">
+<li><p>The dataset we used is movielens-1M (<a class="reference external" href="https://grouplens.org/datasets/movielens/1m/">link</a>), which contains 1 million ratings from 6000 users on 4000 movies.  There’re 5 levels of rating. We will try classify each (user,movie) pair into 5 classes and evaluate the effect of algortithms using Mean Absolute Error.</p></li>
+</ul>
+<p>References:</p>
+<ul class="simple">
+<li><p>A Keras implementation of Movie Recommendation(<a class="reference external" href="https://github.com/ririw/ririw.github.io/blob/master/assets/Recommending%20movies.ipynb">notebook</a>) from the <a class="reference external" href="http://blog.richardweiss.org/2016/09/25/movie-embeddings.html">blog</a>.</p></li>
+<li><p>Nerual Collaborative filtering (<a class="reference external" href="https://www.comp.nus.edu.sg/~xiangnan/papers/ncf.pdf">He, 2015</a>)</p></li>
+</ul>
+<p>Python interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span> <span class="o">=</span> <span class="n">NeuralCF</span><span class="p">(</span><span class="n">user_count</span><span class="p">,</span> <span class="n">item_count</span><span class="p">,</span> <span class="n">class_num</span><span class="p">,</span> <span class="n">user_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">item_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hidden_layers</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">include_mf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mf_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_count</span></code>: The number of users. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item_count</span></code>: The number of classes. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_num</span></code>: The number of classes. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_embed</span></code>: Units of user embedding. Positive int. Default is 20.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item_embed</span></code>: itemEmbed Units of item embedding. Positive int. Default is 20.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_layers</span></code>: Units of hidden layers for MLP. Tuple of positive int. Default is (40, 20, 10).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include_mf</span></code>: Whether to include Matrix Factorization. Boolean. Default is True.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mf_embed</span></code>: Units of matrix factorization embedding. Positive int. Default is 20.</p></li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="install-java-8">
+<h4>Install Java 8<a class="headerlink" href="#install-java-8" title="Permalink to this headline">¶</a></h4>
+<p>Run the command on the colaboratory file to install jdk 1.8</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq &gt; /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-8-openjdk-amd64&quot;
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>update-alternatives: using /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java to provide /usr/bin/java (java) in manual mode
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="install-analytics-zoo-from-pip">
+<h4>Install Analytics Zoo from pip<a class="headerlink" href="#install-analytics-zoo-from-pip" title="Permalink to this headline">¶</a></h4>
+<p>You can add the following command on your colab file to install the analytics-zoo via pip easily:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="initialize-context">
+<h4>Initialize context<a class="headerlink" href="#initialize-context" title="Permalink to this headline">¶</a></h4>
+<p>Call init_nncontext() that will create a SparkContext with optimized performance configurations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span><span class="o">*</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">init_nncontext</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Prepending /usr/local/lib/python3.7/dist-packages/bigdl/share/conf/spark-bigdl.conf to sys.path
+Adding /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar to BIGDL_JARS
+Prepending /usr/local/lib/python3.7/dist-packages/zoo/share/conf/spark-analytics-zoo.conf to sys.path
+pyspark_submit_args is:  --driver-class-path /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar:/usr/local/lib/python3.7/dist-packages/bigdl/share/lib/bigdl-0.12.2-jar-with-dependencies.jar pyspark-shell 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Analytics Zoo provides three Recommenders, including Wide and Deep (WND) model, Neural network-based Collaborative Filtering (NCF) model and Session Recommender model. Easy-to-use Keras-Style defined models which provides compile and fit methods for training. Alternatively, they could be fed into NNFrames or BigDL Optimizer.</p>
+<p>WND and NCF recommenders can handle either explict or implicit feedback, given corresponding features.</p>
+</div>
+</div>
+<div class="section" id="imports">
+<h3>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.pipeline.api.keras.layers</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">zoo.models.recommendation</span> <span class="kn">import</span> <span class="n">UserItemFeature</span>
+<span class="kn">from</span> <span class="nn">zoo.models.recommendation</span> <span class="kn">import</span> <span class="n">NeuralCF</span>
+<span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span> <span class="n">init_nncontext</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">bigdl.util.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Populating the interactive namespace from numpy and matplotlib
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="download-movielens-dataset">
+<h3>Download movielens dataset<a class="headerlink" href="#download-movielens-dataset" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget http://files.grouplens.org/datasets/movielens/ml-1m.zip
+!unzip ml-1m.zip
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="read-the-dataset">
+<h3>Read the dataset<a class="headerlink" href="#read-the-dataset" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+  <span class="n">rating_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span><span class="s2">&quot;ratings.dat&quot;</span><span class="p">)</span>
+  <span class="n">rating_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">rating_files</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>    
+  <span class="n">movielens_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rating_list</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">movielens_data</span> 
+
+<span class="k">def</span> <span class="nf">get_id_pairs</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+	<span class="n">movielens_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">movielens_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_id_ratings</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+	<span class="n">movielens_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">movielens_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movielens_data</span> <span class="o">=</span> <span class="n">get_id_ratings</span><span class="p">(</span><span class="s2">&quot;/content/ml-1m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="understand-the-data">
+<h3>Understand the data<a class="headerlink" href="#understand-the-data" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">min_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">max_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">min_movie_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">max_movie_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">rating_labels</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">movielens_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">min_user_id</span><span class="p">,</span> <span class="n">max_user_id</span><span class="p">,</span> <span class="n">min_movie_id</span><span class="p">,</span> <span class="n">max_movie_id</span><span class="p">,</span> <span class="n">rating_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1000209, 3)
+1 6040 1 3952 [1 2 3 4 5]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each record is in format of (userid, movieid, rating_score). UserIDs range between 1 and 6040. MovieIDs range between 1 and 3952. Ratings are made on a 5-star scale (whole-star ratings only). Counts of users and movies are recorded for later use.</p>
+</div>
+<div class="section" id="transformation">
+<h3>Transformation<a class="headerlink" href="#transformation" title="Permalink to this headline">¶</a></h3>
+<p>Transform original data into RDD of sample. We use optimizer of BigDL directly to train the model, it requires data to be provided in format of RDD(Sample). A Sample is a BigDL data structure which can be constructed using 2 numpy arrays, feature and label respectively. The API interface is Sample.from_ndarray(feature, label) Here, labels are tranformed into zero-based since original labels start from 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">build_sample</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">,</span> <span class="n">rating</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_ndarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rating</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">UserItemFeature</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pairFeatureRdds</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">build_sample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">pairFeatureRdds</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7fde70f09910&gt;,
+ &lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7fde70d792d0&gt;,
+ &lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7fde55409e10&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="split">
+<h3>Split<a class="headerlink" href="#split" title="Permalink to this headline">¶</a></h3>
+<p>Randomly split the data into train (80%) and validation (20%)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trainPairFeatureRdds</span><span class="p">,</span> <span class="n">valPairFeatureRdds</span> <span class="o">=</span> <span class="n">pairFeatureRdds</span><span class="o">.</span><span class="n">randomSplit</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+
+<span class="n">train_rdd</span><span class="o">=</span> <span class="n">trainPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">val_rdd</span><span class="o">=</span> <span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">val_rdd</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PythonRDD[3] at RDD at PythonRDD.scala:53
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_rdd</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>800491
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_rdd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Sample: features: [JTensor: storage: [1.000e+00 1.193e+03], shape: [2], float], labels: [JTensor: storage: [4.], shape: [1], float],
+ Sample: features: [JTensor: storage: [  1. 914.], shape: [2], float], labels: [JTensor: storage: [2.], shape: [1], float],
+ Sample: features: [JTensor: storage: [1.000e+00 3.408e+03], shape: [2], float], labels: [JTensor: storage: [3.], shape: [1], float]]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="build-model">
+<h3>Build model<a class="headerlink" href="#build-model" title="Permalink to this headline">¶</a></h3>
+<p>In Analytics Zoo, it is simple to build NCF model by calling NeuralCF API. You need specify the user count, item count and class number according to your data, then add hidden layers as needed, you can also choose to include matrix factorization in the network. The model could be fed into an Optimizer of BigDL or NNClassifier of analytics-zoo. Please refer to the document for more details. In this example, we demostrate how to use optimizer of BigDL.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span> <span class="o">=</span> <span class="n">NeuralCF</span><span class="p">(</span><span class="n">user_count</span><span class="o">=</span><span class="n">max_user_id</span><span class="p">,</span> 
+               <span class="n">item_count</span><span class="o">=</span><span class="n">max_movie_id</span><span class="p">,</span> 
+               <span class="n">class_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+               <span class="n">hidden_layers</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> 
+               <span class="n">include_mf</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createZooKerasInput
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasEmbedding
+creating: createZooKerasEmbedding
+creating: createZooKerasFlatten
+creating: createZooKerasFlatten
+creating: createZooKerasMerge
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasModel
+creating: createZooNeuralCF
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="compile-model">
+<h3>Compile model<a class="headerlink" href="#compile-model" title="Permalink to this headline">¶</a></h3>
+<p>Compile model given specific optimizers, loss, as well as metrics for evaluation. Optimizer tries to minimize the loss of the neural net with respect to its weights/biases, over the training set. To create an Optimizer in BigDL, you want to at least specify arguments: model(a neural network model), criterion(the loss function), traing_rdd(training dataset) and batch size. Please refer to <a class="reference external" href="https://bigdl-project.github.io/master/#ProgrammingGuide/optimization/">ProgrammingGuide</a> and <a class="reference external" href="https://bigdl-project.github.io/master/#APIGuide/Optimizers/Optimizer/">Optimizer</a> for more details to create efficient optimizers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span> <span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+            <span class="n">loss</span><span class="o">=</span> <span class="s2">&quot;sparse_categorical_crossentropy&quot;</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createAdam
+creating: createZooKerasSparseCategoricalCrossEntropy
+creating: createZooKerasSparseCategoricalAccuracy
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="collect-logs">
+<h3>Collect logs<a class="headerlink" href="#collect-logs" title="Permalink to this headline">¶</a></h3>
+<p>You can leverage tensorboard to see the summaries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmp_log_dir</span> <span class="o">=</span> <span class="n">create_tmp_path</span><span class="p">()</span>
+<span class="n">ncf</span><span class="o">.</span><span class="n">set_tensorboard</span><span class="p">(</span><span class="n">tmp_log_dir</span><span class="p">,</span> <span class="s2">&quot;training_ncf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-the-model">
+<h3>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_rdd</span><span class="p">,</span> 
+        <span class="n">nb_epoch</span><span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+        <span class="n">batch_size</span><span class="o">=</span> <span class="mi">8000</span><span class="p">,</span> 
+        <span class="n">validation_data</span><span class="o">=</span><span class="n">val_rdd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="prediction">
+<h3>Prediction<a class="headerlink" href="#prediction" title="Permalink to this headline">¶</a></h3>
+<p>Zoo models make inferences based on the given data using model.predict(val_rdd) API. A result of RDD is returned. predict_class returns the predicted label.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_rdd</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([0.00806034, 0.02006759, 0.18866627, 0.63047034, 0.15273541],
+       dtype=float32),
+ array([0.00254512, 0.00567304, 0.06865695, 0.46720853, 0.4559163 ],
+       dtype=float32),
+ array([0.00535633, 0.02252354, 0.12654975, 0.4168996 , 0.42867082],
+       dtype=float32),
+ array([0.00396674, 0.01450644, 0.12073953, 0.60501534, 0.255772  ],
+       dtype=float32),
+ array([0.00394357, 0.01327773, 0.14935595, 0.6658978 , 0.16752498],
+       dtype=float32)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results_class</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict_class</span><span class="p">(</span><span class="n">val_rdd</span><span class="p">)</span>
+<span class="n">results_class</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4, 4, 5, 4, 4]
+</pre></div>
+</div>
+</div>
+</div>
+<p>In Analytics Zoo, Recommender has provied 3 unique APIs to predict user-item pairs and make recommendations for users or items given candidates.</p>
+<div class="section" id="predict-for-user-item-pairs">
+<h4>Predict for user item pairs<a class="headerlink" href="#predict-for-user-item-pairs" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userItemPairPrediction</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict_user_item_pair</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userItemPairPrediction</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 1, item_id: 661, prediction: 4, probability: 0.630470335483551]
+UserItemPrediction [user_id: 1, item_id: 2804, prediction: 4, probability: 0.46720853447914124]
+UserItemPrediction [user_id: 1, item_id: 1035, prediction: 5, probability: 0.42867082357406616]
+UserItemPrediction [user_id: 1, item_id: 2687, prediction: 4, probability: 0.6050153374671936]
+UserItemPrediction [user_id: 1, item_id: 2321, prediction: 4, probability: 0.665897786617279]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommend-3-items-for-each-user-given-candidates-in-the-feature-rdds">
+<h4>Recommend 3 items for each user given candidates in the feature RDDs<a class="headerlink" href="#recommend-3-items-for-each-user-given-candidates-in-the-feature-rdds" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userRecs</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">recommend_for_user</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 4904, item_id: 750, prediction: 5, probability: 0.8882462382316589]
+UserItemPrediction [user_id: 4904, item_id: 1198, prediction: 5, probability: 0.8594017028808594]
+UserItemPrediction [user_id: 4904, item_id: 912, prediction: 5, probability: 0.8534067869186401]
+UserItemPrediction [user_id: 1084, item_id: 50, prediction: 5, probability: 0.7139193415641785]
+UserItemPrediction [user_id: 1084, item_id: 2324, prediction: 5, probability: 0.6326656937599182]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommend-3-users-for-each-item-given-candidates-in-the-feature-rdds">
+<h4>Recommend 3 users for each item given candidates in the feature RDDs<a class="headerlink" href="#recommend-3-users-for-each-item-given-candidates-in-the-feature-rdds" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">itemRecs</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">recommend_for_item</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">itemRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 2909, item_id: 384, prediction: 4, probability: 0.40346845984458923]
+UserItemPrediction [user_id: 1409, item_id: 384, prediction: 3, probability: 0.4329181909561157]
+UserItemPrediction [user_id: 4789, item_id: 384, prediction: 3, probability: 0.41791829466819763]
+UserItemPrediction [user_id: 1940, item_id: 1084, prediction: 5, probability: 0.8245269060134888]
+UserItemPrediction [user_id: 2497, item_id: 1084, prediction: 5, probability: 0.7757750749588013]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="evaluation">
+<h3>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h3>
+<p>Plot the train and validation loss curves</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#retrieve train and validation summary object and read the loss data into ndarray&#39;s. </span>
+<span class="n">train_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_train_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="n">val_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="c1">#plot the train and validation curves</span>
+<span class="c1"># each event data is a tuple in form of (iteration_count, value, timestamp)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;train loss&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;val loss&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">train_loss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;loss&#39;)
+</pre></div>
+</div>
+<img alt="../_images/T051594_Analytics_Zoo_58_1.png" src="../_images/T051594_Analytics_Zoo_58_1.png" />
+</div>
+</div>
+<p>Plot accuracy</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">top1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Top1Accuracy&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;top1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;top1 accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T051594_Analytics_Zoo_60_0.png" src="../_images/T051594_Analytics_Zoo_60_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="part-2">
+<h2>Part 2<a class="headerlink" href="#part-2" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Applying NCF on Goodreads using Analytics Zoo library.</p>
+</div></blockquote>
+<div class="section" id="id1">
+<h3>Introduction<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>NCF Recommender with Explict Feedback</p>
+<p>In this notebook we demostrate how to build a neural network recommendation system, Neural Collaborative Filtering(NCF) with explict feedback. We use Recommender API in Analytics Zoo to build a model, and use optimizer of BigDL to train the model.</p>
+<p>The system (<a class="reference external" href="http://www.sciencedirect.com/science/article/pii/S1110866515000341">Recommendation systems: Principles, methods and evaluation</a>) normally prompts the user through the system interface to provide ratings for items in order to construct and improve the model. The accuracy of recommendation depends on the quantity of ratings provided by the user.</p>
+<p>NCF(<a class="reference external" href="https://www.comp.nus.edu.sg/~xiangnan/papers/ncf.pdf">He, 2015</a>) leverages a multi-layer perceptrons to learn the user–item interaction function, at the mean time, NCF can express and generalize matrix factorization under its framework. includeMF(Boolean) is provided for users to build a NCF with or without matrix factorization.</p>
+<p>Data:</p>
+<ul class="simple">
+<li><p>Goodreads book ratings dataset</p></li>
+</ul>
+<p>References:</p>
+<ul class="simple">
+<li><p>A Keras implementation of Movie Recommendation(<a class="reference external" href="https://github.com/ririw/ririw.github.io/blob/master/assets/Recommending%20movies.ipynb">notebook</a>) from the <a class="reference external" href="http://blog.richardweiss.org/2016/09/25/movie-embeddings.html">blog</a>.</p></li>
+<li><p>Nerual Collaborative filtering (<a class="reference external" href="https://www.comp.nus.edu.sg/~xiangnan/papers/ncf.pdf">He, 2015</a>)</p></li>
+</ul>
+<p>Python interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span> <span class="o">=</span> <span class="n">NeuralCF</span><span class="p">(</span><span class="n">user_count</span><span class="p">,</span> <span class="n">item_count</span><span class="p">,</span> <span class="n">class_num</span><span class="p">,</span> <span class="n">user_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">item_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">hidden_layers</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">include_mf</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mf_embed</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_count</span></code>: The number of users. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item_count</span></code>: The number of classes. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_num</span></code>: The number of classes. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_embed</span></code>: Units of user embedding. Positive int. Default is 20.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">item_embed</span></code>: itemEmbed Units of item embedding. Positive int. Default is 20.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_layers</span></code>: Units of hidden layers for MLP. Tuple of positive int. Default is (40, 20, 10).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include_mf</span></code>: Whether to include Matrix Factorization. Boolean. Default is True.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mf_embed</span></code>: Units of matrix factorization embedding. Positive int. Default is 20.</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>Installation<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h4>Install Java 8<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Run the command on the colaboratory file to install jdk 1.8</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq &gt; /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-8-openjdk-amd64&quot;
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>update-alternatives: using /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java to provide /usr/bin/java (java) in manual mode
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h4>Install Analytics Zoo from pip<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>You can add the following command on your colab file to install the analytics-zoo via pip easily:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id5">
+<h4>Initialize context<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>Call init_nncontext() that will create a SparkContext with optimized performance configurations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span><span class="o">*</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">init_nncontext</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Prepending /usr/local/lib/python3.7/dist-packages/bigdl/share/conf/spark-bigdl.conf to sys.path
+Adding /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar to BIGDL_JARS
+Prepending /usr/local/lib/python3.7/dist-packages/zoo/share/conf/spark-analytics-zoo.conf to sys.path
+pyspark_submit_args is:  --driver-class-path /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar:/usr/local/lib/python3.7/dist-packages/bigdl/share/lib/bigdl-0.12.2-jar-with-dependencies.jar pyspark-shell 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Analytics Zoo provides three Recommenders, including Wide and Deep (WND) model, Neural network-based Collaborative Filtering (NCF) model and Session Recommender model. Easy-to-use Keras-Style defined models which provides compile and fit methods for training. Alternatively, they could be fed into NNFrames or BigDL Optimizer.</p>
+<p>WND and NCF recommenders can handle either explict or implicit feedback, given corresponding features.</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>Imports<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.pipeline.api.keras.layers</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">zoo.models.recommendation</span> <span class="kn">import</span> <span class="n">UserItemFeature</span>
+<span class="kn">from</span> <span class="nn">zoo.models.recommendation</span> <span class="kn">import</span> <span class="n">NeuralCF</span>
+<span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span> <span class="n">init_nncontext</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">from</span> <span class="nn">bigdl.util.common</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Populating the interactive namespace from numpy and matplotlib
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="download-goodreads-dataset">
+<h3>Download goodreads dataset<a class="headerlink" href="#download-goodreads-dataset" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget https://github.com/sparsh-ai/reco-data/raw/master/goodreads/ratings.csv
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3>Read the dataset<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+  <span class="n">rating_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span><span class="s2">&quot;ratings.csv&quot;</span><span class="p">)</span>
+  <span class="n">rating_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">rating_files</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>    
+  <span class="n">goodreads_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rating_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">goodreads_data</span> 
+
+<span class="k">def</span> <span class="nf">get_id_pairs</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+	<span class="n">goodreads_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_id_ratings</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+  <span class="n">goodreads_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+  <span class="n">le_user</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">LabelEncoder</span><span class="p">()</span>
+  <span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">le_user</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+  <span class="n">le_item</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">LabelEncoder</span><span class="p">()</span>
+  <span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">le_item</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+  <span class="k">return</span> <span class="n">goodreads_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">goodreads_data</span> <span class="o">=</span> <span class="n">get_id_ratings</span><span class="p">(</span><span class="s2">&quot;/content&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>Understand the data<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">min_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">max_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">min_book_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">max_book_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">rating_labels</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">goodreads_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">min_user_id</span><span class="p">,</span> <span class="n">max_user_id</span><span class="p">,</span> <span class="n">min_book_id</span><span class="p">,</span> <span class="n">max_book_id</span><span class="p">,</span> <span class="n">rating_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(454517, 3)
+0 4999 0 4999 [1 2 3 4 5]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each record is in format of (userid, bookid, rating_score). Both UserIDs and BookIDs range between 0 and 4999. Ratings are made on a 5-star scale (whole-star ratings only). Counts of users and books are recorded for later use.</p>
+</div>
+<div class="section" id="id9">
+<h3>Transformation<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>Transform original data into RDD of sample. We use optimizer of BigDL directly to train the model, it requires data to be provided in format of RDD(Sample). A Sample is a BigDL data structure which can be constructed using 2 numpy arrays, feature and label respectively. The API interface is Sample.from_ndarray(feature, label).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">build_sample</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">,</span> <span class="n">rating</span><span class="p">):</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">Sample</span><span class="o">.</span><span class="n">from_ndarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">rating</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">UserItemFeature</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">,</span> <span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pairFeatureRdds</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">goodreads_data</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">build_sample</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">pairFeatureRdds</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7f91617553d0&gt;,
+ &lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7f9161755210&gt;,
+ &lt;zoo.models.recommendation.recommender.UserItemFeature at 0x7f9161755090&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>Split<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>Randomly split the data into train (80%) and validation (20%)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">trainPairFeatureRdds</span><span class="p">,</span> <span class="n">valPairFeatureRdds</span> <span class="o">=</span> <span class="n">pairFeatureRdds</span><span class="o">.</span><span class="n">randomSplit</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+
+<span class="n">train_rdd</span><span class="o">=</span> <span class="n">trainPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">val_rdd</span><span class="o">=</span> <span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">val_rdd</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PythonRDD[37] at RDD at PythonRDD.scala:53
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_rdd</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>363662
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_rdd</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Sample: features: [JTensor: storage: [510. 276.], shape: [2], float], labels: [JTensor: storage: [3.], shape: [1], float],
+ Sample: features: [JTensor: storage: [2289. 2492.], shape: [2], float], labels: [JTensor: storage: [1.], shape: [1], float],
+ Sample: features: [JTensor: storage: [3919. 1597.], shape: [2], float], labels: [JTensor: storage: [4.], shape: [1], float]]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h3>Build model<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>In Analytics Zoo, it is simple to build NCF model by calling NeuralCF API. You need specify the user count, item count and class number according to your data, then add hidden layers as needed, you can also choose to include matrix factorization in the network. The model could be fed into an Optimizer of BigDL or NNClassifier of analytics-zoo. Please refer to the document for more details. In this example, we demostrate how to use optimizer of BigDL.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span> <span class="o">=</span> <span class="n">NeuralCF</span><span class="p">(</span><span class="n">user_count</span><span class="o">=</span><span class="n">max_user_id</span><span class="p">,</span> 
+               <span class="n">item_count</span><span class="o">=</span><span class="n">max_book_id</span><span class="p">,</span> 
+               <span class="n">class_num</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+               <span class="n">hidden_layers</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> 
+               <span class="n">include_mf</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createZooKerasInput
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasEmbedding
+creating: createZooKerasEmbedding
+creating: createZooKerasFlatten
+creating: createZooKerasFlatten
+creating: createZooKerasMerge
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasModel
+creating: createZooNeuralCF
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id12">
+<h3>Compile model<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p>Compile model given specific optimizers, loss, as well as metrics for evaluation. Optimizer tries to minimize the loss of the neural net with respect to its weights/biases, over the training set. To create an Optimizer in BigDL, you want to at least specify arguments: model(a neural network model), criterion(the loss function), traing_rdd(training dataset) and batch size. Please refer to <a class="reference external" href="https://bigdl-project.github.io/master/#ProgrammingGuide/optimization/">ProgrammingGuide</a> and <a class="reference external" href="https://bigdl-project.github.io/master/#APIGuide/Optimizers/Optimizer/">Optimizer</a> for more details to create efficient optimizers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span> <span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+            <span class="n">loss</span><span class="o">=</span> <span class="s2">&quot;sparse_categorical_crossentropy&quot;</span><span class="p">,</span>
+            <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createAdam
+creating: createZooKerasSparseCategoricalCrossEntropy
+creating: createZooKerasSparseCategoricalAccuracy
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id13">
+<h3>Collect logs<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<p>You can leverage tensorboard to see the summaries.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmp_log_dir</span> <span class="o">=</span> <span class="n">create_tmp_path</span><span class="p">()</span>
+<span class="n">ncf</span><span class="o">.</span><span class="n">set_tensorboard</span><span class="p">(</span><span class="n">tmp_log_dir</span><span class="p">,</span> <span class="s2">&quot;training_ncf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id14">
+<h3>Train the model<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ncf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_rdd</span><span class="p">,</span> 
+        <span class="n">nb_epoch</span><span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+        <span class="n">batch_size</span><span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+        <span class="n">validation_data</span><span class="o">=</span><span class="n">val_rdd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id15">
+<h3>Prediction<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>Zoo models make inferences based on the given data using model.predict(val_rdd) API. A result of RDD is returned. predict_class returns the predicted label.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">val_rdd</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([0.00071773, 0.00534406, 0.07192371, 0.46765593, 0.45435852],
+       dtype=float32),
+ array([0.14319365, 0.23656234, 0.28515524, 0.24342458, 0.09166414],
+       dtype=float32),
+ array([0.0084668 , 0.02982639, 0.17435056, 0.46424043, 0.32311577],
+       dtype=float32),
+ array([5.7515636e-04, 1.4479134e-02, 3.0612889e-01, 6.0694826e-01,
+        7.1868621e-02], dtype=float32),
+ array([0.00603686, 0.01832466, 0.12356475, 0.32203293, 0.5300408 ],
+       dtype=float32)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results_class</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict_class</span><span class="p">(</span><span class="n">val_rdd</span><span class="p">)</span>
+<span class="n">results_class</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4, 3, 4, 4, 5]
+</pre></div>
+</div>
+</div>
+</div>
+<p>In Analytics Zoo, Recommender has provied 3 unique APIs to predict user-item pairs and make recommendations for users or items given candidates.</p>
+<div class="section" id="id16">
+<h4>Predict for user item pairs<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userItemPairPrediction</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">predict_user_item_pair</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userItemPairPrediction</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 2765, item_id: 53, prediction: 4, probability: 0.4676559269428253]
+UserItemPrediction [user_id: 4573, item_id: 95, prediction: 3, probability: 0.2851552367210388]
+UserItemPrediction [user_id: 3907, item_id: 15, prediction: 4, probability: 0.4642404317855835]
+UserItemPrediction [user_id: 790, item_id: 156, prediction: 4, probability: 0.6069482564926147]
+UserItemPrediction [user_id: 3315, item_id: 1721, prediction: 5, probability: 0.5300408005714417]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id17">
+<h4>Recommend 3 items for each user given candidates in the feature RDDs<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userRecs</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">recommend_for_user</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 3586, item_id: 850, prediction: 5, probability: 0.49247753620147705]
+UserItemPrediction [user_id: 3586, item_id: 2354, prediction: 4, probability: 0.6351815462112427]
+UserItemPrediction [user_id: 3586, item_id: 2787, prediction: 4, probability: 0.6106586456298828]
+UserItemPrediction [user_id: 1084, item_id: 4588, prediction: 5, probability: 0.7689940333366394]
+UserItemPrediction [user_id: 1084, item_id: 554, prediction: 5, probability: 0.7594876289367676]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id18">
+<h4>Recommend 3 users for each item given candidates in the feature RDDs<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">itemRecs</span> <span class="o">=</span> <span class="n">ncf</span><span class="o">.</span><span class="n">recommend_for_item</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">itemRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 3111, item_id: 3558, prediction: 5, probability: 0.48693835735321045]
+UserItemPrediction [user_id: 2024, item_id: 3558, prediction: 5, probability: 0.42628324031829834]
+UserItemPrediction [user_id: 4909, item_id: 3558, prediction: 4, probability: 0.562437891960144]
+UserItemPrediction [user_id: 3023, item_id: 1084, prediction: 5, probability: 0.8389995694160461]
+UserItemPrediction [user_id: 4790, item_id: 1084, prediction: 5, probability: 0.6715853810310364]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id19">
+<h3>Evaluation<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p>Plot the train and validation loss curves</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#retrieve train and validation summary object and read the loss data into ndarray&#39;s. </span>
+<span class="n">train_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_train_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="n">val_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="c1">#plot the train and validation curves</span>
+<span class="c1"># each event data is a tuple in form of (iteration_count, value, timestamp)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;train loss&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;val loss&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">train_loss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;loss&#39;)
+</pre></div>
+</div>
+<img alt="../_images/T051594_Analytics_Zoo_118_1.png" src="../_images/T051594_Analytics_Zoo_118_1.png" />
+</div>
+</div>
+<p>Plot accuracy</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">top1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Top1Accuracy&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;top1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;top1 accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T051594_Analytics_Zoo_120_0.png" src="../_images/T051594_Analytics_Zoo_120_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="part-3">
+<h2>Part 3<a class="headerlink" href="#part-3" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Applying Wide&amp;Deep on MovieLens using Analytics Zoo library</p>
+</div></blockquote>
+<div class="section" id="id20">
+<h3>Introduction<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p>Wide and Deep Learning Model, proposed by Google in 2016, is a DNN-Linear mixed model. Wide and deep learning has been used for Google App Store for their app recommendation.</p>
+<p>In this tutorial, we use Recommender API of Analytics Zoo to build a wide linear model and a deep neural network, which is called Wide&amp;Deep model, and use optimizer of BigDL to train the neural network. Wide&amp;Deep model combines the strength of memorization and generalization. It’s useful for generic large-scale regression and classification problems with sparse input features (e.g., categorical features with a large number of possible feature values).</p>
+<p>Python interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wide_and_deep</span> <span class="o">=</span> <span class="n">WideAndDeep</span><span class="p">(</span><span class="n">class_num</span><span class="p">,</span> <span class="n">column_info</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;wide_n_deep&quot;</span><span class="p">,</span> <span class="n">hidden_layers</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">class_num</span></code>: The number of classes. Positive int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">column_info</span></code>: An instance of ColumnFeatureInfo.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model_type</span></code>: String. ‘wide’, ‘deep’ and ‘wide_n_deep’ are supported. Default is ‘wide_n_deep’.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hidden_layers</span></code>: Units of hidden layers for the deep model. Tuple of positive int. Default is (40, 20, 10).</p></li>
+</ul>
+</div>
+<div class="section" id="id21">
+<h3>Installation<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h4>Install Java 8<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h4>
+<p>Run the command on the colaboratory file to install jdk 1.8</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq &gt; /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ[&quot;JAVA_HOME&quot;] = &quot;/usr/lib/jvm/java-8-openjdk-amd64&quot;
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>update-alternatives: using /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java to provide /usr/bin/java (java) in manual mode
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id23">
+<h4>Install Analytics Zoo from pip<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h4>
+<p>You can add the following command on your colab file to install the analytics-zoo via pip easily:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id24">
+<h4>Initialize context<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h4>
+<p>Call init_nncontext() that will create a SparkContext with optimized performance configurations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span><span class="o">*</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">init_nncontext</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Prepending /usr/local/lib/python3.7/dist-packages/bigdl/share/conf/spark-bigdl.conf to sys.path
+Adding /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar to BIGDL_JARS
+Prepending /usr/local/lib/python3.7/dist-packages/zoo/share/conf/spark-analytics-zoo.conf to sys.path
+pyspark_submit_args is:  --driver-class-path /usr/local/lib/python3.7/dist-packages/zoo/share/lib/analytics-zoo-bigdl_0.12.2-spark_2.4.3-0.10.0-jar-with-dependencies.jar:/usr/local/lib/python3.7/dist-packages/bigdl/share/lib/bigdl-0.12.2-jar-with-dependencies.jar pyspark-shell 
+</pre></div>
+</div>
+</div>
+</div>
+<p>Analytics Zoo provides three Recommenders, including Wide and Deep (WND) model, Neural network-based Collaborative Filtering (NCF) model and Session Recommender model. Easy-to-use Keras-Style defined models which provides compile and fit methods for training. Alternatively, they could be fed into NNFrames or BigDL Optimizer.</p>
+<p>WND and NCF recommenders can handle either explict or implicit feedback, given corresponding features.</p>
+</div>
+</div>
+<div class="section" id="id25">
+<h3>Imports<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zoo.models.recommendation</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">zoo.models.recommendation.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">zoo.common.nncontext</span> <span class="kn">import</span> <span class="n">init_nncontext</span>
+
+<span class="n">sqlContext</span> <span class="o">=</span> <span class="n">SQLContext</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">Row</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Populating the interactive namespace from numpy and matplotlib
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id26">
+<h3>Download movielens dataset<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget http://files.grouplens.org/datasets/movielens/ml-1m.zip
+!unzip ml-1m.zip
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id27">
+<h3>Read the dataset<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+  <span class="n">rating_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dir</span><span class="p">,</span><span class="s2">&quot;ratings.dat&quot;</span><span class="p">)</span>
+  <span class="n">rating_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">rating_files</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>    
+  <span class="n">movielens_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rating_list</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">movielens_data</span> 
+
+<span class="k">def</span> <span class="nf">get_id_pairs</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+	<span class="n">movielens_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">movielens_data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_id_ratings</span><span class="p">(</span><span class="n">data_dir</span><span class="p">):</span>
+	<span class="n">movielens_data</span> <span class="o">=</span> <span class="n">read_data_sets</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">movielens_data</span><span class="p">[:</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movielens_data</span> <span class="o">=</span> <span class="n">get_id_ratings</span><span class="p">(</span><span class="s2">&quot;/content/ml-1m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id28">
+<h3>Understand the data<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">min_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">max_user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">min_movie_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">max_movie_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">rating_labels</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">movielens_data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">min_user_id</span><span class="p">,</span> <span class="n">max_user_id</span><span class="p">,</span> <span class="n">min_movie_id</span><span class="p">,</span> <span class="n">max_movie_id</span><span class="p">,</span> <span class="n">rating_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100000, 3)
+1 669 1 3952 [1 2 3 4 5]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id29">
+<h3>Transformation<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<p>Transform ratings into dataframe, read user and item data into dataframes. Transform labels to zero-based since the original labels start from 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Rating</span> <span class="o">=</span> <span class="n">Row</span><span class="p">(</span><span class="s2">&quot;userId&quot;</span><span class="p">,</span> <span class="s2">&quot;itemId&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">User</span> <span class="o">=</span> <span class="n">Row</span><span class="p">(</span><span class="s2">&quot;userId&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span> <span class="p">,</span><span class="s2">&quot;occupation&quot;</span><span class="p">)</span>
+<span class="n">Item</span> <span class="o">=</span> <span class="n">Row</span><span class="p">(</span><span class="s2">&quot;itemId&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span> <span class="p">,</span><span class="s2">&quot;genres&quot;</span><span class="p">)</span>
+
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="p">(</span><span class="n">movielens_data</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">Rating</span><span class="p">(</span><span class="o">*</span><span class="n">r</span><span class="p">))</span>
+<span class="n">ratingDF</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">ratings</span><span class="p">)</span>
+
+<span class="n">users</span><span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;/content/ml-1m/users.dat&quot;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">])))</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">User</span><span class="p">(</span><span class="o">*</span><span class="n">r</span><span class="p">))</span>
+<span class="n">userDF</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+
+<span class="n">items</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;/content/ml-1m/movies.dat&quot;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>\
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">Item</span><span class="p">(</span><span class="o">*</span><span class="n">r</span><span class="p">))</span>
+<span class="n">itemDF</span> <span class="o">=</span> <span class="n">sqlContext</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Join data together, and transform data. For example, gender is going be used as categorical feature, occupation and gender will be used as crossed features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span><span class="p">,</span> <span class="n">udf</span>
+
+<span class="n">gender_udf</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="k">lambda</span> <span class="n">gender</span><span class="p">:</span> <span class="n">categorical_from_vocab_list</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">bucket_cross_udf</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="k">lambda</span> <span class="n">feature1</span><span class="p">,</span> <span class="n">feature2</span><span class="p">:</span> <span class="n">hash_bucket</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">feature1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">feature2</span><span class="p">),</span> <span class="n">bucket_size</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+<span class="n">genres_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Crime&quot;</span><span class="p">,</span> <span class="s2">&quot;Romance&quot;</span><span class="p">,</span> <span class="s2">&quot;Thriller&quot;</span><span class="p">,</span> <span class="s2">&quot;Adventure&quot;</span><span class="p">,</span> <span class="s2">&quot;Drama&quot;</span><span class="p">,</span> <span class="s2">&quot;Children&#39;s&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;War&quot;</span><span class="p">,</span> <span class="s2">&quot;Documentary&quot;</span><span class="p">,</span> <span class="s2">&quot;Fantasy&quot;</span><span class="p">,</span> <span class="s2">&quot;Mystery&quot;</span><span class="p">,</span> <span class="s2">&quot;Musical&quot;</span><span class="p">,</span> <span class="s2">&quot;Animation&quot;</span><span class="p">,</span> <span class="s2">&quot;Film-Noir&quot;</span><span class="p">,</span> <span class="s2">&quot;Horror&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Western&quot;</span><span class="p">,</span> <span class="s2">&quot;Comedy&quot;</span><span class="p">,</span> <span class="s2">&quot;Action&quot;</span><span class="p">,</span> <span class="s2">&quot;Sci-Fi&quot;</span><span class="p">]</span>
+<span class="n">genres_udf</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="k">lambda</span> <span class="n">genres</span><span class="p">:</span> <span class="n">categorical_from_vocab_list</span><span class="p">(</span><span class="n">genres</span><span class="p">,</span> <span class="n">genres_list</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+     
+<span class="n">allDF</span> <span class="o">=</span> <span class="n">ratingDF</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">userDF</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">itemDF</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;itemId&quot;</span><span class="p">])</span> \
+        <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="n">gender_udf</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;age-gender&quot;</span><span class="p">,</span> <span class="n">bucket_cross_udf</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">),</span> <span class="n">col</span><span class="p">(</span><span class="s2">&quot;gender&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;genres&quot;</span><span class="p">,</span> <span class="n">genres_udf</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;genres&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">))</span>
+<span class="n">allDF</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+------+------+-----+------+---+----------+--------------+------+----------+
+|itemId|userId|label|gender|age|occupation|         title|genres|age-gender|
++------+------+-----+------+---+----------+--------------+------+----------+
+|    26|   229|    3|     2| 18|        10|Othello (1995)|     5|        72|
+|    26|   342|    3|     2| 18|        12|Othello (1995)|     5|        72|
+|    26|   655|    2|     1| 25|         2|Othello (1995)|     5|         1|
+|    26|   524|    2|     2| 18|         0|Othello (1995)|     5|        72|
+|    26|    18|    3|     1| 18|         3|Othello (1995)|     5|        77|
++------+------+-----+------+---+----------+--------------+------+----------+
+only showing top 5 rows
+</pre></div>
+</div>
+</div>
+</div>
+<p>Speficy data feature information shared by the WideAndDeep model and its feature generation. Here, we use occupation gender for wide base part, age and gender crossed as wide cross part, genres and gender as indicators, userid and itemid for embedding.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bucket_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">column_info</span> <span class="o">=</span> <span class="n">ColumnFeatureInfo</span><span class="p">(</span>
+            <span class="n">wide_base_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;occupation&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">],</span>
+            <span class="n">wide_base_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+            <span class="n">wide_cross_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;age-gender&quot;</span><span class="p">],</span>
+            <span class="n">wide_cross_dims</span><span class="o">=</span><span class="p">[</span><span class="n">bucket_size</span><span class="p">],</span>
+            <span class="n">indicator_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;genres&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">],</span>
+            <span class="n">indicator_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+            <span class="n">embed_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">,</span> <span class="s2">&quot;itemId&quot;</span><span class="p">],</span>
+            <span class="n">embed_in_dims</span><span class="o">=</span><span class="p">[</span><span class="n">max_user_id</span><span class="p">,</span> <span class="n">max_movie_id</span><span class="p">],</span>
+            <span class="n">embed_out_dims</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+            <span class="n">continuous_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Transform data to RDD of Sample. We use optimizer of BigDL directly to train the model, it requires data to be provided in format of RDD(Sample). A Sample is a BigDL data structure which can be constructed using 2 numpy arrays, feature and label respectively. The API interface is Sample.from_ndarray(feature, label). Wide&amp;Deep model need two input tensors, one is SparseTensor for the Wide model, another is a DenseTensor for the Deep model.</p>
+<p>Randomly split the data into train (80%) and validation (20%)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rdds</span> <span class="o">=</span> <span class="n">allDF</span><span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">to_user_item_feature</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column_info</span><span class="p">))</span>
+<span class="n">trainPairFeatureRdds</span><span class="p">,</span> <span class="n">valPairFeatureRdds</span> <span class="o">=</span> <span class="n">rdds</span><span class="o">.</span><span class="n">randomSplit</span><span class="p">([</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+
+<span class="n">train_data</span><span class="o">=</span> <span class="n">trainPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+<span class="n">test_data</span><span class="o">=</span> <span class="n">valPairFeatureRdds</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">pair_feature</span><span class="p">:</span> <span class="n">pair_feature</span><span class="o">.</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_data</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>80151
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">train_data</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Sample: features: [JTensor: storage: [1. 1. 1.], shape: [124] ,indices [10 23 96], float, JTensor: storage: [0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.], shape: [22], float, JTensor: storage: [229.  26.], shape: [2], float, JTensor: storage: [18.], shape: [1], float], labels: [JTensor: storage: [3.], shape: [1], float],
+ Sample: features: [JTensor: storage: [1. 1. 1.], shape: [124] ,indices [ 2 22 25], float, JTensor: storage: [0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1. 0.], shape: [22], float, JTensor: storage: [655.  26.], shape: [2], float, JTensor: storage: [25.], shape: [1], float], labels: [JTensor: storage: [2.], shape: [1], float],
+ Sample: features: [JTensor: storage: [1. 1. 1.], shape: [124] ,indices [ 0 23 96], float, JTensor: storage: [0. 0. 0. 0. 0. 1. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 1.], shape: [22], float, JTensor: storage: [524.  26.], shape: [2], float, JTensor: storage: [18.], shape: [1], float], labels: [JTensor: storage: [2.], shape: [1], float]]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id30">
+<h3>Build model<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<p>In Analytics Zoo, it is simple to build Wide&amp;Deep model by calling WideAndDeep API. You need specify model type, and class number, as well as column information of features according to your data. You can also change other default parameters in the network, like hidden layers. The model could be fed into an Optimizer of BigDL or NNClassifier of analytics-zoo. Please refer to the document for more details. In this example, we demostrate how to use optimizer of BigDL.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wide_n_deep</span> <span class="o">=</span> <span class="n">WideAndDeep</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">column_info</span><span class="p">,</span> <span class="s2">&quot;wide_n_deep&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createZooKerasInput
+creating: createZooKerasInput
+creating: createZooKerasInput
+creating: createZooKerasInput
+creating: createZooKerasSparseDense
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasEmbedding
+creating: createZooKerasFlatten
+creating: createZooKerasFlatten
+creating: createZooKerasSelect
+creating: createZooKerasEmbedding
+creating: createZooKerasFlatten
+creating: createZooKerasMerge
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasDense
+creating: createZooKerasMerge
+creating: createZooKerasActivation
+creating: createZooKerasModel
+creating: createZooWideAndDeep
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-optimizer-and-train-the-model">
+<h4>Create optimizer and train the model<a class="headerlink" href="#create-optimizer-and-train-the-model" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wide_n_deep</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+                    <span class="n">loss</span><span class="o">=</span> <span class="s2">&quot;sparse_categorical_crossentropy&quot;</span><span class="p">,</span>
+                    <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>creating: createAdam
+creating: createZooKerasSparseCategoricalCrossEntropy
+creating: createZooKerasSparseCategoricalAccuracy
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tmp_log_dir</span> <span class="o">=</span> <span class="n">create_tmp_path</span><span class="p">()</span>
+<span class="n">wide_n_deep</span><span class="o">.</span><span class="n">set_tensorboard</span><span class="p">(</span><span class="n">tmp_log_dir</span><span class="p">,</span> <span class="s2">&quot;training_wideanddeep&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Train the network. Wait some time till it finished.. Voila! You’ve got a trained model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="c1"># Boot training process</span>
+<span class="n">wide_n_deep</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span>
+                <span class="n">nb_epoch</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+                <span class="n">validation_data</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimization Done.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Optimization Done.
+CPU times: user 478 ms, sys: 57.8 ms, total: 535 ms
+Wall time: 1min 19s
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id31">
+<h3>Prediction<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
+<p>Zoo models make inferences based on the given data using model.predict(val_rdd) API. A result of RDD is returned. predict_class returns the predicted label.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">wide_n_deep</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[array([0.11510788, 0.11794264, 0.20563757, 0.437561  , 0.12375093],
+       dtype=float32),
+ array([0.02078348, 0.03359406, 0.22935031, 0.20971832, 0.5065538 ],
+       dtype=float32),
+ array([0.07785287, 0.06622984, 0.32682514, 0.37786472, 0.15122744],
+       dtype=float32),
+ array([0.08764142, 0.05253283, 0.22836466, 0.34160003, 0.28986108],
+       dtype=float32),
+ array([0.09743527, 0.07298197, 0.31074455, 0.3314138 , 0.18742438],
+       dtype=float32)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">results_class</span> <span class="o">=</span> <span class="n">wide_n_deep</span><span class="o">.</span><span class="n">predict_class</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>
+<span class="n">results_class</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4, 5, 4, 4, 4]
+</pre></div>
+</div>
+</div>
+</div>
+<p>In Analytics Zoo, Recommender has provied 3 unique APIs to predict user-item pairs and make recommendations for users or items given candidates.</p>
+<div class="section" id="id32">
+<h4>Predict for user item pairs<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userItemPairPrediction</span> <span class="o">=</span> <span class="n">wide_n_deep</span><span class="o">.</span><span class="n">predict_user_item_pair</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userItemPairPrediction</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 342, item_id: 26, prediction: 4, probability: 0.4375610053539276]
+UserItemPrediction [user_id: 602, item_id: 29, prediction: 5, probability: 0.5065538287162781]
+UserItemPrediction [user_id: 5, item_id: 29, prediction: 4, probability: 0.3778647184371948]
+UserItemPrediction [user_id: 623, item_id: 29, prediction: 4, probability: 0.3416000306606293]
+UserItemPrediction [user_id: 563, item_id: 29, prediction: 4, probability: 0.33141380548477173]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id33">
+<h4>Recommend 3 items for each user given candidates in the feature RDDs<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">userRecs</span> <span class="o">=</span> <span class="n">wide_n_deep</span><span class="o">.</span><span class="n">recommend_for_user</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">userRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 600, item_id: 2987, prediction: 4, probability: 0.48497775197029114]
+UserItemPrediction [user_id: 600, item_id: 2701, prediction: 4, probability: 0.47248759865760803]
+UserItemPrediction [user_id: 600, item_id: 104, prediction: 4, probability: 0.4457840323448181]
+UserItemPrediction [user_id: 200, item_id: 2555, prediction: 5, probability: 0.2934740483760834]
+UserItemPrediction [user_id: 200, item_id: 2041, prediction: 3, probability: 0.3036503791809082]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id34">
+<h4>Recommend 3 users for each item given candidates in the feature RDDs<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">itemRecs</span> <span class="o">=</span> <span class="n">wide_n_deep</span><span class="o">.</span><span class="n">recommend_for_item</span><span class="p">(</span><span class="n">valPairFeatureRdds</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">itemRecs</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UserItemPrediction [user_id: 412, item_id: 1200, prediction: 5, probability: 0.4764344394207001]
+UserItemPrediction [user_id: 661, item_id: 1200, prediction: 5, probability: 0.47617384791374207]
+UserItemPrediction [user_id: 161, item_id: 1200, prediction: 5, probability: 0.47474074363708496]
+UserItemPrediction [user_id: 10, item_id: 2000, prediction: 5, probability: 0.3568936884403229]
+UserItemPrediction [user_id: 101, item_id: 2000, prediction: 5, probability: 0.3536785840988159]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id35">
+<h3>Evaluation<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<p>Plot the train and validation loss curves</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#retrieve train and validation summary object and read the loss data into ndarray&#39;s. </span>
+<span class="n">train_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wide_n_deep</span><span class="o">.</span><span class="n">get_train_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="n">val_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wide_n_deep</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Loss&quot;</span><span class="p">))</span>
+<span class="c1">#plot the train and validation curves</span>
+<span class="c1"># each event data is a tuple in form of (iteration_count, value, timestamp)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">train_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;train loss&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;val loss&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">val_loss</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">train_loss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;loss&#39;)
+</pre></div>
+</div>
+<img alt="../_images/T051594_Analytics_Zoo_177_1.png" src="../_images/T051594_Analytics_Zoo_177_1.png" />
+</div>
+</div>
+<p>Plot accuracy</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">top1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wide_n_deep</span><span class="o">.</span><span class="n">get_validation_summary</span><span class="p">(</span><span class="s2">&quot;Top1Accuracy&quot;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">top1</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;top1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;top1 accuracy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">train_loss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0.0, 60.0)
+</pre></div>
+</div>
+<img alt="../_images/T051594_Analytics_Zoo_179_1.png" src="../_images/T051594_Analytics_Zoo_179_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># %reload_ext tensorboard</span>
+<span class="c1"># %tensorboard --logdir $tmp_log_dir/training_wideanddeep/</span>
+</pre></div>
+</div>
+</div>
+</div>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F458e2929-3e13-4a70-a024-06529ba69944%2FUntitled.png?table=block&id=c067f5e5-b038-45ae-8a13-a55d3fda879b&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'></div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T757697_Simple_Similarity_based_Recommender.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Simple Similarity based Recommmendations</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T313645_A_B_Testing.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">A/B Testing</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

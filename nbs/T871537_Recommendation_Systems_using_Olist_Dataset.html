@@ -1,0 +1,2184 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recommendation systems using Olist dataset &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Offline Replayer Evaluation" href="T057885_Offline_Replayer_Evaluation.html" />
+    <link rel="prev" title="Vowpal Wabbit Contextual Bandit" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T871537_Recommendation_Systems_using_Olist_Dataset.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T871537_Recommendation_Systems_using_Olist_Dataset.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#popularity-based-recommender">
+   Popularity based recommender
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#knn-collaborative-method">
+   KNN collaborative method
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recommendation-based-on-sentiment-analysis-of-review-message">
+   Recommendation based on sentiment analysis of Review message
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#future-ideas">
+   Future Ideas
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="recommendation-systems-using-olist-dataset">
+<h1>Recommendation systems using Olist dataset<a class="headerlink" href="#recommendation-systems-using-olist-dataset" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Olist e-commerce dataset to build simple recommender systems</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">textblob</span> <span class="kn">import</span> <span class="n">TextBlob</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install -q -U kaggle
+!pip install --upgrade --force-reinstall --no-deps kaggle
+!mkdir ~/.kaggle
+!cp /content/drive/MyDrive/kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+
+!kaggle datasets download -d olistbr/brazilian-ecommerce
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!unzip brazilian-ecommerce.zip
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Archive:  brazilian-ecommerce.zip
+  inflating: olist_customers_dataset.csv  
+  inflating: olist_geolocation_dataset.csv  
+  inflating: olist_order_items_dataset.csv  
+  inflating: olist_order_payments_dataset.csv  
+  inflating: olist_order_reviews_dataset.csv  
+  inflating: olist_orders_dataset.csv  
+  inflating: olist_products_dataset.csv  
+  inflating: olist_sellers_dataset.csv  
+  inflating: product_category_name_translation.csv  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">products</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_products_dataset.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">,</span><span class="s1">&#39;product_category_name&#39;</span><span class="p">])</span>
+
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_orders_dataset.csv&#39;</span><span class="p">,</span><span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;order_id&#39;</span><span class="p">,</span><span class="s1">&#39;customer_id&#39;</span><span class="p">])</span>
+
+<span class="n">prod</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_order_items_dataset.csv&#39;</span><span class="p">,</span><span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;product_id&#39;</span><span class="p">,</span><span class="s1">&#39;order_id&#39;</span><span class="p">])</span>
+
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_customers_dataset.csv&#39;</span><span class="p">,</span><span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;customer_id&#39;</span><span class="p">,</span><span class="s1">&#39;customer_zip_code_prefix&#39;</span><span class="p">,</span><span class="s1">&#39;customer_city&#39;</span><span class="p">])</span>
+
+<span class="n">location</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_geolocation_dataset.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;geolocation_zip_code_prefix&#39;</span><span class="p">])</span>
+
+<span class="n">reviews</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;olist_order_reviews_dataset.csv&#39;</span><span class="p">,</span><span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;order_id&#39;</span><span class="p">,</span><span class="s1">&#39;review_score&#39;</span><span class="p">,</span><span class="s1">&#39;review_comment_message&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">describe_data</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data Types:&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Rows and Columns:&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Column Names:&quot;</span><span class="p">)</span>
+  <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Null values&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">products</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+product_id               object
+product_category_name    object
+dtype: object
+
+
+Rows and Columns:
+(32951, 2)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;product_id&#39;, &#39;product_category_name&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+product_id                 0
+product_category_name    610
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">customers</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+customer_id                 object
+customer_zip_code_prefix     int64
+customer_city               object
+dtype: object
+
+
+Rows and Columns:
+(99441, 3)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;customer_id&#39;, &#39;customer_zip_code_prefix&#39;, &#39;customer_city&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+customer_id                 0
+customer_zip_code_prefix    0
+customer_city               0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">reviews</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+order_id                  object
+review_score               int64
+review_comment_message    object
+dtype: object
+
+
+Rows and Columns:
+(100000, 3)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;order_id&#39;, &#39;review_score&#39;, &#39;review_comment_message&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+order_id                      0
+review_score                  0
+review_comment_message    58247
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+order_id       object
+customer_id    object
+dtype: object
+
+
+Rows and Columns:
+(99441, 2)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;order_id&#39;, &#39;customer_id&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+order_id       0
+customer_id    0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+geolocation_zip_code_prefix    int64
+dtype: object
+
+
+Rows and Columns:
+(1000163, 1)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;geolocation_zip_code_prefix&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+geolocation_zip_code_prefix    0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">describe_data</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data Types:
+order_id      object
+product_id    object
+dtype: object
+
+
+Rows and Columns:
+(112650, 2)
+
+
+Column Names:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;order_id&#39;, &#39;product_id&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Null values
+order_id      0
+product_id    0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;font&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">reviews</span><span class="o">.</span><span class="n">review_score</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Rating Distribution</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Rating&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;system1.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T871537_Recommendation_Systems_using_Olist_Dataset_12_0.png" src="../_images/T871537_Recommendation_Systems_using_Olist_Dataset_12_0.png" />
+</div>
+</div>
+<div class="section" id="popularity-based-recommender">
+<h2>Popularity based recommender<a class="headerlink" href="#popularity-based-recommender" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">comb_product</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">products</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span><span class="s1">&#39;product_id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">comb_product_review</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">comb_product</span><span class="p">,</span><span class="n">reviews</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;order_id&#39;</span><span class="p">)</span>
+<span class="n">comb_product_review</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>product_id</th>
+      <th>product_category_name</th>
+      <th>order_id</th>
+      <th>review_score</th>
+      <th>review_comment_message</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1e9e8ef04dbcff4541ed26657ea517e5</td>
+      <td>perfumaria</td>
+      <td>e17e4f88e31525f7deef66779844ddce</td>
+      <td>5</td>
+      <td>Super adooorei o delineador ele é bem preto e ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3aa071139cb16b67ca9e5dea641aaa2f</td>
+      <td>artes</td>
+      <td>5236307716393b7114b53ee991f36956</td>
+      <td>5</td>
+      <td>Excelente apontador! Em 3 segundos uma ponta p...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>96bd76ec8810374ed1b65e291975717f</td>
+      <td>esporte_lazer</td>
+      <td>01f66e58769f84129811d43eefd187fb</td>
+      <td>5</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>cef67bcfe19066a932b7673e239eb23d</td>
+      <td>bebes</td>
+      <td>143d00a4f2dde4e0364ee1821577adb3</td>
+      <td>1</td>
+      <td>modelo comprado: travesseiro memoria carinho B...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>9dc1a7de274444849c219cff195d0b71</td>
+      <td>utilidades_domesticas</td>
+      <td>86cafb8794cb99a9b1b77fc8e48fbbbb</td>
+      <td>5</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">review_count</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comb_product_review</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;product_category_name&#39;</span><span class="p">)[</span><span class="s1">&#39;review_score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<span class="n">review_count</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;review_score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>review_score</th>
+    </tr>
+    <tr>
+      <th>product_category_name</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>cama_mesa_banho</th>
+      <td>11272</td>
+    </tr>
+    <tr>
+      <th>beleza_saude</th>
+      <td>9728</td>
+    </tr>
+    <tr>
+      <th>esporte_lazer</th>
+      <td>8701</td>
+    </tr>
+    <tr>
+      <th>moveis_decoracao</th>
+      <td>8416</td>
+    </tr>
+    <tr>
+      <th>informatica_acessorios</th>
+      <td>7895</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Conclusion : These are the top 5 products with highest review score and so we can recommend these ones. Best recommended technique when completely new user visits an e-commerce site, that site will not have any past history</p>
+</div>
+<div class="section" id="knn-collaborative-method">
+<h2>KNN collaborative method<a class="headerlink" href="#knn-collaborative-method" title="Permalink to this headline">¶</a></h2>
+<p>The collaborative filtering algorithm uses “User Behavior” for recommending items.</p>
+<p>kNN is a machine learning algorithm to find clusters of similar users based on ratings, and make predictions using the average rating of top-k nearest neighbors. For example, we first present ratings in a matrix with the matrix having one row for each item and one column for each user location</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">comb_product_review</span> <span class="o">=</span> <span class="n">comb_product_review</span><span class="p">[</span><span class="n">comb_product_review</span><span class="o">.</span><span class="n">review_score</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prod_order_review</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">comb_product_review</span><span class="p">,</span> <span class="n">orders</span> <span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;order_id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">customers</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>customer_zip_code_prefix</th>
+      <th>customer_city</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>18955e83d337fd6b2def6b18a428ac77</td>
+      <td>9790</td>
+      <td>sao bernardo do campo</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4e7b3e00288586ebd08712fdd0374a03</td>
+      <td>1151</td>
+      <td>sao paulo</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>b2b6027bc5c5109e529d4dc6358b12c3</td>
+      <td>8775</td>
+      <td>mogi das cruzes</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4f2d8ab171c80ec8364f7c12e35b23ad</td>
+      <td>13056</td>
+      <td>campinas</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cust_location</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">customers</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;customer_zip_code_prefix&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;geolocation_zip_code_prefix&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cust_location</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>customer_id</th>
+      <th>customer_zip_code_prefix</th>
+      <th>customer_city</th>
+      <th>geolocation_zip_code_prefix</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+      <td>14409</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+      <td>14409</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+      <td>14409</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+      <td>14409</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>06b8999e2fba1a1fbc88172c00ba8bc7</td>
+      <td>14409</td>
+      <td>franca</td>
+      <td>14409</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cust_prod_location</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span> <span class="p">(</span><span class="n">prod_order_review</span><span class="p">,</span> <span class="n">cust_location</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;customer_id&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">cust_prod_location</span><span class="p">[</span><span class="s1">&#39;review_score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">.9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">.01</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.90    5.0
+0.91    5.0
+0.92    5.0
+0.93    5.0
+0.94    5.0
+0.95    5.0
+0.96    5.0
+0.97    5.0
+0.98    5.0
+0.99    5.0
+Name: review_score, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+
+<span class="n">location_user_rating</span> <span class="o">=</span> <span class="n">cust_prod_location</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;customer_zip_code_prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;product_category_name&#39;</span><span class="p">])</span>
+
+<span class="n">location_user_rating_pivot</span> <span class="o">=</span> <span class="n">location_user_rating</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;product_category_name&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;customer_zip_code_prefix&#39;</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;review_score&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">location_user_rating_matrix</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>customer_zip_code_prefix</th>
+      <th>1003</th>
+      <th>1004</th>
+      <th>1005</th>
+      <th>1006</th>
+      <th>1007</th>
+      <th>1008</th>
+      <th>1009</th>
+      <th>1011</th>
+      <th>1012</th>
+      <th>1013</th>
+    </tr>
+    <tr>
+      <th>product_category_name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>construcao_ferramentas_iluminacao</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>perfumaria</th>
+      <td>0.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>ferramentas_jardim</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>fashion_bolsas_e_acessorios</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>pet_shop</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>eletrodomesticos</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>moveis_cozinha_area_de_servico_jantar_e_jardim</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>livros_tecnicos</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>malas_acessorios</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>instrumentos_musicais</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+
+<span class="n">model_knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="n">algorithm</span> <span class="o">=</span> <span class="s1">&#39;brute&#39;</span><span class="p">)</span>
+
+<span class="n">model_knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">location_user_rating_matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NearestNeighbors(algorithm=&#39;brute&#39;, leaf_size=30, metric=&#39;cosine&#39;,
+                 metric_params=None, n_jobs=None, n_neighbors=5, p=2,
+                 radius=1.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">query_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">query_index</span><span class="p">)</span>
+<span class="n">distances</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">model_knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">query_index</span><span class="p">,:]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">n_neighbors</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>12
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">query_index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;beleza_saude&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="o">.</span><span class="n">flatten</span><span class="p">())):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recommendations for </span><span class="si">{0}</span><span class="s1">:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">query_index</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">, with distance of </span><span class="si">{2}</span><span class="s1">:&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">location_user_rating_pivot</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">i</span><span class="p">]],</span> <span class="n">distances</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">i</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Recommendations for beleza_saude:
+
+1: cama_mesa_banho, with distance of 0.5518436931335353:
+2: esporte_lazer, with distance of 0.5619968142285134:
+3: utilidades_domesticas, with distance of 0.584788746517453:
+4: informatica_acessorios, with distance of 0.58869735760611:
+5: moveis_decoracao, with distance of 0.5935567058997615:
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommendation-based-on-sentiment-analysis-of-review-message">
+<h2>Recommendation based on sentiment analysis of Review message<a class="headerlink" href="#recommendation-based-on-sentiment-analysis-of-review-message" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prod_order_review</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>product_id</th>
+      <th>product_category_name</th>
+      <th>order_id</th>
+      <th>review_score</th>
+      <th>review_comment_message</th>
+      <th>customer_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1e9e8ef04dbcff4541ed26657ea517e5</td>
+      <td>perfumaria</td>
+      <td>e17e4f88e31525f7deef66779844ddce</td>
+      <td>5</td>
+      <td>Super adooorei o delineador ele é bem preto e ...</td>
+      <td>f8a3e963a310aa58b60a5b1fed5bceb5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3aa071139cb16b67ca9e5dea641aaa2f</td>
+      <td>artes</td>
+      <td>5236307716393b7114b53ee991f36956</td>
+      <td>5</td>
+      <td>Excelente apontador! Em 3 segundos uma ponta p...</td>
+      <td>03fc97548af8f58fefc768d12b546c9c</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>96bd76ec8810374ed1b65e291975717f</td>
+      <td>esporte_lazer</td>
+      <td>01f66e58769f84129811d43eefd187fb</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>e41819d1c95c12c9ce495b630eab8aee</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>9dc1a7de274444849c219cff195d0b71</td>
+      <td>utilidades_domesticas</td>
+      <td>86cafb8794cb99a9b1b77fc8e48fbbbb</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>c11c31965ff02cc1d7132df8edfcbc22</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>41d3672d4792049fa1779bb35283ed13</td>
+      <td>instrumentos_musicais</td>
+      <td>c214058828b43a44f352b56ff2d5c0a5</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>3f3a10ec410c8efb0ca799fa7705d07e</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>94546</th>
+      <td>83808703fc0706a22e264b9d75f04a2e</td>
+      <td>informatica_acessorios</td>
+      <td>59e88b7d3675e89aceaf86f372d3bc9a</td>
+      <td>4</td>
+      <td>Bom</td>
+      <td>e750210dde7e68dbd5194c0809e97f7e</td>
+    </tr>
+    <tr>
+      <th>94547</th>
+      <td>83808703fc0706a22e264b9d75f04a2e</td>
+      <td>informatica_acessorios</td>
+      <td>6e4465d771f02e4fe335225de3c6c043</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>0f139d1b208a62a37671423e5eff5016</td>
+    </tr>
+    <tr>
+      <th>94548</th>
+      <td>83808703fc0706a22e264b9d75f04a2e</td>
+      <td>informatica_acessorios</td>
+      <td>6e4465d771f02e4fe335225de3c6c043</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>0f139d1b208a62a37671423e5eff5016</td>
+    </tr>
+    <tr>
+      <th>94549</th>
+      <td>83808703fc0706a22e264b9d75f04a2e</td>
+      <td>informatica_acessorios</td>
+      <td>6e4465d771f02e4fe335225de3c6c043</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>0f139d1b208a62a37671423e5eff5016</td>
+    </tr>
+    <tr>
+      <th>94550</th>
+      <td>106392145fca363410d287a815be6de4</td>
+      <td>cama_mesa_banho</td>
+      <td>f3a47ba087f05d39a74ed1b653f0be1b</td>
+      <td>5</td>
+      <td>Recomendo !!</td>
+      <td>b7fbfcea57659b5d18c20c95db45e908</td>
+    </tr>
+  </tbody>
+</table>
+<p>94551 rows × 6 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prod_order_review</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;review_comment_message&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">final</span> <span class="o">=</span> <span class="n">prod_order_review</span><span class="p">[[</span><span class="s1">&#39;product_category_name&#39;</span><span class="p">,</span><span class="s1">&#39;review_comment_message&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;mode.chained_assignment&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Convert to list</span>
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;review_comment_message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pre-processing steps for data</span>
+
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\s*@\s*\s?&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\?&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;@&quot;[\d-]&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Remove new line characters</span>
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Remove distracting single quotes</span>
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&#39;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]]</span>
+
+<span class="c1">#Converting into lowercase</span>
+<span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bloblist_desc</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="n">df_comments</span><span class="o">=</span> <span class="n">final</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_comments</span><span class="p">:</span>
+    <span class="n">blob</span> <span class="o">=</span> <span class="n">TextBlob</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">bloblist_desc</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row</span><span class="p">,</span><span class="n">blob</span><span class="o">.</span><span class="n">sentiment</span><span class="o">.</span><span class="n">polarity</span><span class="p">,</span> <span class="n">blob</span><span class="o">.</span><span class="n">sentiment</span><span class="o">.</span><span class="n">subjectivity</span><span class="p">))</span>
+    <span class="n">df_comments_polarity_desc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">bloblist_desc</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;review_comment_message&#39;</span><span class="p">,</span><span class="s1">&#39;sentiment&#39;</span><span class="p">,</span><span class="s1">&#39;polarity&#39;</span><span class="p">])</span>
+ 
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">df_comments_polarity_desc</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">df_comments_polarity_desc</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;Positive&quot;</span>
+    <span class="k">elif</span> <span class="n">df_comments_polarity_desc</span><span class="p">[</span><span class="s1">&#39;sentiment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;Neutral&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="s2">&quot;Negative&quot;</span>
+    <span class="k">return</span> <span class="n">val</span>
+
+<span class="n">df_comments_polarity_desc</span><span class="p">[</span><span class="s1">&#39;Sentiment_Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_comments_polarity_desc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;Sentiment_Type&quot;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">df_comments_polarity_desc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T871537_Recommendation_Systems_using_Olist_Dataset_39_0.png" src="../_images/T871537_Recommendation_Systems_using_Olist_Dataset_39_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df_comments_polarity_desc</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>review_comment_message</th>
+      <th>sentiment</th>
+      <th>polarity</th>
+      <th>Sentiment_Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>super adooorei o delineador ele é bem preto e ...</td>
+      <td>0.333333</td>
+      <td>0.666667</td>
+      <td>Positive</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>excelente apontador! em 3 segundos uma ponta p...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>muito bom</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>produto tem um tom de cor diferente da foto. h...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>o produto que chegou é mais bonito do que eu e...</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>34056</th>
+      <td>produto de ótima qualidade, fiquei super feliz...</td>
+      <td>0.333333</td>
+      <td>0.666667</td>
+      <td>Positive</td>
+    </tr>
+    <tr>
+      <th>34057</th>
+      <td>muito boa a loja esta de parabéns</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>34058</th>
+      <td>bom</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>34059</th>
+      <td>bom</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+    <tr>
+      <th>34060</th>
+      <td>recomendo !!</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>Neutral</td>
+    </tr>
+  </tbody>
+</table>
+<p>34061 rows × 4 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">review_analytics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">final</span><span class="p">,</span> <span class="n">df_comments_polarity_desc</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;review_comment_message&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">review_analytics</span> <span class="o">=</span> <span class="n">review_analytics</span><span class="p">[</span><span class="n">review_analytics</span><span class="o">.</span><span class="n">Sentiment_Type</span> <span class="o">==</span> <span class="s1">&#39;Positive&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">review_analytics</span><span class="o">.</span><span class="n">product_category_name</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;cool_stuff&#39;, &#39;beleza_saude&#39;, &#39;artigos_de_festas&#39;,
+       &#39;informatica_acessorios&#39;, &#39;moveis_decoracao&#39;, &#39;perfumaria&#39;,
+       &#39;telefonia&#39;, &#39;esporte_lazer&#39;, &#39;utilidades_domesticas&#39;, &#39;papelaria&#39;,
+       &#39;pet_shop&#39;, &#39;cama_mesa_banho&#39;, &#39;relogios_presentes&#39;,
+       &#39;telefonia_fixa&#39;, &#39;pcs&#39;, &#39;automotivo&#39;, &#39;alimentos&#39;, &#39;eletronicos&#39;,
+       &#39;ferramentas_jardim&#39;, nan, &#39;brinquedos&#39;,
+       &#39;construcao_ferramentas_construcao&#39;, &#39;eletrodomesticos&#39;,
+       &#39;fashion_bolsas_e_acessorios&#39;, &#39;livros_interesse_geral&#39;,
+       &#39;malas_acessorios&#39;, &#39;portateis_casa_forno_e_cafe&#39;, &#39;climatizacao&#39;,
+       &#39;consoles_games&#39;, &#39;bebes&#39;, &#39;audio&#39;, &#39;instrumentos_musicais&#39;,
+       &#39;artigos_de_natal&#39;, &#39;eletroportateis&#39;, &#39;moveis_sala&#39;,
+       &#39;construcao_ferramentas_ferramentas&#39;, &#39;moveis_escritorio&#39;,
+       &#39;fraldas_higiene&#39;, &#39;industria_comercio_e_negocios&#39;,
+       &#39;alimentos_bebidas&#39;], dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">review_analytics</span><span class="o">.</span><span class="n">product_category_name</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40
+</pre></div>
+</div>
+</div>
+</div>
+<p>Conclusion - These are the products recommended based on sentiments</p>
+</div>
+<div class="section" id="future-ideas">
+<h2>Future Ideas<a class="headerlink" href="#future-ideas" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Recommendation system using Hybrid approach</p></li>
+<li><p>System can be particularly built using data of customers, products at different location</p></li>
+<li><p>Can also try system with customer payment history</p></li>
+</ol>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Vowpal Wabbit Contextual Bandit</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T057885_Offline_Replayer_Evaluation.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Offline Replayer Evaluation</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

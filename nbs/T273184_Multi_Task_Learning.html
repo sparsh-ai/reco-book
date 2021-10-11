@@ -1,0 +1,1710 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-task Learning &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Book Recommender API" href="T661108_Book_Recommender_API.html" />
+    <link rel="prev" title="EduRec MOOCCube Course Recommender" href="T207114_EduRec_MOOCCube_Course_Recommender.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T273184_Multi_Task_Learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T273184_Multi_Task_Learning.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tasks">
+   Tasks
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data">
+   Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#features">
+   Features
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-test-data">
+   Train &amp; Test Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#models">
+   Models
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shared-bottom">
+     Shared Bottom
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#essm">
+     ESSM
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mmoe">
+     MMoE
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cgc">
+     CGC
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ple">
+     PLE
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tests">
+   Tests
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="multi-task-learning">
+<h1>Multi-task Learning<a class="headerlink" href="#multi-task-learning" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Training 5 models on census data taking salary and marital status as proxies for CTR and CTCVR proxy. Objective is to learn about different models and how they work.</p>
+</div></blockquote>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install deepctr[cpu]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data
+!wget http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">deepctr.feature_column</span> <span class="kn">import</span> <span class="n">build_input_features</span><span class="p">,</span> <span class="n">input_from_feature_columns</span>
+<span class="kn">from</span> <span class="nn">deepctr.feature_column</span> <span class="kn">import</span> <span class="n">SparseFeat</span><span class="p">,</span> <span class="n">DenseFeat</span><span class="p">,</span> <span class="n">get_feature_names</span>
+
+<span class="kn">from</span> <span class="nn">deepctr.layers.core</span> <span class="kn">import</span> <span class="n">PredictionLayer</span><span class="p">,</span> <span class="n">DNN</span>
+<span class="kn">from</span> <span class="nn">deepctr.layers.utils</span> <span class="kn">import</span> <span class="n">combined_dnn_input</span> 
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h2>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Task</p></th>
+<th class="text-align:right head"><p>Goal</p></th>
+<th class="text-align:right head"><p>Proxy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Task 1</p></td>
+<td class="text-align:right"><p>Predict whether the income exceeds 50K</p></td>
+<td class="text-align:right"><p>ctr</p></td>
+</tr>
+<tr class="row-odd"><td><p>Task 2</p></td>
+<td class="text-align:right"><p>Predict whether this person’s marital status is never married</p></td>
+<td class="text-align:right"><p>ctcvr</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CENSUS_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;workclass&#39;</span><span class="p">,</span><span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span><span class="s1">&#39;education&#39;</span><span class="p">,</span><span class="s1">&#39;education_num&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;marital_status&#39;</span><span class="p">,</span><span class="s1">&#39;occupation&#39;</span><span class="p">,</span><span class="s1">&#39;relationship&#39;</span><span class="p">,</span><span class="s1">&#39;race&#39;</span><span class="p">,</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;capital_gain&#39;</span><span class="p">,</span><span class="s1">&#39;capital_loss&#39;</span><span class="p">,</span><span class="s1">&#39;hours_per_week&#39;</span><span class="p">,</span><span class="s1">&#39;native_country&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;income_bracket&#39;</span><span class="p">]</span>
+
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;adult.data&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">CENSUS_COLUMNS</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;adult.test&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="n">CENSUS_COLUMNS</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_train</span><span class="p">,</span> <span class="n">df_test</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">#take task1 as ctr task, take task2 as ctcvr task.</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;income_bracket&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39; &gt;50K.&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39; &gt;50K&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39; &lt;=50K.&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39; &lt;=50K&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;marital_status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span><span class="o">==</span><span class="s1">&#39; Never-married&#39;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;marital_status&#39;</span><span class="p">,</span> <span class="s1">&#39;income_bracket&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define dense and sparse features</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">dense_features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span> <span class="s1">&#39;education_num&#39;</span><span class="p">,</span> <span class="s1">&#39;capital_gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital_loss&#39;</span><span class="p">,</span> <span class="s1">&#39;hours_per_week&#39;</span><span class="p">]</span>
+<span class="n">sparse_features</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dense_features</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">,</span> <span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]]</span>
+
+<span class="n">data</span><span class="p">[</span><span class="n">sparse_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">sparse_features</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">dense_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">dense_features</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">mms</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">data</span><span class="p">[</span><span class="n">dense_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">mms</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dense_features</span><span class="p">])</span>
+    
+<span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">sparse_features</span><span class="p">:</span>
+    <span class="n">lbe</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">feat</span><span class="p">]</span> <span class="o">=</span> <span class="n">lbe</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">feat</span><span class="p">])</span>
+    
+<span class="n">fixlen_feature_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">SparseFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">feat</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span><span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">sparse_features</span><span class="p">]</span> \
+<span class="o">+</span> <span class="p">[</span><span class="n">DenseFeat</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="mi">1</span><span class="p">,)</span> <span class="k">for</span> <span class="n">feat</span> <span class="ow">in</span> <span class="n">dense_features</span><span class="p">]</span>
+
+<span class="n">dnn_feature_columns</span> <span class="o">=</span> <span class="n">fixlen_feature_columns</span>
+
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">get_feature_names</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-test-data">
+<h2>Train &amp; Test Data<a class="headerlink" href="#train-test-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#train test split</span>
+<span class="n">n_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">n_train</span><span class="p">:]</span>
+<span class="n">train_model_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">train</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">}</span>
+<span class="n">test_model_input</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">test</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="models">
+<h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shared-bottom">
+<h3>Shared Bottom<a class="headerlink" href="#shared-bottom" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://reports-archive.adm.cs.cmu.edu/anon/1997/CMU-CS-97-203.pdf">Multitask Learning (1998)</a></p>
+<p>Rich Caruana</p>
+<p><strong>Abstract</strong>:</p>
+<p><em>Multitask Learning is an approach to inductive transfer that improves learning for one task by using the information contained in the training signals of other related tasks. It does this by learning tasks in parallel while using a shared representation; what is learned for each task can help other tasks be learned better. In this thesis we demonstrate multitask learning for a dozen problems. We explain how multitask learning works and show that there are many opportunities for multitask learning in real domains. We show that in some cases features that would normally be used as inputs work better if used as multitask outputs instead. We present suggestions for how to get the most out of multitask learning in articial neural nets, present an algorithm for multitask learning with case-based methods like k-nearest neighbor and kernel regression, and sketch an algorithm for multitask learning in decision trees. Multitask learning improves generalization performance, can be applied in many dierent kinds of domains, and can be used with dierent learning algorithms. We conjecture there will be many opportunities for its use on real-world problems.</em></p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F59831bf7-7f8d-4c07-8ad6-19c2b75de5b5%2FUntitled.png?table=block&id=fae3a0fa-6572-4f1c-add5-2e626616ae06&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2' width=40%><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import tensorflow as tf</span>
+
+<span class="c1"># from deepctr.feature_column import build_input_features, input_from_feature_columns</span>
+<span class="c1"># from deepctr.layers.core import PredictionLayer, DNN</span>
+<span class="c1"># from deepctr.layers.utils import combined_dnn_input </span>
+
+<span class="k">def</span> <span class="nf">Shared_Bottom</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="p">,</span> <span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span>
+                  <span class="n">bottom_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span><span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">32</span><span class="p">]],</span>
+                  <span class="n">l2_reg_embedding</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">dnn_activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantiates the Shared_Bottom multi-task learning Network architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.</span>
+<span class="sd">    :param num_tasks:  integer, number of tasks, equal to number of outputs, must be greater than 1.</span>
+<span class="sd">    :param task_types: list of str, indicating the loss of each tasks, ``&quot;binary&quot;`` for  binary logloss or  ``&quot;regression&quot;`` for regression loss. e.g. [&#39;binary&#39;, &#39;regression&#39;]</span>
+<span class="sd">    :param task_names: list of str, indicating the predict target of each tasks</span>
+<span class="sd">    :param bottom_dnn_units: list,list of positive integer or empty list, the layer number and units in each layer of shared-bottom DNN</span>
+<span class="sd">    :param tower_dnn_units_lists: list, list of positive integer list, its length must be euqal to num_tasks, the layer number and units in each layer of task-specific DNN</span>
+<span class="sd">    :param l2_reg_embedding: float. L2 regularizer strength applied to embedding vector</span>
+<span class="sd">    :param l2_reg_dnn: float. L2 regularizer strength applied to DNN</span>
+<span class="sd">    :param seed: integer ,to use as random seed.</span>
+<span class="sd">    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.</span>
+<span class="sd">    :param dnn_activation: Activation function to use in DNN</span>
+<span class="sd">    :param dnn_use_bn: bool. Whether use BatchNormalization before activation or not in DNN</span>
+<span class="sd">    :return: A Keras model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be greater than 1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_types</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_tasks</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be equal to the length of task_types&quot;</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">task_types</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;regression&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;task must be binary or regression, </span><span class="si">{}</span><span class="s2"> is illegal&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_type</span><span class="p">))</span>
+            
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of tower_dnn_units_lists must be euqal to num_tasks&quot;</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">build_input_features</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+    <span class="n">inputs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    
+    <span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span> <span class="o">=</span> <span class="n">input_from_feature_columns</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">l2_reg_embedding</span><span class="p">,</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="n">dnn_input</span> <span class="o">=</span> <span class="n">combined_dnn_input</span><span class="p">(</span><span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span><span class="p">)</span>
+    <span class="n">shared_bottom_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">bottom_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)(</span><span class="n">dnn_input</span><span class="p">)</span>
+
+    <span class="n">tasks_output</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">task_type</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">tower_dnn</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">tower_dnn_units_lists</span><span class="p">):</span>
+        <span class="n">tower_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tower_&#39;</span><span class="o">+</span><span class="n">task_name</span><span class="p">)(</span><span class="n">shared_bottom_output</span><span class="p">)</span>
+        
+        <span class="n">logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">tower_output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">task_name</span><span class="p">)(</span><span class="n">logit</span><span class="p">)</span> <span class="c1">#regression-&gt;keep, binary classification-&gt;sigmoid</span>
+        <span class="n">tasks_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">tasks_output</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="essm">
+<h3>ESSM<a class="headerlink" href="#essm" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://arxiv.org/abs/1804.07931">Entire Space Multi-Task Model: An Effective Approach for Estimating Post-Click Conversion Rate (SIGIR’18)</a></p>
+<p>Xiao Ma, Liqin Zhao, Guan Huang, Zhi Wang, Zelin Hu, Xiaoqiang Zhu, Kun Gai</p>
+<p><strong>Abstract</strong>:</p>
+<p><em>Estimating post-click conversion rate (CVR) accurately is crucial for ranking systems in industrial applications such as recommendation and advertising. Conventional CVR modeling applies popular deep learning methods and achieves state-of-the-art performance. However it encounters several task-specific problems in practice, making CVR modeling challenging. For example, conventional CVR models are trained with samples of clicked impressions while utilized to make inference on the entire space with samples of all impressions. This causes a sample selection bias problem. Besides, there exists an extreme data sparsity problem, making the model fitting rather difficult. In this paper, we model CVR in a brand-new perspective by making good use of sequential pattern of user actions, i.e., impression -&gt; click -&gt; conversion. The proposed Entire Space Multi-task Model (ESMM) can eliminate the two problems simultaneously by i) modeling CVR directly over the entire space, ii) employing a feature representation transfer learning strategy. Experiments on dataset gathered from Taobao’s recommender system demonstrate that ESMM significantly outperforms competitive methods. We also release a sampling version of this dataset to enable future research. To the best of our knowledge, this is the first public dataset which contains samples with sequential dependence of click and conversion labels for CVR modeling.</em></p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F51b9ace1-a895-42d6-8d50-638c52c4cf93%2FUntitled.png?table=block&id=ebc5b2ff-e1ba-464f-a206-52caafbccf98&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import tensorflow as tf</span>
+
+<span class="c1"># from deepctr.feature_column import build_input_features, input_from_feature_columns</span>
+<span class="c1"># from deepctr.layers.core import PredictionLayer, DNN</span>
+<span class="c1"># from deepctr.layers.utils import combined_dnn_input </span>
+
+
+<span class="k">def</span> <span class="nf">ESSM</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="n">task_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ctr&#39;</span><span class="p">,</span> <span class="s1">&#39;ctcvr&#39;</span><span class="p">],</span>
+        <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">]],</span> <span class="n">l2_reg_embedding</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+         <span class="n">seed</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">dnn_activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantiates the Entire Space Multi-Task Model architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.</span>
+<span class="sd">    :param task_type:  str, indicating the loss of each tasks, ``&quot;binary&quot;`` for  binary logloss or  ``&quot;regression&quot;`` for regression loss.</span>
+<span class="sd">    :param task_names: list of str, indicating the predict target of each tasks. default value is [&#39;ctr&#39;, &#39;ctcvr&#39;]</span>
+<span class="sd">    :param tower_dnn_units_lists: list, list of positive integer, the length must be equal to 2, the layer number and units in each layer of task-specific DNN</span>
+<span class="sd">    :param l2_reg_embedding: float. L2 regularizer strength applied to embedding vector</span>
+<span class="sd">    :param l2_reg_dnn: float. L2 regularizer strength applied to DNN</span>
+<span class="sd">    :param seed: integer ,to use as random seed.</span>
+<span class="sd">    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.</span>
+<span class="sd">    :param dnn_activation: Activation function to use in DNN</span>
+<span class="sd">    :param dnn_use_bn: bool. Whether use BatchNormalization before activation or not in DNN</span>
+<span class="sd">    :return: A Keras model instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_names</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of task_names must be equal to 2&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of tower_dnn_units_lists must be equal to 2&quot;</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">build_input_features</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+    <span class="n">inputs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    
+    <span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span> <span class="o">=</span> <span class="n">input_from_feature_columns</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">l2_reg_embedding</span><span class="p">,</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="n">dnn_input</span> <span class="o">=</span> <span class="n">combined_dnn_input</span><span class="p">(</span><span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span><span class="p">)</span>
+    
+    <span class="n">ctr_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)(</span><span class="n">dnn_input</span><span class="p">)</span>
+    <span class="n">cvr_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)(</span><span class="n">dnn_input</span><span class="p">)</span>
+    
+    <span class="n">ctr_logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">ctr_output</span><span class="p">)</span>
+    <span class="n">cvr_logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">cvr_output</span><span class="p">)</span>
+    
+    <span class="n">ctr_pred</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">task_names</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span><span class="n">ctr_logit</span><span class="p">)</span> 
+    <span class="n">cvr_pred</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">)(</span><span class="n">cvr_logit</span><span class="p">)</span> 
+    
+    <span class="n">ctcvr_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">task_names</span><span class="p">[</span><span class="mi">1</span><span class="p">])([</span><span class="n">ctr_pred</span><span class="p">,</span> <span class="n">cvr_pred</span><span class="p">])</span> <span class="c1">#CTCVR = CTR * CVR</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">ctr_pred</span><span class="p">,</span> <span class="n">ctcvr_pred</span><span class="p">])</span>    
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="mmoe">
+<h3>MMoE<a class="headerlink" href="#mmoe" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3219819.3220007">Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts (KDD’18)</a></p>
+<p>Jiaqi Ma, Zhe Zhao, Xinyang Yi, Jilin Chen, Lichan Hong, Ed H. Chi</p>
+<p><strong>Abstract</strong>:</p>
+<p><em>Neural-based multi-task learning has been successfully used in many real-world large-scale applications such as recommendation systems. For example, in movie recommendations, beyond providing users movies which they tend to purchase and watch, the system might also optimize for users liking the movies afterwards. With multi-task learning, we aim to build a single model that learns these multiple goals and tasks simultaneously. However, the prediction quality of commonly used multi-task models is often sensitive to the relationships between tasks. It is therefore important to study the modeling tradeoffs between task-specific objectives and inter-task relationships. In this work, we propose a novel multi-task learning approach, Multi-gate Mixture-of-Experts (MMoE), which explicitly learns to model task relationships from data. We adapt the Mixture-of-Experts (MoE) structure to multi-task learning by sharing the expert submodels across all tasks, while also having a gating network trained to optimize each task. To validate our approach on data with different levels of task relatedness, we first apply it to a synthetic dataset where we control the task relatedness. We show that the proposed approach performs better than baseline methods when the tasks are less related. We also show that the MMoE structure results in an additional trainability benefit, depending on different levels of randomness in the training data and model initialization. Furthermore, we demonstrate the performance improvements by MMoE on real tasks including a binary classification benchmark, and a large-scale content recommendation system at Google.</em></p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe2258c8f-e00b-4c17-b55d-386a9309bff3%2FUntitled.png?table=block&id=d76c1015-0f1b-463e-aba0-072a45505221&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import tensorflow as tf</span>
+
+<span class="c1"># from deepctr.feature_column import build_input_features, input_from_feature_columns</span>
+<span class="c1"># from deepctr.layers.core import PredictionLayer, DNN</span>
+<span class="c1"># from deepctr.layers.utils import combined_dnn_input</span>
+
+<span class="k">def</span> <span class="nf">MMOE</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="p">,</span> <span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">num_experts</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> 
+          <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">],</span>  <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">],[</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">]],</span>
+          <span class="n">l2_reg_embedding</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantiates the Multi-gate Mixture-of-Experts multi-task learning architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.</span>
+<span class="sd">    :param num_tasks: integer, number of tasks, equal to number of outputs, must be greater than 1.</span>
+<span class="sd">    :param task_types: list of str, indicating the loss of each tasks, ``&quot;binary&quot;`` for  binary logloss, ``&quot;regression&quot;`` for regression loss. e.g. [&#39;binary&#39;, &#39;regression&#39;]</span>
+<span class="sd">    :param task_names: list of str, indicating the predict target of each tasks</span>
+<span class="sd">    </span>
+<span class="sd">    :param num_experts: integer, number of experts.</span>
+<span class="sd">    :param expert_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of expert DNN</span>
+<span class="sd">    :param gate_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of gate DNN</span>
+<span class="sd">    :param tower_dnn_units_lists: list, list of positive integer list, its length must be euqal to num_tasks, the layer number and units in each layer of task-specific DNN</span>
+<span class="sd">    </span>
+<span class="sd">    :param l2_reg_embedding: float. L2 regularizer strength applied to embedding vector</span>
+<span class="sd">    :param l2_reg_dnn: float. L2 regularizer strength applied to DNN</span>
+<span class="sd">    :param seed: integer ,to use as random seed.</span>
+<span class="sd">    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.</span>
+<span class="sd">    :param dnn_activation: Activation function to use in DNN</span>
+<span class="sd">    :param dnn_use_bn: bool. Whether use BatchNormalization before activation or not in DNN</span>
+<span class="sd">    :return: a Keras model instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be greater than 1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_types</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_tasks</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be equal to the length of task_types&quot;</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">task_types</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;regression&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;task must be binary or regression, </span><span class="si">{}</span><span class="s2"> is illegal&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_type</span><span class="p">))</span>
+            
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of tower_dnn_units_lists must be euqal to num_tasks&quot;</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">build_input_features</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+
+    <span class="n">inputs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span> <span class="o">=</span> <span class="n">input_from_feature_columns</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dnn_feature_columns</span><span class="p">,</span>
+                                                                         <span class="n">l2_reg_embedding</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">dnn_input</span> <span class="o">=</span> <span class="n">combined_dnn_input</span><span class="p">(</span><span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span><span class="p">)</span>
+    
+    <span class="c1">#build expert layer</span>
+    <span class="n">expert_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts</span><span class="p">):</span>
+        <span class="n">expert_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">expert_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))(</span><span class="n">dnn_input</span><span class="p">)</span>
+        <span class="n">expert_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expert_network</span><span class="p">)</span>
+    <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">expert_outs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_concat&#39;</span><span class="p">)</span>
+    <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="n">num_experts</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_reshape&#39;</span><span class="p">)(</span><span class="n">expert_concat</span><span class="p">)</span> <span class="c1">#(num_experts, output dim of expert_network)</span>
+
+    <span class="n">mmoe_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tasks</span><span class="p">):</span> <span class="c1">#one mmoe layer: nums_tasks = num_gates</span>
+        <span class="c1">#build gate layers</span>
+        <span class="n">gate_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">gate_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">dnn_input</span><span class="p">)</span>
+        <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">num_experts</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_softmax_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">gate_network</span><span class="p">)</span>
+        <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">gate_out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span> <span class="c1">#let the shape of gate_out be (num_experts, output dim of expert_network)</span>
+
+        <span class="c1">#gate multiply the expert</span>
+        <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_mul_expert_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])([</span><span class="n">expert_concat</span><span class="p">,</span> <span class="n">gate_out</span><span class="p">])</span> 
+        <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#sum pooling in the expert ndim</span>
+        <span class="n">mmoe_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">)</span>
+    
+    <span class="n">task_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">task_type</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">tower_dnn</span><span class="p">,</span> <span class="n">mmoe_out</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">tower_dnn_units_lists</span><span class="p">,</span> <span class="n">mmoe_outs</span><span class="p">):</span>
+        <span class="c1">#build tower layer</span>
+        <span class="n">tower_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tower_&#39;</span><span class="o">+</span><span class="n">task_name</span><span class="p">)(</span><span class="n">mmoe_out</span><span class="p">)</span>
+        
+        <span class="n">logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">tower_output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">task_name</span><span class="p">)(</span><span class="n">logit</span><span class="p">)</span> 
+        <span class="n">task_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">task_outs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="cgc">
+<h3>CGC<a class="headerlink" href="#cgc" title="Permalink to this headline">¶</a></h3>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F1fcae74c-8c84-4575-8f8a-9e6c9a0de99c%2FUntitled.png?table=block&id=d8f16e32-3696-48d7-b248-9707e1f97c72&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import tensorflow as tf</span>
+
+<span class="c1"># from deepctr.feature_column import build_input_features, input_from_feature_columns</span>
+<span class="c1"># from deepctr.layers.core import PredictionLayer, DNN</span>
+<span class="c1"># from deepctr.layers.utils import combined_dnn_input </span>
+
+<span class="k">def</span> <span class="nf">PLE_CGC</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="p">,</span> <span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">num_experts_specific</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_experts_shared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+          <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>  <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">]],</span>
+          <span class="n">l2_reg_embedding</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantiates the Customized Gate Control block of Progressive Layered Extraction architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.</span>
+<span class="sd">    :param num_tasks: integer, number of tasks, equal to number of outputs, must be greater than 1.</span>
+<span class="sd">    :param task_types: list of str, indicating the loss of each tasks, ``&quot;binary&quot;`` for  binary logloss, ``&quot;regression&quot;`` for regression loss. e.g. [&#39;binary&#39;, &#39;regression&#39;]</span>
+<span class="sd">    :param task_names: list of str, indicating the predict target of each tasks</span>
+<span class="sd">    </span>
+<span class="sd">    :param num_experts_specific: integer, number of task-specific experts.</span>
+<span class="sd">    :param num_experts_shared: integer, number of task-shared experts.</span>
+<span class="sd">    :param expert_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of expert DNN</span>
+<span class="sd">    :param gate_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of gate DNN</span>
+<span class="sd">    :param tower_dnn_units_lists: list, list of positive integer list, its length must be euqal to num_tasks, the layer number and units in each layer of task-specific DNN</span>
+<span class="sd">    </span>
+<span class="sd">    :param l2_reg_embedding: float. L2 regularizer strength applied to embedding vector</span>
+<span class="sd">    :param l2_reg_dnn: float. L2 regularizer strength applied to DNN</span>
+<span class="sd">    :param seed: integer ,to use as random seed.</span>
+<span class="sd">    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.</span>
+<span class="sd">    :param dnn_activation: Activation function to use in DNN</span>
+<span class="sd">    :param dnn_use_bn: bool. Whether use BatchNormalization before activation or not in DNN</span>
+<span class="sd">    :return: a Keras model instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be greater than 1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_types</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_tasks</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be equal to the length of task_types&quot;</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">task_types</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;regression&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;task must be binary or regression, </span><span class="si">{}</span><span class="s2"> is illegal&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_type</span><span class="p">))</span>
+            
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of tower_dnn_units_lists must be euqal to num_tasks&quot;</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">build_input_features</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+
+    <span class="n">inputs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span> <span class="o">=</span> <span class="n">input_from_feature_columns</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dnn_feature_columns</span><span class="p">,</span>
+                                                                         <span class="n">l2_reg_embedding</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">dnn_input</span> <span class="o">=</span> <span class="n">combined_dnn_input</span><span class="p">(</span><span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span><span class="p">)</span>
+    
+    <span class="n">expert_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#build task-specific expert layer</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tasks</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts_specific</span><span class="p">):</span>
+            <span class="n">expert_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">expert_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_expert_specific_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">))(</span><span class="n">dnn_input</span><span class="p">)</span>
+            <span class="n">expert_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expert_network</span><span class="p">)</span>
+
+    <span class="c1">#build task-shared expert layer</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts_shared</span><span class="p">):</span>
+        <span class="n">expert_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">expert_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_shared_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))(</span><span class="n">dnn_input</span><span class="p">)</span>
+        <span class="n">expert_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expert_network</span><span class="p">)</span>
+        
+
+
+    <span class="n">cgc_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tasks</span><span class="p">):</span> 
+        <span class="c1">#concat task-specific expert and task-shared expert</span>
+        <span class="n">cur_expert_num</span> <span class="o">=</span> <span class="n">num_experts_specific</span> <span class="o">+</span> <span class="n">num_experts_shared</span>
+        <span class="n">cur_experts</span> <span class="o">=</span> <span class="n">expert_outputs</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">num_experts_specific</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_experts_specific</span><span class="p">]</span> <span class="o">+</span> <span class="n">expert_outputs</span><span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">num_experts_shared</span><span class="p">):]</span> <span class="c1">#task_specific + task_shared</span>
+        <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">cur_experts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_concat_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;expert_reshape_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">expert_concat</span><span class="p">)</span>
+        
+        <span class="c1">#build gate layers</span>
+        <span class="n">gate_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">gate_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">dnn_input</span><span class="p">)</span>
+        <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_softmax_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">gate_network</span><span class="p">)</span>
+        <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">gate_out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span> 
+        
+        <span class="c1">#gate multiply the expert</span>
+        <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;gate_mul_expert_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])([</span><span class="n">expert_concat</span><span class="p">,</span> <span class="n">gate_out</span><span class="p">])</span> 
+        <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#sum pooling in the expert ndim</span>
+        <span class="n">cgc_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">)</span>
+    
+    <span class="n">task_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">task_type</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">tower_dnn</span><span class="p">,</span> <span class="n">cgc_out</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">tower_dnn_units_lists</span><span class="p">,</span> <span class="n">cgc_outs</span><span class="p">):</span>
+        <span class="c1">#build tower layer</span>
+        <span class="n">tower_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tower_&#39;</span><span class="o">+</span><span class="n">task_name</span><span class="p">)(</span><span class="n">cgc_out</span><span class="p">)</span>
+        <span class="n">logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">tower_output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">task_name</span><span class="p">)(</span><span class="n">logit</span><span class="p">)</span> 
+        <span class="n">task_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">task_outs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="ple">
+<h3>PLE<a class="headerlink" href="#ple" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://dl.acm.org/doi/10.1145/3383313.3412236">Progressive Layered Extraction (PLE): A Novel Multi-Task Learning (MTL) Model for Personalized Recommendations (RecSys’20)</a></p>
+<p>Hongyan Tang, Junning Liu, Ming Zhao, Xudong Gong</p>
+<p><strong>Abstract</strong>:</p>
+<p><em>Multi-task learning (MTL) has been successfully applied to many recommendation applications. However, MTL models often suffer from performance degeneration with negative transfer due to the complex and competing task correlation in real-world recommender systems. Moreover, through extensive experiments across SOTA MTL models, we have observed an interesting seesaw phenomenon that performance of one task is often improved by hurting the performance of some other tasks. To address these issues, we propose a Progressive Layered Extraction (PLE) model with a novel sharing structure design. PLE separates shared components and task-specific components explicitly and adopts a progressive routing mechanism to extract and separate deeper semantic knowledge gradually, improving efficiency of joint representation learning and information routing across tasks in a general setup. We apply PLE to both complicatedly correlated and normally correlated tasks, ranging from two-task cases to multi-task cases on a real-world Tencent video recommendation dataset with 1 billion samples, and results show that PLE outperforms state-of-the-art MTL models significantly under different task correlations and task-group size. Furthermore, online evaluation of PLE on a large-scale content recommendation platform at Tencent manifests 2.23% increase in view-count and 1.84% increase in watch time compared to SOTA MTL models, which is a significant improvement and demonstrates the effectiveness of PLE. Finally, extensive offline experiments on public benchmark datasets demonstrate that PLE can be applied to a variety of scenarios besides recommendations to eliminate the seesaw phenomenon. PLE now has been deployed to the online video recommender system in Tencent successfully.</em></p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Faae850bb-cbbb-49d5-bc2f-57fb3b7239cb%2FUntitled.png?table=block&id=242bb0fe-27c4-43d7-b7c3-34604f41f94b&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># import tensorflow as tf</span>
+
+<span class="c1"># from deepctr.feature_column import build_input_features, input_from_feature_columns</span>
+<span class="c1"># from deepctr.layers.core import PredictionLayer, DNN</span>
+<span class="c1"># from deepctr.layers.utils import combined_dnn_input </span>
+
+<span class="k">def</span> <span class="nf">PLE</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="p">,</span> <span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">num_levels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_experts_specific</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_experts_shared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+          <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>  <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">]],</span>
+          <span class="n">l2_reg_embedding</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Instantiates the multi level of Customized Gate Control of Progressive Layered Extraction architecture.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dnn_feature_columns: An iterable containing all the features used by deep part of the model.</span>
+<span class="sd">    :param num_tasks: integer, number of tasks, equal to number of outputs, must be greater than 1.</span>
+<span class="sd">    :param task_types: list of str, indicating the loss of each tasks, ``&quot;binary&quot;`` for  binary logloss, ``&quot;regression&quot;`` for regression loss. e.g. [&#39;binary&#39;, &#39;regression&#39;]</span>
+<span class="sd">    :param task_names: list of str, indicating the predict target of each tasks</span>
+<span class="sd">    </span>
+<span class="sd">    :param num_levels: integer, number of CGC levels.</span>
+<span class="sd">    :param num_experts_specific: integer, number of task-specific experts.</span>
+<span class="sd">    :param num_experts_shared: integer, number of task-shared experts.</span>
+<span class="sd">    :param expert_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of expert DNN</span>
+<span class="sd">    :param gate_dnn_units: list, list of positive integer, its length must be greater than 1, the layer number and units in each layer of gate DNN</span>
+<span class="sd">    :param tower_dnn_units_lists: list, list of positive integer list, its length must be euqal to num_tasks, the layer number and units in each layer of task-specific DNN</span>
+<span class="sd">    </span>
+<span class="sd">    :param l2_reg_embedding: float. L2 regularizer strength applied to embedding vector</span>
+<span class="sd">    :param l2_reg_dnn: float. L2 regularizer strength applied to DNN</span>
+<span class="sd">    :param seed: integer ,to use as random seed.</span>
+<span class="sd">    :param dnn_dropout: float in [0,1), the probability we will drop out a given DNN coordinate.</span>
+<span class="sd">    :param dnn_activation: Activation function to use in DNN</span>
+<span class="sd">    :param dnn_use_bn: bool. Whether use BatchNormalization before activation or not in DNN</span>
+<span class="sd">    :return: a Keras model instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be greater than 1&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_types</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_tasks</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_tasks must be equal to the length of task_types&quot;</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">task_type</span> <span class="ow">in</span> <span class="n">task_types</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">task_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;regression&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;task must be binary or regression, </span><span class="si">{}</span><span class="s2"> is illegal&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">task_type</span><span class="p">))</span>
+            
+    <span class="k">if</span> <span class="n">num_tasks</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tower_dnn_units_lists</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;the length of tower_dnn_units_lists must be euqal to num_tasks&quot;</span><span class="p">)</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">build_input_features</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">)</span>
+
+    <span class="n">inputs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span> <span class="o">=</span> <span class="n">input_from_feature_columns</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">dnn_feature_columns</span><span class="p">,</span>
+                                                                         <span class="n">l2_reg_embedding</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">dnn_input</span> <span class="o">=</span> <span class="n">combined_dnn_input</span><span class="p">(</span><span class="n">sparse_embedding_list</span><span class="p">,</span> <span class="n">dense_value_list</span><span class="p">)</span>
+ 
+    <span class="c1">#single cgc layer</span>
+    <span class="k">def</span> <span class="nf">cgc_net</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">level_name</span><span class="p">,</span> <span class="n">is_last</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1">#inputs: [task1, task2, ... taskn, shared task]</span>
+        
+        <span class="n">expert_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#build task-specific expert layer</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tasks</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts_specific</span><span class="p">):</span>
+                <span class="n">expert_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">expert_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;task_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_expert_specific_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">))(</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">expert_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expert_network</span><span class="p">)</span>
+
+        <span class="c1">#build task-shared expert layer</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experts_shared</span><span class="p">):</span>
+            <span class="n">expert_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">expert_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;expert_shared_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))(</span><span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> 
+            <span class="n">expert_outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expert_network</span><span class="p">)</span>
+
+        <span class="c1">#task_specific gate (count = num_tasks)</span>
+        <span class="n">cgc_outs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_tasks</span><span class="p">):</span> 
+            <span class="c1">#concat task-specific expert and task-shared expert</span>
+            <span class="n">cur_expert_num</span> <span class="o">=</span> <span class="n">num_experts_specific</span> <span class="o">+</span> <span class="n">num_experts_shared</span>
+            <span class="n">cur_experts</span> <span class="o">=</span> <span class="n">expert_outputs</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">num_experts_specific</span><span class="p">:(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_experts_specific</span><span class="p">]</span> <span class="o">+</span> <span class="n">expert_outputs</span><span class="p">[</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">num_experts_shared</span><span class="p">):]</span> <span class="c1">#task_specific + task_shared</span>
+            
+            <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">cur_experts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;expert_concat_specific_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;expert_reshape_specific_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">expert_concat</span><span class="p">)</span>
+
+            <span class="c1">#build gate layers</span>
+            <span class="n">gate_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">gate_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_specific_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="c1">#gate[i] for task input[i]</span>
+            <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_softmax_specific_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">gate_network</span><span class="p">)</span>
+            <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">gate_out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span> 
+
+            <span class="c1">#gate multiply the expert</span>
+            <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_mul_expert_specific_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])([</span><span class="n">expert_concat</span><span class="p">,</span> <span class="n">gate_out</span><span class="p">])</span> 
+            <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#sum pooling in the expert ndim</span>
+            <span class="n">cgc_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">)</span>
+        
+        <span class="c1">#task_shared gate, if the level not in last, add one shared gate</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_last</span><span class="p">:</span>
+            <span class="n">cur_expert_num</span> <span class="o">=</span> <span class="n">num_tasks</span> <span class="o">*</span> <span class="n">num_experts_specific</span> <span class="o">+</span> <span class="n">num_experts_shared</span>
+            <span class="n">cur_experts</span> <span class="o">=</span> <span class="n">expert_outputs</span> <span class="c1">#all the expert include task-specific expert and task-shared expert</span>
+            
+            <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">cur_experts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;expert_concat_shared_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">expert_concat</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Reshape</span><span class="p">([</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;expert_reshape_shared_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">expert_concat</span><span class="p">)</span>
+            
+            <span class="c1">#build gate layers</span>
+            <span class="n">gate_network</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">gate_dnn_units</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_shared_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))(</span><span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#gate for shared task input</span>
+            <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">cur_expert_num</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_softmax_shared_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))(</span><span class="n">gate_network</span><span class="p">)</span>
+            <span class="n">gate_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">gate_out</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span> 
+
+            <span class="c1">#gate multiply the expert</span>
+            <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Multiply</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">level_name</span><span class="o">+</span><span class="s1">&#39;gate_mul_expert_shared_&#39;</span><span class="o">+</span><span class="n">task_names</span><span class="p">[</span><span class="n">i</span><span class="p">])([</span><span class="n">expert_concat</span><span class="p">,</span> <span class="n">gate_out</span><span class="p">])</span> 
+            <span class="n">gate_mul_expert</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#sum pooling in the expert ndim</span>
+            <span class="n">cgc_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gate_mul_expert</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cgc_outs</span>
+    
+    <span class="n">ple_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dnn_input</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">num_tasks</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#[task1, task2, ... taskn, shared task]</span>
+    <span class="n">ple_outputs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_levels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">num_levels</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="c1">#the last level</span>
+            <span class="n">ple_outputs</span> <span class="o">=</span> <span class="n">cgc_net</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">ple_inputs</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s1">&#39;level_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">is_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ple_outputs</span> <span class="o">=</span> <span class="n">cgc_net</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">ple_inputs</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s1">&#39;level_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">is_last</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">ple_inputs</span> <span class="o">=</span> <span class="n">ple_outputs</span>
+            
+    <span class="n">task_outs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">task_type</span><span class="p">,</span> <span class="n">task_name</span><span class="p">,</span> <span class="n">tower_dnn</span><span class="p">,</span> <span class="n">ple_out</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">task_types</span><span class="p">,</span> <span class="n">task_names</span><span class="p">,</span> <span class="n">tower_dnn_units_lists</span><span class="p">,</span> <span class="n">ple_outputs</span><span class="p">):</span>
+        <span class="c1">#build tower layer</span>
+        <span class="n">tower_output</span> <span class="o">=</span> <span class="n">DNN</span><span class="p">(</span><span class="n">tower_dnn</span><span class="p">,</span> <span class="n">dnn_activation</span><span class="p">,</span> <span class="n">l2_reg_dnn</span><span class="p">,</span> <span class="n">dnn_dropout</span><span class="p">,</span> <span class="n">dnn_use_bn</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tower_&#39;</span><span class="o">+</span><span class="n">task_name</span><span class="p">)(</span><span class="n">ple_out</span><span class="p">)</span>
+        <span class="n">logit</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">)(</span><span class="n">tower_output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">PredictionLayer</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">task_name</span><span class="p">)(</span><span class="n">logit</span><span class="p">)</span> 
+        <span class="n">task_outs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        
+    <span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs_list</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">task_outs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tests">
+<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test ESSM Model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">ESSM</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">task_type</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="n">task_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ctr&#39;</span><span class="p">,</span> <span class="s1">&#39;ctcvr&#39;</span><span class="p">],</span>
+        <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">],[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">]])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">],</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_model_input</span><span class="p">,</span> <span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">],</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">)</span>
+
+<span class="n">pred_ans</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_model_input</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test CTR AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test CTCVR AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+128/128 - 4s - loss: 1.0579 - ctr_loss: 0.5650 - ctcvr_loss: 0.4928 - ctr_auc: 0.6240 - ctcvr_auc_1: 0.8766
+Epoch 2/5
+128/128 - 1s - loss: 0.8685 - ctr_loss: 0.5014 - ctcvr_loss: 0.3671 - ctr_auc: 0.7772 - ctcvr_auc_1: 0.9559
+Epoch 3/5
+128/128 - 1s - loss: 0.8575 - ctr_loss: 0.4909 - ctcvr_loss: 0.3666 - ctr_auc: 0.7919 - ctcvr_auc_1: 0.9565
+Epoch 4/5
+128/128 - 1s - loss: 0.8536 - ctr_loss: 0.4879 - ctcvr_loss: 0.3656 - ctr_auc: 0.7942 - ctcvr_auc_1: 0.9564
+Epoch 5/5
+128/128 - 1s - loss: 0.8498 - ctr_loss: 0.4853 - ctcvr_loss: 0.3645 - ctr_auc: 0.7993 - ctcvr_auc_1: 0.9573
+test CTR AUC 0.7597
+test CTCVR AUC 0.954
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test Shared_Bottom Model</span>
+
+<span class="n">task_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">,</span> <span class="s1">&#39;marital&#39;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Shared_Bottom</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_types</span><span class="o">=</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">],</span> <span class="n">task_names</span><span class="o">=</span><span class="n">task_names</span><span class="p">,</span> <span class="n">bottom_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span><span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">32</span><span class="p">]])</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">],</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">])</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_model_input</span><span class="p">,</span> <span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">],</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">)</span>
+
+<span class="n">pred_ans</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_model_input</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test income AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test marital AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+128/128 - 3s - loss: 0.8224 - income_loss: 0.4162 - marital_loss: 0.4062 - income_auc: 0.8227 - marital_auc_1: 0.8653
+Epoch 2/5
+128/128 - 1s - loss: 0.5585 - income_loss: 0.3269 - marital_loss: 0.2316 - income_auc: 0.9018 - marital_auc_1: 0.9616
+Epoch 3/5
+128/128 - 1s - loss: 0.5445 - income_loss: 0.3159 - marital_loss: 0.2285 - income_auc: 0.9086 - marital_auc_1: 0.9625
+Epoch 4/5
+128/128 - 1s - loss: 0.5389 - income_loss: 0.3126 - marital_loss: 0.2263 - income_auc: 0.9104 - marital_auc_1: 0.9632
+Epoch 5/5
+128/128 - 1s - loss: 0.5346 - income_loss: 0.3096 - marital_loss: 0.2249 - income_auc: 0.9121 - marital_auc_1: 0.9637
+test income AUC 0.9096
+test marital AUC 0.9634
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test MMoE Model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">MMOE</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">],</span> <span class="n">task_names</span><span class="o">=</span><span class="n">task_names</span><span class="p">,</span> 
+<span class="n">num_experts</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span> <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">],[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">]])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">],</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_model_input</span><span class="p">,</span> <span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">)</span>
+
+<span class="n">pred_ans</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_model_input</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test income AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test marital AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+128/128 - 6s - loss: 0.8665 - income_loss: 0.4564 - marital_loss: 0.4100 - income_auc: 0.7673 - marital_auc_1: 0.8646
+Epoch 2/5
+128/128 - 2s - loss: 0.5617 - income_loss: 0.3328 - marital_loss: 0.2288 - income_auc: 0.8983 - marital_auc_1: 0.9623
+Epoch 3/5
+128/128 - 2s - loss: 0.5488 - income_loss: 0.3229 - marital_loss: 0.2258 - income_auc: 0.9044 - marital_auc_1: 0.9633
+Epoch 4/5
+128/128 - 2s - loss: 0.5400 - income_loss: 0.3148 - marital_loss: 0.2252 - income_auc: 0.9095 - marital_auc_1: 0.9636
+Epoch 5/5
+128/128 - 2s - loss: 0.5362 - income_loss: 0.3130 - marital_loss: 0.2230 - income_auc: 0.9101 - marital_auc_1: 0.9643
+test income AUC 0.9093
+test marital AUC 0.9642
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test CGC Model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PLE_CGC</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">],</span> <span class="n">task_names</span><span class="o">=</span><span class="n">task_names</span><span class="p">,</span> 
+<span class="n">num_experts_specific</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_experts_shared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>  <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">],[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">]])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">],</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_model_input</span><span class="p">,</span> <span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">)</span>
+
+<span class="n">pred_ans</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_model_input</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test income AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test marital AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+128/128 - 10s - loss: 0.8780 - income_loss: 0.4609 - marital_loss: 0.4171 - income_auc: 0.7648 - marital_auc_1: 0.8784
+Epoch 2/5
+128/128 - 3s - loss: 0.5691 - income_loss: 0.3346 - marital_loss: 0.2344 - income_auc: 0.8971 - marital_auc_1: 0.9606
+Epoch 3/5
+128/128 - 3s - loss: 0.5479 - income_loss: 0.3204 - marital_loss: 0.2274 - income_auc: 0.9062 - marital_auc_1: 0.9628
+Epoch 4/5
+128/128 - 3s - loss: 0.5368 - income_loss: 0.3125 - marital_loss: 0.2242 - income_auc: 0.9106 - marital_auc_1: 0.9638
+Epoch 5/5
+128/128 - 3s - loss: 0.5335 - income_loss: 0.3097 - marital_loss: 0.2237 - income_auc: 0.9121 - marital_auc_1: 0.9640
+test income AUC 0.9102
+test marital AUC 0.964
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test PLE Model</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">PLE</span><span class="p">(</span><span class="n">dnn_feature_columns</span><span class="p">,</span> <span class="n">num_tasks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">task_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">,</span> <span class="s1">&#39;binary&#39;</span><span class="p">],</span> <span class="n">task_names</span><span class="o">=</span><span class="n">task_names</span><span class="p">,</span> 
+<span class="n">num_levels</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">num_experts_specific</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">num_experts_shared</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">expert_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">],</span>  <span class="n">gate_dnn_units</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">tower_dnn_units_lists</span><span class="o">=</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">],[</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">]])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;adam&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">],</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;AUC&#39;</span><span class="p">])</span>
+
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_model_input</span><span class="p">,</span> <span class="p">[</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">],</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.0</span> <span class="p">)</span>
+
+<span class="n">pred_ans</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_model_input</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test income AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;test marital AUC&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;ctcvr_label&#39;</span><span class="p">],</span> <span class="n">pred_ans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+128/128 - 18s - loss: 0.9046 - income_loss: 0.4618 - marital_loss: 0.4428 - income_auc: 0.7682 - marital_auc_1: 0.8368
+Epoch 2/5
+128/128 - 5s - loss: 0.5672 - income_loss: 0.3359 - marital_loss: 0.2312 - income_auc: 0.8969 - marital_auc_1: 0.9616
+Epoch 3/5
+128/128 - 5s - loss: 0.5451 - income_loss: 0.3194 - marital_loss: 0.2256 - income_auc: 0.9065 - marital_auc_1: 0.9634
+Epoch 4/5
+128/128 - 5s - loss: 0.5365 - income_loss: 0.3120 - marital_loss: 0.2244 - income_auc: 0.9110 - marital_auc_1: 0.9639
+Epoch 5/5
+128/128 - 5s - loss: 0.5317 - income_loss: 0.3087 - marital_loss: 0.2229 - income_auc: 0.9127 - marital_auc_1: 0.9643
+test income AUC 0.9095
+test marital AUC 0.9642
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T207114_EduRec_MOOCCube_Course_Recommender.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">EduRec MOOCCube Course Recommender</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T661108_Book_Recommender_API.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Book Recommender API</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

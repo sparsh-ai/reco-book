@@ -1,0 +1,845 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutorials in Jupyter notebook format &#8212; Reco Book</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Transformer-based Recommenders" href="nbs/US780867_Transformer_based_Recommenders.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="#">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 current">
+  <a class="reference internal" href="#">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="nbs/US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="nbs/T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="nbs/T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/index.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="tutorials-in-jupyter-notebook-format">
+<h1>Tutorials in Jupyter notebook format<a class="headerlink" href="#tutorials-in-jupyter-notebook-format" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+     <div id="next">
+        <a class="right-next" href="nbs/US780867_Transformer_based_Recommenders.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Transformer-based Recommenders</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

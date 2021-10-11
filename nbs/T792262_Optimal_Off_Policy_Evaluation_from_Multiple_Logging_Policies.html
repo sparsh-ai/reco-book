@@ -1,0 +1,1880 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optimal Off-Policy Evaluation from Multiple Logging Policies &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Offline Policy Evaluation with VW Command Line" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html" />
+    <link rel="prev" title="Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports">
+   Imports
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configurations">
+   Configurations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dataset">
+   Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#policies">
+   Policies
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#estimators">
+   Estimators
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#run">
+   Run
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><a href="https://colab.research.google.com/github/sparsh-ai/reco-book/blob/stage/nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<div class="section" id="optimal-off-policy-evaluation-from-multiple-logging-policies">
+<h1>Optimal Off-Policy Evaluation from Multiple Logging Policies<a class="headerlink" href="#optimal-off-policy-evaluation-from-multiple-logging-policies" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">tensorflow_version</span> <span class="mf">1.</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TensorFlow 1.x selected.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">KFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.python.framework</span> <span class="kn">import</span> <span class="n">ops</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="configurations">
+<h2>Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!mkdir -p conf
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">writefile</span> <span class="n">conf</span><span class="o">/</span><span class="n">policy_params</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">evaluation</span><span class="p">:</span> <span class="mf">1.0</span>
+<span class="n">behavior1</span><span class="p">:</span> <span class="mf">0.95</span>
+<span class="n">behavior2</span><span class="p">:</span> <span class="mf">0.05</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing conf/policy_params.yaml
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">writefile</span> <span class="n">conf</span><span class="o">/</span><span class="n">q_func_hyperparams</span><span class="o">.</span><span class="n">yaml</span>
+<span class="n">eta</span><span class="p">:</span> <span class="mf">0.01</span>
+<span class="n">std</span><span class="p">:</span> <span class="mf">0.01</span>
+<span class="n">lam</span><span class="p">:</span> <span class="mf">0.001</span>
+<span class="n">batch_size</span><span class="p">:</span> <span class="mi">256</span>
+<span class="n">epochs</span><span class="p">:</span> <span class="mi">200</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing conf/q_func_hyperparams.yaml
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="dataset">
+<h2>Dataset<a class="headerlink" href="#dataset" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!mkdir -p data/optdigits
+!wget -q --show-progress -O data/optdigits/optdigits.tra https://archive.ics.uci.edu/ml/machine-learning-databases/optdigits/optdigits.tra
+!wget -q --show-progress -O data/optdigits/optdigits.tes https://archive.ics.uci.edu/ml/machine-learning-databases/optdigits/optdigits.tes
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>data/optdigits/optd 100%[===================&gt;] 550.43K   741KB/s    in 0.7s    
+data/optdigits/optd 100%[===================&gt;] 258.51K   436KB/s    in 0.6s    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_datasets</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load and preprocess raw multiclass classification data.&quot;&quot;&quot;</span>
+    <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;optdigits&quot;</span><span class="p">:</span>
+        <span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.tra&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.tes&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;pendigits&quot;</span><span class="p">:</span>
+        <span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.tra&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.tes&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;sat&quot;</span><span class="p">:</span>
+        <span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.trn&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">.tst&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="n">data_</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">data_</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">data_</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s2">&quot;letter&quot;</span><span class="p">:</span>
+        <span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span>
+            <span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;letter-recognition.data&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;str&quot;</span>
+        <span class="p">)</span>
+        <span class="n">data_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">data_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">data_</span><span class="p">)</span>
+    <span class="n">data_tr</span><span class="p">,</span> <span class="n">data_ev</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">data_</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+    <span class="n">n_train</span><span class="p">,</span> <span class="n">n_eval</span> <span class="o">=</span> <span class="n">data_tr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data_ev</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_dim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">data_tr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">y_tr</span><span class="p">,</span> <span class="n">y_ev</span> <span class="o">=</span> <span class="n">data_tr</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">data_ev</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">n_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_tr</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y_full_ev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_eval</span><span class="p">,</span> <span class="n">n_class</span><span class="p">))</span>
+    <span class="n">y_full_ev</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_eval</span><span class="p">),</span> <span class="n">y_ev</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_ev</span> <span class="o">=</span> <span class="n">data_tr</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">data_ev</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">X_tr1</span><span class="p">,</span> <span class="n">X_tr2</span> <span class="o">=</span> <span class="n">data_tr</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_dim</span><span class="p">],</span> <span class="n">data_tr</span><span class="p">[:,</span> <span class="n">n_dim</span><span class="p">:]</span>
+    <span class="n">X_ev1</span><span class="p">,</span> <span class="n">X_ev2</span> <span class="o">=</span> <span class="n">data_ev</span><span class="p">[:,</span> <span class="p">:</span><span class="n">n_dim</span><span class="p">],</span> <span class="n">data_ev</span><span class="p">[:,</span> <span class="n">n_dim</span><span class="p">:]</span>
+
+    <span class="c1"># multiple logger index generation</span>
+    <span class="n">ratio1</span> <span class="o">=</span> <span class="n">ratio</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">ratio</span><span class="p">)</span>
+    <span class="n">n_eval1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">n_eval</span> <span class="o">*</span> <span class="n">ratio1</span><span class="p">)</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_eval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">idx1</span><span class="p">[</span><span class="n">n_eval1</span><span class="p">:]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">n_train</span><span class="o">=</span><span class="n">n_train</span><span class="p">,</span>
+        <span class="n">n_eval</span><span class="o">=</span><span class="n">n_eval</span><span class="p">,</span>
+        <span class="n">n_dim</span><span class="o">=</span><span class="n">n_dim</span><span class="p">,</span>
+        <span class="n">n_class</span><span class="o">=</span><span class="n">n_class</span><span class="p">,</span>
+        <span class="n">n_behavior_policies</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">X_tr</span><span class="o">=</span><span class="n">X_tr</span><span class="p">,</span>
+        <span class="n">X_tr1</span><span class="o">=</span><span class="n">X_tr1</span><span class="p">,</span>
+        <span class="n">X_tr2</span><span class="o">=</span><span class="n">X_tr2</span><span class="p">,</span>
+        <span class="n">X_ev</span><span class="o">=</span><span class="n">X_ev</span><span class="p">,</span>
+        <span class="n">X_ev1</span><span class="o">=</span><span class="n">X_ev1</span><span class="p">,</span>
+        <span class="n">X_ev2</span><span class="o">=</span><span class="n">X_ev2</span><span class="p">,</span>
+        <span class="n">y_tr</span><span class="o">=</span><span class="n">y_tr</span><span class="p">,</span>
+        <span class="n">y_ev</span><span class="o">=</span><span class="n">y_ev</span><span class="p">,</span>
+        <span class="n">y_full_ev</span><span class="o">=</span><span class="n">y_full_ev</span><span class="p">,</span>
+        <span class="n">idx1</span><span class="o">=</span><span class="n">idx1</span><span class="p">,</span>
+        <span class="n">ratio1</span><span class="o">=</span><span class="p">(</span><span class="n">n_eval1</span> <span class="o">/</span> <span class="n">n_eval</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">generate_bandit_feedback</span><span class="p">(</span><span class="n">data_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">pi_b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi_b2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate logged bandit feedback data.&quot;&quot;&quot;</span>
+    <span class="n">n_eval</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">]</span>
+    <span class="n">idx1</span><span class="p">,</span> <span class="n">ratio1</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;idx1&quot;</span><span class="p">],</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;ratio1&quot;</span><span class="p">]</span>
+    <span class="n">idx1_expanded</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pi_b</span> <span class="o">=</span> <span class="n">pi_b1</span> <span class="o">*</span> <span class="n">idx1_expanded</span> <span class="o">+</span> <span class="n">pi_b2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">idx1_expanded</span><span class="p">)</span>
+    <span class="n">pi_b_star</span> <span class="o">=</span> <span class="n">pi_b1</span> <span class="o">*</span> <span class="n">ratio1</span> <span class="o">+</span> <span class="n">pi_b2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">ratio1</span><span class="p">)</span>
+    <span class="n">action_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">])</span>
+    <span class="n">actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pvals</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pi_b</span><span class="p">):</span>
+        <span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">action_set</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">pvals</span><span class="p">)</span>
+    <span class="n">rewards</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;y_full_ev&quot;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_eval</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">n_eval</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span>
+        <span class="n">n_class</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">],</span>
+        <span class="n">X_ev</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;X_ev&quot;</span><span class="p">],</span>
+        <span class="n">pi_b</span><span class="o">=</span><span class="n">pi_b</span><span class="p">,</span>
+        <span class="n">pi_b_star</span><span class="o">=</span><span class="n">pi_b_star</span><span class="p">,</span>
+        <span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span>
+        <span class="n">idx1</span><span class="o">=</span><span class="n">idx1</span><span class="p">,</span>
+        <span class="n">rewards</span><span class="o">=</span><span class="n">rewards</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="policies">
+<h2>Policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_policies</span><span class="p">(</span><span class="n">data_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Train evaluation and behavior policies.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./conf/policy_params.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">policy_params</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">policy_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">pol</span> <span class="ow">in</span> <span class="n">policy_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># make label predictions</span>
+        <span class="n">X_tr</span><span class="p">,</span> <span class="n">y_tr</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;X_tr&quot;</span><span class="p">],</span> <span class="n">data_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;y_tr&quot;</span><span class="p">]</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+            <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">,</span>
+            <span class="n">multi_class</span><span class="o">=</span><span class="s2">&quot;multinomial&quot;</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_tr</span><span class="p">)</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;X_ev&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># transform predictions into distribution over actions</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">policy_params</span><span class="p">[</span><span class="n">pol</span><span class="p">]</span>
+        <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]))</span>
+        <span class="n">pi</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]</span>
+        <span class="n">pi</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">]),</span> <span class="n">preds</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">alpha</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">/</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">policy_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">policy_list</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="estimators">
+<h2>Estimators<a class="headerlink" href="#estimators" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_ground_truth</span><span class="p">(</span><span class="n">y_true</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the ground-truth policy value of an eval policy&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pi</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_true</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">y_true</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">calc_ipw</span><span class="p">(</span>
+    <span class="n">rewards</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">n_data</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">iw</span> <span class="o">=</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span> <span class="o">/</span> <span class="n">pi_b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">rewards</span> <span class="o">*</span> <span class="n">iw</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">calc_var</span><span class="p">(</span>
+    <span class="n">rewards</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">estimated_q_func</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">n_data</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">estimated_q_func</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">shifted_rewards</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">-</span> <span class="n">estimated_q_func</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="n">iw</span> <span class="o">=</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span> <span class="o">/</span> <span class="n">pi_b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">shifted_rewards</span> <span class="o">*</span> <span class="n">iw</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">calc_weighted</span><span class="p">(</span>
+    <span class="n">rewards</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">idx1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">estimated_q_func</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_fold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">estimated_rewards_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">estimated_q_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">estimated_q_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">actions</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_fold</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rewards</span><span class="p">):</span>
+        <span class="n">rewards_tr</span><span class="p">,</span> <span class="n">rewards_ev</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">rewards</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">actions_tr</span><span class="p">,</span> <span class="n">actions_ev</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">actions</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">idx1_tr</span><span class="p">,</span> <span class="n">idx1_ev</span> <span class="o">=</span> <span class="n">idx1</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">idx1</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">pi_b_tr</span><span class="p">,</span> <span class="n">pi_b_ev</span> <span class="o">=</span> <span class="n">pi_b</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">pi_b</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">pi_e_tr</span><span class="p">,</span> <span class="n">pi_e_ev</span> <span class="o">=</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">estimated_q_func_tr</span> <span class="o">=</span> <span class="n">estimated_q_func</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+        <span class="n">estimated_q_func_ev</span> <span class="o">=</span> <span class="n">estimated_q_func</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="c1"># estimate lambda with one of the fold</span>
+        <span class="n">n_data1</span><span class="p">,</span> <span class="n">n_data2</span> <span class="o">=</span> <span class="n">idx1_tr</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="p">(</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">var1</span> <span class="o">=</span> <span class="n">calc_var</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">rewards_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">pi_b_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">var2</span> <span class="o">=</span> <span class="n">calc_var</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">rewards_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">actions_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">pi_b_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_data1</span> <span class="o">/</span> <span class="n">var1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">n_data2</span> <span class="o">/</span> <span class="n">var2</span><span class="p">)</span>
+        <span class="n">lam1</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_data1</span> <span class="o">/</span> <span class="n">var1</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+        <span class="n">lam2</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_data2</span> <span class="o">/</span> <span class="n">var2</span><span class="p">)</span> <span class="o">/</span> <span class="n">denominator</span>
+        <span class="c1"># estimate the policy value with the other fold</span>
+        <span class="n">iw1</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pi_e_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">]]</span>
+            <span class="o">/</span> <span class="n">pi_b_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">]]</span>
+        <span class="p">)</span>
+        <span class="n">iw2</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pi_e_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">]]</span>
+            <span class="o">/</span> <span class="n">pi_b_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">]]</span>
+        <span class="p">)</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">estimated_q_func_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">pi_e_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+            <span class="n">estimated_q_func_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">pi_e_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">shifted_rewards1</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">rewards_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">]</span> <span class="o">-</span> <span class="n">estimated_q_func_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="n">idx1_ev</span><span class="p">]]</span>
+        <span class="p">)</span>
+        <span class="n">shifted_rewards2</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">rewards_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">]</span> <span class="o">-</span> <span class="n">estimated_q_func_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">,</span> <span class="n">actions_ev</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_ev</span><span class="p">]]</span>
+        <span class="p">)</span>
+        <span class="n">estimated_rewards</span> <span class="o">=</span> <span class="n">lam1</span> <span class="o">*</span> <span class="p">(</span><span class="n">iw1</span> <span class="o">*</span> <span class="n">shifted_rewards1</span> <span class="o">+</span> <span class="n">v1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">estimated_rewards</span> <span class="o">+=</span> <span class="n">lam2</span> <span class="o">*</span> <span class="p">(</span><span class="n">iw2</span> <span class="o">*</span> <span class="n">shifted_rewards2</span> <span class="o">+</span> <span class="n">v2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">estimated_rewards_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimated_rewards</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">estimated_rewards_list</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">calc_dr</span><span class="p">(</span>
+    <span class="n">rewards</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">estimated_q_func</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">n_data</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">estimated_q_func</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">iw</span> <span class="o">=</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span> <span class="o">/</span> <span class="n">pi_b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="n">shifted_rewards</span> <span class="o">=</span> <span class="n">rewards</span> <span class="o">-</span> <span class="n">estimated_q_func</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_data</span><span class="p">),</span> <span class="n">actions</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">iw</span> <span class="o">*</span> <span class="n">shifted_rewards</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">estimate_q_func</span><span class="p">(</span>
+    <span class="n">bandit_feedback</span><span class="p">,</span>
+    <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">fitting_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;naive&quot;</span><span class="p">,</span>
+    <span class="n">k_fold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="c1"># hyperparam</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./conf/q_func_hyperparams.yaml&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">q_func_hyperparams</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;X_ev&quot;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">]</span>
+    <span class="n">pi_b_star</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">]</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;idx1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">k_fold</span><span class="p">)</span>
+    <span class="n">skf</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">estimated_q_func</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_ev</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">y_tr</span><span class="p">,</span> <span class="n">a_tr</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">pi_e_tr</span> <span class="o">=</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+        <span class="n">pi_b_star_tr</span> <span class="o">=</span> <span class="n">pi_b_star</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+        <span class="n">idx1_tr</span> <span class="o">=</span> <span class="n">idx1</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+        <span class="n">ops</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">QFuncEstimator</span><span class="p">(</span>
+            <span class="n">num_features</span><span class="o">=</span><span class="n">X_tr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">num_classes</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">],</span>
+            <span class="n">fitting_method</span><span class="o">=</span><span class="n">fitting_method</span><span class="p">,</span>
+            <span class="n">eta</span><span class="o">=</span><span class="n">q_func_hyperparams</span><span class="p">[</span><span class="s2">&quot;eta&quot;</span><span class="p">],</span>
+            <span class="n">std</span><span class="o">=</span><span class="n">q_func_hyperparams</span><span class="p">[</span><span class="s2">&quot;std&quot;</span><span class="p">],</span>
+            <span class="n">lam</span><span class="o">=</span><span class="n">q_func_hyperparams</span><span class="p">[</span><span class="s2">&quot;lam&quot;</span><span class="p">],</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">q_func_hyperparams</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">],</span>
+            <span class="n">epochs</span><span class="o">=</span><span class="n">q_func_hyperparams</span><span class="p">[</span><span class="s2">&quot;epochs&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X_tr</span><span class="p">,</span>
+            <span class="n">a</span><span class="o">=</span><span class="n">a_tr</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y_tr</span><span class="p">,</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e_tr</span><span class="p">,</span>
+            <span class="n">pi_b_star</span><span class="o">=</span><span class="n">pi_b_star_tr</span><span class="p">,</span>
+            <span class="n">idx1</span><span class="o">=</span><span class="n">idx1_tr</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">a_idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]):</span>
+            <span class="n">estimated_q_func_for_a</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_ev</span><span class="p">,</span> <span class="n">a_idx</span><span class="o">=</span><span class="n">a_idx</span><span class="p">)[:,</span> <span class="n">a_idx</span><span class="p">]</span>
+            <span class="n">estimated_q_func</span><span class="p">[</span><span class="n">test_idx</span><span class="p">,</span> <span class="n">a_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">estimated_q_func_for_a</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">estimated_q_func</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">QFuncEstimator</span><span class="p">:</span>
+    <span class="n">num_features</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">num_classes</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">fitting_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;stratified&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize Class.&quot;&quot;&quot;</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_placeholders</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_graph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_losses</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_optimizer</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">create_placeholders</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create the placeholders to be used.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_X&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_A&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_R</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_R&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pi_e</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_pi_e&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_pi_b_star</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_pi_b_star&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;input_idx1&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Build the main tensorflow graph with embedding layers.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">],</span>
+                <span class="n">stddev</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">],</span> <span class="n">stddev</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">))</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s2">&quot;prediction&quot;</span><span class="p">):</span>
+            <span class="n">input_X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">input_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preds</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">input_X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_losses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Create the losses.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">):</span>
+            <span class="n">shifted_rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_R</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">preds</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitting_method</span> <span class="o">==</span> <span class="s2">&quot;normal&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">shifted_rewards</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ratio1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span><span class="p">)</span>
+                <span class="n">input_idx2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span>
+                <span class="n">ratio2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">input_idx2</span><span class="p">)</span>
+                <span class="n">pi_e</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_pi_e</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">pi_b_star</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_pi_b_star</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_pi_e</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">preds</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi_e</span> <span class="o">/</span> <span class="n">pi_b_star</span><span class="p">)</span> <span class="o">*</span> <span class="n">shifted_rewards</span> <span class="o">+</span> <span class="n">v</span>
+                <span class="n">phi1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span> <span class="o">*</span> <span class="n">phi</span>
+                <span class="n">phi2</span> <span class="o">=</span> <span class="n">input_idx2</span> <span class="o">*</span> <span class="n">phi</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitting_method</span> <span class="o">==</span> <span class="s2">&quot;stratified&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">ratio1</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">phi1</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">+=</span> <span class="n">ratio2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">phi2</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">-=</span> <span class="n">ratio1</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">phi1</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">-=</span> <span class="n">ratio2</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">phi2</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitting_method</span> <span class="o">==</span> <span class="s2">&quot;naive&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">-=</span> <span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">]</span>
+            <span class="n">l2_reg</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">l2_loss</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">add_n</span><span class="p">(</span><span class="n">l2_reg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Add the required optimizer to the graph.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s2">&quot;optimizer&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apply_grads</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">MomentumOptimizer</span><span class="p">(</span>
+                <span class="n">learning_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.8</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">pi_e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">pi_b_star</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">idx1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epochs</span><span class="p">):</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">):</span>
+                <span class="n">arr_</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">idx</span> <span class="p">:</span> <span class="n">idx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">apply_grads</span><span class="p">,</span>
+                    <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_X</span><span class="p">:</span> <span class="n">X</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">:</span> <span class="n">a</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_R</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_pi_e</span><span class="p">:</span> <span class="n">pi_e</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_pi_b_star</span><span class="p">:</span> <span class="n">pi_b_star</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">input_idx1</span><span class="p">:</span> <span class="n">idx1</span><span class="p">[</span><span class="n">arr_</span><span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">a_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">))</span>
+        <span class="n">a_</span><span class="p">[:,</span> <span class="n">a_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preds</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_X</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">:</span> <span class="n">a_</span><span class="p">})</span>
+
+
+<span class="k">def</span> <span class="nf">estimate_pi_b</span><span class="p">(</span><span class="n">bandit_feedback</span><span class="p">,</span> <span class="n">k_fold</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;X_ev&quot;</span><span class="p">]</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;idx1&quot;</span><span class="p">]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">]</span>
+    <span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">k_fold</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">skf</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">estimated_pi_b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]))</span>
+    <span class="n">estimated_pi_b2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">]))</span>
+    <span class="n">estimated_pi_b_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_eval&quot;</span><span class="p">],</span> <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;n_class&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">test_idx</span> <span class="ow">in</span> <span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="n">X_tr</span><span class="p">,</span> <span class="n">X_ev</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_idx</span><span class="p">]</span>
+        <span class="n">idx1_tr</span><span class="p">,</span> <span class="n">a_tr</span> <span class="o">=</span> <span class="n">idx1</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">a_tr</span><span class="p">[</span><span class="n">idx1_tr</span><span class="p">])</span>
+        <span class="n">estimated_pi_b1</span><span class="p">[</span><span class="n">test_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_ev</span><span class="p">)</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">a_tr</span><span class="p">[</span><span class="o">~</span><span class="n">idx1_tr</span><span class="p">])</span>
+        <span class="n">estimated_pi_b2</span><span class="p">[</span><span class="n">test_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_ev</span><span class="p">)</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_tr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">a_tr</span><span class="p">)</span>
+        <span class="n">estimated_pi_b_star</span><span class="p">[</span><span class="n">test_idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_ev</span><span class="p">)</span>
+    <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">idx1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+        <span class="n">idx1</span> <span class="o">*</span> <span class="n">estimated_pi_b1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">idx1</span><span class="p">)</span> <span class="o">*</span> <span class="n">estimated_pi_b2</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1.0</span>
+    <span class="p">)</span>
+    <span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">estimated_pi_b_star</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bandit_feedback</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="run">
+<h2>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calc_rel_rmse</span><span class="p">(</span><span class="n">policy_value_true</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">policy_value_estimated</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="p">(((</span><span class="n">policy_value_true</span> <span class="o">-</span> <span class="n">policy_value_estimated</span><span class="p">)</span> <span class="o">/</span> <span class="n">policy_value_true</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--num_sims&quot;</span><span class="p">,</span> <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--data&quot;</span><span class="p">,</span> <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;optdigits&#39;</span><span class="p">)</span> <span class="c1"># data in [&#39;optdigits&#39;,&#39;pendigits&#39;,&#39;sat&#39;,&#39;letter&#39;]</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--test_size&quot;</span><span class="p">,</span> <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--is_estimate_pi_b&quot;</span><span class="p">,</span> <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="p">{})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Namespace(data=&#39;optdigits&#39;, is_estimate_pi_b=True, num_sims=200, test_size=0.7)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># configurations</span>
+<span class="n">num_sims</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">num_sims</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">data</span>
+<span class="n">test_size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">test_size</span>
+<span class="n">is_estimate_pi_b</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">is_estimate_pi_b</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">ratio_list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">estimator_names</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;ground_truth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IS-Avg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;IS-PW(f)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DR-Avg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DR-PW&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MRDR&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SMRDR&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">log_path</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">data</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;test_size=</span><span class="si">{</span><span class="n">test_size</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">/</span> <span class="s2">&quot;estimated_pi_b&quot;</span>
+    <span class="k">if</span> <span class="n">is_estimate_pi_b</span>
+    <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">data</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;test_size=</span><span class="si">{</span><span class="n">test_size</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">/</span> <span class="s2">&quot;true_pi_b&quot;</span>
+<span class="p">)</span>
+<span class="n">log_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">raw_results_path</span> <span class="o">=</span> <span class="n">log_path</span> <span class="o">/</span> <span class="s2">&quot;raw_results&quot;</span>
+<span class="n">raw_results_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">rel_rmse_results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">:</span> <span class="p">{</span><span class="n">r</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_sims</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ratio_list</span><span class="p">}</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimator_names</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">ratio</span> <span class="ow">in</span> <span class="n">ratio_list</span><span class="p">:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">ope_results</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_sims</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimator_names</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">sim_id</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_sims</span><span class="p">):</span>
+        <span class="c1"># load and split data</span>
+        <span class="n">data_dict</span> <span class="o">=</span> <span class="n">load_datasets</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">sim_id</span>
+        <span class="p">)</span>
+        <span class="c1"># train eval and two behavior policies</span>
+        <span class="n">pi_e</span><span class="p">,</span> <span class="n">pi_b1</span><span class="p">,</span> <span class="n">pi_b2</span> <span class="o">=</span> <span class="n">train_policies</span><span class="p">(</span>
+            <span class="n">data_dict</span><span class="o">=</span><span class="n">data_dict</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">sim_id</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># generate bandit feedback</span>
+        <span class="n">bandit_feedback_</span> <span class="o">=</span> <span class="n">generate_bandit_feedback</span><span class="p">(</span>
+            <span class="n">data_dict</span><span class="o">=</span><span class="n">data_dict</span><span class="p">,</span> <span class="n">pi_b1</span><span class="o">=</span><span class="n">pi_b1</span><span class="p">,</span> <span class="n">pi_b2</span><span class="o">=</span><span class="n">pi_b2</span>
+        <span class="p">)</span>
+        <span class="c1"># estimate pi_b1, pi_b2, and pi_b_star with 2-fold cross-fitting</span>
+        <span class="k">if</span> <span class="n">is_estimate_pi_b</span><span class="p">:</span>
+            <span class="n">bandit_feedback</span> <span class="o">=</span> <span class="n">estimate_pi_b</span><span class="p">(</span><span class="n">bandit_feedback</span><span class="o">=</span><span class="n">bandit_feedback_</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bandit_feedback</span> <span class="o">=</span> <span class="n">bandit_feedback_</span>
+        <span class="c1"># estimate q-function with 2-fold cross-fitting</span>
+        <span class="n">estimated_q_func</span> <span class="o">=</span> <span class="n">estimate_q_func</span><span class="p">(</span>
+            <span class="n">bandit_feedback</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">,</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+            <span class="n">fitting_method</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">estimated_q_func_with_mrdr_wrong</span> <span class="o">=</span> <span class="n">estimate_q_func</span><span class="p">(</span>
+            <span class="n">bandit_feedback</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">,</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+            <span class="n">fitting_method</span><span class="o">=</span><span class="s2">&quot;naive&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">estimated_q_func_with_mrdr</span> <span class="o">=</span> <span class="n">estimate_q_func</span><span class="p">(</span>
+            <span class="n">bandit_feedback</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">,</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+            <span class="n">fitting_method</span><span class="o">=</span><span class="s2">&quot;stratified&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># off-policy evaluation</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;ground_truth&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_ground_truth</span><span class="p">(</span>
+            <span class="n">y_true</span><span class="o">=</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;y_ev&quot;</span><span class="p">],</span> <span class="n">pi</span><span class="o">=</span><span class="n">pi_e</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;IS-Avg&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_ipw</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;IS&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_ipw</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;IS-PW(f)&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_weighted</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">idx1</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;idx1&quot;</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;DR-Avg&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dr</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func</span><span class="p">,</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;DR-PW&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_weighted</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">idx1</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;idx1&quot;</span><span class="p">],</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;DR&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dr</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func</span><span class="p">,</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;MRDR&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dr</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func_with_mrdr_wrong</span><span class="p">,</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;SMRDR&quot;</span><span class="p">][</span><span class="n">sim_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_dr</span><span class="p">(</span>
+            <span class="n">rewards</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;rewards&quot;</span><span class="p">],</span>
+            <span class="n">actions</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;actions&quot;</span><span class="p">],</span>
+            <span class="n">estimated_q_func</span><span class="o">=</span><span class="n">estimated_q_func_with_mrdr</span><span class="p">,</span>
+            <span class="n">pi_b</span><span class="o">=</span><span class="n">bandit_feedback</span><span class="p">[</span><span class="s2">&quot;pi_b_star&quot;</span><span class="p">],</span>
+            <span class="n">pi_e</span><span class="o">=</span><span class="n">pi_e</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">sim_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">20</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;ratio=</span><span class="si">{</span><span class="n">ratio</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">sim_id</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">th: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">min&quot;</span>
+            <span class="p">)</span>
+    <span class="c1"># save raw off-policy evaluation results.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">raw_results_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;ratio=</span><span class="si">{</span><span class="n">ratio</span><span class="si">}</span><span class="s2">.pkl&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">ope_results</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimator_names</span><span class="p">:</span>
+        <span class="n">rel_rmse_results</span><span class="p">[</span><span class="n">estimator</span><span class="p">][</span><span class="n">ratio</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_rel_rmse</span><span class="p">(</span>
+            <span class="n">policy_value_true</span><span class="o">=</span><span class="n">ope_results</span><span class="p">[</span><span class="s2">&quot;ground_truth&quot;</span><span class="p">],</span>
+            <span class="n">policy_value_estimated</span><span class="o">=</span><span class="n">ope_results</span><span class="p">[</span><span class="n">estimator</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;finish ratio=</span><span class="si">{</span><span class="n">ratio</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># save results of the evaluation of OPE</span>
+<span class="n">rel_rmse_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rel_rmse_results</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;ground_truth&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">rel_rmse_results_df</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">log_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;rel_rmse.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ratio=0.1-20th: 4.68min
+ratio=0.1-40th: 9.34min
+ratio=0.1-60th: 14.03min
+ratio=0.1-80th: 18.7min
+ratio=0.1-100th: 23.36min
+ratio=0.1-120th: 28.05min
+ratio=0.1-140th: 32.74min
+ratio=0.1-160th: 37.42min
+ratio=0.1-180th: 42.12min
+ratio=0.1-200th: 46.86min
+finish ratio=0.1: 46.86min
+==================================================
+ratio=0.2-20th: 4.73min
+ratio=0.2-40th: 9.39min
+ratio=0.2-60th: 14.04min
+ratio=0.2-80th: 18.72min
+ratio=0.2-100th: 23.4min
+ratio=0.2-120th: 28.04min
+ratio=0.2-140th: 32.7min
+ratio=0.2-160th: 37.38min
+ratio=0.2-180th: 42.08min
+ratio=0.2-200th: 46.76min
+finish ratio=0.2: 46.76min
+==================================================
+ratio=0.5-20th: 4.68min
+ratio=0.5-40th: 9.34min
+ratio=0.5-60th: 14.04min
+ratio=0.5-80th: 18.75min
+ratio=0.5-100th: 23.48min
+ratio=0.5-120th: 28.18min
+ratio=0.5-140th: 32.87min
+ratio=0.5-160th: 37.55min
+ratio=0.5-180th: 42.25min
+ratio=0.5-200th: 46.96min
+finish ratio=0.5: 46.96min
+==================================================
+ratio=1-20th: 4.74min
+ratio=1-40th: 9.52min
+ratio=1-60th: 14.19min
+ratio=1-80th: 18.85min
+ratio=1-100th: 23.49min
+ratio=1-120th: 28.19min
+ratio=1-140th: 32.92min
+ratio=1-160th: 37.63min
+ratio=1-180th: 42.35min
+ratio=1-200th: 47.13min
+finish ratio=1: 47.13min
+==================================================
+ratio=2-20th: 4.73min
+ratio=2-40th: 9.43min
+ratio=2-60th: 14.12min
+ratio=2-80th: 18.83min
+ratio=2-100th: 23.55min
+ratio=2-120th: 28.28min
+ratio=2-140th: 32.95min
+ratio=2-160th: 37.7min
+ratio=2-180th: 42.41min
+ratio=2-200th: 47.1min
+finish ratio=2: 47.1min
+==================================================
+ratio=4-20th: 4.69min
+ratio=4-40th: 9.34min
+ratio=4-60th: 13.98min
+ratio=4-80th: 18.6min
+ratio=4-100th: 23.22min
+ratio=4-120th: 27.85min
+ratio=4-140th: 32.52min
+ratio=4-160th: 37.22min
+ratio=4-180th: 41.96min
+ratio=4-200th: 46.65min
+finish ratio=4: 46.65min
+==================================================
+ratio=10-20th: 4.71min
+ratio=10-40th: 9.48min
+ratio=10-60th: 14.27min
+ratio=10-80th: 19.05min
+ratio=10-100th: 23.73min
+ratio=10-120th: 28.38min
+ratio=10-140th: 33.03min
+ratio=10-160th: 37.7min
+ratio=10-180th: 42.36min
+ratio=10-200th: 47.02min
+finish ratio=10: 47.02min
+==================================================
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./log/optdigits/test_size=0.7/estimated_pi_b/rel_rmse.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0.1</th>
+      <th>0.2</th>
+      <th>0.5</th>
+      <th>1.0</th>
+      <th>2.0</th>
+      <th>4.0</th>
+      <th>10.0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>IS-Avg</th>
+      <td>208.48864</td>
+      <td>535.32569</td>
+      <td>2637.91477</td>
+      <td>905.71031</td>
+      <td>135.95046</td>
+      <td>87.50504</td>
+      <td>4222.50872</td>
+    </tr>
+    <tr>
+      <th>IS</th>
+      <td>0.51822</td>
+      <td>0.53494</td>
+      <td>0.52986</td>
+      <td>0.49601</td>
+      <td>0.44738</td>
+      <td>0.40806</td>
+      <td>0.41228</td>
+    </tr>
+    <tr>
+      <th>IS-PW(f)</th>
+      <td>28.30699</td>
+      <td>1.17752</td>
+      <td>0.75899</td>
+      <td>3.61226</td>
+      <td>43.51955</td>
+      <td>107.73743</td>
+      <td>46.19869</td>
+    </tr>
+    <tr>
+      <th>DR-Avg</th>
+      <td>131.46072</td>
+      <td>225.88591</td>
+      <td>510.52975</td>
+      <td>319.42255</td>
+      <td>117.08375</td>
+      <td>62.25383</td>
+      <td>232.50566</td>
+    </tr>
+    <tr>
+      <th>DR-PW</th>
+      <td>6.19500</td>
+      <td>0.06585</td>
+      <td>0.06765</td>
+      <td>0.23945</td>
+      <td>9.66307</td>
+      <td>96.67823</td>
+      <td>54.94231</td>
+    </tr>
+    <tr>
+      <th>DR</th>
+      <td>0.08051</td>
+      <td>0.07398</td>
+      <td>0.05631</td>
+      <td>0.03551</td>
+      <td>0.02426</td>
+      <td>0.05821</td>
+      <td>0.20872</td>
+    </tr>
+    <tr>
+      <th>MRDR</th>
+      <td>0.04909</td>
+      <td>0.05391</td>
+      <td>0.05649</td>
+      <td>0.06436</td>
+      <td>0.06722</td>
+      <td>0.11189</td>
+      <td>0.40688</td>
+    </tr>
+    <tr>
+      <th>SMRDR</th>
+      <td>0.04077</td>
+      <td>0.04424</td>
+      <td>0.05186</td>
+      <td>0.05897</td>
+      <td>0.07331</td>
+      <td>0.11474</td>
+      <td>0.44046</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!apt-get install tree
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!tree --du -h ./log
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>./log
+└── [119K]  optdigits
+    └── [115K]  test_size=0.7
+        └── [111K]  estimated_pi_b
+            ├── [106K]  raw_results
+            │   ├── [ 15K]  ratio=0.1.pkl
+            │   ├── [ 15K]  ratio=0.2.pkl
+            │   ├── [ 15K]  ratio=0.5.pkl
+            │   ├── [ 15K]  ratio=10.pkl
+            │   ├── [ 15K]  ratio=1.pkl
+            │   ├── [ 15K]  ratio=2.pkl
+            │   └── [ 15K]  ratio=4.pkl
+            └── [ 557]  rel_rmse.csv
+
+ 123K used in 4 directories, 8 files
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Offline Policy Evaluation with VW Command Line</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

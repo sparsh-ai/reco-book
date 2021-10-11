@@ -1,0 +1,1389 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build a Kubeflow Pipeline &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Causal Inference" href="T990000_causal_inference.html" />
+    <link rel="prev" title="Books recommendations with Kubeflow Pipelines on Scaleway Kapsule" href="T990000_book_recommender_kubeflow.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990000_build_a_kubeflow_pipeline.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990000_build_a_kubeflow_pipeline.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#before-you-begin">
+   Before you begin
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#understanding-pipelines">
+   Understanding pipelines
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#understanding-pipeline-components">
+     Understanding pipeline components
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#understanding-the-pipeline-graph">
+     Understanding the pipeline graph
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#designing-your-pipeline">
+   Designing your pipeline
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#building-pipeline-components">
+     Building pipeline components
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#understanding-how-data-is-passed-between-components">
+     Understanding how data is passed between components
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#getting-started-building-a-pipeline">
+   Getting started building a pipeline
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#design-your-pipeline">
+     Design your pipeline
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#build-your-pipeline-components">
+   Build your pipeline components
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#build-your-pipeline">
+   Build your pipeline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compile-and-run-your-pipeline">
+   Compile and run your pipeline
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-1-compile-and-then-upload-in-ui">
+     Option 1: Compile and then upload in UI
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-2-run-the-pipeline-using-kubeflow-pipelines-sdk-client">
+     Option 2: run the pipeline using Kubeflow Pipelines SDK client
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next steps
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="build-a-kubeflow-pipeline">
+<h1>Build a Kubeflow Pipeline<a class="headerlink" href="#build-a-kubeflow-pipeline" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>A tutorial on building pipelines to orchestrate your ML workflow.</p>
+</div></blockquote>
+<p>A Kubeflow pipeline is a portable and scalable definition of a machine learning
+(ML) workflow. Each step in your ML workflow, such as preparing data or
+training a model, is an instance of a pipeline component. This document
+provides an overview of pipeline concepts and best practices, and instructions
+describing how to build an ML pipeline.</p>
+<div class="section" id="before-you-begin">
+<h2>Before you begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Run the following command to install the Kubeflow Pipelines SDK. If you run this command in a Jupyter
+notebook, restart the kernel after installing the SDK.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install kfp --upgrade
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Import the <code class="docutils literal notranslate"><span class="pre">kfp</span></code> and <code class="docutils literal notranslate"><span class="pre">kfp.components</span></code> packages.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kfp</span>
+<span class="kn">import</span> <span class="nn">kfp.components</span> <span class="k">as</span> <span class="nn">comp</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="understanding-pipelines">
+<h2>Understanding pipelines<a class="headerlink" href="#understanding-pipelines" title="Permalink to this headline">¶</a></h2>
+<p>A Kubeflow pipeline is a portable and scalable definition of an ML workflow,
+based on containers. A pipeline is composed of a set of input parameters and a
+list of the steps in this workflow. Each step in a pipeline is an instance of a
+component, which is represented as an instance of
+<a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.dsl.html#kfp.dsl.ContainerOp"><code class="docutils literal notranslate"><span class="pre">ContainerOp</span></code></a>.</p>
+<p>You can use pipelines to:</p>
+<ul class="simple">
+<li><p>Orchestrate repeatable ML workflows.</p></li>
+<li><p>Accelerate experimentation by running a workflow with different sets of
+hyperparameters.</p></li>
+</ul>
+<div class="section" id="understanding-pipeline-components">
+<h3>Understanding pipeline components<a class="headerlink" href="#understanding-pipeline-components" title="Permalink to this headline">¶</a></h3>
+<p>A pipeline component is a containerized application that performs one step in a
+pipeline’s workflow. Pipeline components are defined in
+<a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/reference/component-spec/">component specifications</a>, which define the following:</p>
+<ul class="simple">
+<li><p>The component’s interface, its inputs and outputs.</p></li>
+<li><p>The component’s implementation, the container image and the command to
+execute.</p></li>
+<li><p>The component’s metadata, such as the name and description of the
+component.</p></li>
+</ul>
+<p>You can build components by <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/component-development/">defining a component specification for a
+containerized application</a>, or you can <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/python-function-components/">use the Kubeflow
+Pipelines SDK to generate a component specification for a Python
+function</a>. You can also <a class="reference external" href="https://www.kubeflow.org/docs/examples/shared-resources/">reuse prebuilt components
+in your pipeline</a>.</p>
+</div>
+<div class="section" id="understanding-the-pipeline-graph">
+<h3>Understanding the pipeline graph<a class="headerlink" href="#understanding-the-pipeline-graph" title="Permalink to this headline">¶</a></h3>
+<p>Each step in your pipeline’s workflow is an instance of a component. When
+you define your pipeline, you specify the source of each step’s inputs. Step
+inputs can be set from the pipeline’s input arguments, constants, or step
+inputs can depend on the outputs of other steps in this pipeline. Kubeflow
+Pipelines uses these dependencies to define your pipeline’s workflow as
+a graph.</p>
+<p>For example, consider a pipeline with the following steps: ingest data,
+generate statistics, preprocess data, and train a model. The following
+describes the data dependencies between each step.</p>
+<ul class="simple">
+<li><p><strong>Ingest data</strong>: This step loads data from an external source which is
+specified using a pipeline argument, and it outputs a dataset. Since
+this step does not depend on the output of any other steps, this step
+can run first.</p></li>
+<li><p><strong>Generate statistics</strong>: This step uses the ingested dataset to generate
+and output a set of statistics. Since this step depends on the dataset
+produced by the ingest data step, it must run after the ingest data step.</p></li>
+<li><p><strong>Preprocess data</strong>: This step preprocesses the ingested dataset and
+transforms the data into a preprocessed dataset. Since this step depends
+on the dataset produced by the ingest data step, it must run after the
+ingest data step.</p></li>
+<li><p><strong>Train a model</strong>: This step trains a model using the preprocessed dataset,
+the generated statistics, and pipeline parameters, such as the learning
+rate. Since this step depends on the preprocessed data and the generated
+statistics, it must run after both the preprocess data and generate
+statistics steps are complete.</p></li>
+</ul>
+<p>Since the generate statistics and preprocess data steps both depend on the
+ingested data, the generate statistics and preprocess data steps can run in
+parallel. All other steps are executed once their data dependencies are
+available.</p>
+</div>
+</div>
+<div class="section" id="designing-your-pipeline">
+<h2>Designing your pipeline<a class="headerlink" href="#designing-your-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>When designing your pipeline, think about how to split your ML workflow into
+pipeline components. The process of splitting an ML workflow into pipeline
+components is similar to the process of splitting a monolithic script into
+testable functions. The following rules can help you define the components
+that you need to build your pipeline.</p>
+<ul class="simple">
+<li><p>Components should have a single responsibility. Having a single
+responsibility makes it easier to test and reuse a component. For example,
+if you have a component that loads data you can reuse that for similar
+tasks that load data. If you have a component that loads and transforms
+a dataset, the component can be less useful since you can use it only when
+you need to load and transform that dataset.</p></li>
+<li><p>Reuse components when possible. Kubeflow Pipelines provides <a class="reference external" href="https://www.kubeflow.org/docs/examples/shared-resources/">components for
+common pipeline tasks and for access to cloud
+services</a>.</p></li>
+<li><p>Consider what you need to know to debug your pipeline and research the
+lineage of the models that your pipeline produces. Kubeflow Pipelines
+stores the inputs and outputs of each pipeline step. By interrogating the
+artifacts produced by a pipeline run, you can better understand the
+variations in model quality between runs or track down bugs in your
+workflow.</p></li>
+</ul>
+<p>In general, you should design your components with composability in mind.</p>
+<p>Pipelines are composed of component instances, also called steps. Steps can
+define their inputs as depending on the output of another step. The
+dependencies between steps define the pipeline workflow graph.</p>
+<div class="section" id="building-pipeline-components">
+<h3>Building pipeline components<a class="headerlink" href="#building-pipeline-components" title="Permalink to this headline">¶</a></h3>
+<p>Kubeflow pipeline components are containerized applications that perform a
+step in your ML workflow. Here are the ways that you can define pipeline
+components:</p>
+<ul>
+<li><p>If you have a containerized application that you want to use as a
+pipeline component, create a component specification to define this
+container image as a pipeline component.</p>
+<p>This option provides the flexibility to include code written in any
+language in your pipeline, so long as you can package the application
+as a container image. Learn more about <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/component-development/">building pipeline
+components</a>.</p>
+</li>
+<li><p>If your component code can be expressed as a Python function, <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/python-function-components/">evaluate if
+your component can be built as a Python function-based
+component</a>. The Kubeflow Pipelines SDK makes it
+easier to build lightweight Python function-based components by saving you
+the effort of creating a component specification.</p></li>
+</ul>
+<p>Whenever possible, <a class="reference external" href="https://www.kubeflow.org/docs/examples/shared-resources/">reuse prebuilt components</a> to save
+yourself the effort of building custom components.</p>
+<p>The example in this guide demonstrates how to build a pipeline that uses a
+Python function-based component and reuses a prebuilt component.</p>
+</div>
+<div class="section" id="understanding-how-data-is-passed-between-components">
+<h3>Understanding how data is passed between components<a class="headerlink" href="#understanding-how-data-is-passed-between-components" title="Permalink to this headline">¶</a></h3>
+<p>When Kubeflow Pipelines runs a component, a container image is started in a
+Kubernetes Pod and your component’s inputs are passed in as command-line
+arguments. When your component has finished, the component’s outputs are
+returned as files.</p>
+<p>In your component’s specification, you define the components inputs and outputs
+and how the inputs and output paths are passed to your program as command-line
+arguments. You can pass small inputs, such as short strings or numbers, to your
+component by value. Large inputs, such as datasets, must be passed to your
+component as file paths. Outputs are written to the paths that Kubeflow
+Pipelines provides.</p>
+<p>Python function-based components make it easier to build pipeline components
+by building the component specification for you. Python function-based
+components also handle the complexity of passing inputs into your component
+and passing your function’s outputs back to your pipeline.</p>
+<p>Learn more about how <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/python-function-components/#understanding-how-data-is-passed-between-components">Python function-based components handle inputs and
+outputs</a>.</p>
+</div>
+</div>
+<div class="section" id="getting-started-building-a-pipeline">
+<h2>Getting started building a pipeline<a class="headerlink" href="#getting-started-building-a-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>The following sections demonstrate how to get started building a Kubeflow
+pipeline by walking through the process of converting a Python script into
+a pipeline.</p>
+<div class="section" id="design-your-pipeline">
+<h3>Design your pipeline<a class="headerlink" href="#design-your-pipeline" title="Permalink to this headline">¶</a></h3>
+<p>The following steps walk through some of the design decisions you may face
+when designing a pipeline.</p>
+<ol class="simple">
+<li><p>Evaluate the process. In the following example, a Python function downloads
+a zipped tar file (<code class="docutils literal notranslate"><span class="pre">.tar.gz</span></code>) that contains several CSV files, from a
+public website. The function extracts the CSV files and then merges them
+into a single file.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+    
+<span class="k">def</span> <span class="nf">download_and_merge_csv</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_csv</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+  <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">res</span><span class="p">:</span>
+    <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">res</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r|gz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+      <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> 
+       <span class="k">for</span> <span class="n">csv_file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;data/*.csv&#39;</span><span class="p">)])</span>
+  <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Run the following Python command to test the function.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">download_and_merge_csv</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s1">&#39;https://storage.googleapis.com/ml-pipeline-playground/iris-csv-files.tar.gz&#39;</span><span class="p">,</span> 
+    <span class="n">output_csv</span><span class="o">=</span><span class="s1">&#39;merged_data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Run the following to print the first few rows of the
+merged CSV file.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!head merged_data.csv
+</pre></div>
+</div>
+</div>
+</div>
+<ol>
+<li><p>Design your pipeline. For example, consider the following pipeline designs.</p>
+<ul>
+<li><p>Implement the pipeline using a single step. In this case, the pipeline
+contains one component that works similarly to the example function.
+This is a straightforward function, and implementing a single-step
+pipeline is a reasonable approach in this case.</p>
+<p>The down side of this approach is that the zipped tar file would not be
+an artifact of your pipeline runs. Not having this artifact available
+could make it harder to debug this component in production.</p>
+</li>
+<li><p>Implement this as a two-step pipeline. The first step downloads a file
+from a website. The second step extracts the CSV files from a zipped
+tar file and merges them into a single file.</p>
+<p>This approach has a few benefits:</p>
+<ul class="simple">
+<li><p>You can reuse the <a class="reference external" href="https://github.com/kubeflow/pipelines/blob/master/components/web/Download/component.yaml">Web Download component</a>
+to implement the first step.</p></li>
+<li><p>Each step has a single responsibility, which makes the components
+easier to reuse.</p></li>
+<li><p>The zipped tar file is an artifact of the first pipeline step.
+This means that you can examine this artifact when debugging
+pipelines that use this component.</p></li>
+</ul>
+</li>
+</ul>
+<p>This example implements a two-step pipeline.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="build-your-pipeline-components">
+<h2>Build your pipeline components<a class="headerlink" href="#build-your-pipeline-components" title="Permalink to this headline">¶</a></h2>
+<ol>
+<li><p>Build your pipeline components. This example modifies the initial script to
+extract the contents of a zipped tar file, merge the CSV files that were
+contained in the zipped tar file, and return the merged CSV file.</p>
+<p>This example builds a Python function-based component. You can also package
+your component’s code as a Docker container image and define the component
+using a ComponentSpec.</p>
+<p>In this case, the following modifications were required to the original
+function.</p>
+<ul class="simple">
+<li><p>The file download logic was removed. The path to the zipped tar file
+is passed as an argument to this function.</p></li>
+<li><p>The import statements were moved inside of the function. Python
+function-based components require standalone Python functions. This
+means that any required import statements must be defined within the
+function, and any helper functions must be defined within the function.
+Learn more about <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/python-function-components/">building Python function-based
+components</a>.</p></li>
+<li><p>The function’s arguments are decorated with the
+<a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.components.html?highlight=inputpath#kfp.components.InputPath"><code class="docutils literal notranslate"><span class="pre">kfp.components.InputPath</span></code></a> and the
+<a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.components.html?highlight=outputpath#kfp.components.OutputPath"><code class="docutils literal notranslate"><span class="pre">kfp.components.OutputPath</span></code></a> annotations. These
+annotations let Kubeflow Pipelines know to provide the path to the
+zipped tar file and to create a path where your function stores the
+merged CSV file.</p></li>
+</ul>
+<p>The following example shows the updated <code class="docutils literal notranslate"><span class="pre">merge_csv</span></code> function.</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">merge_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="n">comp</span><span class="o">.</span><span class="n">InputPath</span><span class="p">(</span><span class="s1">&#39;Tarball&#39;</span><span class="p">),</span>
+              <span class="n">output_csv</span><span class="p">:</span> <span class="n">comp</span><span class="o">.</span><span class="n">OutputPath</span><span class="p">(</span><span class="s1">&#39;CSV&#39;</span><span class="p">)):</span>
+  <span class="kn">import</span> <span class="nn">glob</span>
+  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+  <span class="kn">import</span> <span class="nn">tarfile</span>
+
+  <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r|gz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+      <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> 
+       <span class="k">for</span> <span class="n">csv_file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;data/*.csv&#39;</span><span class="p">)])</span>
+  <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Use [<code class="docutils literal notranslate"><span class="pre">kfp.components.create_component_from_func</span></code>][create_component_from_func]
+to return a factory function that you can use to create pipeline steps.
+This example also specifies the base container image to run this function
+in, the path to save the component specification to, and a list of PyPI
+packages that need to be installed in the container at runtime.</p></li>
+</ol>
+<p>[create_component_from_func]: (<a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.components.html#kfp.components.create_component_from_func">https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.components.html#kfp.components.create_component_from_func</a>
+<a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.dsl.html#kfp.dsl.ContainerOp">container-op</a>: <a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/stable/source/kfp.dsl.html#kfp.dsl.ContainerOp">https://kubeflow-pipelines.readthedocs.io/en/stable/source/kfp.dsl.html#kfp.dsl.ContainerOp</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_step_merge_csv</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">create_component_from_func</span><span class="p">(</span>
+    <span class="n">func</span><span class="o">=</span><span class="n">merge_csv</span><span class="p">,</span>
+    <span class="n">output_component_file</span><span class="o">=</span><span class="s1">&#39;component.yaml&#39;</span><span class="p">,</span> <span class="c1"># This is optional. It saves the component spec for future use.</span>
+    <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;python:3.7&#39;</span><span class="p">,</span>
+    <span class="n">packages_to_install</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pandas==1.1.4&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="build-your-pipeline">
+<h2>Build your pipeline<a class="headerlink" href="#build-your-pipeline" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>Use <a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.components.html?highlight=load_component_from_url#kfp.components.load_component_from_url"><code class="docutils literal notranslate"><span class="pre">kfp.components.load_component_from_url</span></code></a>
+to load the component specification YAML for any components that you are
+reusing in this pipeline.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">web_downloader_op</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">load_component_from_url</span><span class="p">(</span>
+    <span class="s1">&#39;https://raw.githubusercontent.com/kubeflow/pipelines/master/components/web/Download/component.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol>
+<li><p>Define your pipeline as a Python function.</p>
+<p>Your pipeline function’s arguments define your pipeline’s parameters. Use
+pipeline parameters to experiment with different hyperparameters, such as
+the learning rate used to train a model, or pass run-level inputs, such as
+the path to an input file, into a pipeline run.</p>
+<p>Use the factory functions created by
+<code class="docutils literal notranslate"><span class="pre">kfp.components.create_component_from_func</span></code> and
+<code class="docutils literal notranslate"><span class="pre">kfp.components.load_component_from_url</span></code> to create your pipeline’s tasks.
+The inputs to the component factory functions can be pipeline parameters,
+the outputs of other tasks, or a constant value. In this case, the
+<code class="docutils literal notranslate"><span class="pre">web_downloader_task</span></code> task uses the <code class="docutils literal notranslate"><span class="pre">url</span></code> pipeline parameter, and the
+<code class="docutils literal notranslate"><span class="pre">merge_csv_task</span></code> uses the <code class="docutils literal notranslate"><span class="pre">data</span></code> output of the <code class="docutils literal notranslate"><span class="pre">web_downloader_task</span></code>.</p>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a pipeline and create a task from a component:</span>
+<span class="k">def</span> <span class="nf">my_pipeline</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+  <span class="n">web_downloader_task</span> <span class="o">=</span> <span class="n">web_downloader_op</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span>
+  <span class="n">merge_csv_task</span> <span class="o">=</span> <span class="n">create_step_merge_csv</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">web_downloader_task</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+  <span class="c1"># The outputs of the merge_csv_task can be referenced using the</span>
+  <span class="c1"># merge_csv_task.outputs dictionary: merge_csv_task.outputs[&#39;output_csv&#39;]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="compile-and-run-your-pipeline">
+<h2>Compile and run your pipeline<a class="headerlink" href="#compile-and-run-your-pipeline" title="Permalink to this headline">¶</a></h2>
+<p>After defining the pipeline in Python as described in the preceding section, use one of the following options to compile the pipeline and submit it to the Kubeflow Pipelines service.</p>
+<div class="section" id="option-1-compile-and-then-upload-in-ui">
+<h3>Option 1: Compile and then upload in UI<a class="headerlink" href="#option-1-compile-and-then-upload-in-ui" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>Run the following to compile your pipeline and save it as <code class="docutils literal notranslate"><span class="pre">pipeline.yaml</span></code>.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kfp</span><span class="o">.</span><span class="n">compiler</span><span class="o">.</span><span class="n">Compiler</span><span class="p">()</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">pipeline_func</span><span class="o">=</span><span class="n">my_pipeline</span><span class="p">,</span>
+    <span class="n">package_path</span><span class="o">=</span><span class="s1">&#39;pipeline.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Upload and run your <code class="docutils literal notranslate"><span class="pre">pipeline.yaml</span></code> using the Kubeflow Pipelines user interface.
+See the guide to <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/pipelines-quickstart">getting started with the UI</a>.</p></li>
+</ol>
+</div>
+<div class="section" id="option-2-run-the-pipeline-using-kubeflow-pipelines-sdk-client">
+<h3>Option 2: run the pipeline using Kubeflow Pipelines SDK client<a class="headerlink" href="#option-2-run-the-pipeline-using-kubeflow-pipelines-sdk-client" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li><p>Create an instance of the <a class="reference external" href="https://kubeflow-pipelines.readthedocs.io/en/latest/source/kfp.client.html#kfp.Client"><code class="docutils literal notranslate"><span class="pre">kfp.Client</span></code> class</a> following steps in <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/connect-api">connecting to Kubeflow Pipelines using the SDK client</a>.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span> <span class="c1"># change arguments accordingly</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="simple">
+<li><p>Run the pipeline using the <code class="docutils literal notranslate"><span class="pre">kfp.Client</span></code> instance:</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">create_run_from_pipeline_func</span><span class="p">(</span>
+    <span class="n">my_pipeline</span><span class="p">,</span>
+    <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="s1">&#39;https://storage.googleapis.com/ml-pipeline-playground/iris-csv-files.tar.gz&#39;</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Learn about advanced pipeline features, such as <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/dsl-recursion/">authoring recursive
+components</a> and <a class="reference external" href="https://github.com/kubeflow/pipelines/blob/master/samples/tutorials/DSL%20-%20Control%20structures/DSL%20-%20Control%20structures.py">using conditional execution in a
+pipeline</a>.</p></li>
+<li><p>Learn how to <a class="reference external" href="https://www.kubeflow.org/docs/components/pipelines/sdk/manipulate-resources/">manipulate Kubernetes resources in a
+pipeline</a> (Experimental).</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990000_book_recommender_kubeflow.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Books recommendations with Kubeflow Pipelines on Scaleway Kapsule</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990000_causal_inference.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Causal Inference</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

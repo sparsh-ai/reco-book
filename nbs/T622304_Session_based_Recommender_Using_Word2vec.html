@@ -1,0 +1,2468 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session-based recommendation using word2vec &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bandit-based Online Learning using Thompson Sampling" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html" />
+    <link rel="prev" title="Kafka MongoDB Real-time Streaming" href="T023535_Kafka_MongoDB_Real_time_Streaming.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T622304_Session_based_Recommender_Using_Word2vec.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T622304_Session_based_Recommender_Using_Word2vec.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-import-libraries">
+   Install/import libraries
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-data">
+   Load data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#preprocess">
+   Preprocess
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#product-popularity">
+   Product popularity
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#customer-session-lengths">
+   Customer session lengths
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sessionization">
+   Sessionization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#splitting">
+   Splitting
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#metrics">
+   Metrics
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#baseline-analysis">
+   Baseline analysis
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initializing-ray">
+   Initializing Ray
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-word2vec-with-logging">
+   Train word2vec with logging
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#tune-word2vec-with-ray">
+   Tune word2vec with ray
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explore-the-results-of-the-full-hyperparameter-sweep">
+   Explore the results of the full hyperparameter sweep
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="session-based-recommendation-using-word2vec">
+<h1>Session-based recommendation using word2vec<a class="headerlink" href="#session-based-recommendation-using-word2vec" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>How to build a session-based product recommender using word2vec model on retail dataset</p>
+</div></blockquote>
+<div class="section" id="install-import-libraries">
+<h2>Install/import libraries<a class="headerlink" href="#install-import-libraries" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!sudo apt-get install -y ray
+!pip install ray
+!pip install ray[default]
+!pip install ray[tune]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">default_rng</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span> 
+
+<span class="kn">from</span> <span class="nn">gensim.models.word2vec</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+<span class="kn">from</span> <span class="nn">gensim.models.callbacks</span> <span class="kn">import</span> <span class="n">CallbackAny2Vec</span>
+<span class="kn">from</span> <span class="nn">ray</span> <span class="kn">import</span> <span class="n">tune</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">ray</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">MODEL_DIR</span> <span class="o">=</span> <span class="s2">&quot;/content&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;seaborn-white&quot;</span><span class="p">)</span>
+<span class="n">cldr_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#00b6b5&#39;</span><span class="p">,</span> <span class="s1">&#39;#f7955b&#39;</span><span class="p">,</span><span class="s1">&#39;#6c8cc7&#39;</span><span class="p">,</span> <span class="s1">&#39;#828282&#39;</span><span class="p">]</span><span class="c1">#</span>
+<span class="n">cldr_green</span> <span class="o">=</span> <span class="s1">&#39;#a4d65d&#39;</span>
+<span class="n">color_palette</span> <span class="o">=</span> <span class="s2">&quot;viridis&quot;</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">ECOMM_PATH</span> <span class="o">=</span> <span class="s2">&quot;/content&quot;</span>
+<span class="n">ECOMM_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;OnlineRetail.csv&quot;</span>
+
+<span class="o">%</span><span class="n">load_ext</span> <span class="n">tensorboard</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="load-data">
+<h2>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget -O data.zip https://github.com/sparsh-ai/reco-data/blob/master/onlineretail.zip?raw=true
+!unzip data.zip
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_original_ecomm</span><span class="p">(</span><span class="n">pathname</span><span class="o">=</span><span class="n">ECOMM_PATH</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">ECOMM_FILENAME</span><span class="p">),</span>
+        <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">,</span>
+        <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;InvoiceDate&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">load_original_ecomm</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>InvoiceNo</th>
+      <th>StockCode</th>
+      <th>Description</th>
+      <th>Quantity</th>
+      <th>InvoiceDate</th>
+      <th>UnitPrice</th>
+      <th>CustomerID</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>536365</td>
+      <td>85123A</td>
+      <td>WHITE HANGING HEART T-LIGHT HOLDER</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>2.55</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>536365</td>
+      <td>71053</td>
+      <td>WHITE METAL LANTERN</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>536365</td>
+      <td>84406B</td>
+      <td>CREAM CUPID HEARTS COAT HANGER</td>
+      <td>8</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>2.75</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>536365</td>
+      <td>84029G</td>
+      <td>KNITTED UNION FLAG HOT WATER BOTTLE</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>536365</td>
+      <td>84029E</td>
+      <td>RED WOOLLY HOTTIE WHITE HEART.</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>InvoiceNo           0
+StockCode           0
+Description      1454
+Quantity            0
+InvoiceDate         0
+UnitPrice           0
+CustomerID     135080
+Country             0
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="preprocess">
+<h2>Preprocess<a class="headerlink" href="#preprocess" title="Permalink to this headline">¶</a></h2>
+<p>There are some rows with missing information, so we’ll filter those out. Since we want to define customer sessions, we’ll use group by CustomerID field and filter out any customer entries that have fewer than three purchased items.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">preprocess_ecomm</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">min_session_count</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">item_counts</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;CustomerID&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s2">&quot;StockCode&quot;</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;CustomerID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">item_counts</span><span class="p">[</span><span class="n">item_counts</span> <span class="o">&gt;=</span> <span class="n">min_session_count</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">preprocess_ecomm</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>InvoiceNo</th>
+      <th>StockCode</th>
+      <th>Description</th>
+      <th>Quantity</th>
+      <th>InvoiceDate</th>
+      <th>UnitPrice</th>
+      <th>CustomerID</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>536365</td>
+      <td>85123A</td>
+      <td>WHITE HANGING HEART T-LIGHT HOLDER</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>2.55</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>536365</td>
+      <td>71053</td>
+      <td>WHITE METAL LANTERN</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>536365</td>
+      <td>84406B</td>
+      <td>CREAM CUPID HEARTS COAT HANGER</td>
+      <td>8</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>2.75</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>536365</td>
+      <td>84029G</td>
+      <td>KNITTED UNION FLAG HOT WATER BOTTLE</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>536365</td>
+      <td>84029E</td>
+      <td>RED WOOLLY HOTTIE WHITE HEART.</td>
+      <td>6</td>
+      <td>2010-12-01 08:26:00</td>
+      <td>3.39</td>
+      <td>17850.0</td>
+      <td>United Kingdom</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of unique customers after preprocessing</span>
+<span class="n">df</span><span class="o">.</span><span class="n">CustomerID</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4234
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of unique stock codes (products)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">StockCode</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3684
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="product-popularity">
+<h2>Product popularity<a class="headerlink" href="#product-popularity" title="Permalink to this headline">¶</a></h2>
+<p>Here we plot the frequency by which each product is purchased (occurs in a transaction)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;seaborn-white&quot;</span><span class="p">)</span>
+
+<span class="c1"># Number of unique customer IDs</span>
+<span class="n">product_counts</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;StockCode&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s1">&#39;InvoiceNo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">product_counts</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Product counts&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Product index&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">);</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T622304_Session_based_Recommender_Using_Word2vec_17_0.png" src="../_images/T622304_Session_based_Recommender_Using_Word2vec_17_0.png" />
+</div>
+</div>
+<p>The left side of the figure corresponds to products that are not very popular (because they aren’t purchased very often), while the far right side indicates that some products are extremely popular and have been purchased hundreds of times.</p>
+</div>
+<div class="section" id="customer-session-lengths">
+<h2>Customer session lengths<a class="headerlink" href="#customer-session-lengths" title="Permalink to this headline">¶</a></h2>
+<p>We define a customer’s “session” as all the products they purchased in each transaction, in the order in which they were purchased (ordered InvoiceDate). We can then examine statistics regarding the length of these sessions. Below is a boxplot of all customer session lengths.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">session_lengths</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;CustomerID&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s1">&#39;InvoiceNo&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">session_lengths</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">patch</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">artists</span><span class="p">:</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">patch</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span>
+    <span class="n">patch</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mf">.7</span><span class="p">))</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Session length (# of products purchased)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">);</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;session_lengths.png&quot;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T622304_Session_based_Recommender_Using_Word2vec_19_0.png" src="../_images/T622304_Session_based_Recommender_Using_Word2vec_19_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum session length: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">session_lengths</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum session length: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">session_lengths</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean session length: </span><span class="se">\t</span><span class="s2"> </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">session_lengths</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Median session length: </span><span class="se">\t</span><span class="s2"> </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">session_lengths</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total number of purchases: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">session_lengths</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Minimum session length: 	 3
+Maximum session length: 	 7983
+Mean session length: 	 	 96.03967879074162
+Median session length: 	 	 44.0
+Total number of purchases: 	 406632
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="sessionization">
+<h2>Sessionization<a class="headerlink" href="#sessionization" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">construct_session_sequences</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sessionID</span><span class="p">,</span> <span class="n">itemID</span><span class="p">,</span> <span class="n">save_filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataset in pandas df format, construct a list of lists where each sublist</span>
+<span class="sd">    represents the interactions relevant to a specific session, for each sessionID. </span>
+<span class="sd">    These sublists are composed of a series of itemIDs (str) and are the core training </span>
+<span class="sd">    data used in the Word2Vec algorithm. </span>
+<span class="sd">    This is performed by first grouping over the SessionID column, then casting to list</span>
+<span class="sd">    each group&#39;s series of values in the ItemID column. </span>
+<span class="sd">    INPUTS</span>
+<span class="sd">    ------------</span>
+<span class="sd">    df:                 pandas dataframe</span>
+<span class="sd">    sessionID: str      column name in the df that represents invididual sessions</span>
+<span class="sd">    itemID: str         column name in the df that represents the items within a session</span>
+<span class="sd">    save_filename: str  output filename </span>
+<span class="sd">  </span>
+<span class="sd">    Example:</span>
+<span class="sd">    Given a df that looks like </span>
+<span class="sd">    SessionID |   ItemID </span>
+<span class="sd">    ----------------------</span>
+<span class="sd">        1     |     111</span>
+<span class="sd">        1     |     123</span>
+<span class="sd">        1     |     345</span>
+<span class="sd">        2     |     045 </span>
+<span class="sd">        2     |     334</span>
+<span class="sd">        2     |     342</span>
+<span class="sd">        2     |     8970</span>
+<span class="sd">        2     |     345</span>
+<span class="sd">    </span>
+<span class="sd">    Retrun a list of lists like this: </span>
+<span class="sd">    sessions = [</span>
+<span class="sd">            [&#39;111&#39;, &#39;123&#39;, &#39;345&#39;],</span>
+<span class="sd">            [&#39;045&#39;, &#39;334&#39;, &#39;342&#39;, &#39;8970&#39;, &#39;345&#39;],</span>
+<span class="sd">        ]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">grp_by_session</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="n">sessionID</span><span class="p">])</span>
+
+    <span class="n">session_sequences</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">grp_by_session</span><span class="p">:</span>
+        <span class="n">session_sequences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">itemID</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">session_sequences</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">session_sequences</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ECOMM_PATH</span><span class="p">,</span> <span class="n">ECOMM_FILENAME</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;_sessions.pkl&quot;</span><span class="p">))</span>
+<span class="n">sessions</span> <span class="o">=</span> <span class="n">construct_session_sequences</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;CustomerID&quot;</span><span class="p">,</span> <span class="s2">&quot;StockCode&quot;</span><span class="p">,</span> <span class="n">save_filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+<span class="s1">&#39; --&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sessions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;85116 --&gt; 22375 --&gt; 71477 --&gt; 22492 --&gt; 22771 --&gt; 22772 --&gt; 22773 --&gt; 22774 --&gt; 22775 --&gt; 22805 --&gt; 22725 --&gt; 22726 --&gt; 22727 --&gt; 22728 --&gt; 22729 --&gt; 22212 --&gt; 85167B --&gt; 21171 --&gt; 22195 --&gt; 84969 --&gt; 84997C --&gt; 84997B --&gt; 84997D --&gt; 22494 --&gt; 22497 --&gt; 85232D --&gt; 21064 --&gt; 21731 --&gt; 84558A --&gt; 20780 --&gt; 20782 --&gt; 84625A --&gt; 84625C --&gt; 85116 --&gt; 20719 --&gt; 22375 --&gt; 22376 --&gt; 20966 --&gt; 22725 --&gt; 22726 --&gt; 22727 --&gt; 22728 --&gt; 22729 --&gt; 22196 --&gt; 84992 --&gt; 84991 --&gt; 21976 --&gt; 22417 --&gt; 47559B --&gt; 21154 --&gt; 21041 --&gt; 21035 --&gt; 22423 --&gt; 84969 --&gt; 22134 --&gt; 21832 --&gt; 22422 --&gt; 22497 --&gt; 21731 --&gt; 84558A --&gt; 22376 --&gt; 22374 --&gt; 22371 --&gt; 22375 --&gt; 20665 --&gt; 23076 --&gt; 21791 --&gt; 22550 --&gt; 23177 --&gt; 22432 --&gt; 22774 --&gt; 22195 --&gt; 22196 --&gt; 21975 --&gt; 21041 --&gt; 22423 --&gt; 22699 --&gt; 21731 --&gt; 22492 --&gt; 84559A --&gt; 84559B --&gt; 16008 --&gt; 22821 --&gt; 22497 --&gt; 23084 --&gt; 23162 --&gt; 23171 --&gt; 23172 --&gt; 23170 --&gt; 23173 --&gt; 23174 --&gt; 23175 --&gt; 22371 --&gt; 22375 --&gt; 85178 --&gt; 17021 --&gt; 23146 --&gt; 22196 --&gt; 84558A --&gt; 51014C --&gt; 22727 --&gt; 22725 --&gt; 23308 --&gt; 23297 --&gt; 22375 --&gt; 22374 --&gt; 22376 --&gt; 22371 --&gt; 22372 --&gt; 21578 --&gt; 20719 --&gt; 22727 --&gt; 23146 --&gt; 23147 --&gt; 47559B --&gt; 84992 --&gt; 84991 --&gt; 21975 --&gt; 22423 --&gt; 23175 --&gt; 84558A --&gt; 22992 --&gt; 21791 --&gt; 23316 --&gt; 23480 --&gt; 21265 --&gt; 21636 --&gt; 22372 --&gt; 22375 --&gt; 22371 --&gt; 22374 --&gt; 22252 --&gt; 22945 --&gt; 22423 --&gt; 23173 --&gt; 47580 --&gt; 47567B --&gt; 47559B --&gt; 22698 --&gt; 22697 --&gt; 84558A --&gt; 23084 --&gt; 21731 --&gt; 23177 --&gt; 21791 --&gt; 23508 --&gt; 23506 --&gt; 23503 --&gt; 22992 --&gt; 22561 --&gt; 22492 --&gt; 22621 --&gt; 23146 --&gt; 23421 --&gt; 23422 --&gt; 23420 --&gt; 22699 --&gt; 22725 --&gt; 22728 --&gt; 22726 --&gt; 22727 --&gt; 21976 --&gt; 22417 --&gt; 23308 --&gt; 84991 --&gt; 84992 --&gt; 22196 --&gt; 22195 --&gt; 20719 --&gt; 23162 --&gt; 22131 --&gt; 23497 --&gt; 23552 --&gt; 21064 --&gt; 84625A --&gt; 21731 --&gt; 23084 --&gt; 20719 --&gt; 21265 --&gt; 23271 --&gt; 23506 --&gt; 23508&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_ecomm</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks to see if the processed Online Retail ecommerce session sequence file exists</span>
+<span class="sd">        If True: loads and returns the session sequences</span>
+<span class="sd">        If False: creates and returns the session sequences constructed from the original data file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">original_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ECOMM_PATH</span><span class="p">,</span> <span class="n">ECOMM_FILENAME</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">processed_filename</span> <span class="o">=</span> <span class="n">original_filename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;_sessions.pkl&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">processed_filename</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">processed_filename</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">))</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">load_original_ecomm</span><span class="p">(</span><span class="n">original_filename</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">preprocess_ecomm</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">session_sequences</span> <span class="o">=</span> <span class="n">construct_session_sequences</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;CustomerID&quot;</span><span class="p">,</span> <span class="s2">&quot;StockCode&quot;</span><span class="p">,</span>
+                                                    <span class="n">save_filename</span><span class="o">=</span><span class="n">original_filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">session_sequences</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="splitting">
+<h2>Splitting<a class="headerlink" href="#splitting" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_test_split</span><span class="p">(</span><span class="n">session_sequences</span><span class="p">,</span> <span class="n">test_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Next Event Prediction (NEP) does not necessarily follow the traditional train/test split. </span>
+<span class="sd">    Instead training is perform on the first n-1 items in a session sequence of n items. </span>
+<span class="sd">    The test set is constructed of (n-1, n) &quot;query&quot; pairs where the n-1 item is used to generate </span>
+<span class="sd">    recommendation predictions and it is checked whether the nth item is included in those recommendations. </span>
+<span class="sd">    Example:</span>
+<span class="sd">        Given a session sequence [&#39;045&#39;, &#39;334&#39;, &#39;342&#39;, &#39;8970&#39;, &#39;128&#39;]</span>
+<span class="sd">        Training is done on [&#39;045&#39;, &#39;334&#39;, &#39;342&#39;, &#39;8970&#39;]</span>
+<span class="sd">        Testing (and validation) is done on [&#39;8970&#39;, &#39;128&#39;]</span>
+<span class="sd">    </span>
+<span class="sd">    Test and Validation sets are constructed to be disjoint. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">## Construct training set</span>
+    <span class="c1"># use (1 st, ..., n-1 th) items from each session sequence to form the train set (drop last item)</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="p">[</span><span class="n">sess</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="n">session_sequences</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">test_size</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Test set cannot be larger than train set. Train set contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> sessions.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1">## Construct test and validation sets</span>
+    <span class="c1"># sub-sample 10k sessions, and use (n-1 th, n th) pairs of items from session_squences to form the</span>
+    <span class="c1"># disjoint validaton and test sets</span>
+    <span class="n">test_validation</span> <span class="o">=</span> <span class="p">[</span><span class="n">sess</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="k">for</span> <span class="n">sess</span> <span class="ow">in</span> <span class="n">session_sequences</span><span class="p">]</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_validation</span><span class="p">)),</span> <span class="n">test_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_validation</span><span class="p">)[</span><span class="n">index</span><span class="p">[:</span><span class="n">test_size</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">validation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_validation</span><span class="p">)[</span><span class="n">index</span><span class="p">[</span><span class="n">test_size</span><span class="p">:]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">validation</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sessions</span><span class="p">))</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4234
+4234 1000 1000
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="metrics">
+<h2>Metrics<a class="headerlink" href="#metrics" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recall_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    test must be a list of (query, ground truth) pairs</span>
+<span class="sd">    embeddings must be a gensim.word2vec.wv thingy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ratk_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">query_item</span><span class="p">,</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># get the k most similar items to the query item (computes cosine similarity)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">similar_by_vector</span><span class="p">(</span><span class="n">query_item</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+        <span class="c1"># clean up the list</span>
+        <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">]</span>
+        <span class="c1"># check if ground truth is in the recommedations</span>
+        <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">:</span>
+            <span class="n">ratk_score</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">ratk_score</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ratk_score</span>
+
+
+<span class="k">def</span> <span class="nf">recall_at_k_baseline</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">comatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    test must be a list of (query, ground truth) pairs</span>
+<span class="sd">    embeddings must be a gensim.word2vec.wv thingy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ratk_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">query_item</span><span class="p">,</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># get the k most similar items to the query item (computes cosine similarity)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">co_occ</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">comatrix</span><span class="p">[</span><span class="n">query_item</span><span class="p">])</span>
+            <span class="n">items_and_counts</span> <span class="o">=</span> <span class="n">co_occ</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="ow">in</span> <span class="n">items_and_counts</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">:</span> 
+                <span class="n">ratk_score</span> <span class="o">+=</span><span class="mi">1</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="n">ratk_score</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ratk_score</span>
+
+
+<span class="k">def</span> <span class="nf">hitratio_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implemented EXACTLY as was done in the Hyperparameters Matter paper. </span>
+<span class="sd">    In the paper this metric is described as </span>
+<span class="sd">        • Hit ratio at K (HR@K). It is equal to 1 if the test item appears</span>
+<span class="sd">        in the list of k predicted items and 0 otherwise [13]. </span>
+<span class="sd">    </span>
+<span class="sd">    But this is not what they implement, where they instead divide by k. </span>
+<span class="sd">    What they have actually implemented is more like Precision@k.</span>
+<span class="sd">    However, Precision@k doesn&#39;t make a lot of sense in this context because</span>
+<span class="sd">    there is only ONE possible correct answer in the list of generated </span>
+<span class="sd">    recommendations.  I don&#39;t think this is the best metric to use but </span>
+<span class="sd">    I&#39;ll keep it here for posterity. </span>
+<span class="sd">    test must be a list of (query, ground truth) pairs</span>
+<span class="sd">    embeddings must be a gensim.word2vec.wv thingy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hratk_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">query_item</span><span class="p">,</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># If the query item and next item are the same, prediction is automatically correct</span>
+        <span class="k">if</span> <span class="n">query_item</span> <span class="o">==</span> <span class="n">ground_truth</span><span class="p">:</span>
+            <span class="n">hratk_score</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># get the k most similar items to the query item (computes cosine similarity)</span>
+            <span class="n">neighbors</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">similar_by_vector</span><span class="p">(</span><span class="n">query_item</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+            <span class="c1"># clean up the list</span>
+            <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">]</span>
+            <span class="c1"># check if ground truth is in the recommedations</span>
+            <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">:</span>
+                <span class="n">hratk_score</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">k</span>
+    <span class="n">hratk_score</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hratk_score</span><span class="o">*</span><span class="mi">1000</span>
+
+
+<span class="k">def</span> <span class="nf">mrr_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mean Reciprocal Rank. </span>
+<span class="sd">    test must be a list of (query, ground truth) pairs</span>
+<span class="sd">    embeddings must be a gensim.word2vec.wv thingy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mrratk_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">query_item</span><span class="p">,</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># get the k most similar items to the query item (computes cosine similarity)</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">similar_by_vector</span><span class="p">(</span><span class="n">query_item</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+        <span class="c1"># clean up the list</span>
+        <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">]</span>
+        <span class="c1"># check if ground truth is in the recommedations</span>
+        <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">:</span>
+            <span class="c1"># identify where the item is in the list</span>
+            <span class="n">rank_idx</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">recommendations</span><span class="p">)</span> <span class="o">==</span> <span class="n">ground_truth</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="c1"># score higher-ranked ground truth higher than lower-ranked ground truth</span>
+            <span class="n">mrratk_score</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">rank_idx</span>
+    <span class="n">mrratk_score</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mrratk_score</span>
+
+
+<span class="k">def</span> <span class="nf">mrr_at_k_baseline</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">comatrix</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mean Reciprocal Rank. </span>
+<span class="sd">    test must be a list of (query, ground truth) pairs</span>
+<span class="sd">    embeddings must be a gensim.word2vec.wv thingy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mrratk_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">query_item</span><span class="p">,</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+        <span class="c1"># get the k most similar items to the query item (computes cosine similarity)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">co_occ</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">comatrix</span><span class="p">[</span><span class="n">query_item</span><span class="p">])</span>
+            <span class="n">items_and_counts</span> <span class="o">=</span> <span class="n">co_occ</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="ow">in</span> <span class="n">items_and_counts</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ground_truth</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">:</span> 
+                <span class="n">rank_idx</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">recommendations</span><span class="p">)</span> <span class="o">==</span> <span class="n">ground_truth</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="p">)</span>
+                <span class="n">mrratk_score</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">rank_idx</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="n">mrratk_score</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mrratk_score</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="baseline-analysis">
+<h2>Baseline analysis<a class="headerlink" href="#baseline-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">association_rules_baseline</span><span class="p">(</span><span class="n">train_sessions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a co-occurence matrix that counts how frequently each item </span>
+<span class="sd">    co-occurs with any other item in a given session. This matrix can </span>
+<span class="sd">    then be used to generate a list of recommendations according to the most</span>
+<span class="sd">    frequently co-occurring items for the item in question. </span>
+
+<span class="sd">    These recommendations must be evaluated using the &quot;_baseline&quot;  recall/mrr functions in metrics.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comatrix</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">train_sessions</span><span class="p">:</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">comatrix</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">comatrix</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Construct a co-occurrence matrix containing how frequently </span>
+<span class="c1"># each item is found in the same session as any other item</span>
+<span class="n">comatrix</span> <span class="o">=</span> <span class="n">association_rules_baseline</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+
+<span class="c1"># Recommendations are generated as the top K most frequently co-occurring items</span>
+<span class="c1"># Compute metrics on these recommendations for each (query item, ground truth item)</span>
+<span class="c1"># pair in the test set</span>
+<span class="n">recall_at_10</span> <span class="o">=</span> <span class="n">recall_at_k_baseline</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">comatrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">mrr_at_10</span> <span class="o">=</span> <span class="n">mrr_at_k_baseline</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">comatrix</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Recall@10:&quot;</span><span class="p">,</span> <span class="n">recall_at_10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MRR@10:&quot;</span><span class="p">,</span> <span class="n">mrr_at_10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Recall@10: 0.143
+MRR@10: 0.06450158730158734
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="initializing-ray">
+<h2>Initializing Ray<a class="headerlink" href="#initializing-ray" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ray</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">num_cpus</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ignore_reinit_error</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-06-11 06:21:17,485	INFO services.py:1274 -- View the Ray dashboard at <span class=" -Color -Color-Bold -Color-Bold-Green">http://127.0.0.1:8265</span>
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;metrics_export_port&#39;: 42187,
+ &#39;node_id&#39;: &#39;36950d392a77ab525dbcfe5ffdb2a3629ba8446f2aed261213be1f1f&#39;,
+ &#39;node_ip_address&#39;: &#39;172.28.0.2&#39;,
+ &#39;object_store_address&#39;: &#39;/tmp/ray/session_2021-06-11_06-21-14_124261_62/sockets/plasma_store&#39;,
+ &#39;raylet_ip_address&#39;: &#39;172.28.0.2&#39;,
+ &#39;raylet_socket_name&#39;: &#39;/tmp/ray/session_2021-06-11_06-21-14_124261_62/sockets/raylet&#39;,
+ &#39;redis_address&#39;: &#39;172.28.0.2:6379&#39;,
+ &#39;session_dir&#39;: &#39;/tmp/ray/session_2021-06-11_06-21-14_124261_62&#39;,
+ &#39;webui_url&#39;: &#39;127.0.0.1:8265&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-word2vec-with-logging">
+<h2>Train word2vec with logging<a class="headerlink" href="#train-word2vec-with-logging" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_w2v</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span><span class="nb">dict</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">model_name</span><span class="p">:</span> 
+        <span class="c1"># Load a model for additional training. </span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="c1"># train model</span>
+        <span class="k">if</span> <span class="n">callbacks</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span><span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">build_vocab</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">total_examples</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">corpus_count</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">epochs</span><span class="p">,</span> <span class="n">compute_loss</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">vectors</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">wv</span>
+    <span class="k">return</span> <span class="n">vectors</span>
+    
+
+<span class="k">def</span> <span class="nf">tune_w2v</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">ratk_logger</span> <span class="o">=</span> <span class="n">RecallAtKLogger</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">],</span> <span class="n">ray_tune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># remove keys from config that aren&#39;t hyperparameters of word2vec</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">train_w2v</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">ratk_logger</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">RecallAtKLogger</span><span class="p">(</span><span class="n">CallbackAny2Vec</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Report Recall@K at each epoch&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validation_set</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">ray_tune</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recall_scores</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">validation_set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tune</span> <span class="o">=</span> <span class="n">ray_tune</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span> <span class="o">=</span> <span class="n">save_model</span>
+
+    <span class="k">def</span> <span class="nf">on_epoch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Epoch: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="c1"># method 1: deepcopy the model and set the model copy&#39;s wv to None</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">norms</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># will cause it recalculate norms? </span>
+        
+        <span class="c1"># Every 10 epochs, save the model </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="o">%</span><span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">:</span> 
+            <span class="c1"># method 2: save and reload the model</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">MODEL_DIR</span><span class="si">}</span><span class="s2">w2v_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s2">.model&quot;</span><span class="p">)</span>
+            <span class="c1">#mod = Word2Vec.load(f&quot;w2v_{self.epoch}.model&quot;)</span>
+        
+        <span class="n">ratk_score</span> <span class="o">=</span> <span class="n">recall_at_k</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation</span><span class="p">,</span> <span class="n">mod</span><span class="o">.</span><span class="n">wv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>  
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune</span><span class="p">:</span> 
+            <span class="n">tune</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">recall_at_k</span> <span class="o">=</span> <span class="n">ratk_score</span><span class="p">)</span>    
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">recall_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratk_score</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Recall@10: </span><span class="si">{</span><span class="n">ratk_score</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+<span class="k">class</span> <span class="nc">LossLogger</span><span class="p">(</span><span class="n">CallbackAny2Vec</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Report training loss at each epoch&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_loss</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="c1"># the loss output by Word2Vec is more akin to a cumulative loss and increases each epoch</span>
+        <span class="c1"># to get a value closer to loss per epoch, we subtract</span>
+        <span class="n">cumulative_loss</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_latest_training_loss</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">cumulative_loss</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_loss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_loss</span> <span class="o">=</span> <span class="n">cumulative_loss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training_loss</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expt_dir</span> <span class="o">=</span> <span class="s1">&#39;/content/big_HPO_no_distributed&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">use_saved_expt</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">use_saved_expt</span><span class="p">:</span>
+  <span class="n">analysis</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span><span class="n">expt_dir</span><span class="p">,</span> <span class="n">default_metric</span><span class="o">=</span><span class="s2">&quot;recall_at_k&quot;</span><span class="p">,</span> <span class="n">default_mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span>
+  <span class="n">w2v_params</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">get_best_config</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">w2v_params</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="s2">&quot;min_count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;iter&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+          <span class="s2">&quot;workers&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+          <span class="s2">&quot;sg&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="p">}</span>
+
+<span class="c1"># Instantiate callback to measurs Recall@K on the validation set after each epoch of training</span>
+<span class="n">ratk_logger</span> <span class="o">=</span> <span class="n">RecallAtKLogger</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">save_model</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Instantiate callback to compute Word2Vec&#39;s training loss on the training set after each epoch of training</span>
+<span class="n">loss_logger</span> <span class="o">=</span> <span class="n">LossLogger</span><span class="p">()</span>
+<span class="c1"># Train Word2Vec model and retrieve trained embeddings</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">train_w2v</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">w2v_params</span><span class="p">,</span> <span class="p">[</span><span class="n">ratk_logger</span><span class="p">,</span> <span class="n">loss_logger</span><span class="p">])</span>
+
+<span class="c1"># Save results</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">ratk_logger</span><span class="o">.</span><span class="n">recall_scores</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/content&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;recall@k_per_epoch.pkl&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">loss_logger</span><span class="o">.</span><span class="n">training_loss</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/content&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;trainloss_per_epoch.pkl&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+
+<span class="c1"># Save trained embeddings</span>
+<span class="n">embeddings</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/content&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;embeddings.wv&quot;</span><span class="p">))</span>
+
+<span class="c1"># Visualize metrics as a function of epoch</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ratk_logger</span><span class="o">.</span><span class="n">recall_scores</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ratk_logger</span><span class="o">.</span><span class="n">recall_scores</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loss_logger</span><span class="o">.</span><span class="n">training_loss</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">loss_logger</span><span class="o">.</span><span class="n">training_loss</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Print results on the test set</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">recall_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mrr_at_k</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch: 0	 Recall@10: 0.181
+ Loss: 731531.3125
+Epoch: 1	 Recall@10: 0.209
+ Loss: 619873.5625
+Epoch: 2	 Recall@10: 0.213
+ Loss: 511931.75
+Epoch: 3	 Recall@10: 0.218
+ Loss: 568087.625
+Epoch: 4	 Recall@10: 0.216
+ Loss: 587301.25
+</pre></div>
+</div>
+<img alt="../_images/T622304_Session_based_Recommender_Using_Word2vec_38_1.png" src="../_images/T622304_Session_based_Recommender_Using_Word2vec_38_1.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.235
+0.13457301587301593
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tune-word2vec-with-ray">
+<h2>Tune word2vec with ray<a class="headerlink" href="#tune-word2vec-with-ray" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ray.tune</span> <span class="kn">import</span> <span class="n">Analysis</span>
+<span class="kn">from</span> <span class="nn">ray.tune.schedulers</span> <span class="kn">import</span> <span class="n">ASHAScheduler</span>
+
+<span class="c1"># Define the hyperparameter search space for Word2Vec algorithm</span>
+<span class="n">search_space</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;ecomm&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">106</span><span class="p">,</span> <span class="mi">6</span><span class="p">))),</span>
+    <span class="s2">&quot;window&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3</span><span class="p">))),</span>
+    <span class="s2">&quot;ns_exponent&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">.2</span><span class="p">))),</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">([</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span>
+    <span class="s2">&quot;negative&quot;</span><span class="p">:</span> <span class="n">tune</span><span class="o">.</span><span class="n">grid_search</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span> <span class="mi">3</span><span class="p">))),</span>
+    <span class="s2">&quot;iter&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;min_count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;workers&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s2">&quot;sg&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">use_asha</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">smoke_test</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># The ASHA Scheduler will stop underperforming trials in a principled fashion</span>
+<span class="n">asha_scheduler</span> <span class="o">=</span> <span class="n">ASHAScheduler</span><span class="p">(</span><span class="n">max_t</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">grace_period</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_asha</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="c1"># Set the stopping critera -- use the smoke-test arg to test the system </span>
+<span class="n">stopping_criteria</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;training_iteration&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">smoke_test</span> <span class="k">else</span> <span class="mi">9999</span><span class="p">}</span>
+
+<span class="c1"># Perform hyperparamter sweep with Ray Tune</span>
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">tune</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">tune_w2v</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">expt_dir</span><span class="p">,</span>
+    <span class="n">local_dir</span><span class="o">=</span><span class="s2">&quot;ray_results&quot;</span><span class="p">,</span>
+    <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;recall_at_k&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">scheduler</span><span class="o">=</span><span class="n">asha_scheduler</span><span class="p">,</span>
+    <span class="n">stop</span><span class="o">=</span><span class="n">stopping_criteria</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">resources_per_trial</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;cpu&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;gpu&quot;</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">},</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">search_space</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best hyperparameters found were: &quot;</span><span class="p">,</span> <span class="n">analysis</span><span class="o">.</span><span class="n">best_config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">== Status ==<br>Memory usage on this node: 2.6/12.7 GiB<br>Using AsyncHyperBand: num_stopped=308
+Bracket: Iter 40.000: None | Iter 10.000: 0.206<br>Resources requested: 4.0/4 CPUs, 0/0 GPUs, 0.0/7.36 GiB heap, 0.0/3.68 GiB objects<br>Current best trial: a0670_00440 with recall_at_k=0.244 and parameters={'size': 16, 'window': 1, 'ns_exponent': 0.7999999999999996, 'alpha': 0.1, 'negative': 19, 'iter': 10, 'min_count': 1, 'workers': 6, 'sg': 1}<br>Result logdir: /content/big_HPO_no_distributed<br>Number of trials: 512/25872 (16 PENDING, 4 RUNNING, 492 TERMINATED)<br><br></div><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-06-11 09:06:44,670	ERROR tune.py:545 -- Trials did not complete: [tune_w2v_a0670_00492, tune_w2v_a0670_00493, tune_w2v_a0670_00494, tune_w2v_a0670_00495, tune_w2v_a0670_00496, tune_w2v_a0670_00497, tune_w2v_a0670_00498, tune_w2v_a0670_00499, tune_w2v_a0670_00500, tune_w2v_a0670_00501, tune_w2v_a0670_00502, tune_w2v_a0670_00503, tune_w2v_a0670_00504, tune_w2v_a0670_00505, tune_w2v_a0670_00506, tune_w2v_a0670_00507, tune_w2v_a0670_00508, tune_w2v_a0670_00509, tune_w2v_a0670_00510, tune_w2v_a0670_00511]
+2021-06-11 09:06:44,678	INFO tune.py:549 -- Total run time: 6750.68 seconds (6746.07 seconds for the tuning loop).
+2021-06-11 09:06:44,680	WARNING tune.py:554 -- Experiment has been interrupted, but the most recent state was saved. You can continue running this experiment by passing `resume=True` to `tune.run()`
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best hyperparameters found were:  {&#39;dataset&#39;: &#39;ecomm&#39;, &#39;k&#39;: 10, &#39;size&#39;: 16, &#39;window&#39;: 1, &#39;ns_exponent&#39;: 0.7999999999999996, &#39;alpha&#39;: 0.1, &#39;negative&#39;: 19, &#39;iter&#39;: 10, &#39;min_count&#39;: 1, &#39;workers&#39;: 6, &#39;sg&#39;: 1}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ray Tune saves the results of each trial in the ray_results directory. Each time Ray Tune performs an HPO sweep, the results for that run are saved under a unique subdirectory. In this case, we named that subdirectory big_HPO_no_distributed. Ray Tune provides methods for interacting with these results, starting with the Analysis class that loads the results from each trial, including performance metrics as a function of training time and tons of metadata.</p>
+<p>These results are stored as JSON but the Analysis class provides a nice wrapper for converting those results in a pandas dataframe.</p>
+</div>
+<div class="section" id="explore-the-results-of-the-full-hyperparameter-sweep">
+<h2>Explore the results of the full hyperparameter sweep<a class="headerlink" href="#explore-the-results-of-the-full-hyperparameter-sweep" title="Permalink to this headline">¶</a></h2>
+<p>Next, we’re going to look at how the Recall&#64;10 score changes as a function of various hyperparameter configurations that we tuned over. We tuned over three hyperparameters: the context window size, negative sampling exponent, and the number of negative samples.</p>
+<p>We want to look at the Recall&#64;10 scores for all of these configurations but this is a 3-dimensional space and, as such, will be difficult to visualize. Instead, we’ll “collapse” one dimension, while examining the other two. To do this, we aggregate the Recall&#64;10 scores (taking the mean) along the “collapsed” dimension.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">analysis</span> <span class="o">=</span> <span class="n">Analysis</span><span class="p">(</span><span class="s2">&quot;big_HPO_no_distributed/&quot;</span><span class="p">,</span> 
+                    <span class="n">default_metric</span><span class="o">=</span><span class="s2">&quot;recall_at_k&quot;</span><span class="p">,</span>
+                    <span class="n">default_mode</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">dataframe</span><span class="p">()</span>
+<span class="n">results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>recall_at_k</th>
+      <th>time_this_iter_s</th>
+      <th>done</th>
+      <th>timesteps_total</th>
+      <th>episodes_total</th>
+      <th>training_iteration</th>
+      <th>experiment_id</th>
+      <th>date</th>
+      <th>timestamp</th>
+      <th>time_total_s</th>
+      <th>pid</th>
+      <th>hostname</th>
+      <th>node_ip</th>
+      <th>time_since_restore</th>
+      <th>timesteps_since_restore</th>
+      <th>iterations_since_restore</th>
+      <th>trial_id</th>
+      <th>config/alpha</th>
+      <th>config/dataset</th>
+      <th>config/iter</th>
+      <th>config/k</th>
+      <th>config/min_count</th>
+      <th>config/negative</th>
+      <th>config/ns_exponent</th>
+      <th>config/sg</th>
+      <th>config/size</th>
+      <th>config/window</th>
+      <th>config/workers</th>
+      <th>logdir</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.237</td>
+      <td>5.543207</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>10</td>
+      <td>1faab4240d3746cbb4c51569db069051</td>
+      <td>2021-06-11_08-49-15</td>
+      <td>1623401355</td>
+      <td>71.839448</td>
+      <td>45684</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>71.839448</td>
+      <td>0</td>
+      <td>10</td>
+      <td>a0670_00419</td>
+      <td>0.100</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>19</td>
+      <td>0.6</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00419_41...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.203</td>
+      <td>4.436352</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>10</td>
+      <td>fe00d91e28cf49beb45a0f47b900d2ae</td>
+      <td>2021-06-11_07-54-42</td>
+      <td>1623398082</td>
+      <td>75.372504</td>
+      <td>22252</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>75.372504</td>
+      <td>0</td>
+      <td>10</td>
+      <td>a0670_00187</td>
+      <td>0.010</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>19</td>
+      <td>0.6</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00187_18...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.036</td>
+      <td>10.416867</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>9</td>
+      <td>965436df76d64eb1badb38eceda07998</td>
+      <td>2021-06-11_08-42-17</td>
+      <td>1623400937</td>
+      <td>55.470819</td>
+      <td>43108</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>55.470819</td>
+      <td>0</td>
+      <td>9</td>
+      <td>a0670_00393</td>
+      <td>0.001</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>16</td>
+      <td>0.4</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00393_39...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.236</td>
+      <td>5.960799</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>9</td>
+      <td>8a3090a631b447bd9fb9ee249ef02a30</td>
+      <td>2021-06-11_08-52-44</td>
+      <td>1623401564</td>
+      <td>54.629899</td>
+      <td>47286</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>54.629899</td>
+      <td>0</td>
+      <td>9</td>
+      <td>a0670_00434</td>
+      <td>0.100</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>13</td>
+      <td>0.8</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00434_43...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.041</td>
+      <td>1.409388</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>10</td>
+      <td>cce93e60ce3a4ff4a0db54a8e47fa3d9</td>
+      <td>2021-06-11_08-06-00</td>
+      <td>1623398760</td>
+      <td>38.842165</td>
+      <td>27810</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>38.842165</td>
+      <td>0</td>
+      <td>10</td>
+      <td>a0670_00241</td>
+      <td>0.010</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>10</td>
+      <td>-1.0</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00241_24...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>503</th>
+      <td>0.023</td>
+      <td>5.446685</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>9f3c574035ac47ac850519bf18e37184</td>
+      <td>2021-06-11_09-01-30</td>
+      <td>1623402090</td>
+      <td>22.201976</td>
+      <td>51082</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>22.201976</td>
+      <td>0</td>
+      <td>3</td>
+      <td>a0670_00471</td>
+      <td>0.001</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>10</td>
+      <td>-1.0</td>
+      <td>1</td>
+      <td>22.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00471_47...</td>
+    </tr>
+    <tr>
+      <th>504</th>
+      <td>0.015</td>
+      <td>2.176694</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>10</td>
+      <td>e927f2c1c10e42908c4c5b26d8ba5b86</td>
+      <td>2021-06-11_08-17-32</td>
+      <td>1623399452</td>
+      <td>41.176507</td>
+      <td>33062</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>41.176507</td>
+      <td>0</td>
+      <td>10</td>
+      <td>a0670_00294</td>
+      <td>0.001</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-0.4</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00294_29...</td>
+    </tr>
+    <tr>
+      <th>505</th>
+      <td>0.211</td>
+      <td>1.697303</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>9</td>
+      <td>de953f60dd084976b0a01b62918adea5</td>
+      <td>2021-06-11_08-33-35</td>
+      <td>1623400415</td>
+      <td>19.104989</td>
+      <td>39782</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>19.104989</td>
+      <td>0</td>
+      <td>9</td>
+      <td>a0670_00359</td>
+      <td>0.100</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.2</td>
+      <td>1</td>
+      <td>16.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00359_35...</td>
+    </tr>
+    <tr>
+      <th>506</th>
+      <td>0.024</td>
+      <td>1.774843</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>4</td>
+      <td>d60beb2097b64164acbcb80fa8580019</td>
+      <td>2021-06-11_07-14-48</td>
+      <td>1623395688</td>
+      <td>13.840040</td>
+      <td>3454</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>13.840040</td>
+      <td>0</td>
+      <td>4</td>
+      <td>a0670_00003</td>
+      <td>0.001</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>4</td>
+      <td>-1.0</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00003_3_...</td>
+    </tr>
+    <tr>
+      <th>507</th>
+      <td>0.198</td>
+      <td>2.985146</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>8</td>
+      <td>3ad21430e1004d108a4683096833aeb2</td>
+      <td>2021-06-11_07-46-29</td>
+      <td>1623397589</td>
+      <td>25.868437</td>
+      <td>18924</td>
+      <td>3b5d652723e6</td>
+      <td>172.28.0.2</td>
+      <td>25.868437</td>
+      <td>0</td>
+      <td>8</td>
+      <td>a0670_00154</td>
+      <td>0.010</td>
+      <td>ecomm</td>
+      <td>10</td>
+      <td>10</td>
+      <td>1</td>
+      <td>7</td>
+      <td>0.4</td>
+      <td>1</td>
+      <td>10.0</td>
+      <td>1.0</td>
+      <td>6</td>
+      <td>big_HPO_no_distributed/tune_w2v_a0670_00154_15...</td>
+    </tr>
+  </tbody>
+</table>
+<p>508 rows × 29 columns</p>
+</div></div></div>
+</div>
+<p>The Analysis objects also has methods to quickly retrieve the best configuration found during the HPO sweep.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">best_config</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">get_best_config</span><span class="p">()</span>
+<span class="n">best_config</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;alpha&#39;: 0.1,
+ &#39;dataset&#39;: &#39;ecomm&#39;,
+ &#39;iter&#39;: 10,
+ &#39;k&#39;: 10,
+ &#39;min_count&#39;: 1,
+ &#39;negative&#39;: 19,
+ &#39;ns_exponent&#39;: 0.7999999999999996,
+ &#39;sg&#39;: 1,
+ &#39;size&#39;: 16,
+ &#39;window&#39;: 1,
+ &#39;workers&#39;: 6}
+</pre></div>
+</div>
+</div>
+</div>
+<p>While the results dataframe contains the final Recall&#64;10 scores for each of the 539 trials, it’s also nice to explore how those scores evolved as a function of training for any given trial. Again, the Analysis class delivers, providing the ability to access the full training results for any of the trials. Below we plot the Recall&#64;10 score as a function of training epochs for the best configuration.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">best_path</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">get_best_logdir</span><span class="p">()</span>
+<span class="n">dfs</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">fetch_trial_dataframes</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dfs</span><span class="p">[</span><span class="n">best_path</span><span class="p">][</span><span class="s1">&#39;recall_at_k&#39;</span><span class="p">]);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Epoch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Recall@10&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T622304_Session_based_Recommender_Using_Word2vec_47_0.png" src="../_images/T622304_Session_based_Recommender_Using_Word2vec_47_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">aggregate_z</span><span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">):</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;config/</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;config/</span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+    <span class="n">x_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mean_recall_values</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">grouped</span><span class="p">:</span>
+        <span class="n">x_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">y_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">mean_recall_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;recall_at_k&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">x_values</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">mean_recall_values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">negative</span><span class="p">,</span> <span class="n">ns_exp</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="n">aggregate_z</span><span class="p">(</span><span class="s2">&quot;negative&quot;</span><span class="p">,</span> <span class="s2">&quot;ns_exponent&quot;</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ns_exp</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">negative</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">recall</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">color_palette</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Negative sampling exponent&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Number of negative samples&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> 
+         <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> 
+         <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+         <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;ns_exponent&#39;</span><span class="p">],</span> 
+        <span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">],</span> 
+         <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> 
+         <span class="n">fillstyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
+         <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+
+<span class="n">window</span><span class="p">,</span> <span class="n">ns_exp</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="n">aggregate_z</span><span class="p">(</span><span class="s2">&quot;window&quot;</span><span class="p">,</span> <span class="s2">&quot;ns_exponent&quot;</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">ns_exp</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">recall</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">color_palette</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Negative sampling exponent&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Context window size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> 
+           <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> 
+           <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+           <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;ns_exponent&#39;</span><span class="p">],</span> 
+         <span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;window&#39;</span><span class="p">],</span> 
+         <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> 
+         <span class="n">fillstyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
+         <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">window</span><span class="p">,</span> <span class="n">negative</span><span class="p">,</span> <span class="n">recall</span> <span class="o">=</span> <span class="n">aggregate_z</span><span class="p">(</span><span class="s2">&quot;window&quot;</span><span class="p">,</span> <span class="s2">&quot;negative&quot;</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">window</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">negative</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="n">recall</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">color_palette</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Number of negative examples&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Context window size&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> 
+        <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;window&#39;</span><span class="p">],</span> 
+         <span class="n">best_config</span><span class="p">[</span><span class="s1">&#39;negative&#39;</span><span class="p">],</span> 
+         <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> 
+         <span class="n">fillstyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> 
+         <span class="n">color</span><span class="o">=</span><span class="n">cldr_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+         <span class="n">markersize</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;hpsweep_results.png&quot;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T622304_Session_based_Recommender_Using_Word2vec_49_0.png" src="../_images/T622304_Session_based_Recommender_Using_Word2vec_49_0.png" />
+</div>
+</div>
+<p>And there we have it! Each panel shows the Recall&#64;10 scores (where yellow is a high score and purple is a low score) associated with a unique configuration of hyperparameters. The best hyperparameter values for the Online Retail Data Set are denoted by the light blue circle. Word2vec’s default values are shown by the orange star. In all cases, the orange star is nowhere near the light blue circle, indicating that the default values are not optimal for this dataset.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T023535_Kafka_MongoDB_Real_time_Streaming.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Kafka MongoDB Real-time Streaming</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Bandit-based Online Learning using Thompson Sampling</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

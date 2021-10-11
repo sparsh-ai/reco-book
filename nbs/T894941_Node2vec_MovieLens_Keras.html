@@ -1,0 +1,1878 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graph representation learning with node2vec &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Node2vec from scratch in PyTorch Geometric" href="T611050_Node2vec_PyG.html" />
+    <link rel="prev" title="Node2vec from scratch referencing Karateclub library" href="T815556_Node2vec_Karateclub.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T894941_Node2vec_MovieLens_Keras.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T894941_Node2vec_MovieLens_Keras.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#download-the-movielens-dataset-and-prepare-the-data">
+   Download the MovieLens dataset and prepare the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#construct-the-movies-graph">
+   Construct the Movies graph
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-1-create-the-weighted-edges-between-movies">
+     Step 1: create the weighted edges between movies.
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-2-create-the-graph-with-the-nodes-and-the-edges">
+     Step 2: create the graph with the nodes and the edges
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#step-3-create-vocabulary-and-a-mapping-from-tokens-to-integer-indices">
+     Step 3: Create vocabulary and a mapping from tokens to integer indices
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implement-the-biased-random-walk">
+   Implement the biased random walk
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#generate-training-data-using-the-biased-random-walk">
+   Generate training data using the biased random walk
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#generate-positive-and-negative-examples">
+   Generate positive and negative examples
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#generate-examples">
+     Generate examples
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#convert-the-data-into-tf-data-dataset-objects">
+     Convert the data into
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       tf.data.Dataset
+      </span>
+     </code>
+     objects
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-the-skip-gram-model">
+   Train the skip-gram model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#implement-the-model">
+     Implement the model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-model">
+     Train the model
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#analyze-the-learnt-embeddings">
+   Analyze the learnt embeddings.
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#find-related-movies">
+     Find related movies
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#visualize-the-embeddings-using-the-embedding-projector">
+     Visualize the embeddings using the Embedding Projector
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><a href="https://colab.research.google.com/github/sparsh-ai/reco-book/blob/stage/nbs/T894941_Node2vec_MovieLens_Keras.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<div class="section" id="graph-representation-learning-with-node2vec">
+<h1>Graph representation learning with node2vec<a class="headerlink" href="#graph-representation-learning-with-node2vec" title="Permalink to this headline">¶</a></h1>
+<p><strong>Author:</strong> <a class="reference external" href="https://www.linkedin.com/in/khalid-salama-24403144/">Khalid Salama</a><br>
+<strong>Date created:</strong> 2021/05/15<br>
+<strong>Last modified:</strong> 2021/05/15<br>
+<strong>Description:</strong> Implementing the node2vec model to generate embeddings for movies from the MovieLens dataset.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Learning useful representations from objects structured as graphs is useful for
+a variety of machine learning (ML) applications—such as social and communication networks analysis,
+biomedicine studies, and recommendation systems.
+<a class="reference external" href="https://www.cs.mcgill.ca/~wlh/grl_book/">Graph representation Learning</a> aims to
+learn embeddings for the graph nodes, which can be used for a variety of ML tasks
+such as node label prediction (e.g. categorizing an article based on its citations)
+and link prediction (e.g. recommending an interest group to a user in a social network).</p>
+<p><a class="reference external" href="https://arxiv.org/abs/1607.00653">node2vec</a> is a simple, yet scalable and effective
+technique for learning low-dimensional embeddings for nodes in a graph by optimizing
+a neighborhood-preserving objective. The aim is to learn similar embeddings for
+neighboring nodes, with respect to the graph structure.</p>
+<p>Given your data items structured as a graph (where the items are represented as
+nodes and the relationship between items are represented as edges),
+node2vec works as follows:</p>
+<ol class="simple">
+<li><p>Generate item sequences using (biased) random walk.</p></li>
+<li><p>Create positive and negative training examples from these sequences.</p></li>
+<li><p>Train a <a class="reference external" href="https://www.tensorflow.org/tutorials/text/word2vec">word2vec</a> model
+(skip-gram) to learn embeddings for the items.</p></li>
+</ol>
+<p>In this example, we demonstrate the node2vec technique on the
+<a class="reference external" href="https://files.grouplens.org/datasets/movielens/ml-latest-small-README.html">small version of the Movielens dataset</a>
+to learn movie embeddings. Such a dataset can be represented as a graph by treating
+the movies as nodes, and creating edges between movies that have similar ratings
+by the users. The learnt movie embeddings can be used for tasks such as movie recommendation,
+or movie genres prediction.</p>
+<p>This example requires <code class="docutils literal notranslate"><span class="pre">networkx</span></code> package, which can be installed using the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install networkx
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlretrieve</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">layers</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="download-the-movielens-dataset-and-prepare-the-data">
+<h2>Download the MovieLens dataset and prepare the data<a class="headerlink" href="#download-the-movielens-dataset-and-prepare-the-data" title="Permalink to this headline">¶</a></h2>
+<p>The small version of the MovieLens dataset includes around 100k ratings
+from 610 users on 9,742 movies.</p>
+<p>First, let’s download the dataset. The downloaded folder will contain
+three data files: <code class="docutils literal notranslate"><span class="pre">users.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">movies.csv</span></code>, and <code class="docutils literal notranslate"><span class="pre">ratings.csv</span></code>. In this example,
+we will only need the <code class="docutils literal notranslate"><span class="pre">movies.dat</span></code>, and <code class="docutils literal notranslate"><span class="pre">ratings.dat</span></code> data files.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">urlretrieve</span><span class="p">(</span>
+    <span class="s2">&quot;http://files.grouplens.org/datasets/movielens/ml-latest-small.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;movielens.zip&quot;</span>
+<span class="p">)</span>
+<span class="n">ZipFile</span><span class="p">(</span><span class="s2">&quot;movielens.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we load the data into a Pandas DataFrame and perform some basic preprocessing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load movies to a DataFrame.</span>
+<span class="n">movies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;ml-latest-small/movies.csv&quot;</span><span class="p">)</span>
+<span class="c1"># Create a `movieId` string.</span>
+<span class="n">movies</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;movie_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load ratings to a DataFrame.</span>
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;ml-latest-small/ratings.csv&quot;</span><span class="p">)</span>
+<span class="c1"># Convert the `ratings` to floating point</span>
+<span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="c1"># Create the `movie_id` string.</span>
+<span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;movie_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Movies data shape:&quot;</span><span class="p">,</span> <span class="n">movies</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ratings data shape:&quot;</span><span class="p">,</span> <span class="n">ratings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Movies data shape: (9742, 3)
+Ratings data shape: (100836, 4)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s inspect a sample instance of the <code class="docutils literal notranslate"><span class="pre">ratings</span></code> DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ratings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>movie_1</td>
+      <td>4.0</td>
+      <td>964982703</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>movie_3</td>
+      <td>4.0</td>
+      <td>964981247</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>movie_6</td>
+      <td>4.0</td>
+      <td>964982224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>movie_47</td>
+      <td>5.0</td>
+      <td>964983815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>movie_50</td>
+      <td>5.0</td>
+      <td>964982931</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Next, let’s check a sample instance of the <code class="docutils literal notranslate"><span class="pre">movies</span></code> DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movies</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>movie_1</td>
+      <td>Toy Story (1995)</td>
+      <td>Adventure|Animation|Children|Comedy|Fantasy</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>movie_2</td>
+      <td>Jumanji (1995)</td>
+      <td>Adventure|Children|Fantasy</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>movie_3</td>
+      <td>Grumpier Old Men (1995)</td>
+      <td>Comedy|Romance</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>movie_4</td>
+      <td>Waiting to Exhale (1995)</td>
+      <td>Comedy|Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>movie_5</td>
+      <td>Father of the Bride Part II (1995)</td>
+      <td>Comedy</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Implement two utility functions for the <code class="docutils literal notranslate"><span class="pre">movies</span></code> DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_movie_title_by_id</span><span class="p">(</span><span class="n">movieId</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="o">.</span><span class="n">movieId</span> <span class="o">==</span> <span class="n">movieId</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">get_movie_id_by_title</span><span class="p">(</span><span class="n">title</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="o">.</span><span class="n">title</span> <span class="o">==</span> <span class="n">title</span><span class="p">]</span><span class="o">.</span><span class="n">movieId</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="construct-the-movies-graph">
+<h2>Construct the Movies graph<a class="headerlink" href="#construct-the-movies-graph" title="Permalink to this headline">¶</a></h2>
+<p>We create an edge between two movie nodes in the graph if both movies are rated
+by the same user &gt;= <code class="docutils literal notranslate"><span class="pre">min_rating</span></code>. The weight of the edge will be based on the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Pointwise_mutual_information">pointwise mutual information</a>
+between the two movies, which is computed as: <code class="docutils literal notranslate"><span class="pre">log(xy)</span> <span class="pre">-</span> <span class="pre">log(x)</span> <span class="pre">-</span> <span class="pre">log(y)</span> <span class="pre">+</span> <span class="pre">log(D)</span></code>, where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xy</span></code> is how many users rated both movie <code class="docutils literal notranslate"><span class="pre">x</span></code> and movie <code class="docutils literal notranslate"><span class="pre">y</span></code> with &gt;= <code class="docutils literal notranslate"><span class="pre">min_rating</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code> is how many users rated movie <code class="docutils literal notranslate"><span class="pre">x</span></code> &gt;= <code class="docutils literal notranslate"><span class="pre">min_rating</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code> is how many users rated movie <code class="docutils literal notranslate"><span class="pre">y</span></code> &gt;= <code class="docutils literal notranslate"><span class="pre">min_rating</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">D</span></code> total number of movie ratings &gt;= <code class="docutils literal notranslate"><span class="pre">min_rating</span></code>.</p></li>
+</ul>
+<div class="section" id="step-1-create-the-weighted-edges-between-movies">
+<h3>Step 1: create the weighted edges between movies.<a class="headerlink" href="#step-1-create-the-weighted-edges-between-movies" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">min_rating</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">pair_frequency</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">item_frequency</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Filter instances where rating is greater than or equal to min_rating.</span>
+<span class="n">rated_movies</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">rating</span> <span class="o">&gt;=</span> <span class="n">min_rating</span><span class="p">]</span>
+<span class="c1"># Group instances by user.</span>
+<span class="n">movies_grouped_by_users</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rated_movies</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;userId&quot;</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+    <span class="n">movies_grouped_by_users</span><span class="p">,</span>
+    <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">leave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Compute movie rating frequencies&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># Get a list of movies rated by the user.</span>
+    <span class="n">current_movies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;movieId&quot;</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">current_movies</span><span class="p">)):</span>
+        <span class="n">item_frequency</span><span class="p">[</span><span class="n">current_movies</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_movies</span><span class="p">)):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">current_movies</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">current_movies</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">current_movies</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">current_movies</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">pair_frequency</span><span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Compute movie rating frequencies: 100%|██████████| 573/573 [00:00&lt;00:00, 824.87it/s]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="step-2-create-the-graph-with-the-nodes-and-the-edges">
+<h3>Step 2: create the graph with the nodes and the edges<a class="headerlink" href="#step-2-create-the-graph-with-the-nodes-and-the-edges" title="Permalink to this headline">¶</a></h3>
+<p>To reduce the number of edges between nodes, we only add an edge between movies
+if the weight of the edge is greater than <code class="docutils literal notranslate"><span class="pre">min_weight</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">min_weight</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">item_frequency</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+<span class="c1"># Create the movies undirected graph.</span>
+<span class="n">movies_graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="c1"># Add weighted edges between movies.</span>
+<span class="c1"># This automatically adds the movie nodes to the graph.</span>
+<span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+    <span class="n">pair_frequency</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Creating the movie graph&quot;</span>
+<span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">pair</span>
+    <span class="n">xy_frequency</span> <span class="o">=</span> <span class="n">pair_frequency</span><span class="p">[</span><span class="n">pair</span><span class="p">]</span>
+    <span class="n">x_frequency</span> <span class="o">=</span> <span class="n">item_frequency</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+    <span class="n">y_frequency</span> <span class="o">=</span> <span class="n">item_frequency</span><span class="p">[</span><span class="n">y</span><span class="p">]</span>
+    <span class="n">pmi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">xy_frequency</span><span class="p">)</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x_frequency</span><span class="p">)</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">y_frequency</span><span class="p">)</span> <span class="o">+</span> <span class="n">D</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">pmi</span> <span class="o">*</span> <span class="n">xy_frequency</span>
+    <span class="c1"># Only include edges with weight &gt;= min_weight.</span>
+    <span class="k">if</span> <span class="n">weight</span> <span class="o">&gt;=</span> <span class="n">min_weight</span><span class="p">:</span>
+        <span class="n">movies_graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating the movie graph: 100%|██████████| 298586/298586 [00:00&lt;00:00, 456926.28it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s display the total number of nodes and edges in the graph.
+Note that the number of nodes is less than the total number of movies,
+since only the movies that have edges to other movies are added.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total number of graph nodes:&quot;</span><span class="p">,</span> <span class="n">movies_graph</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total number of graph edges:&quot;</span><span class="p">,</span> <span class="n">movies_graph</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of graph nodes: 1405
+Total number of graph edges: 40043
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s display the average node degree (number of neighbours) in the graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">degrees</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">movies_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+    <span class="n">degrees</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">movies_graph</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average node degree:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">degrees</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">degrees</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average node degree: 57.0
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="step-3-create-vocabulary-and-a-mapping-from-tokens-to-integer-indices">
+<h3>Step 3: Create vocabulary and a mapping from tokens to integer indices<a class="headerlink" href="#step-3-create-vocabulary-and-a-mapping-from-tokens-to-integer-indices" title="Permalink to this headline">¶</a></h3>
+<p>The vocabulary is the nodes (movie IDs) in the graph.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">vocabulary</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;NA&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">movies_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="n">vocabulary_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">token</span><span class="p">:</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="implement-the-biased-random-walk">
+<h2>Implement the biased random walk<a class="headerlink" href="#implement-the-biased-random-walk" title="Permalink to this headline">¶</a></h2>
+<p>A random walk starts from a given node, and randomly picks a neighbour node to move to.
+If the edges are weighted, the neighbour is selected <em>probabilistically</em> with
+respect to weights of the edges between the current node and its neighbours.
+This procedure is repeated for <code class="docutils literal notranslate"><span class="pre">num_steps</span></code> to generate a sequence of <em>related</em> nodes.</p>
+<p>The <a class="reference external" href="https://en.wikipedia.org/wiki/Biased_random_walk_on_a_graph"><em>biased</em> random walk</a> balances between <strong>breadth-first sampling</strong>
+(where only local neighbours are visited) and <strong>depth-first sampling</strong>
+(where  distant neighbours are visited) by introducing the following two parameters:</p>
+<ol class="simple">
+<li><p><strong>Return parameter</strong> (<code class="docutils literal notranslate"><span class="pre">p</span></code>): Controls the likelihood of immediately revisiting
+a node in the walk. Setting it to a high value encourages moderate exploration,
+while setting it to a low value would keep the walk local.</p></li>
+<li><p><strong>In-out parameter</strong> (<code class="docutils literal notranslate"><span class="pre">q</span></code>): Allows the search to differentiate
+between <em>inward</em> and <em>outward</em> nodes. Setting it to a high value biases the
+random walk towards local nodes, while setting it to a low value biases the walk
+to visit nodes which are further away.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">next_step</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">current</span><span class="p">))</span>
+
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Adjust the weights of the edges to the neighbors with respect to p and q.</span>
+    <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">neighbor</span> <span class="o">==</span> <span class="n">previous</span><span class="p">:</span>
+            <span class="c1"># Control the probability to return to the previous node.</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="n">neighbor</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">graph</span><span class="o">.</span><span class="n">has_edge</span><span class="p">(</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">previous</span><span class="p">):</span>
+            <span class="c1"># The probability of visiting a local node.</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="n">neighbor</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Control the probability to move forward.</span>
+            <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="n">current</span><span class="p">][</span><span class="n">neighbor</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">q</span><span class="p">)</span>
+
+    <span class="c1"># Compute the probabilities of visiting each neighbor.</span>
+    <span class="n">weight_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">weight</span> <span class="o">/</span> <span class="n">weight_sum</span> <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
+    <span class="c1"># Probabilistically select a neighbor to visit.</span>
+    <span class="nb">next</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">next</span>
+
+
+<span class="k">def</span> <span class="nf">random_walk</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">num_walks</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="n">walks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="c1"># Perform multiple iterations of the random walk.</span>
+    <span class="k">for</span> <span class="n">walk_iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_walks</span><span class="p">):</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+            <span class="n">nodes</span><span class="p">,</span>
+            <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">leave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Random walks iteration </span><span class="si">{</span><span class="n">walk_iteration</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">num_walks</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="c1"># Start the walk with a random node from the graph.</span>
+            <span class="n">walk</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
+            <span class="c1"># Randomly walk for num_steps.</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_steps</span><span class="p">:</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">previous</span> <span class="o">=</span> <span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="c1"># Compute the next node to visit.</span>
+                <span class="nb">next</span> <span class="o">=</span> <span class="n">next_step</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">previous</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+                <span class="n">walk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+            <span class="c1"># Replace node ids (movie ids) in the walk with token ids.</span>
+            <span class="n">walk</span> <span class="o">=</span> <span class="p">[</span><span class="n">vocabulary_lookup</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">walk</span><span class="p">]</span>
+            <span class="c1"># Add the walk to the generated sequence.</span>
+            <span class="n">walks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">walks</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="generate-training-data-using-the-biased-random-walk">
+<h2>Generate training data using the biased random walk<a class="headerlink" href="#generate-training-data-using-the-biased-random-walk" title="Permalink to this headline">¶</a></h2>
+<p>You can explore different configurations of <code class="docutils literal notranslate"><span class="pre">p</span></code> and <code class="docutils literal notranslate"><span class="pre">q</span></code> to different results of
+related movies.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random walk return parameter.</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># Random walk in-out parameter.</span>
+<span class="n">q</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># Number of iterations of random walks.</span>
+<span class="n">num_walks</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1"># Number of steps of each random walk.</span>
+<span class="n">num_steps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">walks</span> <span class="o">=</span> <span class="n">random_walk</span><span class="p">(</span><span class="n">movies_graph</span><span class="p">,</span> <span class="n">num_walks</span><span class="p">,</span> <span class="n">num_steps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of walks generated:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">walks</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Random walks iteration 1 of 5: 100%|██████████| 1405/1405 [00:08&lt;00:00, 168.76it/s]
+Random walks iteration 2 of 5: 100%|██████████| 1405/1405 [00:07&lt;00:00, 178.81it/s]
+Random walks iteration 3 of 5: 100%|██████████| 1405/1405 [00:08&lt;00:00, 174.19it/s]
+Random walks iteration 4 of 5: 100%|██████████| 1405/1405 [00:08&lt;00:00, 175.37it/s]
+Random walks iteration 5 of 5: 100%|██████████| 1405/1405 [00:08&lt;00:00, 174.63it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of walks generated: 7025
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="generate-positive-and-negative-examples">
+<h2>Generate positive and negative examples<a class="headerlink" href="#generate-positive-and-negative-examples" title="Permalink to this headline">¶</a></h2>
+<p>To train a skip-gram model, we use the generated walks to create positive and
+negative training examples. Each example includes the following features:</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">target</span></code>: A movie in a walk sequence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: Another movie in a walk sequence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">weight</span></code>: How many times these two movies occured in walk sequences.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code>: The label is 1 if these two movies are samples from the walk sequences,
+otherwise (i.e., if randomly sampled) the label is 0.</p></li>
+</ol>
+<div class="section" id="generate-examples">
+<h3>Generate examples<a class="headerlink" href="#generate-examples" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_examples</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">num_negative_samples</span><span class="p">,</span> <span class="n">vocabulary_size</span><span class="p">):</span>
+    <span class="n">example_weights</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># Iterate over all sequences (walks).</span>
+    <span class="k">for</span> <span class="n">sequence</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span>
+        <span class="n">sequences</span><span class="p">,</span>
+        <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">leave</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Generating postive and negative examples&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># Generate positive and negative skip-gram pairs for a sequence (walk).</span>
+        <span class="n">pairs</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">skipgrams</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="p">,</span>
+            <span class="n">vocabulary_size</span><span class="o">=</span><span class="n">vocabulary_size</span><span class="p">,</span>
+            <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span>
+            <span class="n">negative_samples</span><span class="o">=</span><span class="n">num_negative_samples</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pairs</span><span class="p">)):</span>
+            <span class="n">pair</span> <span class="o">=</span> <span class="n">pairs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="n">target</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="n">context</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="n">example_weights</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">targets</span><span class="p">,</span> <span class="n">contexts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">example_weights</span><span class="p">:</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">example_weights</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span>
+        <span class="n">target</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">entry</span>
+        <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">contexts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targets</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">contexts</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+
+<span class="n">num_negative_samples</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">targets</span><span class="p">,</span> <span class="n">contexts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">generate_examples</span><span class="p">(</span>
+    <span class="n">sequences</span><span class="o">=</span><span class="n">walks</span><span class="p">,</span>
+    <span class="n">window_size</span><span class="o">=</span><span class="n">num_steps</span><span class="p">,</span>
+    <span class="n">num_negative_samples</span><span class="o">=</span><span class="n">num_negative_samples</span><span class="p">,</span>
+    <span class="n">vocabulary_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating postive and negative examples: 100%|██████████| 7025/7025 [00:16&lt;00:00, 434.82it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s display the shapes of the outputs</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Targets shape: </span><span class="si">{</span><span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Contexts shape: </span><span class="si">{</span><span class="n">contexts</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Labels shape: </span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Weights shape: </span><span class="si">{</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Targets shape: (883356,)
+Contexts shape: (883356,)
+Labels shape: (883356,)
+Weights shape: (883356,)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="convert-the-data-into-tf-data-dataset-objects">
+<h3>Convert the data into <code class="docutils literal notranslate"><span class="pre">tf.data.Dataset</span></code> objects<a class="headerlink" href="#convert-the-data-into-tf-data-dataset-objects" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1024</span>
+
+
+<span class="k">def</span> <span class="nf">create_dataset</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">contexts</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">targets</span><span class="p">,</span>
+        <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">contexts</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">((</span><span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">weights</span><span class="p">))</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">buffer_size</span><span class="o">=</span><span class="n">batch_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">drop_remainder</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">prefetch</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span>
+
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">create_dataset</span><span class="p">(</span>
+    <span class="n">targets</span><span class="o">=</span><span class="n">targets</span><span class="p">,</span>
+    <span class="n">contexts</span><span class="o">=</span><span class="n">contexts</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+    <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-the-skip-gram-model">
+<h2>Train the skip-gram model<a class="headerlink" href="#train-the-skip-gram-model" title="Permalink to this headline">¶</a></h2>
+<p>Our skip-gram is a simple binary classification model that works as follows:</p>
+<ol class="simple">
+<li><p>An embedding is looked up for the <code class="docutils literal notranslate"><span class="pre">target</span></code> movie.</p></li>
+<li><p>An embedding is looked up for the <code class="docutils literal notranslate"><span class="pre">context</span></code> movie.</p></li>
+<li><p>The dot product is computed between these two embeddings.</p></li>
+<li><p>The result (after a sigmoid activation) is compared to the label.</p></li>
+<li><p>A binary crossentropy loss is used.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">embedding_dim</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="implement-the-model">
+<h3>Implement the model<a class="headerlink" href="#implement-the-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">vocabulary_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
+
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">layers</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;context&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="c1"># Initialize item embeddings.</span>
+    <span class="n">embed_item</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span>
+        <span class="n">input_dim</span><span class="o">=</span><span class="n">vocabulary_size</span><span class="p">,</span>
+        <span class="n">output_dim</span><span class="o">=</span><span class="n">embedding_dim</span><span class="p">,</span>
+        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">&quot;he_normal&quot;</span><span class="p">,</span>
+        <span class="n">embeddings_regularizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">regularizers</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;item_embeddings&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># Lookup embeddings for target.</span>
+    <span class="n">target_embeddings</span> <span class="o">=</span> <span class="n">embed_item</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span>
+    <span class="c1"># Lookup embeddings for context.</span>
+    <span class="n">context_embeddings</span> <span class="o">=</span> <span class="n">embed_item</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;context&quot;</span><span class="p">])</span>
+    <span class="c1"># Compute dot similarity between target and context embeddings.</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">layers</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dot_similarity&quot;</span><span class="p">)(</span>
+        <span class="p">[</span><span class="n">target_embeddings</span><span class="p">,</span> <span class="n">context_embeddings</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="c1"># Create the model.</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="train-the-model">
+<h3>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h3>
+<p>We instantiate the model and compile it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">),</span> <span class="n">embedding_dim</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">),</span>
+    <span class="n">loss</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">BinaryCrossentropy</span><span class="p">(</span><span class="n">from_logits</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s plot the model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">plot_model</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">show_shapes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_layer_names</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T894941_Node2vec_MovieLens_Keras_45_0.png" src="../_images/T894941_Node2vec_MovieLens_Keras_45_0.png" />
+</div>
+</div>
+<p>Now we train the model on the <code class="docutils literal notranslate"><span class="pre">dataset</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">num_epochs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/10
+862/862 [==============================] - 6s 6ms/step - loss: 2.4486
+Epoch 2/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3375
+Epoch 3/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3311
+Epoch 4/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3275
+Epoch 5/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3234
+Epoch 6/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3193
+Epoch 7/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3157
+Epoch 8/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3128
+Epoch 9/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3102
+Epoch 10/10
+862/862 [==============================] - 5s 6ms/step - loss: 2.3077
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally we plot the learning history.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;loss&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T894941_Node2vec_MovieLens_Keras_49_0.png" src="../_images/T894941_Node2vec_MovieLens_Keras_49_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="analyze-the-learnt-embeddings">
+<h2>Analyze the learnt embeddings.<a class="headerlink" href="#analyze-the-learnt-embeddings" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_embeddings</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;item_embeddings&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Embeddings shape:&quot;</span><span class="p">,</span> <span class="n">movie_embeddings</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Embeddings shape: (1406, 50)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="find-related-movies">
+<h3>Find related movies<a class="headerlink" href="#find-related-movies" title="Permalink to this headline">¶</a></h3>
+<p>Define a list with some movies called <code class="docutils literal notranslate"><span class="pre">query_movies</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">query_movies</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Matrix, The (1999)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Star Wars: Episode IV - A New Hope (1977)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Lion King, The (1994)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Terminator 2: Judgment Day (1991)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Godfather, The (1972)&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the embeddings of the movies in <code class="docutils literal notranslate"><span class="pre">query_movies</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">query_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">movie_title</span> <span class="ow">in</span> <span class="n">query_movies</span><span class="p">:</span>
+    <span class="n">movieId</span> <span class="o">=</span> <span class="n">get_movie_id_by_title</span><span class="p">(</span><span class="n">movie_title</span><span class="p">)</span>
+    <span class="n">token_id</span> <span class="o">=</span> <span class="n">vocabulary_lookup</span><span class="p">[</span><span class="n">movieId</span><span class="p">]</span>
+    <span class="n">movie_embedding</span> <span class="o">=</span> <span class="n">movie_embeddings</span><span class="p">[</span><span class="n">token_id</span><span class="p">]</span>
+    <span class="n">query_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">movie_embedding</span><span class="p">)</span>
+
+<span class="n">query_embeddings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">query_embeddings</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compute the <a class="reference external" href="https://en.wikipedia.org/wiki/Cosine_similarity">consine similarity</a> between the embeddings of <code class="docutils literal notranslate"><span class="pre">query_movies</span></code>
+and all the other movies, then pick the top k for each.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">similarities</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">l2_normalize</span><span class="p">(</span><span class="n">query_embeddings</span><span class="p">),</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">l2_normalize</span><span class="p">(</span><span class="n">movie_embeddings</span><span class="p">),</span>
+    <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">top_k</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Display the top related movies in <code class="docutils literal notranslate"><span class="pre">query_movies</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">query_movies</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="s2">&quot;-&quot;</span><span class="p">))</span>
+    <span class="n">similar_tokens</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">similar_tokens</span><span class="p">:</span>
+        <span class="n">similar_movieId</span> <span class="o">=</span> <span class="n">vocabulary</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+        <span class="n">similar_title</span> <span class="o">=</span> <span class="n">get_movie_title_by_id</span><span class="p">(</span><span class="n">similar_movieId</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">similar_title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Matrix, The (1999)
+------------------
+- Matrix, The (1999)
+- Fight Club (1999)
+- Lord of the Rings: The Return of the King, The (2003)
+- Lord of the Rings: The Fellowship of the Ring, The (2001)
+- Dark Knight, The (2008)
+
+Star Wars: Episode IV - A New Hope (1977)
+-----------------------------------------
+- Star Wars: Episode IV - A New Hope (1977)
+- Forrest Gump (1994)
+- Terminator 2: Judgment Day (1991)
+- Silence of the Lambs, The (1991)
+- Matrix, The (1999)
+
+Lion King, The (1994)
+---------------------
+- Beauty and the Beast (1991)
+- Lion King, The (1994)
+- Die Hard: With a Vengeance (1995)
+- Aladdin (1992)
+- Independence Day (a.k.a. ID4) (1996)
+
+Terminator 2: Judgment Day (1991)
+---------------------------------
+- Terminator 2: Judgment Day (1991)
+- Forrest Gump (1994)
+- Braveheart (1995)
+- Silence of the Lambs, The (1991)
+- Jurassic Park (1993)
+
+Godfather, The (1972)
+---------------------
+- Godfather, The (1972)
+- Reservoir Dogs (1992)
+- Fargo (1996)
+- Apocalypse Now (1979)
+- Star Wars: Episode V - The Empire Strikes Back (1980)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="visualize-the-embeddings-using-the-embedding-projector">
+<h3>Visualize the embeddings using the Embedding Projector<a class="headerlink" href="#visualize-the-embeddings-using-the-embedding-projector" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">io</span>
+
+<span class="n">out_v</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;embeddings.tsv&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">out_m</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;metadata.tsv&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">movie_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+    <span class="n">movie_title</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">movies</span><span class="p">[</span><span class="n">movies</span><span class="o">.</span><span class="n">movieId</span> <span class="o">==</span> <span class="n">movie_id</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="n">movie_embeddings</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">out_v</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vector</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">out_m</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">movie_title</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">out_v</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">out_m</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Download the <code class="docutils literal notranslate"><span class="pre">embeddings.tsv</span></code> and <code class="docutils literal notranslate"><span class="pre">metadata.tsv</span></code> to analyze the obtained embeddings
+in the <a class="reference external" href="https://projector.tensorflow.org/">Embedding Projector</a>.</p>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T815556_Node2vec_Karateclub.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Node2vec from scratch referencing Karateclub library</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T611050_Node2vec_PyG.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Node2vec from scratch in PyTorch Geometric</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

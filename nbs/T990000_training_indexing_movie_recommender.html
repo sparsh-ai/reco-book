@@ -1,0 +1,2295 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Training and indexing movie recommender &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EduRec MOOCCube Course Recommender" href="T207114_EduRec_MOOCCube_Course_Recommender.html" />
+    <link rel="prev" title="TF Serving in action" href="T990000_tf_serving_in_action.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990000_training_indexing_movie_recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990000_training_indexing_movie_recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-data">
+   Loading data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-dictionnaries-to-convert-ids-and-indexes">
+   Create dictionnaries to convert ids and indexes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#keras-model">
+   Keras Model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-and-save-model">
+     Train and save model
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-objects">
+   Load objects
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prediction">
+   Prediction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recommanding-movies-using-knn-on-embedding-spaces">
+   Recommanding movies using KNN on embedding spaces
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#looking-at-movies-embedding-space">
+     Looking at movies embedding space
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#looking-at-users-embedding-space">
+     Looking at users embedding space
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="training-and-indexing-movie-recommender">
+<h1>Training and indexing movie recommender<a class="headerlink" href="#training-and-indexing-movie-recommender" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Building tensorflow model on movielens latest small variant and indexing using NMSlib for efficient retrieval.</p>
+</div></blockquote>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install -q nmslib
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">load_model</span><span class="p">,</span> <span class="n">model_from_json</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Model</span> <span class="k">as</span> <span class="n">KerasModel</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Concatenate</span>
+<span class="kn">from</span> <span class="nn">keras.layers.embeddings</span> <span class="kn">import</span> <span class="n">Embedding</span>
+<span class="kn">from</span> <span class="nn">keras.callbacks</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">optimizers</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+
+<span class="kn">import</span> <span class="nn">nmslib</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="loading-data">
+<h2>Loading data<a class="headerlink" href="#loading-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!unzip ml-latest-small.zip
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span> <span class="o">=</span> <span class="s2">&quot;ml-latest-small&quot;</span>
+<span class="n">ratings_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s2">&quot;/ratings.csv&quot;</span><span class="p">)</span>
+<span class="n">ratings_raw</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>964982703</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>964981247</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>6</td>
+      <td>4.0</td>
+      <td>964982224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>47</td>
+      <td>5.0</td>
+      <td>964983815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>50</td>
+      <td>5.0</td>
+      <td>964982931</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movies_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s2">&quot;/movies.csv&quot;</span><span class="p">)</span>
+<span class="n">movies_raw</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Toy Story (1995)</td>
+      <td>Adventure|Animation|Children|Comedy|Fantasy</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Jumanji (1995)</td>
+      <td>Adventure|Children|Fantasy</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Grumpier Old Men (1995)</td>
+      <td>Comedy|Romance</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Waiting to Exhale (1995)</td>
+      <td>Comedy|Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Father of the Bride Part II (1995)</td>
+      <td>Comedy</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="create-dictionnaries-to-convert-ids-and-indexes">
+<h2>Create dictionnaries to convert ids and indexes<a class="headerlink" href="#create-dictionnaries-to-convert-ids-and-indexes" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ratings_train</span> <span class="o">=</span> <span class="n">ratings_raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">users_uniq</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">user2idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">o</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">users_uniq</span><span class="p">)}</span>
+<span class="n">idx2user</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">o</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">users_uniq</span><span class="p">)}</span>
+<span class="n">ratings_train</span><span class="o">.</span><span class="n">userId</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">user2idx</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">movies_uniq</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">movie2idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">o</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">movies_uniq</span><span class="p">)}</span>
+<span class="n">idx2movie</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">o</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">movies_uniq</span><span class="p">)}</span>
+<span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">movie2idx</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+
+<span class="n">n_users</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ratings_train</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+<span class="n">n_movies</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">nunique</span><span class="p">())</span>
+
+<span class="n">n_users</span><span class="p">,</span> <span class="n">n_movies</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(610, 9724)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">save_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>  
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pkl&quot;</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span>
+
+<span class="n">save_obj</span><span class="p">(</span><span class="n">user2idx</span><span class="p">,</span> <span class="s2">&quot;user2idx&quot;</span><span class="p">)</span>
+<span class="n">save_obj</span><span class="p">(</span><span class="n">idx2user</span><span class="p">,</span> <span class="s2">&quot;idx2user&quot;</span><span class="p">)</span>
+<span class="n">save_obj</span><span class="p">(</span><span class="n">movie2idx</span><span class="p">,</span> <span class="s2">&quot;movie2idx&quot;</span><span class="p">)</span>
+<span class="n">save_obj</span><span class="p">(</span><span class="n">idx2movie</span><span class="p">,</span> <span class="s2">&quot;idx2movie&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="keras-model">
+<h2>Keras Model<a class="headerlink" href="#keras-model" title="Permalink to this headline">¶</a></h2>
+<p>The model works as follows:</p>
+<ol class="simple">
+<li><p>Embedds the user and movie id.</p></li>
+<li><p>Concanate the user embedding, movie embedding and the weighted rating into one vector.</p></li>
+<li><p>Passes to linear layers with dropout.</p></li>
+</ol>
+<p>The architecture takes as parameters the embedding size, the size of hidden layers, and the dropout probability associate to them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MovieNet</span><span class="p">:</span> 
+    <span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">-</span> <span class="n">y</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">custom_activation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_rating</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_users</span><span class="p">,</span> <span class="n">n_movies</span><span class="p">,</span> <span class="n">min_rating</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_rating</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_rating</span> <span class="o">=</span> <span class="n">min_rating</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_rating</span> <span class="o">=</span> <span class="n">max_rating</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_users</span> <span class="o">=</span> <span class="n">n_users</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_movies</span> <span class="o">=</span> <span class="n">n_movies</span>
+        
+    <span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emb_size</span><span class="o">=</span><span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="n">hl</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="p">[</span><span class="mf">0.25</span><span class="p">],</span> <span class="n">emb_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,)),</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,))]</span> <span class="c1">#, Input(shape=(1,))]</span>
+        <span class="n">users_emb</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_users</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="n">emb_trainable</span><span class="p">)(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">movies_emb</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_movies</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;movies&#39;</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="n">emb_trainable</span><span class="p">)(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">outputs_emb</span> <span class="o">=</span> <span class="p">[</span><span class="n">Reshape</span><span class="p">(</span><span class="n">target_shape</span><span class="o">=</span><span class="p">(</span><span class="n">emb_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],))(</span><span class="n">users_emb</span><span class="p">),</span> <span class="n">Reshape</span><span class="p">(</span><span class="n">target_shape</span><span class="o">=</span><span class="p">(</span><span class="n">emb_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],))(</span><span class="n">movies_emb</span><span class="p">)]</span>
+        
+        <span class="n">output_model</span> <span class="o">=</span> <span class="n">Concatenate</span><span class="p">()(</span><span class="n">outputs_emb</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">hl</span><span class="p">)):</span>
+            <span class="n">output_model</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hl</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">)(</span><span class="n">output_model</span><span class="p">)</span>
+            <span class="n">output_model</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">output_model</span><span class="p">)</span>
+            <span class="n">output_model</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">drop</span><span class="p">[</span><span class="n">i</span><span class="p">])(</span><span class="n">output_model</span><span class="p">)</span>
+
+        <span class="n">output_model</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="n">output_model</span><span class="p">)</span>
+
+        <span class="n">output_model</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">custom_activation</span><span class="p">)(</span><span class="n">output_model</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">KerasModel</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">output_model</span><span class="p">)</span>
+        
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">beta_1</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">beta_2</span><span class="o">=</span><span class="mf">0.999</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">opt</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rmse</span><span class="p">])</span>
+        
+          
+    <span class="k">def</span> <span class="nf">prepare_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_X</span><span class="p">):</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="n">_X</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">_X</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">values</span><span class="p">]</span><span class="c1">#, _X.ratingWeight]</span>
+        <span class="k">return</span> <span class="n">X</span>            
+            
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prepare_input</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">y_train</span><span class="p">,</span>
+                       <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prepare_input</span><span class="p">(</span><span class="n">X_valid</span><span class="p">),</span> <span class="n">y_valid</span><span class="p">),</span>
+                      <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># print(&quot;Result on validation data: &quot;, self.evaluate(X_valid, y_valid))</span>
+        
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prepare_input</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MovieModel&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_weights.h5&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_arch.json&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;MovieModel&quot;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_arch.json&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model_from_json</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;custom_activation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_activation</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_weights.h5&quot;</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_model</span> <span class="o">=</span> <span class="n">MovieNet</span><span class="p">(</span><span class="n">n_users</span><span class="p">,</span> <span class="n">n_movies</span><span class="p">)</span>
+<span class="n">movie_model</span><span class="o">.</span><span class="n">build_model</span><span class="p">(</span><span class="n">emb_size</span><span class="o">=</span><span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="n">hl</span><span class="o">=</span><span class="p">[</span><span class="mi">70</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;rating&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_valid</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_valid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(80668, 20168, 80668, 20168)
+</pre></div>
+</div>
+</div>
+</div>
+<p>It’s important that every movie are in the training set to have trained embedding of each of them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="n">n_movies</span><span class="p">,</span> <span class="n">n_movies</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(9015, 9724, 709)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">miss_movies</span> <span class="o">=</span> <span class="n">ratings_train</span><span class="p">[</span><span class="o">~</span><span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())][</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">miss_movies</span><span class="p">:</span>
+    <span class="n">concat</span> <span class="o">=</span> <span class="n">concat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratings_train</span><span class="p">[</span><span class="n">ratings_train</span><span class="o">.</span><span class="n">movieId</span> <span class="o">==</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    
+<span class="n">concat</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>291</th>
+      <td>2</td>
+      <td>282</td>
+      <td>4.5</td>
+      <td>1306464021</td>
+    </tr>
+    <tr>
+      <th>292</th>
+      <td>2</td>
+      <td>283</td>
+      <td>5.0</td>
+      <td>1306463825</td>
+    </tr>
+    <tr>
+      <th>294</th>
+      <td>2</td>
+      <td>285</td>
+      <td>5.0</td>
+      <td>1306463670</td>
+    </tr>
+    <tr>
+      <th>637</th>
+      <td>5</td>
+      <td>541</td>
+      <td>3.0</td>
+      <td>845556241</td>
+    </tr>
+    <tr>
+      <th>728</th>
+      <td>5</td>
+      <td>614</td>
+      <td>3.0</td>
+      <td>845556412</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="section" id="train-and-save-model">
+<h3>Train and save model<a class="headerlink" href="#train-and-save-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_valid</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">concat</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y_valid</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">concat</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">X_train</span><span class="p">,</span> <span class="n">concat</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">y_train</span><span class="p">,</span> <span class="n">concat</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">]])</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="n">n_movies</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(9724, 9724)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/5
+159/159 [==============================] - 17s 11ms/step - loss: 1.0931 - rmse: 1.0419 - val_loss: 0.7839 - val_rmse: 0.8739
+Epoch 2/5
+159/159 [==============================] - 1s 7ms/step - loss: 0.7692 - rmse: 0.8765 - val_loss: 0.7445 - val_rmse: 0.8491
+Epoch 3/5
+159/159 [==============================] - 1s 7ms/step - loss: 0.7151 - rmse: 0.8449 - val_loss: 0.7357 - val_rmse: 0.8435
+Epoch 4/5
+159/159 [==============================] - 1s 7ms/step - loss: 0.6707 - rmse: 0.8185 - val_loss: 0.7344 - val_rmse: 0.8434
+Epoch 5/5
+159/159 [==============================] - 1s 8ms/step - loss: 0.6454 - rmse: 0.8027 - val_loss: 0.7376 - val_rmse: 0.8471
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_model</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;movie_model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="load-objects">
+<h2>Load objects<a class="headerlink" href="#load-objects" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span> <span class="o">=</span> <span class="s1">&#39;ml-latest-small&#39;</span>
+<span class="n">ratings_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s2">&quot;/ratings.csv&quot;</span><span class="p">)</span>
+<span class="n">movies_raw</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s2">&quot;/movies.csv&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">load_obj</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>  
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.pkl&quot;</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+<span class="n">user2idx</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="s2">&quot;user2idx&quot;</span><span class="p">)</span>
+<span class="n">idx2user</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="s2">&quot;idx2user&quot;</span><span class="p">)</span>
+<span class="n">movie2idx</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="s2">&quot;movie2idx&quot;</span><span class="p">)</span>
+<span class="n">idx2movie</span> <span class="o">=</span> <span class="n">load_obj</span><span class="p">(</span><span class="s2">&quot;idx2movie&quot;</span><span class="p">)</span>
+
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">ratings_raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">user2idx</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">movie2idx</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="n">ratings</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>4.0</td>
+      <td>964982703</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>964981247</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>2</td>
+      <td>4.0</td>
+      <td>964982224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>3</td>
+      <td>5.0</td>
+      <td>964983815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>4</td>
+      <td>5.0</td>
+      <td>964982931</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_model</span> <span class="o">=</span> <span class="n">MovieNet</span><span class="p">(</span><span class="n">n_users</span><span class="p">,</span> <span class="n">n_movies</span><span class="p">)</span>
+<span class="n">movie_model</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;movie_model&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="prediction">
+<h2>Prediction<a class="headerlink" href="#prediction" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">X_pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;userId&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_movies</span><span class="p">)],</span> <span class="s2">&quot;movieId&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_movies</span><span class="p">)]})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="n">X_pred</span><span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_pred</span><span class="o">.</span><span class="n">userId</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">user_id</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">movie_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_pred</span><span class="p">)</span>
+    <span class="n">df_preds</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;pred&quot;</span><span class="p">:</span> <span class="n">preds</span><span class="p">,</span> <span class="s2">&quot;movieId&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_movies</span><span class="p">)],</span>
+                             <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">movies_raw</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">movies_raw</span><span class="o">.</span><span class="n">movieId</span> <span class="o">==</span> <span class="n">idx2movie</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_movies</span><span class="p">)]})</span>
+    <span class="k">return</span> <span class="n">df_preds</span>
+
+<span class="k">def</span> <span class="nf">suggest_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">predict_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">preds</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;pred&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">userId</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">preds</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">preds</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;movieId&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:</span><span class="n">m</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">user_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">predict_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">userId</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">][[</span><span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="s2">&quot;movieId&quot;</span><span class="p">]],</span> <span class="n">preds</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;movieId&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user_id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_users</span><span class="p">)</span>
+<span class="n">user_id</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>189
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">preds</span> <span class="o">=</span> <span class="n">user_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:]</span>
+<span class="n">preds</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rating</th>
+      <th>movieId</th>
+      <th>pred</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>32</th>
+      <td>5.0</td>
+      <td>763</td>
+      <td>3.563197</td>
+      <td>Harry Potter and the Chamber of Secrets (2002)</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>5.0</td>
+      <td>3149</td>
+      <td>3.375989</td>
+      <td>Life Aquatic with Steve Zissou, The (2004)</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>5.0</td>
+      <td>457</td>
+      <td>3.608593</td>
+      <td>Harry Potter and the Sorcerer's Stone (a.k.a. ...</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>5.0</td>
+      <td>1129</td>
+      <td>4.081214</td>
+      <td>Eternal Sunshine of the Spotless Mind (2004)</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>5.0</td>
+      <td>2046</td>
+      <td>4.013078</td>
+      <td>Lost in Translation (2003)</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>5.0</td>
+      <td>779</td>
+      <td>3.931088</td>
+      <td>Harry Potter and the Prisoner of Azkaban (2004)</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>5.0</td>
+      <td>3182</td>
+      <td>3.747530</td>
+      <td>And Your Mother Too (Y tu mamá también) (2001)</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>5.0</td>
+      <td>1146</td>
+      <td>4.204359</td>
+      <td>City of God (Cidade de Deus) (2002)</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>5.0</td>
+      <td>1125</td>
+      <td>4.156560</td>
+      <td>Amelie (Fabuleux destin d'Amélie Poulain, Le) ...</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>5.0</td>
+      <td>917</td>
+      <td>3.701892</td>
+      <td>Harry Potter and the Half-Blood Prince (2009)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">preds</span><span class="p">[</span><span class="s2">&quot;rating&quot;</span><span class="p">],</span> <span class="n">preds</span><span class="p">[</span><span class="s2">&quot;pred&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f5f74f50fd0&gt;
+</pre></div>
+</div>
+<img alt="../_images/T990000_training_indexing_movie_recommender_31_1.png" src="../_images/T990000_training_indexing_movie_recommender_31_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">suggest_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pred</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2158</th>
+      <td>4.594354</td>
+      <td>Guess Who's Coming to Dinner (1967)</td>
+    </tr>
+    <tr>
+      <th>1395</th>
+      <td>4.587749</td>
+      <td>Three Billboards Outside Ebbing, Missouri (2017)</td>
+    </tr>
+    <tr>
+      <th>2933</th>
+      <td>4.570197</td>
+      <td>Love and Death (1975)</td>
+    </tr>
+    <tr>
+      <th>8833</th>
+      <td>4.559479</td>
+      <td>Jetée, La (1962)</td>
+    </tr>
+    <tr>
+      <th>3457</th>
+      <td>4.558405</td>
+      <td>Raiders of the Lost Ark: The Adaptation (1989)</td>
+    </tr>
+    <tr>
+      <th>4750</th>
+      <td>4.553044</td>
+      <td>Last Tango in Paris (Ultimo tango a Parigi) (1...</td>
+    </tr>
+    <tr>
+      <th>6542</th>
+      <td>4.540706</td>
+      <td>Come and See (Idi i smotri) (1985)</td>
+    </tr>
+    <tr>
+      <th>3233</th>
+      <td>4.539537</td>
+      <td>Five Easy Pieces (1970)</td>
+    </tr>
+    <tr>
+      <th>2793</th>
+      <td>4.522316</td>
+      <td>Holy Mountain, The (Montaña sagrada, La) (1973)</td>
+    </tr>
+    <tr>
+      <th>5646</th>
+      <td>4.521130</td>
+      <td>Day of the Doctor, The (2013)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="recommanding-movies-using-knn-on-embedding-spaces">
+<h2>Recommanding movies using KNN on embedding spaces<a class="headerlink" href="#recommanding-movies-using-knn-on-embedding-spaces" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="looking-at-movies-embedding-space">
+<h3>Looking at movies embedding space<a class="headerlink" href="#looking-at-movies-embedding-space" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movies_index</span> <span class="o">=</span> <span class="n">nmslib</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;angulardist&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hnsw&#39;</span><span class="p">)</span>
+<span class="n">movies_index</span><span class="o">.</span><span class="n">addDataPointBatch</span><span class="p">(</span><span class="n">movie_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;movies&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">efC</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">efS</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_threads</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">index_time_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="n">M</span><span class="p">,</span> <span class="s1">&#39;indexThreadQty&#39;</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;efConstruction&#39;</span><span class="p">:</span> <span class="n">efC</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">query_time_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;efSearch&#39;</span><span class="p">:</span> <span class="n">efS</span><span class="p">}</span>
+
+<span class="n">movies_index</span><span class="o">.</span><span class="n">createIndex</span><span class="p">(</span><span class="n">index_time_params</span><span class="p">)</span>
+<span class="n">movies_index</span><span class="o">.</span><span class="n">setQueryTimeParams</span><span class="p">(</span><span class="n">query_time_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_knns</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">vecs</span><span class="p">,</span> <span class="n">n_neighbour</span><span class="p">):</span>
+     <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">index</span><span class="o">.</span><span class="n">knnQueryBatch</span><span class="p">(</span><span class="n">vecs</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_neighbour</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">get_knn</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">vec</span><span class="p">,</span> <span class="n">n_neighbour</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">index</span><span class="o">.</span><span class="n">knnQuery</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_neighbour</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">suggest_movies_knn</span><span class="p">(</span><span class="n">movieId</span><span class="p">,</span> <span class="n">n_suggest</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">get_knn</span><span class="p">(</span><span class="n">movies_index</span><span class="p">,</span> <span class="n">movie_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;movies&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="n">movieId</span><span class="p">],</span> <span class="n">n_suggest</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">movies_raw</span><span class="p">[</span><span class="n">movies_raw</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">idx2movie</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">res</span><span class="p">])]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">movie_id</span> <span class="o">=</span> <span class="mi">763</span>
+<span class="n">suggest_movies_knn</span><span class="p">(</span><span class="n">movie_id</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>867</th>
+      <td>1147</td>
+      <td>When We Were Kings (1996)</td>
+      <td>Documentary</td>
+    </tr>
+    <tr>
+      <th>1290</th>
+      <td>1719</td>
+      <td>Sweet Hereafter, The (1997)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>1539</th>
+      <td>2074</td>
+      <td>Night Porter, The (Portiere di notte, Il) (1974)</td>
+      <td>Crime|Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>1928</th>
+      <td>2557</td>
+      <td>I Stand Alone (Seul contre tous) (1998)</td>
+      <td>Drama|Thriller</td>
+    </tr>
+    <tr>
+      <th>2259</th>
+      <td>2997</td>
+      <td>Being John Malkovich (1999)</td>
+      <td>Comedy|Drama|Fantasy</td>
+    </tr>
+    <tr>
+      <th>4076</th>
+      <td>5816</td>
+      <td>Harry Potter and the Chamber of Secrets (2002)</td>
+      <td>Adventure|Fantasy</td>
+    </tr>
+    <tr>
+      <th>7275</th>
+      <td>74727</td>
+      <td>Gentlemen of Fortune (Dzhentlmeny udachi) (1972)</td>
+      <td>Comedy|Crime|Drama|Mystery</td>
+    </tr>
+    <tr>
+      <th>8525</th>
+      <td>114678</td>
+      <td>Hector and the Search for Happiness (2014)</td>
+      <td>Adventure|Comedy|Drama</td>
+    </tr>
+    <tr>
+      <th>9572</th>
+      <td>174141</td>
+      <td>Belladonna of Sadness (1973)</td>
+      <td>Animation|Drama|Fantasy</td>
+    </tr>
+    <tr>
+      <th>9680</th>
+      <td>183317</td>
+      <td>Patti Rocks (1988)</td>
+      <td>Comedy|Drama</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="looking-at-users-embedding-space">
+<h3>Looking at users embedding space<a class="headerlink" href="#looking-at-users-embedding-space" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users_index</span> <span class="o">=</span> <span class="n">nmslib</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="s1">&#39;angulardist&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;hnsw&#39;</span><span class="p">)</span>
+<span class="n">users_index</span><span class="o">.</span><span class="n">addDataPointBatch</span><span class="p">(</span><span class="n">movie_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;users&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">efC</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">efS</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">num_threads</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">index_time_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">:</span> <span class="n">M</span><span class="p">,</span> <span class="s1">&#39;indexThreadQty&#39;</span><span class="p">:</span> <span class="n">num_threads</span><span class="p">,</span> <span class="s1">&#39;efConstruction&#39;</span><span class="p">:</span> <span class="n">efC</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="n">query_time_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;efSearch&#39;</span><span class="p">:</span> <span class="n">efS</span><span class="p">}</span>
+
+<span class="n">users_index</span><span class="o">.</span><span class="n">createIndex</span><span class="p">(</span><span class="n">index_time_params</span><span class="p">)</span>
+<span class="n">users_index</span><span class="o">.</span><span class="n">setQueryTimeParams</span><span class="p">(</span><span class="n">query_time_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">suggest_users_knn</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">n_suggest</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">get_knn</span><span class="p">(</span><span class="n">users_index</span><span class="p">,</span> <span class="n">movie_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;users&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_weights</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="n">user_id</span><span class="p">],</span> <span class="n">n_suggest</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">moviesId</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">userId</span> <span class="o">==</span> <span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">][</span><span class="s2">&quot;movieId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;From user&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">movies_raw</span><span class="p">[</span><span class="n">movies_raw</span><span class="o">.</span><span class="n">movieId</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">idx2movie</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">moviesId</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">suggest_users_knn</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>From user 353 : 
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>507</th>
+      <td>589</td>
+      <td>Terminator 2: Judgment Day (1991)</td>
+      <td>Action|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>832</th>
+      <td>1093</td>
+      <td>Doors, The (1991)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>926</th>
+      <td>1225</td>
+      <td>Amadeus (1984)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>1617</th>
+      <td>2161</td>
+      <td>NeverEnding Story, The (1984)</td>
+      <td>Adventure|Children|Fantasy</td>
+    </tr>
+    <tr>
+      <th>1916</th>
+      <td>2541</td>
+      <td>Cruel Intentions (1999)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>2020</th>
+      <td>2692</td>
+      <td>Run Lola Run (Lola rennt) (1998)</td>
+      <td>Action|Crime</td>
+    </tr>
+    <tr>
+      <th>3562</th>
+      <td>4878</td>
+      <td>Donnie Darko (2001)</td>
+      <td>Drama|Mystery|Sci-Fi|Thriller</td>
+    </tr>
+    <tr>
+      <th>3622</th>
+      <td>4973</td>
+      <td>Amelie (Fabuleux destin d'Amélie Poulain, Le) ...</td>
+      <td>Comedy|Romance</td>
+    </tr>
+    <tr>
+      <th>4615</th>
+      <td>6874</td>
+      <td>Kill Bill: Vol. 1 (2003)</td>
+      <td>Action|Crime|Thriller</td>
+    </tr>
+    <tr>
+      <th>5943</th>
+      <td>34319</td>
+      <td>Island, The (2005)</td>
+      <td>Action|Sci-Fi|Thriller</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>From user 553 : 
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>142</th>
+      <td>170</td>
+      <td>Hackers (1995)</td>
+      <td>Action|Adventure|Crime|Thriller</td>
+    </tr>
+    <tr>
+      <th>785</th>
+      <td>1028</td>
+      <td>Mary Poppins (1964)</td>
+      <td>Children|Comedy|Fantasy|Musical</td>
+    </tr>
+    <tr>
+      <th>827</th>
+      <td>1088</td>
+      <td>Dirty Dancing (1987)</td>
+      <td>Drama|Musical|Romance</td>
+    </tr>
+    <tr>
+      <th>836</th>
+      <td>1097</td>
+      <td>E.T. the Extra-Terrestrial (1982)</td>
+      <td>Children|Drama|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>898</th>
+      <td>1196</td>
+      <td>Star Wars: Episode V - The Empire Strikes Back...</td>
+      <td>Action|Adventure|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>911</th>
+      <td>1210</td>
+      <td>Star Wars: Episode VI - Return of the Jedi (1983)</td>
+      <td>Action|Adventure|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>914</th>
+      <td>1213</td>
+      <td>Goodfellas (1990)</td>
+      <td>Crime|Drama</td>
+    </tr>
+    <tr>
+      <th>926</th>
+      <td>1225</td>
+      <td>Amadeus (1984)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>975</th>
+      <td>1276</td>
+      <td>Cool Hand Luke (1967)</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>2035</th>
+      <td>2710</td>
+      <td>Blair Witch Project, The (1999)</td>
+      <td>Drama|Horror|Thriller</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>From user 455 : 
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Toy Story (1995)</td>
+      <td>Adventure|Animation|Children|Comedy|Fantasy</td>
+    </tr>
+    <tr>
+      <th>224</th>
+      <td>260</td>
+      <td>Star Wars: Episode IV - A New Hope (1977)</td>
+      <td>Action|Adventure|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>543</th>
+      <td>640</td>
+      <td>Diabolique (1996)</td>
+      <td>Drama|Thriller</td>
+    </tr>
+    <tr>
+      <th>552</th>
+      <td>662</td>
+      <td>Fear (1996)</td>
+      <td>Thriller</td>
+    </tr>
+    <tr>
+      <th>592</th>
+      <td>733</td>
+      <td>Rock, The (1996)</td>
+      <td>Action|Adventure|Thriller</td>
+    </tr>
+    <tr>
+      <th>615</th>
+      <td>780</td>
+      <td>Independence Day (a.k.a. ID4) (1996)</td>
+      <td>Action|Adventure|Sci-Fi|Thriller</td>
+    </tr>
+    <tr>
+      <th>645</th>
+      <td>832</td>
+      <td>Ransom (1996)</td>
+      <td>Crime|Thriller</td>
+    </tr>
+    <tr>
+      <th>1052</th>
+      <td>1367</td>
+      <td>101 Dalmatians (1996)</td>
+      <td>Adventure|Children|Comedy</td>
+    </tr>
+    <tr>
+      <th>1073</th>
+      <td>1393</td>
+      <td>Jerry Maguire (1996)</td>
+      <td>Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>1083</th>
+      <td>1407</td>
+      <td>Scream (1996)</td>
+      <td>Comedy|Horror|Mystery|Thriller</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>From user 320 : 
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>movieId</th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Jumanji (1995)</td>
+      <td>Adventure|Children|Fantasy</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>141</td>
+      <td>Birdcage, The (1996)</td>
+      <td>Comedy</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>153</td>
+      <td>Batman Forever (1995)</td>
+      <td>Action|Adventure|Comedy|Crime</td>
+    </tr>
+    <tr>
+      <th>275</th>
+      <td>316</td>
+      <td>Stargate (1994)</td>
+      <td>Action|Adventure|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>276</th>
+      <td>317</td>
+      <td>Santa Clause, The (1994)</td>
+      <td>Comedy|Drama|Fantasy</td>
+    </tr>
+    <tr>
+      <th>314</th>
+      <td>356</td>
+      <td>Forrest Gump (1994)</td>
+      <td>Comedy|Drama|Romance|War</td>
+    </tr>
+    <tr>
+      <th>337</th>
+      <td>380</td>
+      <td>True Lies (1994)</td>
+      <td>Action|Adventure|Comedy|Romance|Thriller</td>
+    </tr>
+    <tr>
+      <th>418</th>
+      <td>480</td>
+      <td>Jurassic Park (1993)</td>
+      <td>Action|Adventure|Sci-Fi|Thriller</td>
+    </tr>
+    <tr>
+      <th>510</th>
+      <td>593</td>
+      <td>Silence of the Lambs, The (1991)</td>
+      <td>Crime|Horror|Thriller</td>
+    </tr>
+    <tr>
+      <th>630</th>
+      <td>802</td>
+      <td>Phenomenon (1996)</td>
+      <td>Drama|Romance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990000_tf_serving_in_action.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">TF Serving in action</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T207114_EduRec_MOOCCube_Course_Recommender.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">EduRec MOOCCube Course Recommender</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

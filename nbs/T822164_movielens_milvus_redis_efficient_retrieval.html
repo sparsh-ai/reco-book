@@ -1,0 +1,1438 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recommender with Redis and Milvus &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="RekoNet Anime Recommender" href="T845186_Anime_Recommender.html" />
+    <link rel="prev" title="Learn Embeddings using Graph Networks" href="T516490_Graph_Embeddings.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T822164_movielens_milvus_redis_efficient_retrieval.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T822164_movielens_milvus_redis_efficient_retrieval.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-and-run-milvus-server">
+   Install and run Milvus server
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-and-run-redis-server">
+   Install and run Redis server
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#downloading-pretrained-models">
+   Downloading Pretrained Models
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#connectings-to-milvus-and-redis">
+     1. Connectings to Milvus and Redis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#loading-movies-into-redis">
+     2. Loading Movies into Redis
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#creating-partition-and-collection-in-milvus">
+     3. Creating Partition and Collection in Milvus
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#getting-embeddings-and-ids">
+     4. Getting Embeddings and IDs
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#importing-vectors-into-milvus">
+     4. Importing Vectors into Milvus
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recalling-vectors-in-milvus">
+   Recalling Vectors in Milvus
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#genarating-user-embeddings">
+     1. Genarating User Embeddings
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#searching">
+     2. Searching
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#returning-information-by-ids">
+     3. Returning Information by IDs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="recommender-with-redis-and-milvus">
+<h1>Recommender with Redis and Milvus<a class="headerlink" href="#recommender-with-redis-and-milvus" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Storing the pre-calculated user and items vectors of movielens dataset into redis in-memory database and then indexing into milvus for efficient large-scale retrieval</p>
+</div></blockquote>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Packages</p></th>
+<th class="head"><p>Servers</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pymilvus</p></td>
+<td><p>milvus-1.1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>redis</p></td>
+<td><p>redis</p></td>
+</tr>
+<tr class="row-even"><td><p>paddle_serving_app</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>paddlepaddle</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install pymilvus==1.1.0
+!pip install paddle_serving_app==0.3.1
+!pip install paddlepaddle
+!pip install redis
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="install-and-run-milvus-server">
+<h2>Install and run Milvus server<a class="headerlink" href="#install-and-run-milvus-server" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Warning: It will take ~40 minutes to install!</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!git clone -b 1.1 https://github.com/milvus-io/milvus.git
+% cd /content/milvus/core
+! ./ubuntu_build_deps.sh
+!./build.sh -t Release
+# !./build.sh -t Release -g
+
+% cd /content/milvus/core/milvus
+! echo $LD_LIBRARY_PATH
+import os
+os.environ[&#39;LD_LIBRARY_PATH&#39;] +=&quot;:/content/milvus/core/milvus/lib&quot;
+! echo $LD_LIBRARY_PATH
+% cd scripts
+! nohup ./start_server.sh &amp;
+! cat nohup.out
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!cat nohup.out
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    __  _________ _   ____  ______    
+   /  |/  /  _/ /| | / / / / / __/    
+  / /|_/ // // /_| |/ / /_/ /\ \    
+ /_/  /_/___/____/___/\____/___/     
+
+Welcome to use Milvus!
+Milvus Release version: v1.1.1, built at 2021-06-23 14:11.42, with OpenBLAS library.
+You are using Milvus CPU edition
+Last commit id: 3fc81236452d8060fe7adc1793ad1d69f3d8423c
+
+Loading configuration from: ../conf/server_config.yaml
+NOTICE: You are using SQLite as the meta data management. We recommend change it to MySQL.
+Supported CPU instruction sets: avx2, sse4_2
+FAISS hook AVX2
+Milvus server started successfully!
+Milvus server is going to shutdown ...
+Milvus server exit...
+</pre></div>
+</div>
+</div>
+</div>
+<p>We are using Redis as a metadata storage service. Code can easily be modified to use a python dictionary, but that usually does not work in any use case outside of quick examples. We need a metadata storage service in order to be able to be able to map between embeddings and the corresponding data.</p>
+</div>
+<div class="section" id="install-and-run-redis-server">
+<h2>Install and run Redis server<a class="headerlink" href="#install-and-run-redis-server" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#hide-output
+!wget http://download.redis.io/releases/redis-stable.tar.gz --no-check-certificate
+!tar -xf redis-stable.tar.gz &amp;&amp; cd redis-stable/src &amp;&amp; make
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>! nohup ./redis-stable/src/redis-server &gt; redis_nohup.out &amp;
+! cat redis_nohup.out
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>nohup: redirecting stderr to stdout
+42581:C 23 Jun 2021 16:02:32.639 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+42581:C 23 Jun 2021 16:02:32.639 # Redis version=6.0.5, bits=64, commit=3fc81236, modified=0, pid=42581, just started
+42581:C 23 Jun 2021 16:02:32.639 # Warning: no config file specified, using the default config. In order to specify a config file use ./redis-stable/src/redis-server /path/to/redis.conf
+42581:M 23 Jun 2021 16:02:32.641 * Running mode=standalone, port=6379.
+42581:M 23 Jun 2021 16:02:32.641 # Server initialized
+42581:M 23 Jun 2021 16:02:32.641 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command &#39;echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled&#39; as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+42581:M 23 Jun 2021 16:02:32.642 * Ready to accept connections
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install -U grpcio
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">cd</span> <span class="o">/</span><span class="n">content</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/content
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="downloading-pretrained-models">
+<h2>Downloading Pretrained Models<a class="headerlink" href="#downloading-pretrained-models" title="Permalink to this headline">¶</a></h2>
+<p>This PaddlePaddle model is used to transform user information into vectors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget https://paddlerec.bj.bcebos.com/aistudio/user_vector.tar.gz --no-check-certificate
+!mkdir -p movie_recommender/user_vector_model
+!tar xf user_vector.tar.gz -C movie_recommender/user_vector_model/
+!rm user_vector.tar.gz
+</pre></div>
+</div>
+</div>
+</div>
+<p>Downloading Data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Download movie information
+!wget -P movie_recommender https://paddlerec.bj.bcebos.com/aistudio/movies.dat --no-check-certificate
+# Download movie vecotrs
+!wget -P movie_recommender https://paddlerec.bj.bcebos.com/aistudio/movie_vectors.txt --no-check-certificate
+</pre></div>
+</div>
+</div>
+</div>
+<p>Importing Movies into Milvus</p>
+<div class="section" id="connectings-to-milvus-and-redis">
+<h3>1. Connectings to Milvus and Redis<a class="headerlink" href="#connectings-to-milvus-and-redis" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>! lsof -i -P -n | grep -E &#39;milvus|redis&#39;
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>milvus_se 42433 root   17u  IPv4 478871      0t0  TCP *:19121 (LISTEN)
+milvus_se 42433 root   20u  IPv4 479283      0t0  TCP *:19530 (LISTEN)
+redis-ser 42581 root    6u  IPv6 507112      0t0  TCP *:6379 (LISTEN)
+redis-ser 42581 root    7u  IPv4 507113      0t0  TCP *:6379 (LISTEN)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">milvus</span> <span class="kn">import</span> <span class="n">Milvus</span><span class="p">,</span> <span class="n">IndexType</span><span class="p">,</span> <span class="n">MetricType</span><span class="p">,</span> <span class="n">Status</span>
+<span class="kn">import</span> <span class="nn">redis</span>
+
+<span class="n">milv</span> <span class="o">=</span> <span class="n">Milvus</span><span class="p">(</span><span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="mi">19530</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">StrictRedis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6379</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">milv</span><span class="o">.</span><span class="n">client_version</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1.1.0&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="loading-movies-into-redis">
+<h3>2. Loading Movies into Redis<a class="headerlink" href="#loading-movies-into-redis" title="Permalink to this headline">¶</a></h3>
+<p>We begin by loading all the movie files into redis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+
+<span class="c1">#1::Toy Story (1995)::Animation|Children&#39;s|Comedy</span>
+<span class="k">def</span> <span class="nf">process_movie</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">redis_cli</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;::&quot;</span><span class="p">)</span>
+        <span class="n">movie_id</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">genre_group</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">genre_group</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+        <span class="n">genre</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="n">movie_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;movie_id&quot;</span> <span class="p">:</span> <span class="n">movie_id</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span> <span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                <span class="s2">&quot;genre&quot;</span> <span class="p">:</span> <span class="n">genre</span>
+                <span class="p">}</span>
+        <span class="n">redis_cli</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">##movie_info&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">movie_id</span><span class="p">),</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">movie_info</span><span class="p">))</span>
+        
+<span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;movie_recommender/movies.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span><span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">process_movie</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="creating-partition-and-collection-in-milvus">
+<h3>3. Creating Partition and Collection in Milvus<a class="headerlink" href="#creating-partition-and-collection-in-milvus" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">COLLECTION_NAME</span> <span class="o">=</span> <span class="s1">&#39;demo_films&#39;</span>
+<span class="n">PARTITION_NAME</span> <span class="o">=</span> <span class="s1">&#39;Movie&#39;</span>
+
+<span class="c1">#Dropping collection for clean slate run</span>
+<span class="n">milv</span><span class="o">.</span><span class="n">drop_collection</span><span class="p">(</span><span class="n">COLLECTION_NAME</span><span class="p">)</span>
+
+
+<span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;collection_name&#39;</span><span class="p">:</span><span class="n">COLLECTION_NAME</span><span class="p">,</span> 
+         <span class="s1">&#39;dimension&#39;</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span> 
+         <span class="s1">&#39;index_file_size&#39;</span><span class="p">:</span><span class="mi">2048</span><span class="p">,</span> 
+         <span class="s1">&#39;metric_type&#39;</span><span class="p">:</span><span class="n">MetricType</span><span class="o">.</span><span class="n">L2</span>
+        <span class="p">}</span>
+
+<span class="n">milv</span><span class="o">.</span><span class="n">create_collection</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+<span class="c1"># milv.create_partition(COLLECTION_NAME, PARTITION_NAME)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Status(code=0, message=&#39;Create collection successfully!&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">milv</span><span class="o">.</span><span class="n">get_collection_info</span><span class="p">(</span><span class="n">COLLECTION_NAME</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Status(code=0, message=&#39;Describe collection successfully!&#39;),
+ CollectionSchema(collection_name=&#39;demo_films&#39;, dimension=32, index_file_size=2048, metric_type=&lt;MetricType: L2&gt;))
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="getting-embeddings-and-ids">
+<h3>4. Getting Embeddings and IDs<a class="headerlink" href="#getting-embeddings-and-ids" title="Permalink to this headline">¶</a></h3>
+<p>The vectors in <code class="docutils literal notranslate"><span class="pre">movie_vectors.txt</span></code> are obtained from the <code class="docutils literal notranslate"><span class="pre">user_vector_model</span></code> downloaded above. So we can directly get the vectors and the IDs by reading the file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_vectors</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;movie_recommender/movie_vectors.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
+    <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">str_nums</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">str_nums</span><span class="p">]</span>
+        <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">emb</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ids</span><span class="p">,</span> <span class="n">embeddings</span>
+
+<span class="n">ids</span><span class="p">,</span> <span class="n">embeddings</span> <span class="o">=</span> <span class="n">get_vectors</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="importing-vectors-into-milvus">
+<h3>4. Importing Vectors into Milvus<a class="headerlink" href="#importing-vectors-into-milvus" title="Permalink to this headline">¶</a></h3>
+<p>Import vectors into the partition <strong>Movie</strong> under the collection <strong>demo_films</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># status = milv.insert(collection_name=COLLECTION_NAME, records=embeddings, ids=ids, partition_tag=PARTITION_NAME)</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">milv</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span> <span class="n">records</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
+<span class="n">status</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Status(code=0, message=&#39;Add vectors successfully!&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recalling-vectors-in-milvus">
+<h2>Recalling Vectors in Milvus<a class="headerlink" href="#recalling-vectors-in-milvus" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="genarating-user-embeddings">
+<h3>1. Genarating User Embeddings<a class="headerlink" href="#genarating-user-embeddings" title="Permalink to this headline">¶</a></h3>
+<p>Pass in the gender, age and occupation of the user we want to recommend. <strong>user_vector_model</strong> model will generate the corresponding user vector.
+Occupation is chosen from the following choices:</p>
+<ul class="simple">
+<li><p>0:  “other” or not specified</p></li>
+<li><p>1:  “academic/educator”</p></li>
+<li><p>2:  “artist”</p></li>
+<li><p>3:  “clerical/admin”</p></li>
+<li><p>4:  “college/grad student”</p></li>
+<li><p>5:  “customer service”</p></li>
+<li><p>6:  “doctor/health care”</p></li>
+<li><p>7:  “executive/managerial”</p></li>
+<li><p>8:  “farmer”</p></li>
+<li><p>9:  “homemaker”</p></li>
+<li><p>10:  “K-12 student”</p></li>
+<li><p>11:  “lawyer”</p></li>
+<li><p>12:  “programmer”</p></li>
+<li><p>13:  “retired”</p></li>
+<li><p>14:  “sales/marketing”</p></li>
+<li><p>15:  “scientist”</p></li>
+<li><p>16:  “self-employed”</p></li>
+<li><p>17:  “technician/engineer”</p></li>
+<li><p>18:  “tradesman/craftsman”</p></li>
+<li><p>19:  “unemployed”</p></li>
+<li><p>20:  “writer”</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">paddle_serving_app.local_predict</span> <span class="kn">import</span> <span class="n">LocalPredictor</span>
+
+<span class="k">class</span> <span class="nc">RecallServerServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uv_client</span> <span class="o">=</span> <span class="n">LocalPredictor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uv_client</span><span class="o">.</span><span class="n">load_model_config</span><span class="p">(</span><span class="s2">&quot;movie_recommender/user_vector_model/serving_server_dir&quot;</span><span class="p">)</span> 
+        
+    <span class="k">def</span> <span class="nf">hash2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="mi">1000000</span>
+
+    <span class="k">def</span> <span class="nf">get_user_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;userid&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;occupation&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">lod</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;userid&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash2</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">))</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash2</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">))</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash2</span><span class="p">(</span><span class="s1">&#39;23&#39;</span><span class="p">))</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;occupation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hash2</span><span class="p">(</span><span class="s1">&#39;6&#39;</span><span class="p">))</span>
+        <span class="n">lod</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;userid.lod&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lod</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;gender.lod&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lod</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;age.lod&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lod</span>
+        <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;occupation.lod&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lod</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dic</span><span class="p">:</span>
+            <span class="n">dic</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dic</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dic</span><span class="p">[</span><span class="n">key</span><span class="p">]),</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">fetch_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_client</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">feed</span><span class="o">=</span><span class="n">dic</span><span class="p">,</span> <span class="n">fetch</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;save_infer_model/scale_0.tmp_1&quot;</span><span class="p">],</span> <span class="n">batch</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fetch_map</span><span class="p">[</span><span class="s2">&quot;save_infer_model/scale_0.tmp_1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">recall</span> <span class="o">=</span> <span class="n">RecallServerServicer</span><span class="p">()</span>
+<span class="n">user_vector</span> <span class="o">=</span> <span class="n">recall</span><span class="o">.</span><span class="n">get_user_vector</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2021-06-23 16:29:24,262 - INFO - LocalPredictor load_model_config params: model_path:movie_recommender/user_vector_model/serving_server_dir, use_gpu:False,            gpu_id:0, use_profile:False, thread_num:1, mem_optim:True, ir_optim:False,            use_trt:False, use_lite:False, use_xpu: False, use_feed_fetch_ops:False
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">user_vector</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.0,
+ 4.911433696746826,
+ 4.132595062255859,
+ 3.2255895137786865,
+ 0.0,
+ 4.944108963012695,
+ 0.0,
+ 0.0,
+ 1.27165687084198,
+ 3.1072912216186523,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 0.0,
+ 1.9184402227401733,
+ 0.0,
+ 0.0,
+ 0.0,
+ 4.42396354675293,
+ 2.0686450004577637,
+ 0.0]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="searching">
+<h3>2. Searching<a class="headerlink" href="#searching" title="Permalink to this headline">¶</a></h3>
+<p>Pass in the user vector, and then recall vectors in the previously imported data collection and partition.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TOP_K</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">SEARCH_PARAM</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nprobe&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+<span class="n">status</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">milv</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_NAME</span><span class="p">,</span> <span class="n">query_records</span><span class="o">=</span><span class="p">[</span><span class="n">user_vector</span><span class="p">],</span> <span class="n">top_k</span><span class="o">=</span><span class="n">TOP_K</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">SEARCH_PARAM</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="returning-information-by-ids">
+<h3>3. Returning Information by IDs<a class="headerlink" href="#returning-information-by-ids" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recall_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">recall_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">##movie_info&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">id</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="n">recall_results</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;{&quot;movie_id&quot;: &quot;760&quot;, &quot;title&quot;: &quot;Stalingrad (1993)&quot;, &quot;genre&quot;: [&quot;War&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1350&quot;, &quot;title&quot;: &quot;Omen, The (1976)&quot;, &quot;genre&quot;: [&quot;Horror&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1258&quot;, &quot;title&quot;: &quot;Shining, The (1980)&quot;, &quot;genre&quot;: [&quot;Horror&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;632&quot;, &quot;title&quot;: &quot;Land and Freedom (Tierra y libertad) (1995)&quot;, &quot;genre&quot;: [&quot;War&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;3007&quot;, &quot;title&quot;: &quot;American Movie (1999)&quot;, &quot;genre&quot;: [&quot;Documentary&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2086&quot;, &quot;title&quot;: &quot;One Magic Christmas (1985)&quot;, &quot;genre&quot;: [&quot;Drama&quot;, &quot;Fantasy&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1051&quot;, &quot;title&quot;: &quot;Trees Lounge (1996)&quot;, &quot;genre&quot;: [&quot;Drama&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;3920&quot;, &quot;title&quot;: &quot;Faraway, So Close (In Weiter Ferne, So Nah!) (1993)&quot;, &quot;genre&quot;: [&quot;Drama&quot;, &quot;Fantasy&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1303&quot;, &quot;title&quot;: &quot;Man Who Would Be King, The (1975)&quot;, &quot;genre&quot;: [&quot;Adventure&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;652&quot;, &quot;title&quot;: &quot;301, 302 (1995)&quot;, &quot;genre&quot;: [&quot;Mystery&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1605&quot;, &quot;title&quot;: &quot;Excess Baggage (1997)&quot;, &quot;genre&quot;: [&quot;Adventure&quot;, &quot;Romance&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1275&quot;, &quot;title&quot;: &quot;Highlander (1986)&quot;, &quot;genre&quot;: [&quot;Action&quot;, &quot;Adventure&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1126&quot;, &quot;title&quot;: &quot;Drop Dead Fred (1991)&quot;, &quot;genre&quot;: [&quot;Comedy&quot;, &quot;Fantasy&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;792&quot;, &quot;title&quot;: &quot;Hungarian Fairy Tale, A (1987)&quot;, &quot;genre&quot;: [&quot;Fantasy&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2228&quot;, &quot;title&quot;: &quot;Mountain Eagle, The (1926)&quot;, &quot;genre&quot;: [&quot;Drama&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2659&quot;, &quot;title&quot;: &quot;It Came from Hollywood (1982)&quot;, &quot;genre&quot;: [&quot;Comedy&quot;, &quot;Documentary&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2545&quot;, &quot;title&quot;: &quot;Relax... It\&#39;s Just Sex (1998)&quot;, &quot;genre&quot;: [&quot;Comedy&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;1289&quot;, &quot;title&quot;: &quot;Koyaanisqatsi (1983)&quot;, &quot;genre&quot;: [&quot;Documentary&quot;, &quot;War&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2537&quot;, &quot;title&quot;: &quot;Beyond the Poseidon Adventure (1979)&quot;, &quot;genre&quot;: [&quot;Adventure&quot;]}&#39;,
+ &#39;{&quot;movie_id&quot;: &quot;2864&quot;, &quot;title&quot;: &quot;Splendor (1999)&quot;, &quot;genre&quot;: [&quot;Comedy&quot;]}&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>After completing the recall service, the results can be further sorted using the <strong>movie_recommender</strong> model, and then the movies with high similarity scores can be recommended to users. You can try this deployable recommendation system using this <span class="xref myst">quick start</span>.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T516490_Graph_Embeddings.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Learn Embeddings using Graph Networks</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T845186_Anime_Recommender.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">RekoNet Anime Recommender</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

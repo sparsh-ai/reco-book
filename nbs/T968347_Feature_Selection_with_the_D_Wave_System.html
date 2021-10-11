@@ -1,0 +1,2384 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feature Selection with the D-Wave System &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T968347_Feature_Selection_with_the_D_Wave_System.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T968347_Feature_Selection_with_the_D_Wave_System.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#what-is-feature-selection">
+   What is Feature Selection?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-utils">
+     Plot utils
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#illustrative-toy-problem">
+   Illustrative Toy Problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#feature-selection-by-mutual-information">
+   Feature Selection by Mutual Information
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#quantifying-information-shannon-entropy">
+     Quantifying Information: Shannon Entropy
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#illustration-of-shannon-entropy">
+       Illustration of Shannon Entropy
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#conditional-shannon-entropy">
+       Conditional Shannon Entropy
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#illustration-of-cse">
+       Illustration of CSE
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mutual-information">
+     Mutual Information
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#mutual-information-on-the-toy-problem">
+       Mutual Information on the Toy Problem
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#conditional-mutual-information">
+       Conditional Mutual Information
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-feature-selection-on-a-quantum-computer">
+   Solving Feature Selection on a Quantum Computer
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#miqubo-qubo-representation-of-feature-selection">
+   MIQUBO: QUBO Representation of Feature Selection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#miqubo-on-the-toy-problem">
+     MIQUBO on the Toy Problem
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#penalizing-non-k-selections">
+     Penalizing Non-k Selections
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-application-predicting-survival-of-titanic-passengers">
+   Example Application: Predicting Survival of Titanic Passengers
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#exact-versus-good-solutions-a-note-on-this-dataset">
+     Exact Versus Good Solutions: a Note on this Dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#building-the-mi-based-bqm">
+     Building the MI-Based BQM
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#setting-up-a-qpu-as-a-solver">
+     Setting Up a QPU as a Solver
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#submit-the-problem-for-all-k-values">
+     Submit the Problem for All k Values
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion">
+   Conclusion
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="feature-selection-with-the-d-wave-system">
+<h1>Feature Selection with the D-Wave System<a class="headerlink" href="#feature-selection-with-the-d-wave-system" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>This notebook demonstrates the formulation of an  (nk)  optimization problem for solution on a D-Wave quantum computer. The method used in the example problem of this notebook—feature-selection for machine learning— is applicable to problems from a wide range of domains; for example feature selection in recommenders.</p>
+</div></blockquote>
+<p>The promise of quantum computing to open new unexplored possibilities in several scientific fields has been long discussed, but until recently the lack of a functional quantum computer has confined this discussion mostly to theoretical algorithmic papers. It was only in the last few years that small but functional quantum computers have become available to the broader research community. One paradigm in particular,quantum annealing, can be used to sample optimal solutions for a number of NP-hard optimization problems represented with classical operations research tools, providing an easy access to the potential of this emerging technology. One of the tasks that most naturally fits in this mathematical formulation is feature selection. In this tutorial, we will learn how to run feature selection algorithm. We represent the feature selection as an optimization problem and solve it on a real quantum computer, provided by D-Wave. The results indicate that the proposed approach is effective in selecting a limited set of important features and that quantum computers are becoming powerful enough to enter the wider realm of applied science.</p>
+<p>This notebook demonstrates the formulation of an <span class="math notranslate nohighlight">\(n \choose k\)</span> optimization problem for solution on a D-Wave quantum computer. The method used in the example problem of this notebook—feature-selection for machine learning— is applicable to problems from a wide range of domains; for example financial portfolio optimization.</p>
+<ol class="simple">
+<li><p><a class="reference external" href="#What-is-Feature-Selection?">What is Feature Selection?</a> defines and explains the feature-selection problem.</p></li>
+<li><p><a class="reference external" href="#Feature-Selection-by-Mutual-Information">Feature Selection by Mutual Information</a> describes a particular method of feature selection that is demonstrated in this notebook.</p></li>
+<li><p><a class="reference external" href="#Solving-Feature-Selection-on-a-Quantum-Computer">Solving Feature Selection on a Quantum Computer</a> shows how such optimization problems can be formulated for solution on a D-Wave quantum computer.</p></li>
+<li><p><a class="reference external" href="#Example-Application:-Predicting-Survival-of-Titanic-Passengers">Example Application: Predicting Survival of Titanic Passengers</a> demonstrates the use of <em>Kerberos</em>, an out-of-the-box classical-quantum <a class="reference external" href="https://github.com/dwavesystems/dwave-hybrid">hybrid</a> sampler, to select optimal features for a public-domain dataset.</p></li>
+</ol>
+<p>This notebook should help you understand both the techniques and <a class="reference external" href="https://github.com/dwavesystems">Ocean software</a> tools used for solving optimization problems on D-Wave quantum computers.</p>
+<div class="section" id="what-is-feature-selection">
+<h2>What is Feature Selection?<a class="headerlink" href="#what-is-feature-selection" title="Permalink to this headline">¶</a></h2>
+<p>Statistical and machine-learning models use sets of input variables (“features”) to predict output variables of interest. Feature selection can be part of the model design process: selecting from a large set of potential features a highly informative subset simplifies the model and reduces dimensionality.</p>
+<p>For example, to build a model that predicts the ripening of hothouse tomatoes, Farmer MacDonald daily records the date, noontime temperature, daylight hours, degree of cloudiness, rationed water and fertilizer, soil humidity, electric-light hours, etc. These measurements constitute a list of potential features. After a growth cycle or two, her analysis reveals some correlations between these features and crop yields:</p>
+<ul class="simple">
+<li><p>fertilizer seems a strong predictor of fruit size</p></li>
+<li><p>cloudiness and daylight hours seem poor predictors of growth</p></li>
+<li><p>water rations and soil humidity seem a highly correlated pair of strong predictors of crop rot</p></li>
+</ul>
+<p>Farmer MacDonald suspects that her hothouse’s use of electric light reduces dependency on seasons and sunlight. She can simplify her model by discarding date, daylight hours, and cloudiness. She can record just water ration or just soil humidity rather than both.</p>
+<p>For systems with large numbers of potential input information—for example, weather forecasting or image recognition—model complexity and required compute resources can be daunting. Feature selection can help make such models tractable.</p>
+<p>However, optimal feature selection can itself be a hard problem. This example introduces a powerful method of optimizing feature selection based on a complex probability calculation. This calculation is submitted for solution to a quantum computer.</p>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install dimod
+!pip install dwave_networkx
+!pip install dwave-ocean-sdk
+!pip install -U requests
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span>
+
+<span class="kn">import</span> <span class="nn">dimod</span>
+<span class="kn">import</span> <span class="nn">dwave_networkx</span> <span class="k">as</span> <span class="nn">dnx</span>
+
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install -q watermark
+%reload_ext watermark
+%watermark -m -iv -u -t -d
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Last updated: 2021-07-28 06:39:46
+
+Compiler    : GCC 7.5.0
+OS          : Linux
+Release     : 5.4.104+
+Machine     : x86_64
+Processor   : x86_64
+CPU cores   : 2
+Architecture: 64bit
+
+networkx      : 2.5.1
+sys           : 3.7.11 (default, Jul  3 2021, 18:01:19) 
+[GCC 7.5.0]
+dwave_networkx: 0.8.8
+pandas        : 1.1.5
+matplotlib    : 3.2.2
+numpy         : 1.19.5
+dimod         : 0.9.15
+IPython       : 5.5.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="plot-utils">
+<h3>Plot utils<a class="headerlink" href="#plot-utils" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sub_plot</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">small</span><span class="p">,</span> <span class="n">big</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">subtitles</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">y2</span><span class="p">):</span>
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="n">big</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">small</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">small</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="s1">&#39;ax_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">subtitles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">y2</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">&#39;bv&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;out&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">big</span><span class="p">:</span>
+        <span class="n">axy</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">axy</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">axy</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">plot_toy_signals</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">sub_plot</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>  
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Toy Problem: System Inputs and Output&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_two_var_model</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">):</span>
+    <span class="n">subtitles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Modeling </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">f0f1</span> <span class="k">for</span> <span class="n">f0f1</span> <span class="ow">in</span> <span class="n">df1</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">sub_plot</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df1</span><span class="p">)),</span> <span class="n">subtitles</span><span class="p">,</span> <span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">)</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Toy Problem: Output Vesus Two-Signal Model&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_lingress</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">toy</span><span class="p">):</span>
+    <span class="n">subtitles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> correlation coefficient: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">var_rval</span> <span class="k">for</span> <span class="n">var_rval</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">sub_plot</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span> <span class="n">subtitles</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">toy</span><span class="p">)</span> 
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Toy Problem: Linear Regression&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="c1"># Warning since 0.24.2</span>
+<span class="c1">#def plot_se(data):</span>
+<span class="c1">#    pd.DataFrame(data).plot(x=&#39;Bins&#39;, y=[&#39;Maximum&#39;, &#39;Uniform&#39;, &#39;Exp&#39;, &#39;Vals&#39;], style = [ &#39;ro&#39;,&#39;b&#39;, &#39;g&#39;, &#39;y&#39;])</span>
+<span class="c1">#    plt.title(&quot;Shannon Entropy&quot;)</span>
+<span class="c1">#    plt.ylabel(&quot;Entropy&quot;)</span>
+<span class="k">def</span> <span class="nf">plot_se</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Bins&#39;</span><span class="p">]],</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Maximum&#39;</span><span class="p">]],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> 
+             <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Bins&#39;</span><span class="p">]],</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Uniform&#39;</span><span class="p">]],</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> 
+             <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Bins&#39;</span><span class="p">]],</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Exp&#39;</span><span class="p">]],</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> 
+             <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Bins&#39;</span><span class="p">]],</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Vals&#39;</span><span class="p">]],</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Shannon Entropy&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Bins&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Entropy&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Maximum&#39;</span><span class="p">,</span> <span class="s1">&#39;Uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;Exp&#39;</span><span class="p">,</span> <span class="s1">&#39;Vals&#39;</span><span class="p">])</span>
+    
+<span class="k">def</span> <span class="nf">plot_mi</span><span class="p">(</span><span class="n">scores</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">values</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">values</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">values</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">labels</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Mutual Information&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;MI with Variable of Interest&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_solutions</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sample</span><span class="p">,</span> <span class="n">energy</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">([</span><span class="s1">&#39;sample&#39;</span><span class="p">,</span> <span class="s1">&#39;energy&#39;</span><span class="p">]):</span>
+        <span class="n">energies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+        <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">key</span> <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">sample</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">energies</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">features</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Toy Problem: Unconstrained Solution&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Energy&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_features</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mf">.7</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Best Feature Selection&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Selected Features&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># Set a grid on minor ticks</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">selected_features</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="illustrative-toy-problem">
+<h2>Illustrative Toy Problem<a class="headerlink" href="#illustrative-toy-problem" title="Permalink to this headline">¶</a></h2>
+<p>This subsection illustrates the use of feature selection with a simple example: a toy system with a single output generated from three inputs.</p>
+<p>The model built to predict the system’s output is even simpler: it uses just two of three possible features (inputs). You can expect it to perform better when the selected two features are more independent, assuming all three contribute somewhat commensurately to the system output (if an independent feature contributes less than the difference between two dependent ones, this might not be true). In the case of Farmer MacDonalds’s tomatoes, a model using rationed water and fertilizer should perform better than one using rationed water and soil humidity.</p>
+<p>The code cell below uses the NumPy library to define three inputs, the first two of which are very similar: a sine, a noisy sine, and a linear function with added random noise. It defines an output that is a simple linear combination of these three inputs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sig_len</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="c1"># Three inputs: in1 &amp; in2 are similar </span>
+<span class="n">in1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">sig_len</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">in2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">+</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">+</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">sig_len</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">in3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sig_len</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">sig_len</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">in1</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">in2</span> <span class="o">+</span> <span class="mi">6</span><span class="o">*</span><span class="n">in3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Plot the features and variable of interest (the output).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Store problem in a pandas DataFrame for later use</span>
+<span class="n">toy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">in1</span><span class="p">,</span> <span class="n">in2</span><span class="p">,</span> <span class="n">in3</span><span class="p">,</span> <span class="n">out</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;in2&quot;</span><span class="p">,</span> <span class="s2">&quot;in3&quot;</span><span class="p">,</span> <span class="s2">&quot;out&quot;</span><span class="p">])</span>
+
+<span class="n">plot_toy_signals</span><span class="p">(</span><span class="n">toy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_13_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_13_0.png" />
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">two_var_model</span></code> function in the next cell defines a linear model of two variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">two_var_model</span><span class="p">(</span><span class="n">in_tuple</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">ina</span><span class="p">,</span> <span class="n">inb</span> <span class="o">=</span> <span class="n">in_tuple</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">ina</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">inb</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Use the SciPy library’s <code class="docutils literal notranslate"><span class="pre">curve_fit</span></code> function to try to predict the variable of interest from two of three features. The model with less-correlated features performs better.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">two_vars</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">([</span><span class="s1">&#39;in1&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">,</span> <span class="s1">&#39;in3&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>  
+    <span class="n">two_vars</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">))</span>
+    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">two_var_model</span><span class="p">,</span> <span class="p">(</span><span class="n">toy</span><span class="p">[</span><span class="n">f0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">toy</span><span class="p">[</span><span class="n">f1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">toy</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">two_var_model</span><span class="p">((</span><span class="n">toy</span><span class="p">[</span><span class="n">f0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">toy</span><span class="p">[</span><span class="n">f1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="n">popt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">popt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">toy</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard deviation for selection of features </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2"> is </span><span class="si">{:.4f}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">)))))</span>
+<span class="n">model_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">two_vars</span><span class="p">)</span>
+
+<span class="n">plot_two_var_model</span><span class="p">(</span><span class="n">model_df</span><span class="p">,</span> <span class="n">toy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Standard deviation for selection of features in1 and in2 is 3.2589.
+Standard deviation for selection of features in1 and in3 is 0.0746.
+Standard deviation for selection of features in2 and in3 is 0.0540.
+</pre></div>
+</div>
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_17_1.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_17_1.png" />
+</div>
+</div>
+<p>The following section introduces a method for optimizing feature selection that can be useful in modeling complex systems.</p>
+</div>
+<div class="section" id="feature-selection-by-mutual-information">
+<h2>Feature Selection by Mutual Information<a class="headerlink" href="#feature-selection-by-mutual-information" title="Permalink to this headline">¶</a></h2>
+<p>There are various methods for <a class="reference external" href="https://en.wikipedia.org/wiki/Feature_selection">feature selection</a>. If you are building a machine-learning model, for example, and have six potential features, you might naively consider training it first on each of the features by itself, then on all 15 combinations of subsets of two features, then 20 combinations of subsets of three features, and so on. However, statistical methods are more efficient.</p>
+<p>One statistical criterion that can guide this selection is mutual information (MI). The following subsections explain information and MI with some simple examples.</p>
+<p>If you already understand MI and Shannon entropy, please skip ahead to section <a class="reference external" href="#Solving-Feature-Selection-on-a-Quantum-Computer">Solving Feature Selection on a Quantum Computer</a> (and then from the menu bar, click the <strong>Cell</strong> drop-down menu’s <em>Run All Above</em> option).</p>
+<div class="section" id="quantifying-information-shannon-entropy">
+<h3>Quantifying Information: Shannon Entropy<a class="headerlink" href="#quantifying-information-shannon-entropy" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://en.wiktionary.org/wiki/Shannon_entropy">Shannon entropy</a>, <span class="math notranslate nohighlight">\(H(X)\)</span>,  mathematically quantifies the information in a signal:</p>
+<p><span class="math notranslate nohighlight">\(H(X) = - \sum_{x \in X} p(x) \log p(x)\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(p(x)\)</span> represents the probability of an event’s occurrence. The Shannon Entropy (SE) formula can be understood as weighing by an event’s probability a value of <span class="math notranslate nohighlight">\(\log \frac{1}{p(x)}\)</span> for the event, where the reciprocal is due to the minus sign. This value means that the less likely the occurrence of an event, the more information is attributed to it (intuitively, when a man bites a dog it’s news).</p>
+<p>To calculate SE, the <code class="docutils literal notranslate"><span class="pre">prob</span></code> function defined below calculates probability for a dataset representing some variables (a training set in a machine learning context) by dividing it into bins as a histogram using the NumPy library’s <code class="docutils literal notranslate"><span class="pre">histogramdd</span></code> function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prob</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">max_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Joint probability distribution P(X) for the given data.&quot;&quot;&quot;</span>
+
+    <span class="c1"># bin by the number of different values per feature</span>
+    <span class="n">num_rows</span><span class="p">,</span> <span class="n">num_columns</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">dataset</span><span class="p">[:,</span> <span class="n">ci</span><span class="p">])),</span> <span class="n">max_bins</span><span class="p">)</span> <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_columns</span><span class="p">)]</span>
+
+    <span class="n">freq</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">bins</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+<span class="k">def</span> <span class="nf">shannon_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Shannon entropy H(X) is the sum of P(X)log(P(X)) for probabilty distribution P(X).&quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">return</span> <span class="o">-</span><span class="nb">sum</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="k">for</span> <span class="n">pi</span> <span class="ow">in</span> <span class="n">p</span> <span class="k">if</span> <span class="n">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="illustration-of-shannon-entropy">
+<h4>Illustration of Shannon Entropy<a class="headerlink" href="#illustration-of-shannon-entropy" title="Permalink to this headline">¶</a></h4>
+<p>For an intuitive example of measuring SE, this subsection applies the <code class="docutils literal notranslate"><span class="pre">shannon_entropy</span></code> function to three signals with defined distributions:</p>
+<ul class="simple">
+<li><p>Uniform: this distribution maximizes values of SE because all outcomes are equally likely, meaning every outcome is equally unpredictable. <span class="math notranslate nohighlight">\(H(X) = log(N)\)</span> for uniform distribution, where <span class="math notranslate nohighlight">\(N\)</span> is the number of possible outcomes, <span class="math notranslate nohighlight">\({x_1, x_2, ...x_N}\)</span>.</p></li>
+<li><p>Exponential: the steeper the curve, the more outcomes are in the “tail” part (have higher probability) with lower information value.</p></li>
+<li><p>Binomial: the stronger this signal is biased to one outcome, the more predictable its values, the lower its information value. <span class="math notranslate nohighlight">\(H(X) = -p \log(p) - (1-p) \log(1-p)\)</span> for binomial distribution; for <span class="math notranslate nohighlight">\(p = 0.1\)</span>, for example, <span class="math notranslate nohighlight">\(H(X) = 0.468\)</span>.</p></li>
+</ul>
+<p>Define the three signals and plot the SE. The red dots show the maximal values of SE for different numbers of bits (Shannon developed the formula to calculate channel bandwidth, which for digital communications is measured in bits) or, as here, the bins into which the signals’ possible values are divided.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">max_bins</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Signals with defined distributions</span>
+<span class="n">x_uniform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">x_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">bins</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_bins</span><span class="p">):</span>
+    <span class="n">uniform_se</span> <span class="o">=</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">x_uniform</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span>
+    <span class="n">exp_se</span> <span class="o">=</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">x_exp</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span>
+    <span class="n">vals_se</span> <span class="o">=</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">bins</span><span class="p">))</span>                               
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;Bins&#39;</span><span class="p">:</span> <span class="n">bins</span><span class="p">,</span> <span class="s1">&#39;Uniform&#39;</span><span class="p">:</span> <span class="n">uniform_se</span><span class="p">,</span> <span class="s1">&#39;Maximum&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">bins</span><span class="p">),</span> <span class="s1">&#39;Exp&#39;</span><span class="p">:</span> <span class="n">exp_se</span><span class="p">,</span> <span class="s1">&#39;Vals&#39;</span><span class="p">:</span> <span class="n">vals_se</span><span class="p">})</span>
+
+<span class="n">plot_se</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_23_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_23_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="conditional-shannon-entropy">
+<h4>Conditional Shannon Entropy<a class="headerlink" href="#conditional-shannon-entropy" title="Permalink to this headline">¶</a></h4>
+<p>Conditional SE (CSE) measures the information in one signal, <span class="math notranslate nohighlight">\(X\)</span>, when the value of another signal, <span class="math notranslate nohighlight">\(Y\)</span>, is known:</p>
+<p><span class="math notranslate nohighlight">\(\begin{aligned} H(X|Y) 
+&amp; = H(X,Y)-H(Y) \\
+&amp; = - \sum_{x \in X} p(x, y) \log p(x, y) - H(Y) \end{aligned}\)</span></p>
+<p>where joint SE, <span class="math notranslate nohighlight">\(H(X,Y)\)</span>, measures the information in both signals together, with <span class="math notranslate nohighlight">\(p(x,y)\)</span> being their joint probability. For example, knowing that it’s winter reduces the information value of news that it is raining.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">conditional_shannon_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="n">conditional_indices</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Shannon entropy of P(X) conditional on variable j&quot;&quot;&quot;</span>
+
+    <span class="n">axis</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conditional_indices</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="illustration-of-cse">
+<h4>Illustration of CSE<a class="headerlink" href="#illustration-of-cse" title="Permalink to this headline">¶</a></h4>
+<p>Apply CSE to the toy problem. Because signals <code class="docutils literal notranslate"><span class="pre">in1</span></code> and <code class="docutils literal notranslate"><span class="pre">in2</span></code> are similar, knowing the value of one provides a good estimate of the other; in contrast, the value of signal <code class="docutils literal notranslate"><span class="pre">in3</span></code> is less good for estimating the first two.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;H(in1) = </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s2">&quot;in1&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;H(in1|in3) = </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conditional_shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;in3&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;H(in1|in2) = </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conditional_shannon_entropy</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;in2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>H(in1) = 3.16
+H(in1|in3) = 2.31
+H(in1|in2) = 1.16
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="mutual-information">
+<h3>Mutual Information<a class="headerlink" href="#mutual-information" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Mutual_information">Mutual information</a> between variables <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> is defined as</p>
+<p><span class="math notranslate nohighlight">\(I(X;Y)  = \sum_{y \in Y} \sum_{x \in X} p(x, y) \log \frac{p(x,y)}{p(x)p(y)}\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(p(x)\)</span> and <span class="math notranslate nohighlight">\(p(y)\)</span> are marginal probabilities of <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>, and <span class="math notranslate nohighlight">\(p(x,y)\)</span> the joint probability. Equivalently,</p>
+<p><span class="math notranslate nohighlight">\(I(X;Y)  = H(Y) - H(Y|X)\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(H(Y)\)</span> is the SE of <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(H(Y|X)\)</span> is the CSE of <span class="math notranslate nohighlight">\(Y\)</span> conditional on <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>Mutual information (MI) quantifies how much one knows about one random variable from observations of another. Intuitively, a model based on just one of a pair of features (e.g., farmer MacDonald’s water rations and soil humidity) will better reproduce their combined contribution when MI between them is high.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mutual_information</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mutual information between all variables and variable j&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">shannon_entropy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">j</span><span class="p">))</span> <span class="o">-</span> <span class="n">conditional_shannon_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="mutual-information-on-the-toy-problem">
+<h4>Mutual Information on the Toy Problem<a class="headerlink" href="#mutual-information-on-the-toy-problem" title="Permalink to this headline">¶</a></h4>
+<p>Calculate and plot MI between the output of the toy problem and its three input signals. This measures the suitability of each on its own as a feature in a model of the system, or how much each shapes the output.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mi</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">toy</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;out&#39;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">mi</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="n">column</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plot_mi</span><span class="p">(</span><span class="n">mi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_31_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_31_0.png" />
+</div>
+</div>
+<p>The plot of input and output signals in the first section might give an impression that the toy model’s output is closer to the two sine signals than to <code class="docutils literal notranslate"><span class="pre">in3</span></code>, but the linear regression below confirms the MI result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">var_rval</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">toy</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;out&#39;</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">rvalue</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">toy</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">toy</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  
+    <span class="n">model</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">slope</span><span class="o">*</span><span class="n">toy</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">intercept</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">toy</span><span class="p">),</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">var_rval</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">column</span><span class="p">,</span> <span class="n">rvalue</span><span class="p">))</span>
+
+<span class="n">plot_lingress</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">model</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">var_rval</span><span class="p">),</span> <span class="n">toy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_33_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_33_0.png" />
+</div>
+</div>
+<p>The result should in fact be expected given an output defined as <span class="math notranslate nohighlight">\(out = 2 \times in_1 + 3 \times in_2 + 6 \times in_3\)</span> with the sixfold multiplier on <span class="math notranslate nohighlight">\(in_3\)</span> greater than the sum of multipliers on the other signals, all three of which have an amplitude of 1.</p>
+</div>
+<div class="section" id="conditional-mutual-information">
+<h4>Conditional Mutual Information<a class="headerlink" href="#conditional-mutual-information" title="Permalink to this headline">¶</a></h4>
+<p>Conditional mutual information (CMI) between a variable of interest, <span class="math notranslate nohighlight">\(X\)</span>, and a feature, <span class="math notranslate nohighlight">\(Y\)</span>, given the selection of another feature, <span class="math notranslate nohighlight">\(Z\)</span>, is given by</p>
+<p><span class="math notranslate nohighlight">\(I(X;Y|Z) = H(X|Z)-H(X|Y,Z)\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(H(X|Z)\)</span> is the CSE of <span class="math notranslate nohighlight">\(X\)</span> conditional on <span class="math notranslate nohighlight">\(Z\)</span> and <span class="math notranslate nohighlight">\(H(X|Y, Z)\)</span> is the CSE of <span class="math notranslate nohighlight">\(X\)</span> conditional on both <span class="math notranslate nohighlight">\(Y\)</span> and <span class="math notranslate nohighlight">\(Z\)</span>.</p>
+<p>In this code cell, because marginalization over <span class="math notranslate nohighlight">\(j\)</span> removes a dimension, any conditional indices pointing to subsequent dimensions are decremented by 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">conditional_mutual_information</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="o">*</span><span class="n">conditional_indices</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mutual information between variables X and variable Y conditional on variable Z.&quot;&quot;&quot;</span>
+    
+    <span class="n">marginal_conditional_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">j</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">conditional_indices</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">conditional_shannon_entropy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">j</span><span class="p">),</span> <span class="o">*</span><span class="n">marginal_conditional_indices</span><span class="p">)</span>
+            <span class="o">-</span> <span class="n">conditional_shannon_entropy</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="o">*</span><span class="n">conditional_indices</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Apply <code class="docutils literal notranslate"><span class="pre">conditional_mutual_information</span></code> to the toy problem to find CMI between <code class="docutils literal notranslate"><span class="pre">out</span></code> and either <code class="docutils literal notranslate"><span class="pre">in2</span></code> or <code class="docutils literal notranslate"><span class="pre">in3</span></code>, conditional on <code class="docutils literal notranslate"><span class="pre">in1</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I(out;in2|in1) = </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">,</span> <span class="s1">&#39;in1&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I(out;in3|in1) = </span><span class="si">{:.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="s1">&#39;in3&#39;</span><span class="p">,</span> <span class="s1">&#39;in1&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>I(out;in2|in1) = 0.59
+I(out;in3|in1) = 1.73
+</pre></div>
+</div>
+</div>
+</div>
+<p>Given the sine signal, <code class="docutils literal notranslate"><span class="pre">in1</span></code>, if you try to predict the output from one of the remaining signals, you find that the linear function, <code class="docutils literal notranslate"><span class="pre">in3</span></code> contributes more information than the noisy sine, <code class="docutils literal notranslate"><span class="pre">in2</span></code>.</p>
+<p>Ideally, to select a model’s <span class="math notranslate nohighlight">\(k\)</span> most relevant of <span class="math notranslate nohighlight">\(n\)</span> features, you could maximize <span class="math notranslate nohighlight">\(I({X_k}; Y)\)</span>, the MI between a set of <span class="math notranslate nohighlight">\(k\)</span> features, <span class="math notranslate nohighlight">\(X_k\)</span>, and variable of interest, <span class="math notranslate nohighlight">\(Y\)</span>. This is a hard calculation because <span class="math notranslate nohighlight">\(n \choose k\)</span> grows rapidly in real-world problems.</p>
+</div>
+</div>
+</div>
+<div class="section" id="solving-feature-selection-on-a-quantum-computer">
+<h2>Solving Feature Selection on a Quantum Computer<a class="headerlink" href="#solving-feature-selection-on-a-quantum-computer" title="Permalink to this headline">¶</a></h2>
+<p>There are different methods of approximating the hard calculation of optimally selecting <span class="math notranslate nohighlight">\(n \choose k\)</span> features to maximize MI. The approach followed here assumes conditional independence of features and limits CMI calculations to permutations of three features. The optimal set of features, <span class="math notranslate nohighlight">\(S\)</span>, is then approximated by:</p>
+<p><span class="math notranslate nohighlight">\(\arg \max_S \sum_{i \in S} \left \{ I(X_i;Y) + \sum_{j \in S, j \ne i} I(X_j;Y |X_i) \right \}\)</span></p>
+<p>The left-hand component, <span class="math notranslate nohighlight">\(I(X_i;Y)\)</span>, represents MI between the variable of interest and a particular feature; maximizing selects features that best predict the variable of interest. The right-hand component, <span class="math notranslate nohighlight">\(I(X_j;Y |X_i)\)</span>, represents conditional MI between the variable of interest and a feature given the prior selection of another feature; maximizing selects features that complement information about the variable of interest rather than provide redundant information.</p>
+<p>This approximation is still a hard calculation. The following subsection demonstrates a method for formulating it for solution on the D-Wave quantum computer. The method is based on the 2014 paper, <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2623611">Effective Global Approaches for Mutual Information Based Feature Selection</a>, by Nguyen, Chan, Romano, and Bailey published in the Proceedings of the 20th ACM SIGKDD international conference on knowledge discovery and data mining.</p>
+</div>
+<div class="section" id="miqubo-qubo-representation-of-feature-selection">
+<h2>MIQUBO: QUBO Representation of Feature Selection<a class="headerlink" href="#miqubo-qubo-representation-of-feature-selection" title="Permalink to this headline">¶</a></h2>
+<p>D-Wave systems solve binary quadratic models (BQM)—the Ising model traditionally used in statistical mechanics and its computer-science equivalent, the quadratic unconstrained binary optimization (QUBO) problem. Given <span class="math notranslate nohighlight">\(N\)</span> variables <span class="math notranslate nohighlight">\(x_1,...,x_N\)</span>, where each variable <span class="math notranslate nohighlight">\(x_i\)</span> can have binary values <span class="math notranslate nohighlight">\(0\)</span> or <span class="math notranslate nohighlight">\(1\)</span>, the system finds assignments of values that minimize,</p>
+<p><span class="math notranslate nohighlight">\(\sum_i^N q_ix_i + \sum_{i&lt;j}^N q_{i,j}x_i  x_j\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(q_i\)</span> and <span class="math notranslate nohighlight">\(q_{i,j}\)</span> are configurable (linear and quadratic) coefficients. To formulate a problem for the D-Wave system is to program <span class="math notranslate nohighlight">\(q_i\)</span> and <span class="math notranslate nohighlight">\(q_{i,j}\)</span> so that assignments of <span class="math notranslate nohighlight">\(x_1,...,x_N\)</span> also represent solutions to the problem.</p>
+<p>For feature selection, the Mutual Information QUBO (MIQUBO) method formulates a QUBO based on the approximation above for <span class="math notranslate nohighlight">\(I({X_k}; Y)\)</span>, which can be submitted to the D-Wave quantum computer for solution.</p>
+<p>The reduction of scope to permutations of three variables in this approximate formulation for MI-based optimal feature selection makes it a natural fit for reformulation as a QUBO:</p>
+<table style="width:75%">
+  <tr>
+    <th width="10%"></th>
+    <th width="35%">Formula</th>
+    <th width="10%">Optimization</th> 
+    <th width="10%">Linear Terms</th>
+    <th width="15%">Quadratic Terms</th>
+  </tr>
+  <tr>
+    <td><b>Feature Selection</b></td> 
+    <td>$\sum_{i \in S} \left \{ I(X_i;Y) + \sum_{j \in S, j \ne i} I(X_j;Y |X_i) \right \}$</td>
+    <td>Maximize</td> 
+    <td>$I(X_i;Y)$</td>
+    <td>$I(X_j;Y |X_i)$</td>
+  </tr>
+  <tr>
+    <td><b>QUBO</b></td>
+    <td>$\sum_i^N q_ix_i + \sum_{i < j}^N q_{i,j}x_i  x_j$</td>
+    <td>Minimize</td> 
+    <td>$q_ix_i$</td>
+    <td>$q_{i,j}x_ix_j$</td>
+  </tr>
+</table>
+<p>You can represent each choice of <span class="math notranslate nohighlight">\(n \choose k\)</span> features as the value of solution <span class="math notranslate nohighlight">\(x_1,...,x_N\)</span> by encoding <span class="math notranslate nohighlight">\(x_i=1\)</span> if feature <span class="math notranslate nohighlight">\(X_i\)</span> should be selected and <span class="math notranslate nohighlight">\(x_i=0\)</span> if not. With solutions encoded this way, you can represent the QUBO in matrix format, <span class="math notranslate nohighlight">\(\mathbf{x}^T \mathbf{Q x}\)</span>, where <span class="math notranslate nohighlight">\(\mathbf Q\)</span> is an <span class="math notranslate nohighlight">\(n\)</span> x <span class="math notranslate nohighlight">\(n\)</span> matrix and <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is an <span class="math notranslate nohighlight">\(n\)</span> x <span class="math notranslate nohighlight">\(1\)</span> matrix (a vector) that should have <span class="math notranslate nohighlight">\(k\)</span> ones representing the selected features.</p>
+<p>To map the feature-selection formula to a QUBO, set the elements of <span class="math notranslate nohighlight">\(\mathbf Q\)</span> such that</p>
+<ul class="simple">
+<li><p>diagonal elements (linear coefficients) represent MI: <span class="math notranslate nohighlight">\(Q_{ii} \leftarrow -I(X_i;Y)\)</span></p></li>
+<li><p>non-diagonal elements (quadratic elements) represent CMI: <span class="math notranslate nohighlight">\(Q_{ij} \leftarrow -I(X_j;Y |X_i)\)</span></p></li>
+</ul>
+<p>These QUBO terms are negative because the quantum computer seeks to minimize the programmed problem while the feature-selection formula maximizes. The following subsection codes this and then completes the formulation by adding the <span class="math notranslate nohighlight">\(n \choose k\)</span> constraint to the QUBO.</p>
+<div class="section" id="miqubo-on-the-toy-problem">
+<h3>MIQUBO on the Toy Problem<a class="headerlink" href="#miqubo-on-the-toy-problem" title="Permalink to this headline">¶</a></h3>
+<p>This subsection applies the MIQUBO formulation to the toy problem by configuring the QUBO in three parts: (1) linear biases that maximize MI between the variable of interest and each feature (2) quadratic biases that maximize CMI between the variable of interest and each feature, given the prior choice of another feature (3) selection of just <span class="math notranslate nohighlight">\(k\)</span> features.</p>
+<p>Create a BQM and set the linear coefficients as the MI between <code class="docutils literal notranslate"><span class="pre">out</span></code> and each potential feature.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bqm</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">dimod</span><span class="o">.</span><span class="n">BINARY</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">toy</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+
+    <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="s1">&#39;out&#39;</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="n">column</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="o">-</span><span class="n">mi</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bqm</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>in1: -1.147
+in2: -1.269
+in3: -1.696
+</pre></div>
+</div>
+</div>
+</div>
+<p>Set the quadratic coefficients as the MI between <code class="docutils literal notranslate"><span class="pre">out</span></code> and each potential feature conditional on the other features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">([</span><span class="s1">&#39;in1&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">,</span> <span class="s1">&#39;in3&#39;</span><span class="p">],</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">cmi_01</span> <span class="o">=</span> <span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cmi_10</span> <span class="o">=</span> <span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">toy</span><span class="p">[[</span><span class="s1">&#39;out&#39;</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_interaction</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="o">-</span><span class="n">cmi_01</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_interaction</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="o">-</span><span class="n">cmi_10</span><span class="p">)</span>
+
+<span class="n">bqm</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>     <span class="c1"># scale the BQM to (-1, 1) biases</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">bqm</span><span class="o">.</span><span class="n">quadratic</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;in1&#39;, &#39;in2&#39;): -0.326
+(&#39;in1&#39;, &#39;in3&#39;): -0.899
+(&#39;in2&#39;, &#39;in3&#39;): -1.000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Use Ocean software’s <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_dimod/sdk_index.html">dimod</a> <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_dimod/reference/sampler_composites/samplers.html">ExactSolver()</a> to find an exact solution of the BQM, which currently represents a minimization of MI and CMI, and plot the results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sampler</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">ExactSolver</span><span class="p">()</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+
+<span class="n">plot_solutions</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_47_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_47_0.png" />
+</div>
+</div>
+<p>Unsurprisingly, the best solution (lowest-energy solution for the minimized QUBO) employs all three input signals because the current QUBO mapping does not constrain the number of selected features. In those solutions where only two are selected, models that select <code class="docutils literal notranslate"><span class="pre">in3</span></code> are better than the one that selects just <code class="docutils literal notranslate"><span class="pre">in1</span></code> and <code class="docutils literal notranslate"><span class="pre">in2</span></code>.</p>
+</div>
+<div class="section" id="penalizing-non-k-selections">
+<h3>Penalizing Non-k Selections<a class="headerlink" href="#penalizing-non-k-selections" title="Permalink to this headline">¶</a></h3>
+<p>How do you program  on the quantum computer a constraint that exactly <span class="math notranslate nohighlight">\(k\)</span> features be selected? By penalizing solutions that select greater or fewer than <span class="math notranslate nohighlight">\(k\)</span> features. If you add</p>
+<p><span class="math notranslate nohighlight">\(P = \alpha (\sum_{i=1}^n x_i - k)^2\)</span></p>
+<p>to the QUBO, where penalty <span class="math notranslate nohighlight">\(P\)</span> is positive whenever the number of <span class="math notranslate nohighlight">\(1\)</span>s in solution <span class="math notranslate nohighlight">\(x_1,...,x_N\)</span> is not <span class="math notranslate nohighlight">\(k\)</span>, a large enough <span class="math notranslate nohighlight">\(\alpha\)</span> can ensure that such solutions are no longer minima of the problem.</p>
+<p>Set set a constraint that <span class="math notranslate nohighlight">\(k=2\)</span> with a penalty amplitude of <span class="math notranslate nohighlight">\(4\)</span> (you can rerun this cell with varying values of <code class="docutils literal notranslate"><span class="pre">strength</span></code> to see the penalty range from ineffective to overshadowing the problem) and plot the solution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">bqm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dimod</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">bqm</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+
+<span class="n">plot_solutions</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_50_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_50_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="example-application-predicting-survival-of-titanic-passengers">
+<h2>Example Application: Predicting Survival of Titanic Passengers<a class="headerlink" href="#example-application-predicting-survival-of-titanic-passengers" title="Permalink to this headline">¶</a></h2>
+<p>This example illustrates the MIQUBO method by finding an optimal feature set for predicting survival of Titanic passengers. It uses records provided in file <code class="docutils literal notranslate"><span class="pre">formatted_titanic.csv</span></code>, which is a feature-engineered version of a public database of passenger information recorded by the ship’s crew. In addition to a column showing survival for each passenger, its columns record gender, title, class, port of embarkation, etc.</p>
+<p>The next cell reads the file into a pandas DataFrame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">titanic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://github.com/sparsh-ai/dwave-notebooks/raw/master/demos/feature-selection/data/formatted_titanic.csv&quot;</span><span class="p">)</span>
+<span class="n">titanic</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pclass</th>
+      <th>survived</th>
+      <th>sex</th>
+      <th>age</th>
+      <th>fare</th>
+      <th>cabin</th>
+      <th>miss</th>
+      <th>master</th>
+      <th>mr</th>
+      <th>mrs</th>
+      <th>rare</th>
+      <th>alone</th>
+      <th>embarked port S</th>
+      <th>embarked port C</th>
+      <th>embarked port Q</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>True</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Plot a ranking of MI between each feature and the variable of interest (survival).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mi</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">((</span><span class="s1">&#39;survived&#39;</span><span class="p">,)))</span>
+
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+    <span class="n">mi</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">=</span> <span class="n">mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plot_mi</span><span class="p">(</span><span class="n">mi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_54_0.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_54_0.png" />
+</div>
+</div>
+<div class="section" id="exact-versus-good-solutions-a-note-on-this-dataset">
+<h3>Exact Versus Good Solutions: a Note on this Dataset<a class="headerlink" href="#exact-versus-good-solutions-a-note-on-this-dataset" title="Permalink to this headline">¶</a></h3>
+<p>This example demonstrates a technique for solving a type of optimization problem on a quantum computer. The Titanic dataset provides a familiar, intuitive example available in the public domain. In itself, however, it is not a good fit for solving by sampling.</p>
+<p>The next cell plots the values of MI and CMI for all features and three-variable permutations. Notice the clustering of values in tight ranges of values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="p">[</span><span class="n">mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])),</span> <span class="p">[</span><span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span> <span class="s1">&#39;go&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])),</span> <span class="p">[</span><span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span> <span class="s1">&#39;go&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Titanic MI &amp; CMI Values&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Shannon Entropy&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Variable&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s2">&quot;MI&quot;</span><span class="p">,</span> <span class="s2">&quot;CMI&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f5ea1c128d0&gt;
+</pre></div>
+</div>
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_56_1.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_56_1.png" />
+</div>
+</div>
+<p>The plot below, obtained by exploiting the problem’s small size and brute-force solving for all possible values, shows the solution space for a couple of choices of <span class="math notranslate nohighlight">\(k\)</span>. The left side shows the resulting energy for all possible assignments of values to <span class="math notranslate nohighlight">\(x_1...x_N\)</span> (yellow) and those that satisfy the requirement of <span class="math notranslate nohighlight">\(n \choose k\)</span> (blue); the right side focuses on only those that satisfy <span class="math notranslate nohighlight">\(n \choose k\)</span> and highlights the optimal solution (red).</p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F8abbf7d4-974f-4f74-bcd4-8017bdb08ac7%2FUntitled.png?table=block&id=aa01cbe7-f27e-49ec-8753-ab0621793715&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><p>Notice the high number of valid solutions that form a small cluster (the energy difference between the five best solutions in the depicted graph is in the fourth decimal place). The quantum computer’s strength is in quickly finding diverse good solutions to hard problems, it is not best employed as a double-precision numerical calculator. Run naively on this dataset, it finds numerous good solutions but is unlikely to find the exact optimal solution.</p>
+<p>There are many techniques for reformulating problems for the D-Wave system that can improve performance on various metrics, some of which can help narrow down good solutions to closer approach an optimal solution. These are out of scope for this example. For more information, see the <a class="reference external" href="https://docs.dwavesys.com/docs/latest/doc_handbook.html">D-Wave Problem-Solving Handbook</a>, and examples in the <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/index.html">Ocean software documentation</a>.</p>
+<p>The remainder of this section solves the problem for just the highest-scoring features.</p>
+</div>
+<div class="section" id="building-the-mi-based-bqm">
+<h3>Building the MI-Based BQM<a class="headerlink" href="#building-the-mi-based-bqm" title="Permalink to this headline">¶</a></h3>
+<p>Select 8 features with the top MI ranking found above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">keep</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">sorted_mi</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">mi</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pair</span><span class="p">:</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">titanic</span> <span class="o">=</span> <span class="n">titanic</span><span class="p">[[</span><span class="n">column</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">sorted_mi</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">keep</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;survived&quot;</span><span class="p">]]</span>
+<span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">titanic</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">((</span><span class="s1">&#39;survived&#39;</span><span class="p">,)))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Submitting for </span><span class="si">{}</span><span class="s2"> features: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">keep</span><span class="p">,</span> <span class="n">features</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Submitting for 8 features: [&#39;cabin&#39;, &#39;embarked port C&#39;, &#39;sex&#39;, &#39;alone&#39;, &#39;mrs&#39;, &#39;pclass&#39;, &#39;miss&#39;, &#39;mr&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Calculate a BQM based on the problem’s MI and CMI as done previously for the toy problem.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#@markdown draw helper</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">bokeh.io</span> <span class="kn">import</span> <span class="n">show</span><span class="p">,</span> <span class="n">output_notebook</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">Range1d</span><span class="p">,</span> <span class="n">MultiLine</span><span class="p">,</span> <span class="n">Circle</span><span class="p">,</span> <span class="n">Label</span><span class="p">,</span> <span class="n">LabelSet</span><span class="p">,</span> <span class="n">ColumnDataSource</span>
+<span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">WheelZoomTool</span><span class="p">,</span> <span class="n">ZoomInTool</span><span class="p">,</span> <span class="n">ZoomOutTool</span><span class="p">,</span> <span class="n">ResetTool</span><span class="p">,</span> <span class="n">PanTool</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">from_networkx</span>
+
+<span class="n">me</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">]</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="s1">&#39;bokeh_loaded&#39;</span><span class="p">):</span>
+    <span class="n">output_notebook</span><span class="p">()</span>
+    <span class="n">bokeh_loaded</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">plot_bqm</span><span class="p">(</span><span class="n">bqm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot binary quadratic model as a labeled graph.&quot;&quot;&quot;</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">bqm</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">bqm</span><span class="o">.</span><span class="n">quadratic</span><span class="p">)</span>      
+    <span class="n">plot_size</span> <span class="o">=</span> <span class="mi">400</span>
+    <span class="n">text_size</span> <span class="o">=</span> <span class="s1">&#39;16pt&#39;</span>
+     
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">from_networkx</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">node_renderer</span><span class="o">.</span><span class="n">glyph</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span> <span class="n">fill_alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">edge_renderer</span><span class="o">.</span><span class="n">glyph</span> <span class="o">=</span> <span class="n">MultiLine</span><span class="p">(</span><span class="n">line_alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+ 
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;xpos&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;ypos&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">loc</span> <span class="ow">in</span> <span class="n">pos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;xpos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ypos&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">LabelSet</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;xpos&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;ypos&#39;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;glyph&#39;</span><span class="p">,</span> 
+                      <span class="n">source</span><span class="o">=</span><span class="n">ColumnDataSource</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">x_offset</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_offset</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> 
+                      <span class="n">text_color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">text_font_size</span><span class="o">=</span><span class="s1">&#39;14pt&#39;</span><span class="p">,</span> <span class="n">text_font_style</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>    
+    
+    <span class="n">plot</span> <span class="o">=</span> <span class="n">Plot</span><span class="p">(</span><span class="n">plot_width</span><span class="o">=</span><span class="n">plot_size</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="n">plot_size</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="n">Range1d</span><span class="p">(</span><span class="o">-</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">),</span> <span class="n">y_range</span><span class="o">=</span><span class="n">Range1d</span><span class="p">(</span><span class="o">-</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">))</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;BQM with </span><span class="si">{}</span><span class="s2"> nodes and </span><span class="si">{}</span><span class="s2"> edges&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bqm</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">bqm</span><span class="o">.</span><span class="n">quadratic</span><span class="p">))</span>
+    
+    <span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">WheelZoomTool</span><span class="p">(),</span> <span class="n">ZoomInTool</span><span class="p">(),</span> <span class="n">ZoomOutTool</span><span class="p">(),</span> <span class="n">PanTool</span><span class="p">(),</span> <span class="n">ResetTool</span><span class="p">()]</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">add_tools</span><span class="p">(</span><span class="o">*</span><span class="n">tools</span><span class="p">)</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">toolbar</span><span class="o">.</span><span class="n">active_scroll</span> <span class="o">=</span> <span class="n">tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">plot</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">add_layout</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">plot</span><span class="o">.</span><span class="n">background_fill_color</span> <span class="o">=</span> <span class="s2">&quot;lightyellow&quot;</span>
+        
+    <span class="n">show</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">plot_feature_selection</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">.9</span><span class="p">,</span> <span class="mf">.7</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Best Feature Selection&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Selected Features&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="c1"># Set a grid on minor ticks</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)),</span> <span class="n">minor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">selected_features</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bqm</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">BinaryQuadraticModel</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">dimod</span><span class="o">.</span><span class="n">BINARY</span><span class="p">)</span>
+
+<span class="c1"># add the features</span>
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+    <span class="n">mi</span> <span class="o">=</span> <span class="n">mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">feature</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="o">-</span><span class="n">mi</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">cmi_01</span> <span class="o">=</span> <span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">cmi_10</span> <span class="o">=</span> <span class="n">conditional_mutual_information</span><span class="p">(</span><span class="n">prob</span><span class="p">(</span><span class="n">titanic</span><span class="p">[[</span><span class="s1">&#39;survived&#39;</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_interaction</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="o">-</span><span class="n">cmi_01</span><span class="p">)</span>
+    <span class="n">bqm</span><span class="o">.</span><span class="n">add_interaction</span><span class="p">(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f0</span><span class="p">,</span> <span class="o">-</span><span class="n">cmi_10</span><span class="p">)</span>
+
+<span class="n">bqm</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>  
+
+<span class="n">plot_bqm</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/javascript">
+(function(root) {
+  function now() {
+    return new Date();
+  }
+
+  var force = true;
+
+  if (typeof root._bokeh_onload_callbacks === "undefined" || force === true) {
+    root._bokeh_onload_callbacks = [];
+    root._bokeh_is_loading = undefined;
+  }
+
+  var JS_MIME_TYPE = 'application/javascript';
+  var HTML_MIME_TYPE = 'text/html';
+  var EXEC_MIME_TYPE = 'application/vnd.bokehjs_exec.v0+json';
+  var CLASS_NAME = 'output_bokeh rendered_html';
+
+  /**
+   * Render data to the DOM node
+   */
+  function render(props, node) {
+    var script = document.createElement("script");
+    node.appendChild(script);
+  }
+
+  /**
+   * Handle when an output is cleared or removed
+   */
+  function handleClearOutput(event, handle) {
+    var cell = handle.cell;
+
+    var id = cell.output_area._bokeh_element_id;
+    var server_id = cell.output_area._bokeh_server_id;
+    // Clean up Bokeh references
+    if (id != null && id in Bokeh.index) {
+      Bokeh.index[id].model.document.clear();
+      delete Bokeh.index[id];
+    }
+
+    if (server_id !== undefined) {
+      // Clean up Bokeh references
+      var cmd = "from bokeh.io.state import curstate; print(curstate().uuid_to_server['" + server_id + "'].get_sessions()[0].document.roots[0]._id)";
+      cell.notebook.kernel.execute(cmd, {
+        iopub: {
+          output: function(msg) {
+            var id = msg.content.text.trim();
+            if (id in Bokeh.index) {
+              Bokeh.index[id].model.document.clear();
+              delete Bokeh.index[id];
+            }
+          }
+        }
+      });
+      // Destroy server and session
+      var cmd = "import bokeh.io.notebook as ion; ion.destroy_server('" + server_id + "')";
+      cell.notebook.kernel.execute(cmd);
+    }
+  }
+
+  /**
+   * Handle when a new output is added
+   */
+  function handleAddOutput(event, handle) {
+    var output_area = handle.output_area;
+    var output = handle.output;
+
+    // limit handleAddOutput to display_data with EXEC_MIME_TYPE content only
+    if ((output.output_type != "display_data") || (!Object.prototype.hasOwnProperty.call(output.data, EXEC_MIME_TYPE))) {
+      return
+    }
+
+    var toinsert = output_area.element.find("." + CLASS_NAME.split(' ')[0]);
+
+    if (output.metadata[EXEC_MIME_TYPE]["id"] !== undefined) {
+      toinsert[toinsert.length - 1].firstChild.textContent = output.data[JS_MIME_TYPE];
+      // store reference to embed id on output_area
+      output_area._bokeh_element_id = output.metadata[EXEC_MIME_TYPE]["id"];
+    }
+    if (output.metadata[EXEC_MIME_TYPE]["server_id"] !== undefined) {
+      var bk_div = document.createElement("div");
+      bk_div.innerHTML = output.data[HTML_MIME_TYPE];
+      var script_attrs = bk_div.children[0].attributes;
+      for (var i = 0; i < script_attrs.length; i++) {
+        toinsert[toinsert.length - 1].firstChild.setAttribute(script_attrs[i].name, script_attrs[i].value);
+        toinsert[toinsert.length - 1].firstChild.textContent = bk_div.children[0].textContent
+      }
+      // store reference to server id on output_area
+      output_area._bokeh_server_id = output.metadata[EXEC_MIME_TYPE]["server_id"];
+    }
+  }
+
+  function register_renderer(events, OutputArea) {
+
+    function append_mime(data, metadata, element) {
+      // create a DOM node to render to
+      var toinsert = this.create_output_subarea(
+        metadata,
+        CLASS_NAME,
+        EXEC_MIME_TYPE
+      );
+      this.keyboard_manager.register_events(toinsert);
+      // Render to node
+      var props = {data: data, metadata: metadata[EXEC_MIME_TYPE]};
+      render(props, toinsert[toinsert.length - 1]);
+      element.append(toinsert);
+      return toinsert
+    }
+
+    /* Handle when an output is cleared or removed */
+    events.on('clear_output.CodeCell', handleClearOutput);
+    events.on('delete.Cell', handleClearOutput);
+
+    /* Handle when a new output is added */
+    events.on('output_added.OutputArea', handleAddOutput);
+
+    /**
+     * Register the mime type and append_mime function with output_area
+     */
+    OutputArea.prototype.register_mime_type(EXEC_MIME_TYPE, append_mime, {
+      /* Is output safe? */
+      safe: true,
+      /* Index of renderer in `output_area.display_order` */
+      index: 0
+    });
+  }
+
+  // register the mime type if in Jupyter Notebook environment and previously unregistered
+  if (root.Jupyter !== undefined) {
+    var events = require('base/js/events');
+    var OutputArea = require('notebook/js/outputarea').OutputArea;
+
+    if (OutputArea.prototype.mime_types().indexOf(EXEC_MIME_TYPE) == -1) {
+      register_renderer(events, OutputArea);
+    }
+  }
+
+  
+  if (typeof (root._bokeh_timeout) === "undefined" || force === true) {
+    root._bokeh_timeout = Date.now() + 5000;
+    root._bokeh_failed_load = false;
+  }
+
+  var NB_LOAD_WARNING = {'data': {'text/html':
+     "<div style='background-color: #fdd'>\n"+
+     "<p>\n"+
+     "BokehJS does not appear to have successfully loaded. If loading BokehJS from CDN, this \n"+
+     "may be due to a slow or bad network connection. Possible fixes:\n"+
+     "</p>\n"+
+     "<ul>\n"+
+     "<li>re-rerun `output_notebook()` to attempt to load from CDN again, or</li>\n"+
+     "<li>use INLINE resources instead, as so:</li>\n"+
+     "</ul>\n"+
+     "<code>\n"+
+     "from bokeh.resources import INLINE\n"+
+     "output_notebook(resources=INLINE)\n"+
+     "</code>\n"+
+     "</div>"}};
+
+  function display_loaded() {
+    var el = document.getElementById(null);
+    if (el != null) {
+      el.textContent = "BokehJS is loading...";
+    }
+    if (root.Bokeh !== undefined) {
+      if (el != null) {
+        el.textContent = "BokehJS " + root.Bokeh.version + " successfully loaded.";
+      }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(display_loaded, 100)
+    }
+  }
+
+
+  function run_callbacks() {
+    try {
+      root._bokeh_onload_callbacks.forEach(function(callback) {
+        if (callback != null)
+          callback();
+      });
+    } finally {
+      delete root._bokeh_onload_callbacks
+    }
+    console.debug("Bokeh: all callbacks have finished");
+  }
+
+  function load_libs(css_urls, js_urls, callback) {
+    if (css_urls == null) css_urls = [];
+    if (js_urls == null) js_urls = [];
+
+    root._bokeh_onload_callbacks.push(callback);
+    if (root._bokeh_is_loading > 0) {
+      console.debug("Bokeh: BokehJS is being loaded, scheduling callback at", now());
+      return null;
+    }
+    if (js_urls == null || js_urls.length === 0) {
+      run_callbacks();
+      return null;
+    }
+    console.debug("Bokeh: BokehJS not loaded, scheduling load and callback at", now());
+    root._bokeh_is_loading = css_urls.length + js_urls.length;
+
+    function on_load() {
+      root._bokeh_is_loading--;
+      if (root._bokeh_is_loading === 0) {
+        console.debug("Bokeh: all BokehJS libraries/stylesheets loaded");
+        run_callbacks()
+      }
+    }
+
+    function on_error(url) {
+      console.error("failed to load " + url);
+    }
+
+    for (let i = 0; i < css_urls.length; i++) {
+      const url = css_urls[i];
+      const element = document.createElement("link");
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.rel = "stylesheet";
+      element.type = "text/css";
+      element.href = url;
+      console.debug("Bokeh: injecting link tag for BokehJS stylesheet: ", url);
+      document.body.appendChild(element);
+    }
+
+    const hashes = {"https://cdn.bokeh.org/bokeh/release/bokeh-2.3.3.min.js": "dM3QQsP+wXdHg42wTqW85BjZQdLNNIXqlPw/BgKoExPmTG7ZLML4EGqLMfqHT6ON", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.3.min.js": "8x57I4YuIfu8XyZfFo0XVr2WAT8EK4rh/uDe3wF7YuW2FNUSNEpJbsPaB1nJ2fz2", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.3.min.js": "3QTqdz9LyAm2i0sG5XTePsHec3UHWwVsrOL68SYRoAXsafvfAyqtQ+h440+qIBhS"};
+
+    for (let i = 0; i < js_urls.length; i++) {
+      const url = js_urls[i];
+      const element = document.createElement('script');
+      element.onload = on_load;
+      element.onerror = on_error.bind(null, url);
+      element.async = false;
+      element.src = url;
+      if (url in hashes) {
+        element.crossOrigin = "anonymous";
+        element.integrity = "sha384-" + hashes[url];
+      }
+      console.debug("Bokeh: injecting script tag for BokehJS library: ", url);
+      document.head.appendChild(element);
+    }
+  };
+
+  function inject_raw_css(css) {
+    const element = document.createElement("style");
+    element.appendChild(document.createTextNode(css));
+    document.body.appendChild(element);
+  }
+
+  
+  var js_urls = ["https://cdn.bokeh.org/bokeh/release/bokeh-2.3.3.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.3.3.min.js", "https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.3.3.min.js"];
+  var css_urls = [];
+  
+
+  var inline_js = [
+    function(Bokeh) {
+      Bokeh.set_log_level("info");
+    },
+    function(Bokeh) {
+    
+    
+    }
+  ];
+
+  function run_inline_js() {
+    
+    if (root.Bokeh !== undefined || force === true) {
+      
+    for (var i = 0; i < inline_js.length; i++) {
+      inline_js[i].call(root, root.Bokeh);
+    }
+    } else if (Date.now() < root._bokeh_timeout) {
+      setTimeout(run_inline_js, 100);
+    } else if (!root._bokeh_failed_load) {
+      console.log("Bokeh: BokehJS failed to load within specified timeout.");
+      root._bokeh_failed_load = true;
+    } else if (force !== true) {
+      var cell = $(document.getElementById(null)).parents('.cell').data().cell;
+      cell.output_area.append_execute_result(NB_LOAD_WARNING)
+    }
+
+  }
+
+  if (root._bokeh_is_loading === 0) {
+    console.debug("Bokeh: BokehJS loaded, going straight to plotting");
+    run_inline_js();
+  } else {
+    load_libs(css_urls, js_urls, function() {
+      console.debug("Bokeh: BokehJS plotting callback run at", now());
+      run_inline_js();
+    });
+  }
+}(window));</script><div class="output text_html">
+
+
+
+
+
+<div class="bk-root" id="4d82852b-2fc6-4d3d-b73c-ff26c3ad06a1" data-root-id="1027"></div>
+</div><script type="application/javascript">(function(root) {
+  function embed_document(root) {
+    
+  var docs_json = {"d29db7a5-63f8-4c56-a350-825e620a4b4c":{"defs":[],"roots":{"references":[{"attributes":{"background_fill_color":"lightyellow","center":[{"id":"1023"}],"height":400,"renderers":[{"id":"1002"}],"title":{"id":"1030"},"toolbar":{"id":"1036"},"width":400,"x_range":{"id":"1025"},"x_scale":{"id":"1045"},"y_range":{"id":"1026"},"y_scale":{"id":"1044"}},"id":"1027","type":"Plot"},{"attributes":{"end":1.3,"start":-1.3},"id":"1026","type":"Range1d"},{"attributes":{"source":{"id":"1004"}},"id":"1006","type":"CDSView"},{"attributes":{"end":1.3,"start":-1.3},"id":"1025","type":"Range1d"},{"attributes":{"source":{"id":"1008"}},"id":"1010","type":"CDSView"},{"attributes":{},"id":"1061","type":"UnionRenderers"},{"attributes":{"text":"BQM with 8 nodes and 28 edges"},"id":"1030","type":"Title"},{"attributes":{},"id":"1050","type":"NodesOnly"},{"attributes":{},"id":"1059","type":"UnionRenderers"},{"attributes":{},"id":"1033","type":"ZoomOutTool"},{"attributes":{},"id":"1058","type":"Selection"},{"attributes":{},"id":"1057","type":"UnionRenderers"},{"attributes":{"data":{"index":["cabin","embarked port C","sex","alone","mrs","pclass","miss","mr"]},"selected":{"id":"1060"},"selection_policy":{"id":"1061"}},"id":"1004","type":"ColumnDataSource"},{"attributes":{},"id":"1032","type":"ZoomInTool"},{"attributes":{"data_source":{"id":"1008"},"glyph":{"id":"1017"},"hover_glyph":null,"muted_glyph":null,"view":{"id":"1010"}},"id":"1009","type":"GlyphRenderer"},{"attributes":{},"id":"1051","type":"NodesOnly"},{"attributes":{"data":{"label":["cabin","embarked port C","sex","alone","mrs","pclass","miss","mr"],"xpos":[-0.7939123949174524,0.46221675675115137,0.02499036106798346,-0.06539310472479663,-0.39386722939975366,0.9696898597906559,-0.9921877985415849,0.7884635499737971],"ypos":[0.6321921297645691,-0.8881943549542604,0.9999999999999999,0.013980106161005382,-0.9186838367944027,-0.210603383477458,-0.2474363293028456,0.618745668603391]},"selected":{"id":"1056"},"selection_policy":{"id":"1057"}},"id":"1022","type":"ColumnDataSource"},{"attributes":{"level":"glyph","source":{"id":"1022"},"text":{"field":"label"},"text_color":{"value":"blue"},"text_font_size":{"value":"14pt"},"text_font_style":{"value":"bold"},"x":{"field":"xpos"},"x_offset":{"value":-1},"y":{"field":"ypos"},"y_offset":{"value":-1}},"id":"1023","type":"LabelSet"},{"attributes":{},"id":"1031","type":"WheelZoomTool"},{"attributes":{},"id":"1056","type":"Selection"},{"attributes":{"graph_layout":{"alone":[0.7151750239257791,0.7131357199112602],"cabin":[-0.9403956639699569,-0.35366317322753765],"embarked port C":[-0.010934651459585337,0.02141501604102122],"miss":[0.9945639718763757,-0.1086904690052603],"mr":[0.5428184434087181,-0.845286899442503],"mrs":[-0.307015200340493,-0.939661785249047],"pclass":[-0.1282855733737811,1.0],"sex":[-0.8659263500670571,0.5127515909720651]}},"id":"1011","type":"StaticLayoutProvider"},{"attributes":{},"id":"1035","type":"ResetTool"},{"attributes":{"fill_alpha":{"value":0.25},"fill_color":{"value":"purple"},"size":{"value":35}},"id":"1012","type":"Circle"},{"attributes":{},"id":"1044","type":"LinearScale"},{"attributes":{},"id":"1034","type":"PanTool"},{"attributes":{"edge_renderer":{"id":"1009"},"inspection_policy":{"id":"1051"},"layout_provider":{"id":"1011"},"node_renderer":{"id":"1005"},"selection_policy":{"id":"1050"}},"id":"1002","type":"GraphRenderer"},{"attributes":{"data":{"end":["embarked port C","sex","alone","mrs","pclass","miss","mr","sex","alone","mrs","pclass","miss","mr","alone","mrs","pclass","miss","mr","mrs","pclass","miss","mr","pclass","miss","mr","miss","mr","mr"],"start":["cabin","cabin","cabin","cabin","cabin","cabin","cabin","embarked port C","embarked port C","embarked port C","embarked port C","embarked port C","embarked port C","sex","sex","sex","sex","sex","alone","alone","alone","alone","mrs","mrs","mrs","pclass","pclass","miss"]},"selected":{"id":"1058"},"selection_policy":{"id":"1059"}},"id":"1008","type":"ColumnDataSource"},{"attributes":{"line_alpha":{"value":0.8},"line_width":{"value":2}},"id":"1017","type":"MultiLine"},{"attributes":{},"id":"1060","type":"Selection"},{"attributes":{"data_source":{"id":"1004"},"glyph":{"id":"1012"},"hover_glyph":null,"muted_glyph":null,"view":{"id":"1006"}},"id":"1005","type":"GlyphRenderer"},{"attributes":{},"id":"1045","type":"LinearScale"},{"attributes":{"active_multi":null,"active_scroll":{"id":"1031"},"tools":[{"id":"1031"},{"id":"1032"},{"id":"1033"},{"id":"1034"},{"id":"1035"}]},"id":"1036","type":"Toolbar"}],"root_ids":["1027"]},"title":"Bokeh Application","version":"2.3.3"}};
+  var render_items = [{"docid":"d29db7a5-63f8-4c56-a350-825e620a4b4c","root_ids":["1027"],"roots":{"1027":"4d82852b-2fc6-4d3d-b73c-ff26c3ad06a1"}}];
+  root.Bokeh.embed.embed_items_notebook(docs_json, render_items);
+
+  }
+  if (root.Bokeh !== undefined) {
+    embed_document(root);
+  } else {
+    var attempts = 0;
+    var timer = setInterval(function(root) {
+      if (root.Bokeh !== undefined) {
+        clearInterval(timer);
+        embed_document(root);
+      } else {
+        attempts++;
+        if (attempts > 100) {
+          clearInterval(timer);
+          console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+        }
+      }
+    }, 10, root)
+  }
+})(window);</script></div>
+</div>
+</div>
+<div class="section" id="setting-up-a-qpu-as-a-solver">
+<h3>Setting Up a QPU as a Solver<a class="headerlink" href="#setting-up-a-qpu-as-a-solver" title="Permalink to this headline">¶</a></h3>
+<p>Set up a D-Wave system as your solver in the standard way described in the Ocean documentation’s <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/overview/sapi.html">Configuring Access to D-Wave Solvers</a>.</p>
+<p><em>minor-embedding</em>, the mapping between the problem’s variables to the D-Wave QPU’s numerically indexed qubits, can be handled in a variety of ways and this affects solution quality and performance. Ocean software provides tools suited for different types of problems; for example, <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_system/sdk_index.html">dwave-system</a> <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_system/reference/composites.html">EmbeddingComposite()</a> has a heuristic for automatic embedding. This example uses <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_system/reference/composites.html">FixedEmbeddingComposite()</a> with the embedding found using an algorithm tuned for cliques (complete graphs).</p>
+<p>Helper function <code class="docutils literal notranslate"><span class="pre">qpu_working_graph</span></code> below creates a <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_dnx/sdk_index.html"><em>dwave-networkx</em></a> graph that represents the <em>working graph</em> of the QPU selected by <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_system/reference/samplers.html">DWaveSampler</a>, a Pegasus or Chimera graph with the same sets of nodes (qubits) and edges (couplers) as the QPU. Ocean software’s <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_minorminer/sdk_index.html"><em>minorminer</em></a> finds an embedding for the required clique size in the working graph.</p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fd7d626b0-e5a3-4d90-afc8-a169cd07652e%2FUntitled.png?table=block&id=66b8f3d2-04c6-47bf-8ad1-23d050903c13&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><p><a class="reference external" href="https://youtu.be/qafL1TVKpY0">https://youtu.be/qafL1TVKpY0</a></p>
+<p><a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/overview/install.html">https://docs.ocean.dwavesys.com/en/stable/overview/install.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!dwave setup
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Optionally install non-open-source packages and configure your environment.
+
+Do you want to select non-open-source packages to install (y/n)? [y]: 
+
+D-Wave Drivers
+These drivers enable some automated performance-tuning features.
+This package is available under the D-Wave EULA license.
+The terms of the license are available online: https://docs.ocean.dwavesys.com/eula
+Install (y/n)? [y]: 
+Installing: D-Wave Drivers
+Successfully installed D-Wave Drivers.
+
+D-Wave Problem Inspector
+This tool visualizes problems submitted to the quantum computer and the results returned.
+This package is available under the D-Wave EULA license.
+The terms of the license are available online: https://docs.ocean.dwavesys.com/eula
+Install (y/n)? [y]: 
+Installing: D-Wave Problem Inspector
+Successfully installed D-Wave Problem Inspector.
+
+Creating the D-Wave configuration file.
+Configuration file not found; the default location is: /root/.config/dwave/dwave.conf
+Configuration file path [/root/.config/dwave/dwave.conf]: 
+Configuration file path does not exist. Create it? [y/N]: y
+Profile (create new) [prod]: dev
+API endpoint URL [skip]: https://cloud.dwavesys.com/sapi/
+Authentication token [skip]: DEV-4595********************
+Default client class [skip]: 
+Default solver [skip]: 
+Configuration saved.
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!dwave ping
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using endpoint: https://cloud.dwavesys.com/sapi/
+Using solver: DW_2000Q_6
+Submitted problem ID: 19ef1009-af13-4d82-9b5f-0b216259786c
+
+Wall clock time:
+ * Solver definition fetch: 900.507 ms
+ * Problem submit and results fetch: 966.624 ms
+ * Total: 1867.132 ms
+
+QPU timing:
+ * post_processing_overhead_time = 508 us
+ * qpu_access_overhead_time = 1986 us
+ * qpu_access_time = 10986 us
+ * qpu_anneal_time_per_sample = 20 us
+ * qpu_delay_time_per_sample = 21 us
+ * qpu_programming_time = 10747 us
+ * qpu_readout_time_per_sample = 198 us
+ * qpu_sampling_time = 239 us
+ * total_post_processing_time = 508 us
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qpu_working_graph</span><span class="p">(</span><span class="n">qpu</span><span class="p">):</span>
+    <span class="s2">&quot;Return a dwave_networkx graph representing the working graph of a given QPU.&quot;</span>
+    
+    <span class="n">dnx_graphs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;chimera&#39;</span><span class="p">:</span> <span class="n">dnx</span><span class="o">.</span><span class="n">chimera_graph</span><span class="p">,</span> <span class="s1">&#39;pegasus&#39;</span><span class="p">:</span> <span class="n">dnx</span><span class="o">.</span><span class="n">pegasus_graph</span><span class="p">}</span>
+
+    <span class="n">dnx_graph</span> <span class="o">=</span> <span class="n">dnx_graphs</span><span class="p">[</span><span class="n">qpu</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+    <span class="k">return</span> <span class="n">dnx_graph</span><span class="p">(</span><span class="n">qpu</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;topology&quot;</span><span class="p">][</span><span class="s2">&quot;shape&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> 
+                     <span class="n">node_list</span><span class="o">=</span><span class="n">qpu</span><span class="o">.</span><span class="n">nodelist</span><span class="p">,</span> 
+                     <span class="n">edge_list</span><span class="o">=</span><span class="n">qpu</span><span class="o">.</span><span class="n">edgelist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dwave.system</span> <span class="kn">import</span> <span class="n">DWaveSampler</span><span class="p">,</span> <span class="n">FixedEmbeddingComposite</span>
+<span class="kn">from</span> <span class="nn">minorminer.busclique</span> <span class="kn">import</span> <span class="n">find_clique_embedding</span>
+
+<span class="n">qpu</span> <span class="o">=</span> <span class="n">DWaveSampler</span><span class="p">()</span>
+
+<span class="n">qpu_working_graph</span> <span class="o">=</span> <span class="n">qpu_working_graph</span><span class="p">(</span><span class="n">qpu</span><span class="p">)</span>
+<span class="n">embedding</span> <span class="o">=</span> <span class="n">find_clique_embedding</span><span class="p">(</span><span class="n">bqm</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span> <span class="n">qpu_working_graph</span><span class="p">)</span>
+
+<span class="n">qpu_sampler</span> <span class="o">=</span> <span class="n">FixedEmbeddingComposite</span><span class="p">(</span><span class="n">qpu</span><span class="p">,</span> <span class="n">embedding</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Maximum chain length for minor embedding is </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">embedding</span><span class="o">.</span><span class="n">values</span><span class="p">())))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Maximum chain length for minor embedding is 2.
+</pre></div>
+</div>
+</div>
+</div>
+<p>This problem is small enough to be solved in its entirety on a D-Wave 2000Q QPU. For datasets with higher numbers of features, D-Wave Ocean’s <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_hybrid/sdk_index.html">dwave-hybrid</a> tool can be used to break the BQM into smaller pieces for serial submission to the QPU and/or parallel solution on classical resources. Here, an out-of-the-box hybrid sampler, <a class="reference external" href="https://docs.ocean.dwavesys.com/en/stable/docs_hybrid/reference/reference.html">Kerberos</a> is used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hybrid.reference.kerberos</span> <span class="kn">import</span> <span class="n">KerberosSampler</span>
+
+<span class="n">kerberos_sampler</span> <span class="o">=</span> <span class="n">KerberosSampler</span><span class="p">()</span> 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="submit-the-problem-for-all-k-values">
+<h3>Submit the Problem for All k Values<a class="headerlink" href="#submit-the-problem-for-all-k-values" title="Permalink to this headline">¶</a></h3>
+<p>For all numbers of selected features, <span class="math notranslate nohighlight">\(k\)</span>, set a <span class="math notranslate nohighlight">\(n \choose k\)</span> penalty, submit an updated BQM for solution, and at the end plot the selected features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">selected_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Submitting for k=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+    <span class="n">kbqm</span> <span class="o">=</span> <span class="n">dimod</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">kbqm</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bqm</span><span class="p">)</span>
+    <span class="n">kbqm</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+    
+    <span class="n">best</span> <span class="o">=</span> <span class="n">kerberos_sampler</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">kbqm</span><span class="p">,</span> 
+                                   <span class="n">qpu_sampler</span><span class="o">=</span><span class="n">qpu_sampler</span><span class="p">,</span> 
+                                   <span class="n">qpu_reads</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> 
+                                   <span class="n">max_iter</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                   <span class="n">qpu_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;Notebook - Feature Selection&#39;</span><span class="p">}</span>
+                                  <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">sample</span>
+    
+    <span class="k">for</span> <span class="n">fi</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+        <span class="n">selected_features</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">fi</span><span class="p">]</span> <span class="o">=</span> <span class="n">best</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
+
+<span class="n">plot_feature_selection</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Submitting for k=1
+Submitting for k=2
+Submitting for k=3
+Submitting for k=4
+Submitting for k=5
+Submitting for k=6
+Submitting for k=7
+Submitting for k=8
+</pre></div>
+</div>
+<img alt="../_images/T968347_Feature_Selection_with_the_D_Wave_System_76_1.png" src="../_images/T968347_Feature_Selection_with_the_D_Wave_System_76_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial, we understood some basics of feature selection and applied our learning on a toy dataset using DWave quantum processor. <a class="reference external" href="https://cloud.dwavesys.com/leap/">This</a> is the link where you can register to get some free access. Next, you can take help of <a class="reference external" href="https://github.com/sparsh-ai/dwave-notebooks">this</a> repo and explore some more examples. Also, explore <a class="reference external" href="https://github.com/qcpolimi/CQFS">this</a> repo and associated <a class="reference external" href="https://www.mdpi.com/1099-4300/23/8/970/pdf">paper</a> to know how to perform feature selection on recsys datasets - Movielens, CiteULike, and Xing (RecSys’17).</p>
+<p>Copyright © D-Wave Systems Inc.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

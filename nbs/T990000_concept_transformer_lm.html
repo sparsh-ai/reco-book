@@ -1,0 +1,1284 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TransformerLM Quick Start and Guide &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Content-based method for song recommendation" href="T990000_content_based_music_recommender_lyricsfreak.html" />
+    <link rel="prev" title="Natural Language Processing 101" href="T990000_concept_nlp_basics.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990000_concept_transformer_lm.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990000_concept_transformer_lm.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-a-pre-trained-transformerlm">
+   Using a pre-trained TransformerLM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#train-a-transformerlm-model">
+   Train a TransformerLM Model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-model">
+     Create the Model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#prepare-the-dataset">
+     Prepare the Dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-model">
+     Train the model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#make-predictions">
+     Make predictions
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#transformer-vs-transformerlm">
+   Transformer vs. TransformerLM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#looking-inside-the-trax-transformerlm">
+   Looking inside the Trax TransformerLM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#layers">
+     Layers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#input-decoder-blocks-and-output-layers">
+     Input, Decoder Blocks, and Output Layers
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#transformer-decoder-block">
+     Transformer Decoder Block
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multiple-inputs-outputs-branch-and-residual">
+     Multiple Inputs/Outputs, Branch, and Residual
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#multiple-inputs-outputs">
+       Multiple Inputs/Outputs
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#branch">
+       Branch
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#residual">
+       Residual
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="transformerlm-quick-start-and-guide">
+<h1>TransformerLM Quick Start and Guide<a class="headerlink" href="#transformerlm-quick-start-and-guide" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>In this notebook, we will Use a pre-trained TransformerLM, Train a TransformerLM model, and Looking inside the Trax TransformerLM.</p>
+</div></blockquote>
+<p>Language models are machine learning models that power some of the most impressive applications involving text and language (e.g. machine translation, sentiment analysis, chatbots, summarization). At the time of this writing, some of the largest ML models in existence are language models. They are also based on the <a class="reference external" href="https://arxiv.org/abs/1706.03762">transformer</a> architecture. The transformer language model (TransformerLM) is a simpler <a class="reference external" href="https://arxiv.org/pdf/1801.10198.pdf">variation</a> of the original transformer architecture and is useful for plenty of tasks.</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-1.png" /></p>
+<p>The <a class="reference external" href="https://trax-ml.readthedocs.io/en/latest/">Trax</a> implementation of TransformerLM focuses on clear code and speed.  It runs without any changes on CPUs, GPUs and TPUs.</p>
+<p>In this notebook, we will:</p>
+<ol class="simple">
+<li><p>Use a pre-trained TransformerLM</p></li>
+<li><p>Train a TransformerLM model</p></li>
+<li><p>Looking inside the Trax TransformerLM</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>import os
+import numpy as np
+! pip install -q -U trax
+import trax
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-a-pre-trained-transformerlm">
+<h2>Using a pre-trained TransformerLM<a class="headerlink" href="#using-a-pre-trained-transformerlm" title="Permalink to this headline">¶</a></h2>
+<p>The following cell loads a pre-trained TransformerLM that sorts a list of four integers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Transformer model.</span>
+<span class="c1"># Have to use the same configuration of the pre-trained model we&#39;ll load next</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">trax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">TransformerLM</span><span class="p">(</span>  
+    <span class="n">d_model</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">d_ff</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+    <span class="n">vocab_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">)</span>
+
+<span class="c1"># Initialize using pre-trained weights.</span>
+<span class="n">model</span><span class="o">.</span><span class="n">init_from_file</span><span class="p">(</span><span class="s1">&#39;gs://ml-intro/models/sort-transformer.pkl.gz&#39;</span><span class="p">,</span>
+                     <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                     <span class="n">input_signature</span><span class="o">=</span><span class="n">trax</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">ShapeDtype</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+
+<span class="c1"># Input sequence</span>
+<span class="c1"># The 0s indicate the beginning and end of the input sequence</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+
+<span class="c1"># Run the model</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">trax</span><span class="o">.</span><span class="n">supervised</span><span class="o">.</span><span class="n">decoding</span><span class="o">.</span><span class="n">autoregressive_sample</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">input</span><span class="p">]),</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Show us the output</span>
+<span class="n">output</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 3,  9, 14, 15]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is a trivial example to get you started and put a toy transformer into your hands. Language models get their name from their ability to assign probabilities to sequences of words. This property makes them useful for generating text (and other types of sequences) by probabilistically choosing the next item in the sequence (often the highest probability one)  – exactly like the next-word suggestion feature of your smartphone keyboard.</p>
+<p>In Trax, TransformerLM is a series of <span class="xref myst">Layers</span> combined using the <span class="xref myst">Serial</span> combinator. A high level view of the TransformerLM we’ve declared above can look like this:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-layers-1.png" /></p>
+<p>The model has two decoder layers because we set <code class="docutils literal notranslate"><span class="pre">n_layers</span></code> to 2. TransformerLM makes predictions by being fed one token at a time, with output tokens typically fed back as inputs (that’s the <code class="docutils literal notranslate"><span class="pre">autoregressive</span></code> part of the <code class="docutils literal notranslate"><span class="pre">autoregressive_sample</span></code> method we used to generate the output from the model).</p>
+<p>If we’re to think of a simple model trained to generate the fibonacci sequence, we can give it a number in the sequence and it would continue to generate the next items in the sequence:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-input-output-fib.gif" /></p>
+</div>
+<div class="section" id="train-a-transformerlm-model">
+<h2>Train a TransformerLM Model<a class="headerlink" href="#train-a-transformerlm-model" title="Permalink to this headline">¶</a></h2>
+<p>Let’s train a TransformerLM model. We’ll train this one to reverse a list of integers. This is another toy task that we can train a small transformer to do. But using the concepts we’ll go over, you’ll be able to train proper language models on larger dataset.</p>
+<p><strong>Example</strong>: This model is to take a sequence like <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4]</span></code> and return <code class="docutils literal notranslate"><span class="pre">[4,</span> <span class="pre">3,</span> <span class="pre">2,</span> <span class="pre">1]</span></code>.</p>
+<ol class="simple">
+<li><p>Create the Model</p></li>
+<li><p>Prepare the Dataset</p></li>
+<li><p>Train the model using <code class="docutils literal notranslate"><span class="pre">Trainer</span></code></p></li>
+</ol>
+<div class="section" id="create-the-model">
+<h3>Create the Model<a class="headerlink" href="#create-the-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a Transformer model.</span>
+<span class="k">def</span> <span class="nf">tiny_transformer_lm</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">trax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">TransformerLM</span><span class="p">(</span>  
+          <span class="n">d_model</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">d_ff</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+          <span class="n">vocab_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Refer to <a class="reference external" href="https://trax-ml.readthedocs.io/en/latest/trax.models.html#trax.models.transformer.TransformerLM">TransferLM in the API reference</a> to understand each of its parameters and their default values. We have chosen to create a small model using these values for <code class="docutils literal notranslate"><span class="pre">d_model</span></code>, <code class="docutils literal notranslate"><span class="pre">d_ff</span></code>, and <code class="docutils literal notranslate"><span class="pre">n_layers</span></code> to be able to train the model more quickly on this simple task.</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/untrained-transformer.png" /></p>
+</div>
+<div class="section" id="prepare-the-dataset">
+<h3>Prepare the Dataset<a class="headerlink" href="#prepare-the-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Trax models are trained on streams of data represented as python iterators. <a class="reference external" href="https://trax-ml.readthedocs.io/en/latest/trax.data.html"><code class="docutils literal notranslate"><span class="pre">trax.data</span></code></a> gives you the tools to construct your datapipeline. Trax also gives you readily available access to <a class="reference external" href="https://www.tensorflow.org/datasets">TensorFlow Datasets</a>.</p>
+<p>For this simple task, we will create a python generator. Every time we invoke it, it returns a batch of training examples.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reverse_ints_task</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+  <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">random_ints</span> <span class="o">=</span> <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span><span class="n">length</span><span class="p">))</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">random_ints</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">zero</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="n">target</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">loss_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">length</span><span class="o">+</span><span class="mi">2</span><span class="p">)),</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">length</span><span class="p">))],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">loss_weights</span><span class="p">)</span>  <span class="c1"># Here inputs and targets are the same.</span>
+
+<span class="n">reverse_ints_inputs</span> <span class="o">=</span>  <span class="n">reverse_ints_task</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This function prepares a dataset and returns one batch at a time. If we ask for a batch size of 8, for example, it returns the following:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">reverse_ints_task</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">sequence_batch</span><span class="p">,</span> <span class="n">_</span> <span class="p">,</span> <span class="n">masks</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">sequence_batch</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 0,  2,  1,  8, 11,  0, 11,  8,  1,  2],
+       [ 0, 14,  6, 19,  9,  0,  9, 19,  6, 14],
+       [ 0,  9, 13, 24, 27,  0, 27, 24, 13,  9],
+       [ 0,  9, 12,  2, 28,  0, 28,  2, 12,  9],
+       [ 0, 27, 29, 28, 16,  0, 16, 28, 29, 27],
+       [ 0, 15, 18, 11, 28,  0, 28, 11, 18, 15],
+       [ 0, 24, 28, 19,  3,  0,  3, 19, 28, 24],
+       [ 0, 28,  7,  8, 20,  0, 20,  8,  7, 28]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can see that each example starts with 0, then a list of integers, then another 0, then the reverse of the list of integers. The function will give us as many examples and batches as we request.</p>
+<p>In addition to the example, the generator returns a mask vector. During the training process, the model is challenged to predict the tokens hidden by the mask (which have a value of 1 associated with that position. So for example, if the first element in the batch is the following vector:</p>
+<table><tr>
+<td><strong>0</strong></td><td>5</td><td>6</td><td>7</td><td>8</td><td><strong>0</strong></td><td>8</td><td>7</td><td>6</td><td>5</td>
+</tr></table> 
+<p>And the associated mask vector for this example is:</p>
+<table><tr>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td>
+</tr></table> 
+<p>Then the model will only be presented with the following prefix items, and it has to predict the rest:</p>
+<table><tr>
+<td><strong>0</strong></td><td>5</td><td>6</td><td>7</td><td>8</td><td><strong>0</strong></td><td>_</td><td>_</td><td>_ </td><td>_</td>
+</tr></table> 
+<p>It’s important here to note that while <code class="docutils literal notranslate"><span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8</span></code> constitute the input sequence, the <strong>zeros</strong> serve a different purpose. We are using them as special tokens to delimit where the source sequence begins and ends.</p>
+<p>With this, we now have a method that streams the dataset in addition to the method that creates the model.</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/untrained-transformer-and-dataset.png" /></p>
+</div>
+<div class="section" id="train-the-model">
+<h3>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h3>
+<p>Trax’s <a class="reference external" href="https://trax-ml.readthedocs.io/en/latest/notebooks/trax_intro.html#Supervised-training">training</a> takes care of the training process. We hand it the model, define training and eval tasks, and create the training loop. We then start the training loop.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>from trax.supervised import training
+from trax import layers as tl
+
+# Training task.
+train_task = training.TrainTask(
+    labeled_data=reverse_ints_inputs,
+    loss_layer=tl.CrossEntropyLoss(),
+    optimizer=trax.optimizers.Adam(0.01),
+    n_steps_per_checkpoint=500,
+)
+
+
+# Evaluaton task.
+eval_task = training.EvalTask(
+    labeled_data=reverse_ints_inputs,
+    metrics=[tl.CrossEntropyLoss(), tl.Accuracy()],
+    n_eval_batches=20  # For less variance in eval numbers.
+)
+
+output_dir = os.path.expanduser(&#39;~/train_dir/&#39;)
+!rm -f ~/train_dir/model.pkl.gz  # Remove old model.
+
+# Train tiny model with Loop.
+training_loop = training.Loop(
+    tiny_transformer_lm(),
+    train_task,
+    eval_tasks=[eval_task],
+    output_dir=output_dir)
+
+# run 1000 steps (batches)
+training_loop.run(1000)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Step      1: Ran 1 train steps in 17.93 secs
+Step      1: train CrossEntropyLoss |  4.14618683
+Step      1: eval  CrossEntropyLoss |  3.74931383
+Step      1: eval          Accuracy |  0.03359375
+
+Step    500: Ran 499 train steps in 23.67 secs
+Step    500: train CrossEntropyLoss |  0.62780923
+Step    500: eval  CrossEntropyLoss |  0.01693780
+Step    500: eval          Accuracy |  0.99609375
+
+Step   1000: Ran 500 train steps in 5.34 secs
+Step   1000: train CrossEntropyLoss |  0.00926041
+Step   1000: eval  CrossEntropyLoss |  0.00390428
+Step   1000: eval          Accuracy |  0.99921875
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Trainer is the third key component in this process that helps us arrive at the trained model.</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-training.png" /></p>
+</div>
+<div class="section" id="make-predictions">
+<h3>Make predictions<a class="headerlink" href="#make-predictions" title="Permalink to this headline">¶</a></h3>
+<p>Let’s take our newly minted model for a ride. To do that, we load it up, and use the handy <code class="docutils literal notranslate"><span class="pre">autoregressive_sample</span></code> method to feed it our input sequence and return the output sequence. These components now look like this:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-sampling-prediction.png" /></p>
+<p>And this is the code to do just that:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+<span class="c1"># Initialize model for inference.</span>
+<span class="n">predict_model</span> <span class="o">=</span> <span class="n">tiny_transformer_lm</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;predict&#39;</span><span class="p">)</span>
+<span class="n">predict_signature</span> <span class="o">=</span> <span class="n">trax</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">ShapeDtype</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">predict_model</span><span class="o">.</span><span class="n">init_from_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;model.pkl.gz&quot;</span><span class="p">),</span>
+                             <span class="n">weights_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">input_signature</span><span class="o">=</span><span class="n">predict_signature</span><span class="p">)</span>
+
+<span class="c1"># Run the model</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">trax</span><span class="o">.</span><span class="n">supervised</span><span class="o">.</span><span class="n">decoding</span><span class="o">.</span><span class="n">autoregressive_sample</span><span class="p">(</span>
+    <span class="n">predict_model</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Print the contents of output</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[10  8  6  4]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>If things go correctly, the model would be able to reverse the string and output <code class="docutils literal notranslate"><span class="pre">[[10</span> <span class="pre">8</span> <span class="pre">6</span> <span class="pre">4]]</span></code></p>
+</div>
+</div>
+<div class="section" id="transformer-vs-transformerlm">
+<h2>Transformer vs. TransformerLM<a class="headerlink" href="#transformer-vs-transformerlm" title="Permalink to this headline">¶</a></h2>
+<p>TransformerLM is a great place to start learning about Transformer architectures. The main difference between it and the original Transformer is that it’s made up of a decoder stack, while Transformer is made up of an encoder stack and decoder stack (with the decoder stack being nearly identical to TransformerLM).</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformer-vs-transformerlm.png" /></p>
+</div>
+<div class="section" id="looking-inside-the-trax-transformerlm">
+<h2>Looking inside the Trax TransformerLM<a class="headerlink" href="#looking-inside-the-trax-transformerlm" title="Permalink to this headline">¶</a></h2>
+<p>In Trax, TransformerLM is implemented as a single Serial layer</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-serial-trax-layer.png" /></p>
+<p>This graph shows you two of the central concepts in Trax. Layers are the basic building blocks. Serial is the most common way to compose multiple layers together in sequence.</p>
+<div class="section" id="layers">
+<h3>Layers<a class="headerlink" href="#layers" title="Permalink to this headline">¶</a></h3>
+<p>Layers are best described in the <a class="reference external" href="https://trax-ml.readthedocs.io/en/latest/notebooks/layers_intro.html">Trax Layers Intro</a>.</p>
+<p>For a Transformer to make a calculation (translate a sentence, summarize an article, or generate text), input tokens pass through many steps of transformation and
+computation (e.g. embedding, positional encoding, self-attention, feed-forward neural networks…tec). Each of these steps is a layer (some with their own sublayers).</p>
+<p>Each layer you use or define takes a fixed number of input tensors and returns a fixed number of output tensors (n_in and n_out respectively, both of which default to 1).</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-layer-inputs-outputs.png" /></p>
+<p>A simple example of a layer is the ReLU activation function:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/relu-trax-layer.png" /></p>
+<p>Trax is a deep learning library, though. And so, a layer can also contain weights. An example of this is the Dense layer. Here is a dense layer that multiplies the input tensor with a weight matrix (<code class="docutils literal notranslate"><span class="pre">W</span></code>) and adds a bias (<code class="docutils literal notranslate"><span class="pre">b</span></code>) (both W and b are saved inside the <code class="docutils literal notranslate"><span class="pre">weights</span></code> property of the layer):</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/dense-trax-layer.png" /></p>
+<p>In practice, Dense and Relu often go hand in hand. With Dense first working on a tensor, and ReLu then processing the output of the Dense layer. This is a perfect job for Serial, which, in simple cases, chains two or more layers and hands over the output of the first layer to the following one:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/serial-dense-relu-trax.png" /></p>
+<p>The Serial combinator is a layer itself. So we can think of it as a layer containing a number of sublayers:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/serial-layer-dense-relu-trax.png" /></p>
+<p>With these concepts in mind, let’s go back and unpack the layers inside the TransformerLM Serial.</p>
+</div>
+<div class="section" id="input-decoder-blocks-and-output-layers">
+<h3>Input, Decoder Blocks, and Output Layers<a class="headerlink" href="#input-decoder-blocks-and-output-layers" title="Permalink to this headline">¶</a></h3>
+<p>It’s straightforward to read the delcaration of TransformerLM to understand the layers that make it up. In general, you can group these layers into a set of input layers, then Transformer decoder blocks, and a set of output blocks. The number of Transformer blocks (<code class="docutils literal notranslate"><span class="pre">n_layers</span></code>) is one of the key parameters when creating a TransformerLM model. This is a way to think of the layer groups of a TransformerLM:</p>
+<div align="center">
+<img src="https://storage.googleapis.com/ml-intro/t/TransformerLM-layer-groups.png" />
+</div>
+<ul class="simple">
+<li><p>The <strong>input layers</strong> take each input token id and look up its proper embedding and positional encoding.</p></li>
+<li><p>The prediction calculations happen in the stack of <strong>decoder blocks</strong>.</p></li>
+<li><p>The <strong>output layers</strong> take the output of the final Decoder block and project it to the output vocabulary. The LogSoftmax layer then turns the scoring of each potential output token into a probability score.</p></li>
+</ul>
+</div>
+<div class="section" id="transformer-decoder-block">
+<h3>Transformer Decoder Block<a class="headerlink" href="#transformer-decoder-block" title="Permalink to this headline">¶</a></h3>
+<p>A decoder block has two major components:</p>
+<ul class="simple">
+<li><p>A <strong>Causal self-attention</strong> layer. Self-attention incorporates information from other tokens that could help make more sense of the current token being processed. Causal attention only allows the incorporation of information from previous positions. One key parameter when creating a TransformerLM model is <code class="docutils literal notranslate"><span class="pre">n_heads</span></code>, which is the number of “attention heads”.</p></li>
+<li><p>A <strong>FeedForward</strong> component. This is where the primary prediction computation is calculated. The key parameter associated with this layer is <code class="docutils literal notranslate"><span class="pre">d_ff</span></code>, which specifies the dimensions of the neural network layer used in this block.</p></li>
+</ul>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/transformerLM-d_self-attention-ff.png" /></p>
+<p>This figure also shows the <code class="docutils literal notranslate"><span class="pre">d_model</span></code> parameter, which specifies the dimension of tensors at most points in the model, including the embedding, and the majority of tensors handed off between the various layers in the model.</p>
+</div>
+<div class="section" id="multiple-inputs-outputs-branch-and-residual">
+<h3>Multiple Inputs/Outputs, Branch, and Residual<a class="headerlink" href="#multiple-inputs-outputs-branch-and-residual" title="Permalink to this headline">¶</a></h3>
+<p>There are a couple more central Trax concept to cover to gain a deeper understanding of how Trax implements TransformerLM</p>
+<div class="section" id="multiple-inputs-outputs">
+<h4>Multiple Inputs/Outputs<a class="headerlink" href="#multiple-inputs-outputs" title="Permalink to this headline">¶</a></h4>
+<p>The layers we’ve seen so far all have one input tensor and one output tensor. A layer could have more. For example, the Concatenate layer:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-concatenate-layer.png" /></p>
+</div>
+<div class="section" id="branch">
+<h4>Branch<a class="headerlink" href="#branch" title="Permalink to this headline">¶</a></h4>
+<p>We saw the Serial combinator that combines layers serially. Branch combines layers in parallel. It supplies input copies to each of its sublayers.</p>
+<p>For example, if we wrap two layers (each expecting one input) in a Branch layer, and we pass a tensor to Branch, it copies it as the input to both of its sublayers as shown here:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/branch-combinator-trax-inputs.png" /></p>
+<p>Since the sublayers have two outputs (one from each), then the Branch layer would also end up outputing both of those tensors:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/branch-combinator-trax-output.png" /></p>
+</div>
+<div class="section" id="residual">
+<h4>Residual<a class="headerlink" href="#residual" title="Permalink to this headline">¶</a></h4>
+<p>Residual connections are an important component of Transformer architectures. Inside a Decoder Block, both the causal-attention layer and the
+feed-forward layer have residual connections around them:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-residual-input.png" /></p>
+<p>What that means, is that a copy of the input tensor is added to the output of the Attention layer:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-residual-output.png" /></p>
+<p>In Trax, this is achieved using the Residual layer, which combines both the Serial and Branch combinators:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-residual-layers-1.png" /></p>
+<p>Similarly, the feed-forward sublayer has another residual connection around it:</p>
+<p><img alt="" src="https://storage.googleapis.com/ml-intro/t/trax-transformer-residual-layers-2.png" /></p>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990000_concept_nlp_basics.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Natural Language Processing 101</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990000_content_based_music_recommender_lyricsfreak.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Content-based method for song recommendation</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
