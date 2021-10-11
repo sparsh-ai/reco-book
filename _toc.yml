@@ -1,119 +1,127 @@
 format: jb-book
 root: index
-chapters:
-- file: nbs/movielens_recommendations_transformers
-- file: nbs/bert4rec_movielens_pytorch
-- file: nbs/bert4rec_movielens_25m_pytorch
-- file: nbs/T088416_BST_Implementation_in_MXNet
-- file: nbs/T602245_BST_implementation_in_PyTorch
-- file: nbs/T881207_BST_PTLightning_ML1M
-- file: nbs/T757997_SASRec_PyTorch
-- file: nbs/T225287_SASRec_PaddlePaddle
-- file: nbs/T975104_SSEPT_ML1M_Tensorflow1x
-- file: nbs/T382881_DeepWalk_Karateclub
-- file: nbs/T384270_DeepWalk_pure_python
-- file: nbs/T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K
-- file: nbs/T815556_Node2vec_Karateclub
-- file: nbs/T894941_Node2vec_MovieLens_Keras
-- file: nbs/T611050_Node2vec_PyG
-- file: nbs/T186367_Node2vec_library
-- file: nbs/T331379_bayesian_personalized_ranking
-- file: nbs/T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering
-- file: nbs/T102448_Adversarial_Learning_for_Recommendation
-- file: nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender
-- file: nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset
-- file: nbs/T355514_Black_box_Attack_on_Sequential_Recs
-- file: nbs/T873451_Statistics_fundamentals
-- file: nbs/T890478_Batch_Learning_from_Bandit_Feedback_(BLBF)
-- file: nbs/T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems
-- file: nbs/T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation
-- file: nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation
-- file: nbs/T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset
-- file: nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset
-- file: nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies
-- file: nbs/T167249_Offline_Policy_Evaluation_with_VW_Command_Line
-- file: nbs/T966055_OBP_Library_Workshop_Tutorials
-- file: nbs/T632722_PyTorch_Fundamentals_Part_1
-- file: nbs/T472467_PyTorch_Fundamentals_Part_2
-- file: nbs/T206654_PyTorch_Fundamentals_Part_3
-- file: nbs/T536348_Attention_Mechanisms
-- file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
-- file: nbs/T611432_Image_Analysis_with_Tensorflow
-- file: nbs/T925716_MongoDB_to_CSV_Conversion
-- file: nbs/T396469_PDF_to_Word_Cloud_via_Email
-- file: nbs/T030890_Job_Scraping_and_Clustering
-- file: nbs/T897054_Scene_Text_Recognition
-- file: nbs/T034809_Large_scale_Document_Retrieval_with_Elastic_Search
-- file: nbs/T467251_vowpal_wabbit_contextual_recommender
-- file: nbs/T686684_similar_product_recommender
-- file: nbs/T132203_Retail_Product_Recommendations_using_Word2vec
-- file: nbs/T501828_Recommender_Implicit_Negative_Feedback
-- file: nbs/T315965_Sequence_Aware_Recommenders_Music
-- file: nbs/T051777_image_similarity_recommendations
-- file: nbs/T990172_recobook_diversity_aware_book_recommender
-- file: nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender
-- file: nbs/T023535_Kafka_MongoDB_Real_time_Streaming
-- file: nbs/T622304_Session_based_Recommender_Using_Word2vec
-- file: nbs/T416854_bandit_based_recommender_using_thompson_sampling_app
-- file: nbs/T198578_Booking_dot_com_Trip_Recommendation
-- file: nbs/T519734_Vowpal_Wabbit_Contextual_Bandit
-- file: nbs/T871537_Recommendation_Systems_using_Olist_Dataset
-- file: nbs/T057885_Offline_Replayer_Evaluation
-- file: nbs/T915054_method_for_effective_online_testing
-- file: nbs/T513987_Recsys_2020_Feature_Engineering_Tutorial
-- file: nbs/T227901_amazon_personalize_batch_job
-- file: nbs/T022961_Amazon_Personalize_Workshop
-- file: nbs/T424437_Collaborative_Filtering_on_ML_latest_small
-- file: nbs/T539160_Building_and_Deploying_ASOS_Fashion_Recommender
-- file: nbs/T757697_Simple_Similarity_based_Recommender
-- file: nbs/T051594_Analytics_Zoo
-- file: nbs/T313645_A_B_Testing
-- file: nbs/T475711_PinSage_Graph_based_Recommender
-- file: nbs/T516490_Graph_Embeddings
-- file: nbs/T822164_movielens_milvus_redis_efficient_retrieval
-- file: nbs/T845186_Anime_Recommender
-- file: nbs/T855843_kafka_spark_streaming_colab
-- file: nbs/T460437_Building_Models_From_Scratch
-- file: nbs/T855971_Conet_Model_for_Movie_Recommender
-- file: nbs/T996996_content_based_and_collaborative_movielens
-- file: nbs/T239418_Simple_Movie_Recommenders
-- file: nbs/T138337_Simple_Movie_Recommender
-- file: nbs/T935440_The_importance_of_Rating_Normalization
-- file: nbs/T612622_cornac_examples
-- file: nbs/T561435_Flower_Classification
-- file: nbs/T680910_Trivago_Session_based_Recommender
-- file: nbs/T990000_ads_selection_using_bandits
-- file: nbs/T990000_book_crossing_surprise_svd_nmf
-- file: nbs/T990000_book_recommender_kubeflow
-- file: nbs/T990000_build_a_kubeflow_pipeline
-- file: nbs/T990000_causal_inference
-- file: nbs/T990000_concept_embedding_nlp
-- file: nbs/T990000_concept_neural_net
-- file: nbs/T990000_concept_nlp_basics
-- file: nbs/T990000_concept_transformer_lm
-- file: nbs/T990000_content_based_music_recommender_lyricsfreak
-- file: nbs/T990000_evaluation_metrics_basics
-- file: nbs/T990000_implicit_synthetic
-- file: nbs/T990000_movie_recommender_tensorflow
-- file: nbs/T990000_movie_recommender_tensorflow_sagemaker
-- file: nbs/T990000_movielens_eda_modeling
-- file: nbs/T990000_read_data_from_cassandra_into_pandas
-- file: nbs/T990000_rl_in_action
-- file: nbs/T990000_rnn_cnn_basics
-- file: nbs/T990000_tf_serving_in_action
-- file: nbs/T990000_training_indexing_movie_recommender
-- file: nbs/T207114_EduRec_MOOCCube_Course_Recommender
-- file: nbs/T273184_Multi_Task_Learning
-- file: nbs/T661108_Book_Recommender_API
-- file: nbs/T912764_Simple_Movie_Recommender_App
-- file: nbs/T964554_Career_Village_Questions_Recommendation
-- file: nbs/T990001_amazon_women_apparel_tfidf_word2vec
-- file: nbs/T990001_anime_recommender_graph_network
-- file: nbs/T990001_concept_self_attention
-- file: nbs/T990001_course_recommender_svd_flask
-- file: nbs/T990001_data_mining_similarity_measures
-- file: nbs/T990001_jaccard_recommender
-- file: nbs/T990001_live_streamer_recommender
-- file: nbs/T990001_songs_embedding_skipgram_recommender
-- file: nbs/T990001_toy_example_car_recommender_knn
-- file: nbs/T990001_wikirecs_recommender
+parts:
+- caption: User Stories
+  chapters:
+  - file: nbs/US780867_Transformer_based_Recommenders
+    sections:
+    - file: nbs/T034923_BERT4Rec_on_ML1M_in_PyTorch
+    - file: nbs/T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning
+    - file: nbs/T088416_BST_Implementation_in_MXNet
+    - file: nbs/T602245_BST_implementation_in_PyTorch
+    - file: nbs/T007665_BST_on_ML1M_in_Keras
+    - file: nbs/T881207_BST_PTLightning_ML1M
+    - file: nbs/T757997_SASRec_PyTorch
+    - file: nbs/T225287_SASRec_PaddlePaddle
+    - file: nbs/T701627_SR_SAN_Session_based_Model
+    - file: nbs/T975104_SSEPT_ML1M_Tensorflow1x
+
+- caption: Prototypes
+  chapters:
+  - file: nbs/T382881_DeepWalk_Karateclub
+  - file: nbs/T384270_DeepWalk_pure_python
+  - file: nbs/T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K
+  - file: nbs/T815556_Node2vec_Karateclub
+  - file: nbs/T894941_Node2vec_MovieLens_Keras
+  - file: nbs/T611050_Node2vec_PyG
+  - file: nbs/T186367_Node2vec_library
+  - file: nbs/T331379_bayesian_personalized_ranking
+  - file: nbs/T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering
+  - file: nbs/T102448_Adversarial_Learning_for_Recommendation
+  - file: nbs/T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender
+  - file: nbs/T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset
+  - file: nbs/T355514_Black_box_Attack_on_Sequential_Recs
+  - file: nbs/T873451_Statistics_fundamentals
+  - file: nbs/T890478_Batch_Learning_from_Bandit_Feedback_(BLBF)
+  - file: nbs/T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems
+  - file: nbs/T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation
+  - file: nbs/T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation
+  - file: nbs/T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset
+  - file: nbs/T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset
+  - file: nbs/T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies
+  - file: nbs/T167249_Offline_Policy_Evaluation_with_VW_Command_Line
+  - file: nbs/T966055_OBP_Library_Workshop_Tutorials
+  - file: nbs/T632722_PyTorch_Fundamentals_Part_1
+  - file: nbs/T472467_PyTorch_Fundamentals_Part_2
+  - file: nbs/T206654_PyTorch_Fundamentals_Part_3
+  - file: nbs/T536348_Attention_Mechanisms
+  - file: nbs/T500796_Agricultural_Satellite_Image_Segmentation
+  - file: nbs/T611432_Image_Analysis_with_Tensorflow
+  - file: nbs/T925716_MongoDB_to_CSV_Conversion
+  - file: nbs/T396469_PDF_to_Word_Cloud_via_Email
+  - file: nbs/T030890_Job_Scraping_and_Clustering
+  - file: nbs/T897054_Scene_Text_Recognition
+  - file: nbs/T034809_Large_scale_Document_Retrieval_with_Elastic_Search
+  - file: nbs/T467251_vowpal_wabbit_contextual_recommender
+  - file: nbs/T686684_similar_product_recommender
+  - file: nbs/T132203_Retail_Product_Recommendations_using_Word2vec
+  - file: nbs/T501828_Recommender_Implicit_Negative_Feedback
+  - file: nbs/T315965_Sequence_Aware_Recommenders_Music
+  - file: nbs/T051777_image_similarity_recommendations
+  - file: nbs/T990172_recobook_diversity_aware_book_recommender
+  - file: nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender
+  - file: nbs/T023535_Kafka_MongoDB_Real_time_Streaming
+  - file: nbs/T622304_Session_based_Recommender_Using_Word2vec
+  - file: nbs/T416854_bandit_based_recommender_using_thompson_sampling_app
+  - file: nbs/T198578_Booking_dot_com_Trip_Recommendation
+  - file: nbs/T519734_Vowpal_Wabbit_Contextual_Bandit
+  - file: nbs/T871537_Recommendation_Systems_using_Olist_Dataset
+  - file: nbs/T057885_Offline_Replayer_Evaluation
+  - file: nbs/T915054_method_for_effective_online_testing
+  - file: nbs/T513987_Recsys_2020_Feature_Engineering_Tutorial
+  - file: nbs/T227901_amazon_personalize_batch_job
+  - file: nbs/T022961_Amazon_Personalize_Workshop
+  - file: nbs/T424437_Collaborative_Filtering_on_ML_latest_small
+  - file: nbs/T539160_Building_and_Deploying_ASOS_Fashion_Recommender
+  - file: nbs/T757697_Simple_Similarity_based_Recommender
+  - file: nbs/T051594_Analytics_Zoo
+  - file: nbs/T313645_A_B_Testing
+  - file: nbs/T475711_PinSage_Graph_based_Recommender
+  - file: nbs/T516490_Graph_Embeddings
+  - file: nbs/T822164_movielens_milvus_redis_efficient_retrieval
+  - file: nbs/T845186_Anime_Recommender
+  - file: nbs/T855843_kafka_spark_streaming_colab
+  - file: nbs/T460437_Building_Models_From_Scratch
+  - file: nbs/T855971_Conet_Model_for_Movie_Recommender
+  - file: nbs/T996996_content_based_and_collaborative_movielens
+  - file: nbs/T239418_Simple_Movie_Recommenders
+  - file: nbs/T138337_Simple_Movie_Recommender
+  - file: nbs/T935440_The_importance_of_Rating_Normalization
+  - file: nbs/T612622_cornac_examples
+  - file: nbs/T561435_Flower_Classification
+  - file: nbs/T680910_Trivago_Session_based_Recommender
+  - file: nbs/T990000_ads_selection_using_bandits
+  - file: nbs/T990000_book_crossing_surprise_svd_nmf
+  - file: nbs/T990000_book_recommender_kubeflow
+  - file: nbs/T990000_build_a_kubeflow_pipeline
+  - file: nbs/T990000_causal_inference
+  - file: nbs/T990000_concept_embedding_nlp
+  - file: nbs/T990000_concept_neural_net
+  - file: nbs/T990000_concept_nlp_basics
+  - file: nbs/T990000_concept_transformer_lm
+  - file: nbs/T990000_content_based_music_recommender_lyricsfreak
+  - file: nbs/T990000_evaluation_metrics_basics
+  - file: nbs/T990000_implicit_synthetic
+  - file: nbs/T990000_movie_recommender_tensorflow
+  - file: nbs/T990000_movie_recommender_tensorflow_sagemaker
+  - file: nbs/T990000_movielens_eda_modeling
+  - file: nbs/T990000_read_data_from_cassandra_into_pandas
+  - file: nbs/T990000_rl_in_action
+  - file: nbs/T990000_rnn_cnn_basics
+  - file: nbs/T990000_tf_serving_in_action
+  - file: nbs/T990000_training_indexing_movie_recommender
+  - file: nbs/T207114_EduRec_MOOCCube_Course_Recommender
+  - file: nbs/T273184_Multi_Task_Learning
+  - file: nbs/T661108_Book_Recommender_API
+  - file: nbs/T912764_Simple_Movie_Recommender_App
+  - file: nbs/T964554_Career_Village_Questions_Recommendation
+  - file: nbs/T990001_amazon_women_apparel_tfidf_word2vec
+  - file: nbs/T990001_anime_recommender_graph_network
+  - file: nbs/T990001_concept_self_attention
+  - file: nbs/T990001_course_recommender_svd_flask
+  - file: nbs/T990001_data_mining_similarity_measures
+  - file: nbs/T990001_jaccard_recommender
+  - file: nbs/T990001_live_streamer_recommender
+  - file: nbs/T990001_songs_embedding_skipgram_recommender
+  - file: nbs/T990001_toy_example_car_recommender_knn
+  - file: nbs/T990001_wikirecs_recommender
