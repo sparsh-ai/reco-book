@@ -1,9 +1,9 @@
 format: jb-book
 root: index
 chapters:
-- file: nbs/movielens_recommendations_transformers
+- file: nbs/T007665_BST_on_ML1M_in_Keras
 - file: nbs/T034923_BERT4Rec_on_ML1M_in_PyTorch
-- file: nbs/bert4rec_movielens_25m_pytorch
+- file: nbs/T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning
 - file: nbs/T088416_BST_Implementation_in_MXNet
 - file: nbs/T602245_BST_implementation_in_PyTorch
 - file: nbs/T881207_BST_PTLightning_ML1M
