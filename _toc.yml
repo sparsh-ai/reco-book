@@ -3,7 +3,7 @@ root: index
 parts:
 - caption: User Stories
   chapters:
-  - file: US780867_Transformer_based_Recommenders
+  - file: nbs/US780867_Transformer_based_Recommenders
     sections:
     - file: nbs/T034923_BERT4Rec_on_ML1M_in_PyTorch
     - file: nbs/T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning
