@@ -11,6 +11,7 @@ parts:
     - file: nbs/T602245_BST_implementation_in_PyTorch
     - file: nbs/T007665_BST_on_ML1M_in_Keras
     - file: nbs/T881207_BST_PTLightning_ML1M
+    - file: nbs/T025247_BST_using_Deepctr_library
     - file: nbs/T757997_SASRec_PyTorch
     - file: nbs/T225287_SASRec_PaddlePaddle
     - file: nbs/T701627_SR_SAN_Session_based_Model
