@@ -15,6 +15,7 @@ parts:
     - file: nbs/T225287_SASRec_PaddlePaddle
     - file: nbs/T701627_SR_SAN_Session_based_Model
     - file: nbs/T975104_SSEPT_ML1M_Tensorflow1x
+    - file: nbs/T472955_GCSAN_Session_based_Model
 
 - caption: Prototypes
   chapters:
