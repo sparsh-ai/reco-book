@@ -28,5 +28,10 @@ jobs:
     - name: Building HTML site
       run: |
         jupyter-book build .
-        ghp-import -n -p -f _build/html
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./_build/html
+        publish_branch: gh-pages
         
