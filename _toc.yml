@@ -17,6 +17,7 @@ parts:
     - file: nbs/T701627_SR_SAN_Session_based_Model
     - file: nbs/T975104_SSEPT_ML1M_Tensorflow1x
     - file: nbs/T472955_GCSAN_Session_based_Model
+    - file: nbs/T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose
 
 - caption: Prototypes
   chapters:
