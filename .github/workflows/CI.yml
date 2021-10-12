@@ -30,7 +30,12 @@ jobs:
     - name: Building HTML site
       run: |
         jupyter-book build .
-
+    - name: Saving build
+      uses: actions/upload-artifact@v2
+      with:
+        name: _build content
+        path: |
+          _build
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
