@@ -1,0 +1,342 @@
+import random
+import networkx as nx 
+from gensim.models import Word2Vec
+
+
+class DeepWalk:
+  """
+  Implement DeepWalk algorithm.
+  reference paper : DeepWalk: Online Learning of Social Representations
+  link : https://arxiv.org/abs/1403.6652
+  Using the algorithm can get graph embedding model with your network data.
+  """
+  def __init__(self, G=None, adjlist_path=None, edgelist_path=None):
+    """
+    Parameters
+    G : networkx : networkx graph.
+    
+    adjlist_path : network file path. 
+    """
+    if G == adjlist_path == edgelist_path == None:
+      raise ValueError('all parameter is None, please check your input.')
+      
+
+    try:
+      
+      if G != None:
+        self.G = G
+      elif adjlist_path != None:
+        self.G = nx.read_adjlist(adjlist_path)
+      elif edgelist_path != None:
+        self.G = nx.read_edgelist(edgelist_path)
+
+    except Exception as e:
+      print(e)
+
+
+
+  def random_walk(self, iterations, start_node=None, random_walk_times=5):
+    """
+    : Implement of random walk algorithm :
+    Parameters
+    ----------------------------------------
+    iterations : int : random walk number of iteration 
+    start_node : str : choose start node (random choose a node, if start_node is None)
+    random_walk_times : int : random walk times.
+    ----------------------------------------
+    Returns
+    walk_records : list of walks record
+    """
+    walk_records = []
+    
+
+    for i in range(iterations):
+      
+      if start_node is None:
+        s_node = random.choice(list(self.G.nodes()))
+        walk_path = [s_node]
+      else:
+        walk_path = [start_node]
+        
+      current_node = s_node
+      while(len(walk_path) < random_walk_times):
+        neighbors = list(self.G.neighbors(current_node))
+        
+        
+        current_node = random.choice(neighbors)
+        walk_path.append(current_node)
+          
+      walk_records.append(walk_path)
+    
+    return walk_records
+
+
+  def buildWord2Vec(self, **kwargs):
+    """
+    
+    Using gensim to build word2vec model
+    Parameters
+    ----------------------------------------
+    **kwargs
+    
+    walk_path : list : random walk results
+    size : int : specific embedding dimension, default : 100 dim
+    window : int : specific learn context window size, default : 5
+    workers : int : specific workers. default : 2
+    ----------------------------------------
+    Returns
+    walk_records : list of walks record
+    """
+    
+    walk_path = kwargs.get('walk_path', None)
+    if walk_path is None:
+      return 
+    
+    size = kwargs.get('size', 100)
+    window = kwargs.get('window', 5)
+    workers = kwargs.get('workers', 2)
+
+    embedding_model = Word2Vec(walk_path, size=size, window=window, min_count=0, workers=workers, sg=1, hs=1)
+
+    return embedding_model
+
+import numpy as np
+from abc import ABC
+import pandas as pd
+
+class Tree(ABC): 
+    @staticmethod
+    def merge(dims, lr, batch_size, left=None, right=None):
+        if left is not None: left.set_left()
+        if right is not None: right.set_right()
+        return InternalNode(dims, lr, batch_size, left, right)
+    
+    @staticmethod
+    def build_tree(nodes, dims, lr, batch_size):
+        if len(nodes) % 2 != 0: nodes.append(None)
+        while len(nodes) > 1:
+            nodes = [Tree.merge(dims, lr, batch_size, nodes[i], nodes[i+1]) for i in range(0, len(nodes) - 1, 2)]
+        return nodes[0]
+        
+    def set_parent(self, t):
+        self.parent = t
+        
+    def set_left(self): self.is_right = False
+        
+    def set_right(self): self.is_right = True
+
+class InternalNode(Tree):
+    def __init__(self, dims, lr, batch_size, left=None, right=None, parent=None, is_right=None):
+        self.dims = dims
+        self.set_left_child(left)
+        self.set_right_child(right)
+        self.set_parent(parent)
+        self.is_right = is_right
+        self.params = np.random.uniform(size=self.dims) 
+        self.gradients = []
+        self.lr = lr
+        self.batch_size= batch_size
+        
+    def set_left_child(self, child: Tree):
+        self.left = child
+        if self.left is not None:
+            self.left.set_parent(self)
+            self.left.set_left()
+            
+    def set_right_child(self, child: Tree):
+        self.right = child
+        if self.right is not None:
+            self.right.set_parent(self)
+            self.right.set_right()
+            
+    def set_parent(self, parent: Tree):
+        self.parent = parent    
+        
+    def predict(self, embedding, right=True):
+        d = self.params.dot(embedding) if right else -self.params.dot(embedding)
+        return 1/(1+np.exp(-d))
+    
+    def update_gradients(self, gradient: np.array):
+        self.gradients.append(gradient)
+        if len(self.gradients) >= self.batch_size:
+            avg_gradient = np.stack(self.gradients, axis=0).mean(axis=0)
+            self.params = self.params - self.lr * avg_gradient
+            self.gradients = []
+        
+    def __eq__(self, other):
+        return (
+            self.dims == other.dims and
+            self.left == other.left and
+            self.right == other.right and
+            self.lr == other.lr and
+            self.batch_size == other.batch_size
+        )
+
+class Leaf(Tree):
+    def __init__(self, vertex, parent: InternalNode = None, is_right = False):
+        self.parent = parent
+        self.is_right = is_right 
+        self.vertex = vertex
+        
+    def update(self, anchor_vertex):
+        node = self
+        gradients = []
+        total_cost = 0.
+        emb_grads = []
+        while node.parent is not None:
+            is_right = node.is_right
+            node = node.parent        
+            prob = node.predict(anchor_vertex.embedding, is_right)
+            log_prob = np.log(prob)
+            total_cost -= log_prob
+            u = 1 - prob
+            node.update_gradients(u*anchor_vertex.embedding)
+            emb_grads.append(u*node.params)
+        anchor_vertex.update_embedding(sum(emb_grads))
+        return total_cost
+
+class Vertex(object):
+    def __init__(self, dim, lr, batch_size):
+        self.dim = dim
+        self.embedding = np.random.uniform(size=dim)
+        self.lr = lr
+        self.gradients = []
+        self.batch_size = batch_size
+        
+    def update_embedding(self, gradient: np.array): 
+        self.gradients.append(gradient)
+        if len(self.gradients) >= self.batch_size:
+            avg_gradient = np.stack(self.gradients, axis=0).mean(axis=0)
+            self.embedding = self.embedding - self.lr * avg_gradient
+            self.gradients = []
+
+v = Vertex(8, 1e-1, 1)
+v2 = Vertex(8, 1e-1, 1)
+leaf = Leaf(v)
+leaf2 = Leaf(v2)
+i = InternalNode(8, 1e-1, 1, leaf, leaf2)
+
+before = leaf2.vertex.embedding
+before_parent = leaf.parent.params
+print(before)
+
+leaf.update(leaf2.vertex)
+after = leaf2.vertex.embedding
+after_parent = leaf.parent.params
+print(after)
+
+assert leaf.vertex == v
+assert leaf.vertex != v2
+assert leaf2.vertex == v2
+assert leaf2.vertex != v
+assert leaf.parent == i
+assert leaf2.parent == i
+
+i2 = Tree.merge(8, 1e-1, 1, leaf, leaf2)
+
+assert i2 == i
+
+i3 = InternalNode(8, 0.01, 1, leaf)
+assert i3.left == leaf
+assert i3.right is None
+
+two_internal_nodes = Tree.merge(8, 0.01, 1, i, i2)
+
+assert two_internal_nodes.left == i
+assert two_internal_nodes.right == i2
+assert i.parent == two_internal_nodes
+assert i2.parent == two_internal_nodes
+
+p = Tree.merge(8, 1e-1, 1, leaf, leaf2)
+
+leaf.parent == leaf2.parent
+
+leaf.vertex.embedding
+
+before = leaf2.vertex.embedding.copy()
+before_parent = leaf.parent.params.copy()
+leaf.update(leaf2.vertex)
+after = leaf2.vertex.embedding
+after_parent = leaf.parent.params
+(before, after)
+
+(before_parent, after_parent)
+
+assert leaf.parent.predict(leaf2.vertex.embedding, right=False) + leaf.parent.predict(leaf2.vertex.embedding)
+
+leaf.parent.predict(leaf2.vertex.embedding)
+
+new_leaf = Leaf(Vertex(8, 0.01, 1))
+new_leaf2 = Leaf(Vertex(8, 0.01, 1))
+merged = Tree.merge(8, 0.01, 1, new_leaf, new_leaf2)
+before1 = new_leaf2.vertex.embedding.copy()
+new_leaf.update(new_leaf2.vertex)
+after1 = new_leaf2.vertex.embedding
+(before1, after1)
+
+before2 = new_leaf.vertex.embedding.copy()
+new_leaf2.update(new_leaf.vertex)
+after2 = new_leaf.vertex.embedding
+(before2, after2)
+
+emb_length = 10
+lr = 1e-3
+bs = 100
+v1 = Vertex(emb_length, lr, bs)
+v2 = Vertex(emb_length, lr, bs)
+v3 = Vertex(emb_length, lr, bs)
+random_walk = [v1, v2, v3]
+leaves = list(map(lambda x: Leaf(x), random_walk))
+tree = Tree.build_tree(leaves, emb_length, lr, bs)
+
+leaves
+
+tree.__class__
+
+v1.embedding.shape, v2.embedding.shape, v3.embedding.shape
+
+leaf1, leaf2, leaf3, empty_leaf = leaves
+
+leaf3.vertex.embedding
+
+leaf1.parent, leaf2.parent, leaf3.parent
+
+costs1 = []
+costs3 = []
+combined_cost = []
+for i in range(10000):
+    cost1 = leaf1.update(leaf2.vertex)
+    cost3 = leaf3.update(leaf2.vertex)
+    if i % bs == 0:
+        costs1.append(cost1) 
+        costs3.append(cost3)
+        combined_cost.append(cost1+cost3) 
+    
+pd.Series(costs1).plot(kind='line')
+
+pd.Series(costs3).plot(kind='line')
+
+pd.Series(combined_cost).plot(kind='line')
+
+emb_length, lr, bs = 10, 1e-4, 100
+leaves = [Vertex(emb_length, lr, bs) for i in range(100)]
+
+leaves = [Leaf(v) for v in leaves]
+
+tree = Tree.build_tree(leaves, emb_length, lr, bs)
+
+chosen_leaf = leaves[20]
+
+#slow
+costs = []
+num_iter = 3000
+epoch_costs = [] 
+for it in range(num_iter):
+    for i in range(100):
+        if i == 20:
+            continue
+        costs.append(leaves[i].update(chosen_leaf.vertex)) 
+    epoch_costs.append(np.mean(costs))
+    costs = []
+s = pd.Series(epoch_costs)
+s.plot(kind='line')

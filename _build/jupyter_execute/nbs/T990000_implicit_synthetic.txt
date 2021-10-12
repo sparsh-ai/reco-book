@@ -1,0 +1,169 @@
+# !pip install --no-use-pep517 poismf implicit hpfrec
+
+import numpy as np
+import pandas as pd
+
+from scipy.sparse import coo_matrix, csr_matrix, csc_matrix
+
+from poismf import PoisMF
+from implicit.als import AlternatingLeastSquares
+from implicit.bpr import BayesianPersonalizedRanking
+from hpfrec import HPF ## <- Bayesian version
+
+## Generating random sparse data
+nusers = 10 ** 2
+nitems = 10 ** 3
+nnz    = 10 ** 4
+
+np.random.seed(1)
+df = pd.DataFrame({
+    'UserId' : np.random.randint(nusers, size = nnz),
+    'ItemId' : np.random.randint(nitems, size = nnz),
+    'Count'  : 1 + np.random.gamma(1, 1, size = nnz).astype(int)
+})
+
+df.head()
+
+df.describe().T
+
+from sklearn.model_selection import train_test_split
+
+df_train, df_test = train_test_split(df, test_size=.2)
+df_train = df_train.copy()
+users_train = np.unique(df_train.UserId.to_numpy())
+items_train = np.unique(df_train.ItemId.to_numpy())
+df_test = df_test.loc[df_test.UserId.isin(users_train) &
+                      df_test.ItemId.isin(items_train)]
+df_train["UserId"] = pd.Categorical(df_train.UserId, users_train).codes
+df_train["ItemId"] = pd.Categorical(df_train.ItemId, items_train).codes
+df_test["UserId"] = pd.Categorical(df_test.UserId, users_train).codes
+df_test["ItemId"] = pd.Categorical(df_test.ItemId, items_train).codes
+users_test = np.unique(df_test.UserId.to_numpy())
+
+print("Number of entries in training data: {:,}".format(df_train.shape[0]))
+print("Number of entries in test data: {:,}".format(df_test.shape[0]))
+print("Number of users in training data: {:,}".format(users_train.shape[0]))
+print("Number of users in test data: {:,}".format(users_test.shape[0]))
+print("Number of items in training and test data: {:,}".format(items_train.shape[0]))
+
+from sklearn.metrics import roc_auc_score
+from joblib import Parallel, delayed
+
+## Note: this is a computationally inefficient implementation of the
+## test metrics, not recommended to use outside of this notebook
+def print_ranking_metrics(A, B, df_train, df_test, users_test,
+                          nusers=1000, top_n=5, seed=1,
+                          njobs=-1):
+    """
+    Parameters
+    ----------
+    A : array(m, k)
+        The user-factor matrix.
+    B : array(n, k)
+        The item-factor matrix
+    df_train : DataFrame(n_train, [user, item, value])
+        The training triplets.
+    df_test : DataFrame(n_test, [user, item, value])
+        The hold-out triplets.
+    n_user : int
+        Number of users to sample.
+    top_n : int
+        Number of top-ranked items to calculate precision.
+    seed : int
+        Random seed used to select the users.
+    njobs : int
+        Number of jobs to run in parallel.
+    """
+    n_users = A.shape[0]
+    n_items = B.shape[0]
+    rng = np.random.default_rng(seed=seed)
+    chosen_users = rng.choice(users_test, size=nusers, replace=False)
+    all_train = df_train.loc[df_train.UserId.isin(chosen_users)]
+    all_test = df_test.loc[df_test.UserId.isin(chosen_users)]
+    
+    def metrics_single_user(user):
+        ypos = all_test.ItemId.loc[all_test.UserId == user].to_numpy()
+        ytrain = all_train.ItemId.loc[all_train.UserId == user].to_numpy()
+        yneg = np.setdiff1d(np.arange(n_items), np.r_[ypos, ytrain])
+        ytest = np.r_[yneg, ypos]
+        yhat = B[ytest].dot(A[user])
+        auc = roc_auc_score(np.r_[np.zeros(yneg.shape[0]),
+                                  np.ones(ypos.shape[0])],
+                            yhat)
+        topN = np.argsort(-yhat)[:top_n]
+        p_at_k = np.mean(topN >= yneg.shape[0])
+        p_at_k_rnd = ypos.shape[0] / ytest.shape[0] ## <- baseline
+        return auc, p_at_k, p_at_k_rnd
+
+    res_triplets = Parallel(n_jobs = njobs)\
+                    (delayed(metrics_single_user)(u) \
+                        for u in chosen_users)
+
+    res_triplets = np.array(res_triplets)
+    auc = np.mean(res_triplets[:,0])
+    p_at_k = np.mean(res_triplets[:,1])
+    p_at_k_rnd = np.mean(res_triplets[:,2])
+    print("AUC: %.4f [random: %.2f]" % (auc, 0.5))
+    print("P@%d: %.4f [random: %.4f]" % (top_n,
+                                         p_at_k,
+                                         p_at_k_rnd))
+
+model = PoisMF(k=5, method="pg")
+model.fit(df_train)
+
+print_ranking_metrics(model.A, model.B,
+                      df_train, df_test, users_test,
+                      nusers=20)
+
+model = PoisMF(k=5, method="tncg")
+model.fit(df_train)
+
+print_ranking_metrics(model.A, model.B,
+                      df_train, df_test, users_test,
+                      nusers=20)
+
+model = PoisMF(k=5, method="cg")
+model.fit(df_train)
+
+print_ranking_metrics(model.A, model.B,
+                      df_train, df_test, users_test,
+                      nusers=20)
+
+model.A[0]
+
+model.topN(user = 2, n = 5, exclude = df_train.ItemId.loc[df_train.UserId==2])
+
+model.topN_new(df_train.loc[df_train.UserId==2], n = 5, exclude = df_train.ItemId.loc[df_train.UserId==2])
+
+model.predict(user=[3,3,3], item=[3,4,11])
+
+## Note: package implicit takes a matrix of shape [items, users]
+## Other packages take a matrix of shape [users, items]
+Xcoo = coo_matrix((df_train.Count, (df_train.UserId, df_train.ItemId)))
+Xcoo_T = Xcoo.T
+Xcsr_T = csr_matrix(Xcoo_T)
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(40,80))
+plt.spy(Xcoo, markersize=5)
+
+ials = AlternatingLeastSquares(factors=5, regularization=0.01,
+                               dtype=np.float64, iterations=5,
+                               use_gpu=False)
+ials.fit(Xcsr_T)
+
+print_ranking_metrics(ials.user_factors, ials.item_factors,
+                      df_train, df_test, users_test, nusers=20)
+
+bpr = BayesianPersonalizedRanking(factors=5, regularization=0.01,
+                               dtype=np.float64, iterations=5,
+                               use_gpu=False)
+bpr.fit(Xcsr_T)
+
+print_ranking_metrics(bpr.user_factors, bpr.item_factors,
+                      df_train, df_test, users_test, nusers=20)
+
+hpf = HPF(k=5, verbose=False, use_float=False).fit(Xcoo)
+
+print_ranking_metrics(hpf.Theta, hpf.Beta,
+                      df_train, df_test, users_test, nusers=20)

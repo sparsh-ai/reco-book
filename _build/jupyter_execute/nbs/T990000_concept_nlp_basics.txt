@@ -1,0 +1,78 @@
+import numpy as np
+import pandas as pd
+import altair as alt
+
+import spacy
+from keras.preprocessing.text import text_to_word_sequence
+from keras.preprocessing.text import one_hot, hashing_trick
+
+! python -m spacy download en_core_web_sm
+
+sentence = 'The quick brown fox jumped over the lazy dog.'
+
+text_to_word_sequence(sentence)
+
+nlp = spacy.load('en_core_web_sm')
+
+sentence = 'The quick brown fox jumped over the lazy dog'
+doc = nlp(sentence)
+
+for token in doc:
+    print(token)
+
+# Given a size of vocabulary, do one-hot encoding
+one_hot(sentence, n=10)
+
+# Given a size of vocabulary, do hash encoding (to save space)
+hashing_trick(sentence, n=100, hash_function="md5")
+
+from keras.preprocessing.text import Tokenizer
+
+# Instantiate the Tokenizer
+simple_tokenizer = Tokenizer()
+
+# Fit the Tokenizer
+simple_tokenizer.fit_on_texts([sentence])
+
+def get_sentence_vectors(sentences, tokenizer, mode="binary"):
+    matrix = tokenizer.texts_to_matrix(sentences, mode=mode)
+    df = pd.DataFrame(matrix)
+    df.drop(columns=0, inplace=True)
+    df.columns = tokenizer.word_index
+    return df
+
+# See the word vectors
+simple_tokenizer.word_index
+
+sentences = ['The quick brown fox jumped over the lazy dog', 
+             'The dog woke up lazily and barked at the fox',
+             'The fox looked back and just ignored the dog']
+
+# Instantiate and Fit
+tokenizer = Tokenizer()
+tokenizer.fit_on_texts(sentences)
+
+tokenizer.word_index
+
+tokenizer.texts_to_sequences(sentences)
+
+tokenizer.texts_to_matrix(sentences, mode="binary")
+
+_x = get_sentence_vectors(sentences, tokenizer, mode="tfidf")
+_x
+
+_x = _x.rename_axis('sentence').reset_index().melt(id_vars=['sentence'])
+_x.head(10)
+
+alt.Chart(_x).mark_rect().encode(
+    x=alt.X('variable:N', title="word"),
+    y=alt.Y('sentence:N', title="sentence"),
+    color=alt.Color('value:Q', title="tfidf")
+).properties(
+    width=700
+).interactive()
+
+one_hot_results = tokenizer.texts_to_matrix(sentence, mode='binary')
+
+word_index = tokenizer.word_index
+print('Found %s unique tokens.' % len(word_index))

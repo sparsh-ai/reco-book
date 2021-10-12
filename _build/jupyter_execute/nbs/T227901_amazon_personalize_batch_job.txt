@@ -1,0 +1,423 @@
+data_dir = "movie_data"
+!mkdir $data_dir
+!cd $data_dir && wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!cd $data_dir && unzip ml-latest-small.zip
+
+import time
+from time import sleep
+import json
+from datetime import datetime
+
+import boto3
+import pandas as pd
+import uuid
+
+original_data = pd.read_csv(data_dir + '/ml-latest-small/ratings.csv')
+original_data.head(10)
+
+interactions_df = original_data.copy()
+
+# Only want ratings greater or equal to 4, filter out ratings less than 4
+interactions_df = interactions_df[interactions_df['rating'] >= 4.0]
+
+interactions_df.head(10)
+
+interactions_df = interactions_df[['userId', 'movieId', 'timestamp']]
+interactions_df.head()
+interactions_df.rename(columns = {'userId':'USER_ID', 'movieId':'ITEM_ID', 
+                              'timestamp':'TIMESTAMP'}, inplace = True)
+
+interactions_filename = "interactions.csv"
+interactions_df.to_csv((data_dir+"/"+interactions_filename), index=False, float_format='%.0f')
+
+# Configure the SDK to Personalize:
+personalize = boto3.client('personalize')
+personalize_runtime = boto3.client('personalize-runtime')
+
+create_dataset_group_response = personalize.create_dataset_group(
+    name = "personalize-devlab-movies-dataset-group"
+)
+
+dataset_group_arn = create_dataset_group_response['datasetGroupArn']
+print(json.dumps(create_dataset_group_response, indent=2))
+
+current_time = datetime.now()
+print("Started on: ", current_time.strftime("%I:%M:%S %p"))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_group_response = personalize.describe_dataset_group(
+        datasetGroupArn = dataset_group_arn
+    )
+    status = describe_dataset_group_response["datasetGroup"]["status"]
+    print("DatasetGroup: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+current_time = datetime.now()
+print("Completed on: ", current_time.strftime("%I:%M:%S %p"))
+
+interactions_schema = schema = {
+    "type": "record",
+    "name": "Interactions",
+    "namespace": "com.amazonaws.personalize.schema",
+    "fields": [
+        {
+            "name": "USER_ID",
+            "type": "string"
+        },
+        {
+            "name": "ITEM_ID",
+            "type": "string"
+        },
+        {
+            "name": "TIMESTAMP",
+            "type": "long"
+        }
+    ],
+    "version": "1.0"
+}
+
+create_schema_response = personalize.create_schema(
+    name = "personalize-devlab-movies-interactions-schema",
+    schema = json.dumps(interactions_schema)
+)
+
+schema_arn = create_schema_response['schemaArn']
+print(json.dumps(create_schema_response, indent=2))
+
+dataset_type = "INTERACTIONS"
+create_dataset_response = personalize.create_dataset(
+    name = "personalize-devlab-movies-interactions-dataset",
+    datasetType = dataset_type,
+    datasetGroupArn = dataset_group_arn,
+    schemaArn = schema_arn
+)
+
+dataset_arn = create_dataset_response['datasetArn']
+print(json.dumps(create_dataset_response, indent=2))
+
+# Record the interaction dataset arn to be used later
+interactions_dataset_arn = dataset_arn
+
+with open('/opt/ml/metadata/resource-metadata.json') as notebook_info:
+    data = json.load(notebook_info)
+    resource_arn = data['ResourceArn']
+    region = resource_arn.split(':')[3]
+    
+session = boto3.Session(region_name=region)
+
+print(region)
+s3 = boto3.client('s3')
+account_id = boto3.client('sts').get_caller_identity().get('Account')
+bucket_name = account_id + "personalizedevlab"
+print(bucket_name)
+if region != "us-east-1":
+    s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': region})
+else:
+    s3.create_bucket(Bucket=bucket_name)
+
+s3 = boto3.client("s3")
+
+policy = {
+    "Version": "2012-10-17",
+    "Id": "PersonalizeS3BucketAccessPolicy",
+    "Statement": [
+        {
+            "Sid": "PersonalizeS3BucketAccessPolicy",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "personalize.amazonaws.com"
+            },
+            "Action": [
+                "s3:*Object",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{}".format(bucket_name),
+                "arn:aws:s3:::{}/*".format(bucket_name)
+            ]
+        }
+    ]
+}
+
+s3.put_bucket_policy(Bucket=bucket_name, Policy=json.dumps(policy))
+
+iam = boto3.client("iam")
+
+role_name = "PersonalizeRoleDevLab"
+assume_role_policy_document = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "personalize.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+create_role_response = iam.create_role(
+    RoleName = role_name,
+    AssumeRolePolicyDocument = json.dumps(assume_role_policy_document)
+)
+
+# AmazonPersonalizeFullAccess provides access to any S3 bucket with a name that includes "personalize" or "Personalize" 
+# if you would like to use a bucket with a different name, please consider creating and attaching a new policy
+# that provides read access to your bucket or attaching the AmazonS3ReadOnlyAccess policy to the role
+policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"
+iam.attach_role_policy(
+    RoleName = role_name,
+    PolicyArn = policy_arn
+)
+
+# Now add S3 support
+iam.attach_role_policy(
+    PolicyArn='arn:aws:iam::aws:policy/AmazonS3FullAccess',
+    RoleName=role_name
+)
+time.sleep(60) # wait for a minute to allow IAM role policy attachment to propagate
+
+role_arn = create_role_response["Role"]["Arn"]
+print(role_arn)
+
+# Upload Interactions File
+interactions_file_path = data_dir + "/" + interactions_filename
+boto3.Session().resource('s3').Bucket(bucket_name).Object(interactions_filename).upload_file(interactions_file_path)
+interactions_s3DataPath = "s3://"+bucket_name+"/"+interactions_filename
+
+create_dataset_import_job_response = personalize.create_dataset_import_job(
+    jobName = "personalize-devlab-import1",
+    datasetArn = interactions_dataset_arn,
+    dataSource = {
+        "dataLocation": "s3://{}/{}".format(bucket_name, interactions_filename)
+    },
+    roleArn = role_arn
+)
+
+dataset_import_job_arn = create_dataset_import_job_response['datasetImportJobArn']
+print(json.dumps(create_dataset_import_job_response, indent=2))
+
+current_time = datetime.now()
+print("Started on: ", current_time.strftime("%I:%M:%S %p"))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_import_job_response = personalize.describe_dataset_import_job(
+        datasetImportJobArn = dataset_import_job_arn
+    )
+    status = describe_dataset_import_job_response["datasetImportJob"]['status']
+    print("DatasetImportJob: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+current_time = datetime.now()
+print("Completed on: ", current_time.strftime("%I:%M:%S %p"))
+
+HRNN_recipe_arn = "arn:aws:personalize:::recipe/aws-hrnn"
+
+hrnn_create_solution_response = personalize.create_solution(
+    name = "personalize-devlab-hrnn",
+    datasetGroupArn = dataset_group_arn,
+    recipeArn = HRNN_recipe_arn
+)
+
+hrnn_solution_arn = hrnn_create_solution_response['solutionArn']
+print(json.dumps(hrnn_create_solution_response, indent=2))
+
+hrnn_create_solution_version_response = personalize.create_solution_version(
+    solutionArn = hrnn_solution_arn
+)
+
+hrnn_solution_version_arn = hrnn_create_solution_version_response['solutionVersionArn']
+print(json.dumps(hrnn_create_solution_version_response, indent=2))
+
+current_time = datetime.now()
+print("Started on: ", current_time.strftime("%I:%M:%S %p"))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_solution_version_response = personalize.describe_solution_version(
+        solutionVersionArn = hrnn_solution_version_arn
+    )
+    status = describe_solution_version_response["solutionVersion"]['status']
+    print("SolutionVersion Status: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+    
+current_time = datetime.now()
+print("Completed on: ", current_time.strftime("%I:%M:%S %p"))
+
+hrnn_solution_metrics_response = personalize.get_solution_metrics(
+    solutionVersionArn = hrnn_solution_version_arn
+)
+
+print(json.dumps(hrnn_solution_metrics_response, indent=2))
+
+# Create a dataframe for the items by reading in the correct source CSV.
+items_df = pd.read_csv(data_dir + '/ml-latest-small/movies.csv', index_col=0)
+# Render some sample data
+items_df.head(5)
+
+# Create a function to get movie by id
+def get_movie_by_id(movie_id, movie_df=items_df):
+    try:
+        return movie_df.loc[int(movie_id)]['title'] + " - " + movie_df.loc[int(movie_id)]['genres']
+    except:
+        return "Error obtaining movie" + movie_id
+
+# Get the user list
+users_df = pd.read_csv(data_dir + '/ml-latest-small/ratings.csv', index_col=0)
+
+batch_users = users_df.sample(3).index.tolist()
+
+# Write the file to disk
+json_input_filename = "json_input.json"
+with open(data_dir + "/" + json_input_filename, 'w') as json_input:
+    for user_id in batch_users:
+        json_input.write('{"userId": "' + str(user_id) + '"}\n')
+
+# Showcase the input file:
+!cat $data_dir"/"$json_input_filename
+
+# Upload files to S3
+boto3.Session().resource('s3').Bucket(bucket_name).Object(json_input_filename).upload_file(data_dir+"/"+json_input_filename)
+s3_input_path = "s3://" + bucket_name + "/" + json_input_filename
+print(s3_input_path)
+
+# Define the output path
+s3_output_path = "s3://" + bucket_name + "/"
+print(s3_output_path)
+
+current_time = datetime.now()
+batchInferenceJobArn = personalize.create_batch_inference_job (
+    solutionVersionArn = hrnn_solution_version_arn,
+    jobName = "Personalize-devlab-Batch-Inference-Job-HRNN"+current_time.strftime("%I%M%S"),
+    roleArn = role_arn,
+    jobInput = 
+     {"s3DataSource": {"path": s3_input_path}},
+    jobOutput = 
+     {"s3DataDestination":{"path": s3_output_path}}
+)
+batchInferenceJobArn = batchInferenceJobArn['batchInferenceJobArn']
+
+current_time = datetime.now()
+print("Import Started on: ", current_time.strftime("%I:%M:%S %p"))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_inference_job_response = personalize.describe_batch_inference_job(
+        batchInferenceJobArn = batchInferenceJobArn
+    )
+    status = describe_dataset_inference_job_response["batchInferenceJob"]['status']
+    print("DatasetInferenceJob: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+    
+current_time = datetime.now()
+print("Import Completed on: ", current_time.strftime("%I:%M:%S %p"))
+
+s3 = boto3.client('s3')
+export_name = json_input_filename + ".out"
+s3.download_file(bucket_name, export_name, data_dir+"/"+export_name)
+
+# Update DF rendering
+pd.set_option('display.max_rows', 30)
+with open(data_dir+"/"+export_name) as json_file:
+    # Get the first line and parse it
+    line = json.loads(json_file.readline())
+    # Do the same for the other lines
+    while line:
+        # extract the user ID 
+        col_header = "User: " + line['input']['userId']
+        # Create a list for all the artists
+        recommendation_list = []
+        # Add all the entries
+        for item in line['output']['recommendedItems']:
+            movie = get_movie_by_id(item)
+            recommendation_list.append(movie)
+        if 'bulk_recommendations_df' in locals():
+            new_rec_DF = pd.DataFrame(recommendation_list, columns = [col_header])
+            bulk_recommendations_df = bulk_recommendations_df.join(new_rec_DF)
+        else:
+            bulk_recommendations_df = pd.DataFrame(recommendation_list, columns=[col_header])
+        try:
+            line = json.loads(json_file.readline())
+        except:
+            line = None
+bulk_recommendations_df
+
+personalize.delete_solution(
+    solutionArn = hrnn_solution_arn
+)
+
+personalize.delete_dataset(
+    datasetArn = dataset_arn
+)
+
+paginator = personalize.get_paginator('list_datasets')
+for paginate_result in paginator.paginate():
+    for datasets in paginate_result["datasets"]:
+        print(datasets["datasetArn"])
+
+# Replace the ARN and run the following cell to delete any additional datasets
+personalize.delete_dataset(
+    datasetArn = "INSERT ARN HERE"
+)
+
+personalize.delete_schema(
+    schemaArn = schema_arn
+)
+
+paginator = personalize.get_paginator('list_schemas')
+for paginate_result in paginator.paginate():
+    for schema in paginate_result["schemas"]:
+        print(schema["schemaArn"])
+
+# Replace the ARN and run the following cell to delete any additional schema
+personalize.delete_schema(
+    schemaArn = "INSERT ARN HERE"
+)
+
+personalize.delete_dataset_group(
+    datasetGroupArn = dataset_group_arn
+)
+
+iam.detach_role_policy(
+    RoleName = "PersonalizeRoleDevLab",
+    PolicyArn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+)
+
+iam.detach_role_policy(
+    RoleName = "PersonalizeRoleDevLab",
+    PolicyArn = "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"
+)
+
+# Lists all policities attached to the personalize devlab role
+iam.list_attached_role_policies(
+    RoleName = "PersonalizeRoleDevLab"
+)
+
+# Detach policy from rule
+iam.detach_role_policy(
+    RoleName = "PersonalizeRoleDevLab",
+    PolicyArn = "INSERT ARN HERE"
+)
+
+iam.delete_role(
+    RoleName = "PersonalizeRoleDevLab"
+)

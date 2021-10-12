@@ -1,0 +1,155 @@
+!pip install pymilvus==1.1.0
+!pip install paddle_serving_app==0.3.1
+!pip install paddlepaddle
+!pip install redis
+
+!git clone -b 1.1 https://github.com/milvus-io/milvus.git
+% cd /content/milvus/core
+! ./ubuntu_build_deps.sh
+!./build.sh -t Release
+# !./build.sh -t Release -g
+
+% cd /content/milvus/core/milvus
+! echo $LD_LIBRARY_PATH
+import os
+os.environ['LD_LIBRARY_PATH'] +=":/content/milvus/core/milvus/lib"
+! echo $LD_LIBRARY_PATH
+% cd scripts
+! nohup ./start_server.sh &
+! cat nohup.out
+
+!cat nohup.out
+
+#hide-output
+!wget http://download.redis.io/releases/redis-stable.tar.gz --no-check-certificate
+!tar -xf redis-stable.tar.gz && cd redis-stable/src && make
+
+! nohup ./redis-stable/src/redis-server > redis_nohup.out &
+! cat redis_nohup.out
+
+!pip install -U grpcio
+
+%cd /content
+
+!wget https://paddlerec.bj.bcebos.com/aistudio/user_vector.tar.gz --no-check-certificate
+!mkdir -p movie_recommender/user_vector_model
+!tar xf user_vector.tar.gz -C movie_recommender/user_vector_model/
+!rm user_vector.tar.gz
+
+# Download movie information
+!wget -P movie_recommender https://paddlerec.bj.bcebos.com/aistudio/movies.dat --no-check-certificate
+# Download movie vecotrs
+!wget -P movie_recommender https://paddlerec.bj.bcebos.com/aistudio/movie_vectors.txt --no-check-certificate
+
+! lsof -i -P -n | grep -E 'milvus|redis'
+
+from milvus import Milvus, IndexType, MetricType, Status
+import redis
+
+milv = Milvus(host = '127.0.0.1', port = 19530)
+r = redis.StrictRedis(host="127.0.0.1", port=6379) 
+
+milv.client_version()
+
+import json
+import codecs
+
+#1::Toy Story (1995)::Animation|Children's|Comedy
+def process_movie(lines, redis_cli):
+    for line in lines:
+        if len(line.strip()) == 0:
+            continue
+        tmp = line.strip().split("::")
+        movie_id = tmp[0]
+        title = tmp[1]
+        genre_group = tmp[2]
+        tmp = genre_group.strip().split("|")
+        genre = tmp
+        movie_info = {"movie_id" : movie_id,
+                "title" : title,
+                "genre" : genre
+                }
+        redis_cli.set("{}##movie_info".format(movie_id), json.dumps(movie_info))
+        
+with codecs.open("movie_recommender/movies.dat", "r",encoding='utf-8',errors='ignore') as f:
+        lines = f.readlines()
+        process_movie(lines, r)
+
+COLLECTION_NAME = 'demo_films'
+PARTITION_NAME = 'Movie'
+
+#Dropping collection for clean slate run
+milv.drop_collection(COLLECTION_NAME)
+
+
+param = {'collection_name':COLLECTION_NAME, 
+         'dimension':32, 
+         'index_file_size':2048, 
+         'metric_type':MetricType.L2
+        }
+
+milv.create_collection(param)
+# milv.create_partition(COLLECTION_NAME, PARTITION_NAME)
+
+milv.get_collection_info(COLLECTION_NAME)
+
+def get_vectors():
+    with codecs.open("movie_recommender/movie_vectors.txt", "r", encoding='utf-8', errors='ignore') as f:
+        lines = f.readlines()
+    ids = [int(line.split(":")[0]) for line in lines]
+    embeddings = []
+    for line in lines:
+        line = line.strip().split(":")[1][1:-1]
+        str_nums = line.split(",")
+        emb = [float(x) for x in str_nums]
+        embeddings.append(emb)
+    return ids, embeddings
+
+ids, embeddings = get_vectors()
+
+# status = milv.insert(collection_name=COLLECTION_NAME, records=embeddings, ids=ids, partition_tag=PARTITION_NAME)
+status = milv.insert(collection_name=COLLECTION_NAME, records=embeddings, ids=ids)
+status[0]
+
+import numpy as np
+from paddle_serving_app.local_predict import LocalPredictor
+
+class RecallServerServicer(object):
+    def __init__(self):
+        self.uv_client = LocalPredictor()
+        self.uv_client.load_model_config("movie_recommender/user_vector_model/serving_server_dir") 
+        
+    def hash2(self, a):
+        return hash(a) % 1000000
+
+    def get_user_vector(self):
+        dic = {"userid": [], "gender": [], "age": [], "occupation": []}
+        lod = [0]
+        dic["userid"].append(self.hash2('0'))
+        dic["gender"].append(self.hash2('M'))
+        dic["age"].append(self.hash2('23'))
+        dic["occupation"].append(self.hash2('6'))
+        lod.append(1)
+
+        dic["userid.lod"] = lod
+        dic["gender.lod"] = lod
+        dic["age.lod"] = lod
+        dic["occupation.lod"] = lod
+        for key in dic:
+            dic[key] = np.array(dic[key]).astype(np.int64).reshape(len(dic[key]),1)
+        fetch_map = self.uv_client.predict(feed=dic, fetch=["save_infer_model/scale_0.tmp_1"], batch=True)
+        return fetch_map["save_infer_model/scale_0.tmp_1"].tolist()[0]
+
+recall = RecallServerServicer()
+user_vector = recall.get_user_vector()
+
+user_vector
+
+TOP_K = 20
+SEARCH_PARAM = {'nprobe': 20}
+status, results = milv.search(collection_name=COLLECTION_NAME, query_records=[user_vector], top_k=TOP_K, params=SEARCH_PARAM)
+
+recall_results = []
+for x in results[0]:
+    recall_results.append(r.get("{}##movie_info".format(x.id)).decode('utf-8'))
+recall_results

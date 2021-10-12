@@ -1,0 +1,109 @@
+import os
+import pickle
+from glob import glob
+
+# import basic numerical libraries
+import numpy as np
+import pandas as pd
+
+# import keras libraries for image recognition
+from keras.applications import VGG16
+from keras.applications.vgg16 import preprocess_input
+from keras.preprocessing import image as kimage
+
+#hide-output
+# download and unzip shirts folder from the directory
+!wget https://raw.githubusercontent.com/sparsh-ai/rec-data-public/master/shirts.zip
+!unzip shirts.zip
+
+# Create a dictionary of shirts for feeding to the image recognition model
+shirts_dict = dict()
+for shirt in glob('shirts/*.jpg'):  # load all shirts
+  img = kimage.load_img(shirt, target_size=(224, 224))   # VGG accepts images in 224 X 224 pixels
+  img = preprocess_input(np.expand_dims(kimage.img_to_array(img), axis=0))  # so some preprocessing
+  id = shirt.split('/')[-1].split('.')[0]
+  shirts_dict[id] = img  # map image & shirt id
+
+#hide-input
+no_of_shirts = len(shirts_dict.keys())
+print('Number of shirts = {}'.format(no_of_shirts))
+
+# Train on the VGG Model
+model = VGG16(include_top=False, weights='imagenet')
+
+shirts_matrix = np.zeros([no_of_shirts, 25088])   # initialize the matrix with zeros
+for i, (id, img) in enumerate(shirts_dict.items()):  
+  shirts_matrix[i, :] = model.predict(img).ravel()  # flatten the matrix
+
+model.summary()
+
+#hide
+# Create a corelation between shirts
+dot_product = shirts_matrix.dot(shirts_matrix.T)
+norms = np.array([np.sqrt(np.diagonal(dot_product))])
+similarity = dot_product / (norms * norms.T)
+print(similarity.shape)
+
+#hide
+type(similarity)
+
+# create a cross reference matrix with shirts and matrix
+matrix_id_to_shirt_id = dict()
+shirt_id_to_matrix_id = dict()
+for i, (id, img) in enumerate(shirts_dict.items()):  
+    matrix_id_to_shirt_id[i] = id
+    shirt_id_to_matrix_id[id] = i
+
+#hide
+type(matrix_id_to_shirt_id)
+
+# Display the sample shirt
+from IPython.display import Image
+Image('shirts/1015.jpg')
+
+#hide
+# evaluate on shirt "1015"
+target_shirt_id = '1015'
+target_id = shirt_id_to_matrix_id[target_shirt_id]
+
+# Sort 10 shirts based on their closest corelation
+closest_ids = np.argsort(similarity[target_id, :])[::-1][0:10]
+closest_shirts = [matrix_id_to_shirt_id[matrix_id] for matrix_id in closest_ids]
+
+closest_shirts
+
+#collapse-input
+import glob
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+%matplotlib inline
+
+images = []
+
+for shirt in closest_shirts:
+  shirt = 'shirts/'+shirt+'.jpg'
+  for img_path in glob.glob(shirt):
+      images.append(mpimg.imread(img_path))
+
+plt.figure(figsize=(20,10))
+columns = 5
+for i, image in enumerate(images):
+    plt.subplot(len(images) / columns + 1, columns, i + 1)
+    plt.imshow(image)
+
+#hide-output
+from sklearn.externals import joblib
+joblib.dump(similarity, 'similarity.pkl')
+joblib.dump(shirt_id_to_matrix_id, 'shirt_id_to_matrix_id.pkl')
+joblib.dump(matrix_id_to_shirt_id, 'matrix_id_to_shirt_id.pkl')
+
+# load the model from disk
+loaded_model = joblib.load('similarity.pkl')
+
+#hide
+type(loaded_model)
+
+# Sort 10 shirts based on their closest corelation
+closest_ids = np.argsort(loaded_model[target_id, :])[::-1][0:10]
+closest_shirts = [matrix_id_to_shirt_id[matrix_id] for matrix_id in closest_ids]
+closest_shirts

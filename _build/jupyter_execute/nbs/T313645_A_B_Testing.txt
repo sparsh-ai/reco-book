@@ -1,0 +1,913 @@
+import scipy.stats as scs
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+plt.style.use('ggplot')
+
+def pooled_prob(N_A, N_B, X_A, X_B):
+    """Returns pooled probability for two samples"""
+    return (X_A + X_B) / (N_A + N_B)
+
+
+def pooled_SE(N_A, N_B, X_A, X_B):
+    """Returns the pooled standard error for two samples"""
+    p_hat = pooled_prob(N_A, N_B, X_A, X_B)
+    SE = np.sqrt(p_hat * (1 - p_hat) * (1 / N_A + 1 / N_B))
+    return SE
+
+
+def confidence_interval(sample_mean=0, sample_std=1, sample_size=1,
+                        sig_level=0.05):
+    """Returns the confidence interval as a tuple"""
+    z = z_val(sig_level)
+
+    left = sample_mean - z * sample_std / np.sqrt(sample_size)
+    right = sample_mean + z * sample_std / np.sqrt(sample_size)
+
+    return (left, right)
+
+
+def z_val(sig_level=0.05, two_tailed=True):
+    """Returns the z value for a given significance level"""
+    z_dist = scs.norm()
+    if two_tailed:
+        sig_level = sig_level/2
+        area = 1 - sig_level
+    else:
+        area = 1 - sig_level
+
+    z = z_dist.ppf(area)
+
+    return z
+
+
+def ab_dist(stderr, d_hat=0, group_type='control'):
+    """Returns a distribution object depending on group type
+    Examples:
+    Parameters:
+        stderr (float): pooled standard error of two independent samples
+        d_hat (float): the mean difference between two independent samples
+        group_type (string): 'control' and 'test' are supported
+    Returns:
+        dist (scipy.stats distribution object)
+    """
+    if group_type == 'control':
+        sample_mean = 0
+
+    elif group_type == 'test':
+        sample_mean = d_hat
+
+    # create a normal distribution which is dependent on mean and std dev
+    dist = scs.norm(sample_mean, stderr)
+    return dist
+
+
+def min_sample_size(bcr, mde, power=0.8, sig_level=0.05):
+    """Returns the minimum sample size to set up a split test
+    Arguments:
+        bcr (float): probability of success for control, sometimes
+        referred to as baseline conversion rate
+        mde (float): minimum change in measurement between control
+        group and test group if alternative hypothesis is true, sometimes
+        referred to as minimum detectable effect
+        power (float): probability of rejecting the null hypothesis when the
+        null hypothesis is false, typically 0.8
+        sig_level (float): significance level often denoted as alpha,
+        typically 0.05
+    Returns:
+        min_N: minimum sample size (float)
+    References:
+        Stanford lecture on sample sizes
+        http://statweb.stanford.edu/~susan/courses/s141/hopower.pdf
+    """
+    # standard normal distribution to determine z-values
+    standard_norm = scs.norm(0, 1)
+
+    # find Z_beta from desired power
+    Z_beta = standard_norm.ppf(power)
+
+    # find Z_alpha
+    Z_alpha = standard_norm.ppf(1-sig_level/2)
+
+    # average of probabilities from both groups
+    pooled_prob = (bcr + bcr+mde) / 2
+
+    min_N = (2 * pooled_prob * (1 - pooled_prob) * (Z_beta + Z_alpha)**2
+             / mde**2)
+
+    return min_N
+
+
+def p_val(N_A, N_B, p_A, p_B):
+    """Returns the p-value for an A/B test"""
+    return scs.binom(N_A, p_A).pmf(p_B * N_B)
+
+def plot_norm_dist(ax, mu, std, with_CI=False, sig_level=0.05, label=None):
+    """Adds a normal distribution to the axes provided
+    Example:
+        plot_norm_dist(ax, 0, 1)  # plots a standard normal distribution
+    Parameters:
+        ax (matplotlib axes)
+        mu (float): mean of the normal distribution
+        std (float): standard deviation of the normal distribution
+    Returns:
+        None: the function adds a plot to the axes object provided
+    """
+    x = np.linspace(mu - 12 * std, mu + 12 * std, 1000)
+    y = scs.norm(mu, std).pdf(x)
+    ax.plot(x, y, label=label)
+
+    if with_CI:
+        plot_CI(ax, mu, std, sig_level=sig_level)
+
+def plot_binom_dist(ax, n, p, label=None):
+    """Adds a binomial distribution to the axes provided
+    Example:
+        plot_binom_dist(ax, 0, 1)  # plots a standard normal distribution
+    Parameters:
+        ax (matplotlib axes)
+        mu (float): mean of the normal distribution
+        sig (float): standard deviation of the normal distribution
+    Returns:
+        None: the function adds a plot to the axes object provided
+    """
+    x = np.linspace(0, n, n+1)
+    y = scs.binom(n, p).pmf(x)
+    ax.plot(x, y, label=label)
+
+def plot_CI(ax, mu, s, sig_level=0.05, color='grey'):
+    """Calculates the two-tailed confidence interval and adds the plot to
+    an axes object.
+    Example:
+        plot_CI(ax, mu=0, s=stderr, sig_level=0.05)
+    Parameters:
+        ax (matplotlib axes)
+        mu (float): mean
+        s (float): standard deviation
+    Returns:
+        None: the function adds a plot to the axes object provided
+    """
+    left, right = confidence_interval(sample_mean=mu, sample_std=s,
+                                      sig_level=sig_level)
+    ax.axvline(left, c=color, linestyle='--', alpha=0.5)
+    ax.axvline(right, c=color, linestyle='--', alpha=0.5)
+
+def plot_null(ax, stderr):
+    """Plots the null hypothesis distribution where if there is no real change,
+    the distribution of the differences between the test and the control groups
+    will be normally distributed.
+    The confidence band is also plotted.
+    Example:
+        plot_null(ax, stderr)
+    Parameters:
+        ax (matplotlib axes)
+        stderr (float): the pooled standard error of the control and test group
+    Returns:
+        None: the function adds a plot to the axes object provided
+    """
+    plot_norm_dist(ax, 0, stderr, label="Null")
+    plot_CI(ax, mu=0, s=stderr, sig_level=0.05)
+
+def plot_alt(ax, stderr, d_hat):
+    """Plots the alternative hypothesis distribution where if there is a real
+    change, the distribution of the differences between the test and the
+    control groups will be normally distributed and centered around d_hat
+    The confidence band is also plotted.
+    Example:
+        plot_alt(ax, stderr, d_hat=0.025)
+    Parameters:
+        ax (matplotlib axes)
+        stderr (float): the pooled standard error of the control and test group
+    Returns:
+        None: the function adds a plot to the axes object provided
+    """
+    plot_norm_dist(ax, d_hat, stderr, label="Alternative")
+
+def abplot(N_A, N_B, bcr, d_hat, sig_level=0.05, show_power=False,
+           show_alpha=False, show_beta=False, show_p_value=False,
+           show_legend=True):
+    """Example plot of AB test
+    Example:
+        abplot(n=4000, bcr=0.11, d_hat=0.03)
+    Parameters:
+        n (int): total sample size for both control and test groups (N_A + N_B)
+        bcr (float): base conversion rate; conversion rate of control
+        d_hat: difference in conversion rate between the control and test
+            groups, sometimes referred to as **minimal detectable effect** when
+            calculating minimum sample size or **lift** when discussing
+            positive improvement desired from launching a change.
+    Returns:
+        None: the function plots an AB test as two distributions for
+        visualization purposes
+    """
+    # create a plot object
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # define parameters to find pooled standard error
+    X_A = bcr * N_A
+    X_B = (bcr + d_hat) * N_B
+    stderr = pooled_SE(N_A, N_B, X_A, X_B)
+
+    # plot the distribution of the null and alternative hypothesis
+    plot_null(ax, stderr)
+    plot_alt(ax, stderr, d_hat)
+
+    # set extent of plot area
+    ax.set_xlim(-8 * stderr, 8 * stderr)
+
+    # shade areas according to user input
+    if show_power:
+        show_area(ax, d_hat, stderr, sig_level, area_type='power')
+    if show_alpha:
+        show_area(ax, d_hat, stderr, sig_level, area_type='alpha')
+    if show_beta:
+        show_area(ax, d_hat, stderr, sig_level, area_type='beta')
+
+    # show p_value based on the binomial distributions for the two groups
+    if show_p_value:
+        null = ab_dist(stderr, 'control')
+        p_value = p_val(N_A, N_B, bcr, bcr+d_hat)
+        ax.text(3 * stderr, null.pdf(0),
+                'p-value = {0:.3f}'.format(p_value),
+                fontsize=12, ha='left')
+
+    # option to show legend
+    if show_legend:
+        plt.legend()
+
+    plt.xlabel('d')
+    plt.ylabel('PDF')
+    plt.show()
+
+def show_area(ax, d_hat, stderr, sig_level, area_type='power'):
+    """Fill between upper significance boundary and distribution for
+    alternative hypothesis
+    """
+    left, right = confidence_interval(sample_mean=0, sample_std=stderr,
+                                      sig_level=sig_level)
+    x = np.linspace(-12 * stderr, 12 * stderr, 1000)
+    null = ab_dist(stderr, 'control')
+    alternative = ab_dist(stderr, d_hat, 'test')
+
+    # if area_type is power
+    # Fill between upper significance boundary and distribution for alternative
+    # hypothesis
+    if area_type == 'power':
+        ax.fill_between(x, 0, alternative.pdf(x), color='green', alpha=0.25,
+                        where=(x > right))
+        ax.text(-3 * stderr, null.pdf(0),
+                'power = {0:.3f}'.format(1 - alternative.cdf(right)),
+                fontsize=12, ha='right', color='k')
+
+    # if area_type is alpha
+    # Fill between upper significance boundary and distribution for null
+    # hypothesis
+    if area_type == 'alpha':
+        ax.fill_between(x, 0, null.pdf(x), color='green', alpha=0.25,
+                        where=(x > right))
+        ax.text(-3 * stderr, null.pdf(0),
+                'alpha = {0:.3f}'.format(1 - null.cdf(right)),
+                fontsize=12, ha='right', color='k')
+
+    # if area_type is beta
+    # Fill between distribution for alternative hypothesis and upper
+    # significance boundary
+    if area_type == 'beta':
+        ax.fill_between(x, 0, alternative.pdf(x), color='green', alpha=0.25,
+                        where=(x < right))
+        ax.text(-3 * stderr, null.pdf(0),
+                'beta = {0:.3f}'.format(alternative.cdf(right)),
+                fontsize=12, ha='right', color='k')
+
+def zplot(area=0.95, two_tailed=True, align_right=False):
+    """Plots a z distribution with common annotations
+    Example:
+        zplot(area=0.95)
+        zplot(area=0.80, two_tailed=False, align_right=True)
+    Parameters:
+        area (float): The area under the standard normal distribution curve.
+        align (str): The area under the curve can be aligned to the center
+            (default) or to the left.
+    Returns:
+        None: A plot of the normal distribution with annotations showing the
+        area under the curve and the boundaries of the area.
+    """
+    # create plot object
+    fig = plt.figure(figsize=(12, 6))
+    ax = fig.subplots()
+    # create normal distribution
+    norm = scs.norm()
+    # create data points to plot
+    x = np.linspace(-5, 5, 1000)
+    y = norm.pdf(x)
+
+    ax.plot(x, y)
+
+    # code to fill areas
+    # for two-tailed tests
+    if two_tailed:
+        left = norm.ppf(0.5 - area / 2)
+        right = norm.ppf(0.5 + area / 2)
+        ax.vlines(right, 0, norm.pdf(right), color='grey', linestyle='--')
+        ax.vlines(left, 0, norm.pdf(left), color='grey', linestyle='--')
+
+        ax.fill_between(x, 0, y, color='grey', alpha=0.25,
+                        where=(x > left) & (x < right))
+        plt.xlabel('z')
+        plt.ylabel('PDF')
+        plt.text(left, norm.pdf(left), "z = {0:.3f}".format(left), fontsize=12,
+                 rotation=90, va="bottom", ha="right")
+        plt.text(right, norm.pdf(right), "z = {0:.3f}".format(right),
+                 fontsize=12, rotation=90, va="bottom", ha="left")
+    # for one-tailed tests
+    else:
+        # align the area to the right
+        if align_right:
+            left = norm.ppf(1-area)
+            ax.vlines(left, 0, norm.pdf(left), color='grey', linestyle='--')
+            ax.fill_between(x, 0, y, color='grey', alpha=0.25,
+                            where=x > left)
+            plt.text(left, norm.pdf(left), "z = {0:.3f}".format(left),
+                     fontsize=12, rotation=90, va="bottom", ha="right")
+        # align the area to the left
+        else:
+            right = norm.ppf(area)
+            ax.vlines(right, 0, norm.pdf(right), color='grey', linestyle='--')
+            ax.fill_between(x, 0, y, color='grey', alpha=0.25,
+                            where=x < right)
+            plt.text(right, norm.pdf(right), "z = {0:.3f}".format(right),
+                     fontsize=12, rotation=90, va="bottom", ha="left")
+
+    # annotate the shaded area
+    plt.text(0, 0.1, "shaded area = {0:.3f}".format(area), fontsize=12,
+             ha='center')
+    # axis labels
+    plt.xlabel('z')
+    plt.ylabel('PDF')
+
+    plt.show()
+
+def abplot_CI_bars(N, X, sig_level=0.05, dmin=None):
+    """Returns a confidence interval bar plot for multivariate tests
+    Parameters:
+        N (list or tuple): sample size for all groups
+        X (list or tuple): number of conversions for each variant
+        sig_level (float): significance level
+        dmin (float): minimum desired lift; a red and green dashed lines are
+            shown on the plot if dmin is provided.
+    Returns:
+        None: A plot of the confidence interval bars is returned inline.
+    """
+
+    # initiate plot object
+    fig, ax = plt.subplots(figsize=(12, 3))
+
+    # get control group values
+    N_A = N[0]
+    X_A = X[0]
+
+    # initiate containers for standard error and differences
+    SE = []
+    d = []
+    # iterate through X and N and calculate d and SE
+    for idx in range(1, len(N)):
+        X_B = X[idx]
+        N_B = N[idx]
+        d.append(X_B / N_B - X_A / N_A)
+        SE.append(pooled_SE(N_A, N_B, X_A, X_B))
+
+    # convert to numpy arrays
+    SE = np.array(SE)
+    d = np.array(d)
+
+    y = np.arange(len(N)-1)
+
+    # get z value
+    z = z_val(sig_level)
+    # confidence interval values
+    ci = SE * z
+
+    # bar to represent the confidence interval
+    ax.hlines(y, d-ci, d+ci, color='blue', alpha=0.35, lw=10, zorder=1)
+    # marker for the mean
+    ax.scatter(d, y, s=300, marker='|', lw=10, color='magenta', zorder=2)
+
+    # vertical line to represent 0
+    ax.axvline(0, c='grey', linestyle='-')
+
+    # plot veritcal dashed lines if dmin is provided
+    if dmin is not None:
+        ax.axvline(-dmin, c='red', linestyle='--', alpha=0.75)
+        ax.axvline(dmin, c='green', linestyle='--', alpha=0.75)
+
+    # invert y axis to show variant 1 at the top
+    ax.invert_yaxis()
+    # label variants on y axis
+    labels = ['variant{}'.format(idx+1) for idx in range(len(N)-1)]
+    plt.yticks(np.arange(len(N)-1), labels)
+
+def funnel_CI_plot(A, B, sig_level=0.05):
+    """Returns a confidence interval bar plot for multivariate tests
+    Parameters:
+        A (list of tuples): (sample size, conversions) for control group funnel
+        B (list of tuples): (sample size, conversions) for test group funnel
+        sig_level (float): significance level
+    Returns:
+        None: A plot of the confidence interval bars is returned inline.
+    """
+
+    # initiate plot object
+    fig, ax = plt.subplots(figsize=(12, 3))
+
+    # initiate containers for standard error and differences
+    SE = []
+    d = []
+    # iterate through X and N and calculate d and SE
+    for idx in range(len(A)):
+        X_A = A[idx][1]
+        N_A = A[idx][0]
+        X_B = B[idx][1]
+        N_B = B[idx][0]
+        d.append(X_B / N_B - X_A / N_A)
+        SE.append(pooled_SE(N_A, N_B, X_A, X_B))
+
+    # convert to numpy arrays
+    SE = np.array(SE)
+    d = np.array(d)
+    print(d)
+
+    y = np.arange(len(A))
+
+    # get z value
+    z = z_val(sig_level)
+    # confidence interval values
+    ci = SE * z
+
+    # bar to represent the confidence interval
+    ax.hlines(y, d-ci, d+ci, color='blue', alpha=0.35, lw=10, zorder=1)
+    # marker for the mean
+    ax.scatter(d, y, s=300, marker='|', lw=10, color='magenta', zorder=2)
+
+    # vertical line to represent 0
+    ax.axvline(0, c='grey', linestyle='-')
+
+    # invert y axis to show variant 1 at the top
+    ax.invert_yaxis()
+    # label variants on y axis
+    labels = ['metric{}'.format(idx+1) for idx in range(len(A))]
+    plt.yticks(np.arange(len(A)), labels)
+
+# code examples presented in Python
+bcr = 0.10  # baseline conversion rate
+d_hat = 0.02  # difference between the groups
+
+# A is control; B is test
+N_A = 1000
+N_B = 1000
+
+def generate_data(N_A, N_B, p_A, p_B, days=None, control_label='A',
+                  test_label='B'):
+    """Returns a pandas dataframe with fake CTR data
+    Example:
+    Parameters:
+        N_A (int): sample size for control group
+        N_B (int): sample size for test group
+            Note: final sample size may not match N_A provided because the
+            group at each row is chosen at random (50/50).
+        p_A (float): conversion rate; conversion rate of control group
+        p_B (float): conversion rate; conversion rate of test group
+        days (int): optional; if provided, a column for 'ts' will be included
+            to divide the data in chunks of time
+            Note: overflow data will be included in an extra day
+        control_label (str)
+        test_label (str)
+    Returns:
+        df (df)
+    """
+
+    # initiate empty container
+    data = []
+
+    # total amount of rows in the data
+    N = N_A + N_B
+
+    # distribute events based on proportion of group size
+    group_bern = scs.bernoulli(N_A / (N_A + N_B))
+
+    # initiate bernoulli distributions from which to randomly sample
+    A_bern = scs.bernoulli(p_A)
+    B_bern = scs.bernoulli(p_B)
+
+    for idx in range(N):
+        # initite empty row
+        row = {}
+        # for 'ts' column
+        if days is not None:
+            if type(days) == int:
+                row['ts'] = idx // (N // days)
+            else:
+                raise ValueError("Provide an integer for the days parameter.")
+        # assign group based on 50/50 probability
+        row['group'] = group_bern.rvs()
+
+        if row['group'] == 0:
+            # assign conversion based on provided parameters
+            row['converted'] = A_bern.rvs()
+        else:
+            row['converted'] = B_bern.rvs()
+        # collect row into data container
+        data.append(row)
+
+    # convert data into pandas dataframe
+    df = pd.DataFrame(data)
+
+    # transform group labels of 0s and 1s to user-defined group labels
+    df['group'] = df['group'].apply(
+        lambda x: control_label if x == 0 else test_label)
+
+    return df
+
+ab_data = generate_data(N_A, N_B, bcr, bcr+d_hat)
+ab_data.head(10)
+
+ab_summary = ab_data.pivot_table(values='converted', index='group', aggfunc=np.sum)
+# add additional columns to the pivot table
+ab_summary['total'] = ab_data.pivot_table(values='converted', index='group', aggfunc=lambda x: len(x))
+ab_summary['rate'] = ab_data.pivot_table(values='converted', index='group')
+ab_summary
+
+A_converted = ab_summary.loc['A','converted']
+A_total = ab_summary.loc['A','total']
+A_cr = ab_summary.loc['A','rate']
+
+B_converted = ab_summary.loc['B','converted']
+B_total = ab_summary.loc['B','total']
+B_cr = ab_summary.loc['B','rate']
+
+fig, ax = plt.subplots(figsize=(12,6))
+x = np.linspace(A_converted-49, A_converted+50, 100)
+y = scs.binom(A_total, A_cr).pmf(x)
+ax.bar(x, y, alpha=0.5)
+ax.axvline(x=B_cr * A_total, c='blue', alpha=0.75, linestyle='--')
+plt.xlabel('converted')
+plt.ylabel('probability')
+
+fig, ax = plt.subplots(figsize=(12,6))
+xA = np.linspace(A_converted-49, A_converted+50, 100)
+yA = scs.binom(A_total, A_cr).pmf(xA)
+ax.bar(xA, yA, alpha=0.5)
+xB = np.linspace(B_converted-49, B_converted+50, 100)
+yB = scs.binom(B_total, B_cr).pmf(xB)
+ax.bar(xB, yB, alpha=0.5)
+plt.xlabel('converted')
+plt.ylabel('probability')
+
+# define the parameters for abplot()
+# use the actual values from the experiment for bcr and d_hat
+# p_A is the conversion rate of the control group
+# p_B is the conversion rate of the test group
+bcr = A_cr
+d_hat = B_cr - A_cr
+abplot(N_A, N_B, bcr, d_hat)
+
+abplot(N_A, N_B, bcr, d_hat, show_power=True)
+
+abplot(N_A, N_B, bcr, d_hat, show_beta=True)
+
+abplot(N_A, N_B, bcr, d_hat, show_alpha=True)
+
+abplot(2000, 2000, bcr, d_hat, show_power=True)
+
+zplot()
+
+zplot(0.80,False,True)
+
+min_sample_size(bcr=0.10, mde=0.02)
+
+abplot(3843, 3843, 0.10, 0.02, show_power=True)
+
+!wget https://github.com/sparsh-ai/reco-data/raw/master/abtest-sample-dayC1C2.csv
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import scipy.stats as ss 
+
+data= pd.read_csv("abtest-sample-dayC1C2.csv")
+data.head(10)
+
+sns.distplot(data.Conversion_A)
+
+sns.distplot(data.Conversion_B)
+
+t_stat, p_val= ss.ttest_ind(data.Conversion_B,data.Conversion_A)
+t_stat , p_val
+
+import math as mt
+import numpy as np
+import pandas as pd
+from scipy.stats import norm
+
+#Let's place this estimators into a dictionary for ease of use later
+baseline = {"Cookies":40000,"Clicks":3200,"Enrollments":660,"CTP":0.08,"GConversion":0.20625,
+           "Retention":0.53,"NConversion":0.109313}
+
+#Scale The counts estimates
+baseline["Cookies"] = 5000
+baseline["Clicks"]=baseline["Clicks"]*(5000/40000)
+baseline["Enrollments"]=baseline["Enrollments"]*(5000/40000)
+baseline
+
+# Let's get the p and n we need for Gross Conversion (GC)
+# and compute the Stansard Deviation(sd) rounded to 4 decimal digits.
+GC={}
+GC["d_min"]=0.01
+GC["p"]=baseline["GConversion"]
+#p is given in this case - or we could calculate it from enrollments/clicks
+GC["n"]=baseline["Clicks"]
+GC["sd"]=round(mt.sqrt((GC["p"]*(1-GC["p"]))/GC["n"]),4)
+GC["sd"]
+
+# Let's get the p and n we need for Retention(R)
+# and compute the Stansard Deviation(sd) rounded to 4 decimal digits.
+R={}
+R["d_min"]=0.01
+R["p"]=baseline["Retention"]
+R["n"]=baseline["Enrollments"]
+R["sd"]=round(mt.sqrt((R["p"]*(1-R["p"]))/R["n"]),4)
+R["sd"]
+
+# Let's get the p and n we need for Net Conversion (NC)
+# and compute the Standard Deviation (sd) rounded to 4 decimal digits.
+NC={}
+NC["d_min"]=0.0075
+NC["p"]=baseline["NConversion"]
+NC["n"]=baseline["Clicks"]
+NC["sd"]=round(mt.sqrt((NC["p"]*(1-NC["p"]))/NC["n"]),4)
+NC["sd"]
+
+def get_sds(p,d):
+    sd1=mt.sqrt(2*p*(1-p))
+    sd2=mt.sqrt(p*(1-p)+(p+d)*(1-(p+d)))
+    x=[sd1,sd2]
+    return x
+
+#Inputs: required alpha value (alpha should already fit the required test)
+#Returns: z-score for given alpha
+def get_z_score(alpha):
+    return norm.ppf(alpha)
+
+# Inputs p-baseline conversion rate which is our estimated p and d-minimum detectable change
+# Returns
+def get_sds(p,d):
+    sd1=mt.sqrt(2*p*(1-p))
+    sd2=mt.sqrt(p*(1-p)+(p+d)*(1-(p+d)))
+    sds=[sd1,sd2]
+    return sds
+
+# Inputs:sd1-sd for the baseline,sd2-sd for the expected change,alpha,beta,d-d_min,p-baseline estimate p
+# Returns: the minimum sample size required per group according to metric denominator
+def get_sampSize(sds,alpha,beta,d):
+    n=pow((get_z_score(1-alpha/2)*sds[0]+get_z_score(1-beta)*sds[1]),2)/pow(d,2)
+    return n
+
+GC["d"]=0.01
+R["d"]=0.01
+NC["d"]=0.0075
+
+# Let's get an integer value for simplicity
+GC["SampSize"]=round(get_sampSize(get_sds(GC["p"],GC["d"]),0.05,0.2,GC["d"]))
+GC["SampSize"]
+
+GC["SampSize"]=round(GC["SampSize"]/0.08*2)
+GC["SampSize"]
+
+# Getting a nice integer value
+R["SampSize"]=round(get_sampSize(get_sds(R["p"],R["d"]),0.05,0.2,R["d"]))
+R["SampSize"]
+
+R["SampSize"]=R["SampSize"]/0.08/0.20625*2
+R["SampSize"]
+
+# Getting a nice integer value
+NC["SampSize"]=round(get_sampSize(get_sds(NC["p"],NC["d"]),0.05,0.2,NC["d"]))
+NC["SampSize"]
+
+NC["SampSize"]=NC["SampSize"]/0.08*2
+NC["SampSize"]
+
+# we use pandas to load datasets
+control=pd.read_csv("https://github.com/baumanab/udacity_ABTesting/raw/master/data/Final%20Project%20Results%20-%20Control.csv")
+experiment=pd.read_csv("https://github.com/baumanab/udacity_ABTesting/raw/master/data/Final%20Project%20Results%20-%20Experiment.csv")
+control.head()
+
+pageviews_cont=control['Pageviews'].sum()
+pageviews_exp=experiment['Pageviews'].sum()
+pageviews_total=pageviews_cont+pageviews_exp
+print ("number of pageviews in control:", pageviews_cont)
+print ("number of Pageviewsin experiment:" ,pageviews_exp)
+
+p=0.5
+alpha=0.05
+p_hat=round(pageviews_cont/(pageviews_total),4)
+sd=mt.sqrt(p*(1-p)/(pageviews_total))
+ME=round(get_z_score(1-(alpha/2))*sd,4)
+print ("The confidence interval is between",p-ME,"and",p+ME,"; Is",p_hat,"inside this range?")
+
+clicks_cont=control['Clicks'].sum()
+clicks_exp=experiment['Clicks'].sum()
+clicks_total=clicks_cont+clicks_exp
+
+p_hat=round(clicks_cont/clicks_total,4)
+sd=mt.sqrt(p*(1-p)/clicks_total)
+ME=round(get_z_score(1-(alpha/2))*sd,4)
+print ("The confidence interval is between",p-ME,"and",p+ME,"; Is",p_hat,"inside this range?")
+
+ctp_cont=clicks_cont/pageviews_cont
+ctp_exp=clicks_exp/pageviews_exp
+d_hat=round(ctp_exp-ctp_cont,4)
+p_pooled=clicks_total/pageviews_total
+sd_pooled=mt.sqrt(p_pooled*(1-p_pooled)*(1/pageviews_cont+1/pageviews_exp))
+ME=round(get_z_score(1-(alpha/2))*sd_pooled,4)
+print ("The confidence interval is between",0-ME,"and",0+ME,"; Is",d_hat,"within this range?")
+
+# Count the total clicks from complete records only
+clicks_cont=control["Clicks"].loc[control["Enrollments"].notnull()].sum()
+clicks_exp=experiment["Clicks"].loc[experiment["Enrollments"].notnull()].sum()
+
+#Gross Conversion - number of enrollments divided by number of clicks
+enrollments_cont=control["Enrollments"].sum()
+enrollments_exp=experiment["Enrollments"].sum()
+
+GC_cont=enrollments_cont/clicks_cont
+GC_exp=enrollments_exp/clicks_exp
+GC_pooled=(enrollments_cont+enrollments_exp)/(clicks_cont+clicks_exp)
+GC_sd_pooled=mt.sqrt(GC_pooled*(1-GC_pooled)*(1/clicks_cont+1/clicks_exp))
+GC_ME=round(get_z_score(1-alpha/2)*GC_sd_pooled,4)
+GC_diff=round(GC_exp-GC_cont,4)
+print("The change due to the experiment is",GC_diff*100,"%")
+print("Confidence Interval: [",GC_diff-GC_ME,",",GC_diff+GC_ME,"]")
+print ("The change is statistically significant if the CI doesn't include 0. In that case, it is practically significant if",-GC["d_min"],"is not in the CI as well.")
+
+#Net Conversion - number of payments divided by number of clicks
+payments_cont=control["Payments"].sum()
+payments_exp=experiment["Payments"].sum()
+
+NC_cont=payments_cont/clicks_cont
+NC_exp=payments_exp/clicks_exp
+NC_pooled=(payments_cont+payments_exp)/(clicks_cont+clicks_exp)
+NC_sd_pooled=mt.sqrt(NC_pooled*(1-NC_pooled)*(1/clicks_cont+1/clicks_exp))
+NC_ME=round(get_z_score(1-alpha/2)*NC_sd_pooled,4)
+NC_diff=round(NC_exp-NC_cont,4)
+print("The change due to the experiment is",NC_diff*100,"%")
+print("Confidence Interval: [",NC_diff-NC_ME,",",NC_diff+NC_ME,"]")
+print ("The change is statistically significant if the CI doesn't include 0. In that case, it is practically significant if",NC["d_min"],"is not in the CI as well.")
+
+#let's first create the dataset we need for this:
+# start by merging the two datasets
+full=control.join(other=experiment,how="inner",lsuffix="_cont",rsuffix="_exp")
+#Let's look at what we got
+full.count()
+
+#now we only need the complete data records
+full=full.loc[full["Enrollments_cont"].notnull()]
+full.count()
+
+# Perfect! Now, derive a new column for each metric, so we have it's daily values
+# We need a 1 if the experiment value is greater than the control value=
+x=full['Enrollments_cont']/full['Clicks_cont']
+y=full['Enrollments_exp']/full['Clicks_exp']
+full['GC'] = np.where(x<y,1,0)
+# The same now for net conversion
+z=full['Payments_cont']/full['Clicks_cont']
+w=full['Payments_exp']/full['Clicks_exp']
+full['NC'] = np.where(z<w,1,0)
+full.head()
+
+GC_x=full.GC[full["GC"]==1].count()
+NC_x=full.NC[full["NC"]==1].count()
+n=full.NC.count()
+print("No. of cases for GC:",GC_x,'\n',
+      "No. of cases for NC:",NC_x,'\n',
+      "No. of total cases",n)
+
+#first a function for calculating probability of x=number of successes
+def get_prob(x,n):
+    p=round(mt.factorial(n)/(mt.factorial(x)*mt.factorial(n-x))*0.5**x*0.5**(n-x),4)
+    return p
+#next a function to compute the pvalue from probabilities of maximum x
+def get_2side_pvalue(x,n):
+    p=0
+    for i in range(0,x+1):
+        p=p+get_prob(i,n)
+    return 2*p
+
+print ("GC Change is significant if",get_2side_pvalue(GC_x,n),"is smaller than 0.05")
+print ("NC Change is significant if",get_2side_pvalue(NC_x,n),"is smaller than 0.05")
+
+# Packages imports
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+import statsmodels.stats.api as sms
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import seaborn as sns
+from math import ceil
+
+%matplotlib inline
+
+import warnings
+warnings.filterwarnings("ignore")
+
+# Some plot styling preferences
+plt.style.use('seaborn-whitegrid')
+font = {'family' : 'Helvetica',
+        'weight' : 'bold',
+        'size'   : 14}
+
+mpl.rc('font', **font)
+
+effect_size = sms.proportion_effectsize(0.13, 0.15)    # Calculating effect size based on our expected rates
+
+required_n = sms.NormalIndPower().solve_power(
+    effect_size, 
+    power=0.8, 
+    alpha=0.05, 
+    ratio=1
+    )                                                  # Calculating sample size needed
+
+required_n = ceil(required_n)                          # Rounding up to next whole number                          
+
+print(required_n)
+
+df = pd.read_csv('https://github.com/sparsh-ai/reco-data/raw/master/ab-testing.zip')
+
+df.head()
+
+df.info()
+
+# To make sure all the control group are seeing the old page and viceversa
+
+pd.crosstab(df['group'], df['landing_page'])
+
+session_counts = df['user_id'].value_counts(ascending=False)
+multi_users = session_counts[session_counts > 1].count()
+
+print(f'There are {multi_users} users that appear multiple times in the dataset')
+
+users_to_drop = session_counts[session_counts > 1].index
+
+df = df[~df['user_id'].isin(users_to_drop)]
+print(f'The updated dataset now has {df.shape[0]} entries')
+
+control_sample = df[df['group'] == 'control'].sample(n=required_n, random_state=22)
+treatment_sample = df[df['group'] == 'treatment'].sample(n=required_n, random_state=22)
+
+ab_test = pd.concat([control_sample, treatment_sample], axis=0)
+ab_test.reset_index(drop=True, inplace=True)
+
+ab_test
+
+ab_test.info()
+
+ab_test['group'].value_counts()
+
+conversion_rates = ab_test.groupby('group')['converted']
+
+std_p = lambda x: np.std(x, ddof=0)              # Std. deviation of the proportion
+se_p = lambda x: stats.sem(x, ddof=0)            # Std. error of the proportion (std / sqrt(n))
+
+conversion_rates = conversion_rates.agg([np.mean, std_p, se_p])
+conversion_rates.columns = ['conversion_rate', 'std_deviation', 'std_error']
+
+
+conversion_rates.style.format('{:.3f}')
+
+plt.figure(figsize=(8,6))
+
+sns.barplot(x=ab_test['group'], y=ab_test['converted'], ci=False)
+
+plt.ylim(0, 0.17)
+plt.title('Conversion rate by group', pad=20)
+plt.xlabel('Group', labelpad=15)
+plt.ylabel('Converted (proportion)', labelpad=15);
+
+from statsmodels.stats.proportion import proportions_ztest, proportion_confint
+
+control_results = ab_test[ab_test['group'] == 'control']['converted']
+treatment_results = ab_test[ab_test['group'] == 'treatment']['converted']
+
+n_con = control_results.count()
+n_treat = treatment_results.count()
+successes = [control_results.sum(), treatment_results.sum()]
+nobs = [n_con, n_treat]
+
+z_stat, pval = proportions_ztest(successes, nobs=nobs)
+(lower_con, lower_treat), (upper_con, upper_treat) = proportion_confint(successes, nobs=nobs, alpha=0.05)
+
+print(f'z statistic: {z_stat:.2f}')
+print(f'p-value: {pval:.3f}')
+print(f'ci 95% for control group: [{lower_con:.3f}, {upper_con:.3f}]')
+print(f'ci 95% for treatment group: [{lower_treat:.3f}, {upper_treat:.3f}]')

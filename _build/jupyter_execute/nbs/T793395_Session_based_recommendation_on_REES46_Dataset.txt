@@ -1,0 +1,717 @@
+import os
+import numpy as np 
+import gc
+import shutil
+import glob
+
+import cudf
+import cupy as cp
+import nvtabular as nvt
+from nvtabular import ColumnSelector
+
+import transformers4rec.torch as tr
+from transformers4rec.torch.ranking_metric import NDCGAt, RecallAt
+
+# define some information about where to get our data
+INPUT_DATA_DIR = os.environ.get("INPUT_DATA_DIR", "/workspace/data/")
+
+%%time
+raw_df = cudf.read_csv(os.path.join(INPUT_DATA_DIR, '2019-Oct.csv')) 
+raw_df.head()
+
+raw_df.shape
+
+raw_df['event_time_dt'] = raw_df['event_time'].astype('datetime64[s]')
+raw_df['event_time_ts']= raw_df['event_time_dt'].astype('int')
+raw_df.head()
+
+# check out the columns with nulls
+raw_df.isnull().any()
+
+# Remove rows where `user_session` is null.
+raw_df = raw_df[raw_df['user_session'].isnull()==False]
+len(raw_df)
+
+raw_df = raw_df.drop(['event_time'],  axis=1)
+
+cols = list(raw_df.columns)
+cols.remove('user_session')
+cols
+
+# load data 
+df_event = nvt.Dataset(raw_df) 
+
+# categorify user_session 
+cat_feats = ['user_session'] >> nvt.ops.Categorify()
+
+workflow = nvt.Workflow(cols + cat_feats)
+workflow.fit(df_event)
+df = workflow.transform(df_event).to_ddf().compute()
+
+df.head()
+
+raw_df = None
+del(raw_df)
+
+gc.collect()
+
+%%time
+df = df.sort_values(['user_session', 'event_time_ts']).reset_index(drop=True)
+
+print("Count with in-session repeated interactions: {}".format(len(df)))
+# Sorts the dataframe by session and timestamp, to remove consecutive repetitions
+df['product_id_past'] = df['product_id'].shift(1).fillna(0)
+df['session_id_past'] = df['user_session'].shift(1).fillna(0)
+#Keeping only no consecutive repeated in session interactions
+df = df[~((df['user_session'] == df['session_id_past']) & \
+             (df['product_id'] == df['product_id_past']))]
+print("Count after removed in-session repeated interactions: {}".format(len(df)))
+del(df['product_id_past'])
+del(df['session_id_past'])
+
+gc.collect()
+
+item_first_interaction_df = df.groupby('product_id').agg({'event_time_ts': 'min'}) \
+            .reset_index().rename(columns={'event_time_ts': 'prod_first_event_time_ts'})
+item_first_interaction_df.head()
+gc.collect()
+
+df = df.merge(item_first_interaction_df, on=['product_id'], how='left').reset_index(drop=True)
+
+df.head()
+
+del(item_first_interaction_df)
+item_first_interaction_df=None
+gc.collect()
+
+# check the min date
+df['event_time_dt'].min()
+
+# Filters only the first week of the data.
+df = df[df['event_time_dt'] < np.datetime64('2019-10-08')].reset_index(drop=True)
+
+df['event_time_dt'].max()
+
+df = df.drop(['event_time_dt'],  axis=1)
+
+df.head()
+
+# save df as parquet files on disk
+df.to_parquet(os.path.join(INPUT_DATA_DIR, 'Oct-2019.parquet'))
+
+# define data path about where to get our data
+INPUT_DATA_DIR = os.environ.get("INPUT_DATA_DIR", "/workspace/data/")
+
+%%time
+df = cudf.read_parquet(os.path.join(INPUT_DATA_DIR, 'Oct-2019.parquet'))  
+df.head(5)
+
+df.shape
+
+df.isnull().any()
+
+# categorify features 
+cat_feats = ['user_session', 'category_code', 'brand', 'user_id', 'product_id', 'category_id', 'event_type'] >> nvt.ops.Categorify(start_index=1)
+
+# create time features
+session_ts = ['event_time_ts']
+
+session_time = (
+    session_ts >> 
+    nvt.ops.LambdaOp(lambda col: cudf.to_datetime(col, unit='s')) >> 
+    nvt.ops.Rename(name = 'event_time_dt')
+)
+
+sessiontime_weekday = (
+    session_time >> 
+    nvt.ops.LambdaOp(lambda col: col.dt.weekday) >> 
+    nvt.ops.Rename(name ='et_dayofweek')
+)
+
+def get_cycled_feature_value_sin(col, max_value):
+    value_scaled = (col + 0.000001) / max_value
+    value_sin = np.sin(2*np.pi*value_scaled)
+    return value_sin
+
+def get_cycled_feature_value_cos(col, max_value):
+    value_scaled = (col + 0.000001) / max_value
+    value_cos = np.cos(2*np.pi*value_scaled)
+    return value_cos
+
+weekday_sin = sessiontime_weekday >> (lambda col: get_cycled_feature_value_sin(col+1, 7)) >> nvt.ops.Rename(name = 'et_dayofweek_sin')
+weekday_cos= sessiontime_weekday >> (lambda col: get_cycled_feature_value_cos(col+1, 7)) >> nvt.ops.Rename(name = 'et_dayofweek_cos')
+
+from nvtabular.ops import Operator
+
+class ItemRecency(Operator):
+    def transform(self, columns, gdf):
+        for column in columns.names:
+            col = gdf[column]
+            item_first_timestamp = gdf['prod_first_event_time_ts']
+            delta_days = (col - item_first_timestamp) / (60*60*24)
+            gdf[column + "_age_days"] = delta_days * (delta_days >=0)
+        return gdf
+            
+    def output_column_names(self, columns):
+        return ColumnSelector([column + "_age_days" for column in columns.names])
+
+    def dependencies(self):
+        return ["prod_first_event_time_ts"]
+    
+    
+recency_features = ['event_time_ts'] >> ItemRecency() 
+recency_features_norm = recency_features >> nvt.ops.LogOp() >> nvt.ops.Normalize() >> nvt.ops.Rename(name='product_recency_days_log_norm')
+
+time_features = (
+    session_time +
+    sessiontime_weekday +
+    weekday_sin +
+    weekday_cos +
+    recency_features_norm
+)
+
+# Smoothing price long-tailed distribution and applying standardization
+price_log = ['price'] >> nvt.ops.LogOp() >> nvt.ops.Normalize() >> nvt.ops.Rename(name='price_log_norm')
+
+# Relative price to the average price for the category_id
+def relative_price_to_avg_categ(col, gdf):
+    epsilon = 1e-5
+    col = ((gdf['price'] - col) / (col + epsilon)) * (col > 0).astype(int)
+    return col
+    
+avg_category_id_pr = ['category_id'] >> nvt.ops.JoinGroupby(cont_cols =['price'], stats=["mean"]) >> nvt.ops.Rename(name='avg_category_id_price')
+relative_price_to_avg_category = avg_category_id_pr >> nvt.ops.LambdaOp(relative_price_to_avg_categ, dependency=['price']) >> nvt.ops.Rename(name="relative_price_to_avg_categ_id")
+
+groupby_feats = ['event_time_ts', 'user_session'] + cat_feats + time_features + price_log + relative_price_to_avg_category
+
+# Define Groupby Workflow
+groupby_features = groupby_feats >> nvt.ops.Groupby(
+    groupby_cols=["user_session"], 
+    sort_cols=["event_time_ts"],
+    aggs={
+        'user_id': ['first'],
+        'product_id': ["list", "count"],
+        'category_code': ["list"],  
+        'event_type': ["list"], 
+        'brand': ["list"], 
+        'category_id': ["list"], 
+        'event_time_ts': ["first"],
+        'event_time_dt': ["first"],
+        'et_dayofweek_sin': ["list"],
+        'et_dayofweek_cos': ["list"],
+        'price_log_norm': ["list"],
+        'relative_price_to_avg_categ_id': ["list"],
+        'product_recency_days_log_norm': ["list"]
+        },
+    name_sep="-")
+
+groupby_features_list = groupby_features['product_id-list',
+        'category_code-list',  
+        'event_type-list', 
+        'brand-list', 
+        'category_id-list', 
+        'et_dayofweek_sin-list',
+        'et_dayofweek_cos-list',
+        'price_log_norm-list',
+        'relative_price_to_avg_categ_id-list',
+        'product_recency_days_log_norm-list']
+
+SESSIONS_MAX_LENGTH = 20 
+MINIMUM_SESSION_LENGTH = 2
+
+groupby_features_trim = groupby_features_list >> nvt.ops.ListSlice(0,SESSIONS_MAX_LENGTH) >> nvt.ops.Rename(postfix = '_seq')
+
+# calculate session day index based on 'timestamp-first' column
+day_index = ((groupby_features['event_time_dt-first'])  >> 
+    nvt.ops.LambdaOp(lambda col: (col - col.min()).dt.days +1) >> 
+    nvt.ops.Rename(f = lambda col: "day_index")
+)
+
+selected_features = groupby_features['user_session', 'product_id-count'] + groupby_features_trim + day_index
+
+filtered_sessions = selected_features >> nvt.ops.Filter(f=lambda df: df["product_id-count"] >= MINIMUM_SESSION_LENGTH)
+
+# avoid numba warnings
+from numba import config
+config.CUDA_LOW_OCCUPANCY_WARNINGS = 0
+
+dataset = nvt.Dataset(df)
+
+workflow = nvt.Workflow(filtered_sessions)
+workflow.fit(dataset)
+sessions_gdf = workflow.transform(dataset).to_ddf()
+
+sessions_gdf.head(3)
+
+workflow.output_schema.column_names
+
+workflow_path = os.path.join(INPUT_DATA_DIR, 'workflow_etl')
+workflow.save(workflow_path)
+
+# define partition column
+PARTITION_COL = 'day_index'
+
+# define output_folder to store the partitioned parquet files
+OUTPUT_FOLDER = os.environ.get("OUTPUT_FOLDER", INPUT_DATA_DIR + "sessions_by_day")
+!mkdir -p $OUTPUT_FOLDER
+
+from transformers4rec.data.preprocessing import save_time_based_splits
+save_time_based_splits(data=nvt.Dataset(sessions_gdf),
+                       output_dir= OUTPUT_FOLDER,
+                       partition_col=PARTITION_COL,
+                       timestamp_col='user_session', 
+                      )
+
+# check out the OUTPUT_FOLDER
+!ls $OUTPUT_FOLDER
+
+# Copyright 2021 NVIDIA Corporation. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+from merlin_standard_lib import Schema
+# Define schema object to pass it to the TabularSequenceFeatures class
+SCHEMA_PATH = 'schema_tutorial.pb'
+schema = Schema().from_proto_text(SCHEMA_PATH)
+schema = schema.select_by_name(['product_id-list_seq'])
+
+!head -30 $SCHEMA_PATH
+
+sequence_length = 20
+inputs = tr.TabularSequenceFeatures.from_schema(
+        schema,
+        max_sequence_length= sequence_length,
+        masking = 'causal',
+    )
+
+d_model = 128
+body = tr.SequentialBlock(
+        inputs,
+        tr.MLPBlock([d_model]),
+        tr.Block(torch.nn.GRU(input_size=d_model, hidden_size=d_model, num_layers=1), [None, 20, d_model])
+)
+
+head = tr.Head(
+    body,
+    tr.NextItemPredictionTask(weight_tying=True, hf_format=True, 
+                              metrics=[NDCGAt(top_ks=[10, 20], labels_onehot=True),  
+                                       RecallAt(top_ks=[10, 20], labels_onehot=True)]),
+)
+model = tr.Model(head)
+
+# import NVTabular dependencies
+from transformers4rec.torch.utils.data_utils import NVTabularDataLoader
+
+x_cat_names, x_cont_names = ['product_id-list_seq'], []
+
+# dictionary representing max sequence length for column
+sparse_features_max = {
+    fname: sequence_length
+    for fname in x_cat_names + x_cont_names
+}
+
+# Define a `get_dataloader` function to call in the training loop
+def get_dataloader(path, batch_size=32):
+
+    return NVTabularDataLoader.from_schema(
+        schema,
+        path, 
+        batch_size,
+        max_sequence_length=sequence_length,
+        sparse_names=x_cat_names + x_cont_names,
+        sparse_max=sparse_features_max,
+)
+
+from transformers4rec.config.trainer import T4RecTrainingArguments
+from transformers4rec.torch import Trainer
+
+#Set arguments for training 
+train_args = T4RecTrainingArguments(local_rank = -1, 
+                                    dataloader_drop_last = False,
+                                    report_to = [],   #set empy list to avoig logging metrics to Weights&Biases
+                                    gradient_accumulation_steps = 1,
+                                    per_device_train_batch_size = 256, 
+                                    per_device_eval_batch_size = 32,
+                                    output_dir = "./tmp", 
+                                    max_sequence_length=sequence_length,
+                                    learning_rate=0.00071,
+                                    num_train_epochs=3,
+                                    logging_steps=200,
+                                   )
+
+# Instantiate the T4Rec Trainer, which manages training and evaluation
+trainer = Trainer(
+    model=model,
+    args=train_args,
+    schema=schema,
+    compute_metrics=True,
+)
+
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "/workspace/data/sessions_by_day")
+
+%%time
+start_time_window_index = 1
+final_time_window_index = 4
+for time_index in range(start_time_window_index, final_time_window_index):
+    # Set data 
+    time_index_train = time_index
+    time_index_eval = time_index + 1
+    train_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_train}/train.parquet"))
+    eval_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_eval}/valid.parquet"))
+    
+    # Initialize dataloaders
+    trainer.train_dataloader = get_dataloader(train_paths, train_args.per_device_train_batch_size)
+    trainer.eval_dataloader = get_dataloader(eval_paths, train_args.per_device_eval_batch_size)
+    
+    # Train on day related to time_index 
+    print('*'*20)
+    print("Launch training for day %s are:" %time_index)
+    print('*'*20 + '\n')
+    trainer.reset_lr_scheduler()
+    trainer.train()
+    trainer.state.global_step +=1
+    
+    # Evaluate on the following day
+    train_metrics = trainer.evaluate(metric_key_prefix='eval')
+    print('*'*20)
+    print("Eval results for day %s are:\t" %time_index_eval)
+    print('\n' + '*'*20 + '\n')
+    for key in sorted(train_metrics.keys()):
+        print(" %s = %s" % (key, str(train_metrics[key]))) 
+    trainer.wipe_memory()
+
+with open("results.txt", 'w') as f: 
+    f.write('GRU accuracy results:')
+    f.write('\n')
+    for key, value in  model.compute_metrics().items(): 
+        f.write('%s:%s\n' % (key, value.item()))
+
+import IPython
+app = IPython.Application.instance()
+app.kernel.do_shutdown(True)
+
+import os
+import glob
+
+import torch 
+import transformers4rec.torch as tr
+
+from transformers4rec.torch.ranking_metric import NDCGAt, RecallAt
+
+from merlin_standard_lib import Schema
+
+# Define schema object to pass it to the TabularSequenceFeatures class
+SCHEMA_PATH = 'schema_tutorial.pb'
+schema = Schema().from_proto_text(SCHEMA_PATH)
+
+# Create a sub-schema only with the selected features
+schema = schema.select_by_name(['product_id-list_seq'])
+
+#Input 
+sequence_length, d_model = 20, 192
+# Define input module to process tabular input-features and to prepare masked inputs
+inputs= tr.TabularSequenceFeatures.from_schema(
+    schema,
+    max_sequence_length=sequence_length,
+    d_output=d_model,
+    masking="mlm",
+)
+
+# Define XLNetConfig class and set default parameters for HF XLNet config  
+transformer_config = tr.XLNetConfig.build(
+    d_model=d_model, n_head=4, n_layer=2, total_seq_length=sequence_length
+)
+# Define the model block including: inputs, masking, projection and transformer block.
+body = tr.SequentialBlock(
+    inputs, tr.MLPBlock([192]), tr.TransformerBlock(transformer_config, masking=inputs.masking)
+)
+
+# Define the head for to next item prediction task 
+head = tr.Head(
+    body,
+    tr.NextItemPredictionTask(weight_tying=True, hf_format=True, 
+                              metrics=[NDCGAt(top_ks=[10, 20], labels_onehot=True),  
+                                       RecallAt(top_ks=[10, 20], labels_onehot=True)]),
+)
+
+# Get the end-to-end Model class 
+model = tr.Model(head)
+
+from transformers4rec.config.trainer import T4RecTrainingArguments
+from transformers4rec.torch import Trainer
+
+#Set arguments for training 
+training_args = T4RecTrainingArguments(
+            output_dir="./tmp",
+            max_sequence_length=20,
+            data_loader_engine='nvtabular',
+            num_train_epochs=3, 
+            dataloader_drop_last=False,
+            per_device_train_batch_size = 256,
+            per_device_eval_batch_size = 32,
+            gradient_accumulation_steps = 1,
+            learning_rate=0.000666,
+            report_to = [],
+            logging_steps=200,
+        )
+
+# Instantiate the T4Rec Trainer, which manages training and evaluation
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    schema=schema,
+    compute_metrics=True,
+)
+
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "/workspace/data/sessions_by_day")
+
+%%time
+start_time_window_index = 1
+final_time_window_index = 4
+for time_index in range(start_time_window_index, final_time_window_index):
+    # Set data 
+    time_index_train = time_index
+    time_index_eval = time_index + 1
+    train_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_train}/train.parquet"))
+    eval_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_eval}/valid.parquet"))
+    # Train on day related to time_index 
+    print('*'*20)
+    print("Launch training for day %s are:" %time_index)
+    print('*'*20 + '\n')
+    trainer.train_dataset_or_path = train_paths
+    trainer.reset_lr_scheduler()
+    trainer.train()
+    trainer.state.global_step +=1
+    # Evaluate on the following day
+    trainer.eval_dataset_or_path = eval_paths
+    train_metrics = trainer.evaluate(metric_key_prefix='eval')
+    print('*'*20)
+    print("Eval results for day %s are:\t" %time_index_eval)
+    print('\n' + '*'*20 + '\n')
+    for key in sorted(train_metrics.keys()):
+        print(" %s = %s" % (key, str(train_metrics[key]))) 
+    trainer.wipe_memory()
+
+with open("results.txt", 'a') as f:
+    f.write('\n')
+    f.write('XLNet-MLM accuracy results:')
+    f.write('\n')
+    for key, value in  model.compute_metrics().items(): 
+        f.write('%s:%s\n' % (key, value.item()))
+
+import IPython
+app = IPython.Application.instance()
+app.kernel.do_shutdown(True)
+
+import os
+import glob
+import nvtabular as nvt
+
+import torch 
+import transformers4rec.torch as tr
+
+from transformers4rec.torch.ranking_metric import NDCGAt, RecallAt
+
+# Define categorical and continuous columns to fed to training model
+x_cat_names = ['product_id-list_seq', 'category_id-list_seq', 'brand-list_seq']
+x_cont_names = ['product_recency_days_log_norm-list_seq', 'et_dayofweek_sin-list_seq', 'et_dayofweek_cos-list_seq', 
+                'price_log_norm-list_seq', 'relative_price_to_avg_categ_id-list_seq']
+
+from merlin_standard_lib import Schema
+
+# Define schema object to pass it to the TabularSequenceFeatures class
+SCHEMA_PATH ='schema_tutorial.pb'
+schema = Schema().from_proto_text(SCHEMA_PATH)
+schema = schema.select_by_name(x_cat_names + x_cont_names)
+
+# Define input block
+sequence_length, d_model = 20, 192
+# Define input module to process tabular input-features and to prepare masked inputs
+inputs= tr.TabularSequenceFeatures.from_schema(
+    schema,
+    max_sequence_length=sequence_length,
+    aggregation="concat",
+    d_output=d_model,
+    masking="mlm",
+)
+
+# Define XLNetConfig class and set default parameters for HF XLNet config  
+transformer_config = tr.XLNetConfig.build(
+    d_model=d_model, n_head=4, n_layer=2, total_seq_length=sequence_length
+)
+# Define the model block including: inputs, masking, projection and transformer block.
+body = tr.SequentialBlock(
+    inputs, tr.MLPBlock([192]), tr.TransformerBlock(transformer_config, masking=inputs.masking)
+)
+
+# Define the head related to next item prediction task 
+head = tr.Head(
+    body,
+    tr.NextItemPredictionTask(weight_tying=True, hf_format=True, 
+                                     metrics=[NDCGAt(top_ks=[10, 20], labels_onehot=True),  
+                                              RecallAt(top_ks=[10, 20], labels_onehot=True)]),
+)
+
+# Get the end-to-end Model class 
+model = tr.Model(head)
+
+from transformers4rec.config.trainer import T4RecTrainingArguments
+from transformers4rec.torch import Trainer
+
+#Set arguments for training 
+training_args = T4RecTrainingArguments(
+            output_dir="./tmp",
+            max_sequence_length=20,
+            data_loader_engine='nvtabular',
+            num_train_epochs=3, 
+            dataloader_drop_last=False,
+            per_device_train_batch_size = 256,
+            per_device_eval_batch_size = 32,
+            gradient_accumulation_steps = 1,
+            learning_rate=0.000666,
+            report_to = [],
+            logging_steps=200,
+)
+
+# Instantiate the T4Rec Trainer, which manages training and evaluation
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    schema=schema,
+    compute_metrics=True,
+)
+
+OUTPUT_DIR = os.environ.get("OUTPUT_DIR", "/workspace/data/sessions_by_day")
+
+%%time
+start_time_window_index = 1
+final_time_window_index = 4
+for time_index in range(start_time_window_index, final_time_window_index):
+    # Set data 
+    time_index_train = time_index
+    time_index_eval = time_index + 1
+    train_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_train}/train.parquet"))
+    eval_paths = glob.glob(os.path.join(OUTPUT_DIR, f"{time_index_eval}/valid.parquet"))
+    # Train on day related to time_index 
+    print('*'*20)
+    print("Launch training for day %s are:" %time_index)
+    print('*'*20 + '\n')
+    trainer.train_dataset_or_path = train_paths
+    trainer.reset_lr_scheduler()
+    trainer.train()
+    trainer.state.global_step +=1
+    # Evaluate on the following day
+    trainer.eval_dataset_or_path = eval_paths
+    train_metrics = trainer.evaluate(metric_key_prefix='eval')
+    print('*'*20)
+    print("Eval results for day %s are:\t" %time_index_eval)
+    print('\n' + '*'*20 + '\n')
+    for key in sorted(train_metrics.keys()):
+        print(" %s = %s" % (key, str(train_metrics[key]))) 
+    trainer.wipe_memory()
+
+with open("results.txt", 'a') as f:
+    f.write('\n')
+    f.write('XLNet-MLM with side information accuracy results:')
+    f.write('\n')
+    for key, value in  model.compute_metrics().items(): 
+        f.write('%s %s\n' % (key, value.item()))
+
+import nvtabular as nvt
+
+# define data path about where to get our data
+INPUT_DATA_DIR = os.environ.get("INPUT_DATA_DIR", "/workspace/data/")
+workflow_path = os.path.join(INPUT_DATA_DIR, 'workflow_etl')
+workflow = nvt.Workflow.load(workflow_path)
+
+# dictionary representing max sequence length for the sequential (list) columns
+sparse_features_max = {
+    fname: sequence_length
+    for fname in x_cat_names + x_cont_names
+}
+
+sparse_features_max
+
+from nvtabular.inference.triton import export_pytorch_ensemble
+export_pytorch_ensemble(
+    model,
+    workflow,
+    sparse_max=sparse_features_max,
+    name= "t4r_pytorch",
+    model_path= "/workspace/models",
+    label_columns =[],
+)
+
+!cat results.txt
+
+from visuals import create_bar_chart
+create_bar_chart('results.txt')
+
+# Import dependencies
+import os
+from time import time
+
+import argparse
+import numpy as np
+import pandas as pd
+import sys
+import cudf
+
+import tritonhttpclient
+
+try:
+    triton_client = tritonhttpclient.InferenceServerClient(url="localhost:8000", verbose=True)
+    print("client created.")
+except Exception as e:
+    print("channel creation failed: " + str(e))
+triton_client.is_server_live()
+
+triton_client.get_model_repository_index()
+
+model_name = "t4r_pytorch"
+triton_client.load_model(model_name=model_name)
+
+INPUT_DATA_DIR = os.environ.get("INPUT_DATA_DIR", "/workspace/data/")
+df= cudf.read_parquet(os.path.join(INPUT_DATA_DIR, 'Oct-2019.parquet'))
+df=df.sort_values('event_time_ts')
+batch = df.iloc[:50,:]
+
+sessions_to_use = batch.user_session.value_counts()
+filtered_batch = batch[batch.user_session.isin(sessions_to_use[sessions_to_use.values>1].index.values)]
+
+filtered_batch.head()
+
+import nvtabular.inference.triton as nvt_triton
+import tritonclient.grpc as grpcclient
+
+inputs = nvt_triton.convert_df_to_triton_input(filtered_batch.columns, filtered_batch, grpcclient.InferInput)
+
+output_names = ["output"]
+
+outputs = []
+for col in output_names:
+    outputs.append(grpcclient.InferRequestedOutput(col))
+    
+MODEL_NAME_NVT = "t4r_pytorch"
+
+with grpcclient.InferenceServerClient("localhost:8001") as client:
+    response = client.infer(MODEL_NAME_NVT, inputs)
+    print(col, ':\n', response.as_numpy(col))
+
+from transformers4rec.torch.utils.examples_utils import visualize_response
+visualize_response(filtered_batch, response, top_k=5, session_col='user_session')
+
+triton_client.unload_model(model_name="t4r_pytorch")
+triton_client.unload_model(model_name="t4r_pytorch_nvt")
+triton_client.unload_model(model_name="t4r_pytorch_pt")

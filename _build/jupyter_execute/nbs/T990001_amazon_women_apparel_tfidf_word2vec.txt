@@ -1,0 +1,539 @@
+# !pip install -q -U kaggle
+# !pip install --upgrade --force-reinstall --no-deps kaggle
+# !mkdir ~/.kaggle
+# !cp /content/drive/MyDrive/kaggle.json ~/.kaggle/
+# !chmod 600 ~/.kaggle/kaggle.json
+# !kaggle datasets download -d ajaysh/women-apparel-recommendation-engine-amazoncom
+
+!unzip /content/women-apparel-recommendation-engine-amazoncom.zip
+
+import numpy as np
+import pandas as pd
+import itertools
+import math
+import scipy.sparse
+from collections import Counter
+from sklearn import preprocessing
+
+import re
+import nltk
+from nltk.corpus import stopwords
+from gensim.models import Word2Vec
+from gensim.models import KeyedVectors
+
+import requests
+from PIL import Image
+from io import BytesIO
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib import gridspec
+
+import warnings
+warnings.filterwarnings("ignore")
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import pairwise_distances
+
+nltk.download('stopwords')
+stopword = set(stopwords.words('english'))
+
+data = pd.read_json('tops_fashion.json')
+data.shape
+
+data.head()
+
+# keeping just the pertinent features
+data = data[['asin','product_type_name', 'formatted_price','title','medium_image_url']]
+
+data.dtypes
+
+data.memory_usage(deep=True)  # memory usage in bytes
+
+data.describe()
+
+data.describe(include=['O'])
+
+#Basic stats for product type
+print('The basic statistics for product type on amazon are as follows: \n{}\n\n'.format(data['product_type_name'].describe()))
+
+#product type segregation
+print('Product type count:\n{}\n\n'.format(Counter(list(data['product_type_name'])).most_common(10)))
+
+#basic stats for titles
+print('The basic statistics for product ttiles on amazon are as follows: \n{}\n\n'.format(data['title'].describe()))
+
+#Basic stats for product type
+print('{} % of the total points have a listed price \n \n'.format(data[~data['formatted_price'].isnull()].shape[0]/data.shape[0]*100))
+
+# data.memory_usage(deep=True)  # memory usage before encoding
+
+# # convert "product type" column data type to category
+# data["product_type_name"] = data["product_type_name"].astype("category")
+
+# # label encode the "asin" column
+# # because it is currently in object form, and taking lots of storage memory
+# le_asin = preprocessing.LabelEncoder()
+# data.loc[:,"asin"] = le_asin.fit_transform(data["asin"].values)
+
+# # label encode the "url" column also
+# le_url = preprocessing.LabelEncoder()
+# data.loc[:,"medium_image_url"] = le_url.fit_transform(data["medium_image_url"].values)
+
+# # convert "price" column to float
+# data.loc[:,"formatted_price"] = data["formatted_price"].replace('Too low to display', None)
+# data.loc[:,"formatted_price"] = data["formatted_price"].replace('[\$,]', '', regex=True).astype(float)
+
+# data.memory_usage(deep=True)  # memory usage after encoding
+
+# removing products without a price as we need a price to sell products
+data = data[~data['formatted_price'].isnull()]
+print('The number of products (data points) remaining after removing products without a price: \n{}\n'.format(data.shape[0]))
+
+
+#removing products without a title as we need titles for vectorization
+#distance based similarity recommendation for title vectorization
+data = data[~data['title'].isnull()]
+print('The number of products (data points) remaining after removing products without a title description required for vectorization:\n{}\n'.format(data.shape[0]))
+
+
+#removing products with small length titles as they might not adequately describe product
+data = data[data['title'].apply(lambda x : len(x.split())>4)]
+print('The number of products (data points) remaining after removing products with insufficient title descriptions required for vectorization:\n{}\n'.format(data.shape[0]))  
+
+#removing stopwords, terms which are not alphanumeric and lowering text
+def text_clean(txt):
+  txt = re.sub('[^A-Za-z0-9]+', ' ', txt)
+  txt = txt.lower()
+  pattern = re.compile(r'\b(' + r'|'.join(stopword) + r')\b\s*')
+  txt = pattern.sub(' ', txt)
+  txt = ' '.join(txt.split())
+  return txt
+
+x = data.sample(5).title.values
+x
+
+[text_clean(_x) for _x in x]
+
+data['title'] = data['title'].apply(text_clean)
+
+data.head()
+
+#Downloading Googles Word2Vec library to be used in all word to vec models using a pretrained model by google
+!wget -c "https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz"
+!gzip -d GoogleNews-vectors-negative300.bin.gz
+
+modl = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+
+#vocab = stores all the words in google Word2vec model
+vocab = modl.vocab
+
+#Utility function for results 
+def display_img(url):
+    #Get url of the product and download it
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    plt.imshow(img)
+
+def heatmap_image(keys,values,labels,url,text):
+    #keys gives the list of words for recommended title
+    #divide the figure into two parts
+    
+    gs = gridspec.GridSpec(1,2,width_ratios = [4,1])
+    fg = plt.figure(figsize=(25,3))
+    
+    #1st figure plotting a heatmap that represents the most commonly occuring words
+    ax = plt.subplot(gs[0])
+    ax = sns.heatmap(np.array([values]),annot=np.array([labels]))
+    ax.set_xticklabels(keys)
+    ax.set_title(text)                 
+    
+    #2nd figure plotting a heatmap that represents the image of the product
+    ln = plt.subplot(gs[1])
+    ln.set_xticks([])
+    ln.set_yticks([])
+    
+    fig = display_img(url)
+    
+    #display combine figure
+    plt.show()
+
+def heatmap_image_plot(doc_id,vec1,vec2,url,text,model,tfidf_title_vectorizer,tfidf_title_features,idf_title_vectorizer,idf_title_features):
+    
+                     
+    intersection = set(vec1.keys()) & set(vec2.keys())
+    
+    #set the value of non intersecting word to zero in vec2                 
+    for i in vec2.keys():
+        if i not in intersection:
+            vec2[i]=0
+    #if ith word in intersection(list of words of title1 and list of words of title2): values(i)=count of that word in title2 else values(i)=0                 
+    values = [vec2[x] for x in vec2.keys()]
+    
+    #labels for heatmap
+    keys = list(vec2.keys())
+                     
+    if model == 'bag_of_words':
+        labels = values
+    
+    elif model == 'Tfidf':
+        labels = []
+        for i in vec2.keys():
+            if i in tfidf_title_vectorizer.vocabulary_:
+                #idf_title_vectorizer.vocabulary contains all the words in the corpus         
+                labels.append(tfidf_title_features[doc_id,tfidf_title_vectorizer.vocabulary_[i]])
+        
+            else:
+                labels.append(0)
+    elif model == 'idf':
+        labels = []
+        for i in vec2.keys():
+            if i in idf_title_vectorizer.vocabulary_:
+                #idf_title_vectorizer.vocabulary contains all the words in the corpus         
+                labels.append(idf_title_features[doc_id,idf_title_vectorizer.vocabulary_[i]])
+        
+            else:
+                labels.append(0)
+                     
+    heatmap_image(keys,values,labels,url,text)
+                     
+                     
+def text_vector(sentence):
+    words = sentence.split()    
+    return Counter(words)
+
+
+def visualization(doc_id,sentence1,sentence2,url,model,tfidf_title_vectorizer,tfidf_title_features,idf_title_vectorizer,idf_title_features):
+    vec1 = text_vector(sentence1)
+    vec2 = text_vector(sentence2)
+                     
+    heatmap_image_plot(doc_id,vec1,vec2,url,sentence2,model,tfidf_title_vectorizer,tfidf_title_features,idf_title_vectorizer,idf_title_features)  
+
+#utility function to better visualize and understand results
+
+def get_word_vec(sentence,doc_id,model_name,idf_title_vectorizer,idf_title_features):
+    #doc_id : index id in vectorized array
+    #sentence : title of product
+    #model_name : 'avg', we will append the model[i], w2v representation of word i
+    
+    vec = []
+    for i in sentence.split():
+        if i in vocab:
+            if model_name == 'avg':
+                vec.append(modl[i])
+            elif model_name == 'weighted' and i in idf_title_vectorizer.vocabulary_:
+                vec.append(idf_title_features[doc_id,idf_title_vectorizer.vocabulary_[i]] * modl[i] )
+        else:
+            vec.append(np.zeros(shape=(300,)))
+    return np.array(vec)
+def get_distance(vec1,vec2):
+    # vec1 = np.array(#number_of_words_title1 * 300), each row is a vector of length 300 corresponds to each word in give title
+    # vec2 = np.array(#number_of_words_title2 * 300), each row is a vector of length 300 corresponds to each word in give title
+    final_dist = []
+    for i in vec1:
+        dist = []
+        for j in vec2:
+            dist.append(np.linalg.norm(i-j))
+        final_dist.append(np.array(dist))
+            
+    return np.array(final_dist)
+
+def results_Word2Vec(sentence1,sentence2,url,doc_id1,doc_id2,model_name,idf_title_vectorizer,idf_title_features):
+    # sentence1 : title1, input product
+    # sentence2 : title2, recommended product
+    # model:  'avg'
+
+    sentence_vec1 = get_word_vec(sentence1,doc_id1,model_name,idf_title_vectorizer,idf_title_features)
+    sentence_vec2 = get_word_vec(sentence2,doc_id2,model_name,idf_title_vectorizer,idf_title_features)
+    
+    #sent1_sent2_dist = eucledian distance between i and j
+    #sent1_sent2_dist = np array with dimensions(#number of words in title1 * #number of words in title2)
+    sent1_sent2_dist = get_distance(sentence_vec1,sentence_vec2)
+    
+    # divide whole figure into 2 parts 1st part displays heatmap 2nd part displays image of products
+    
+    gs = gridspec.GridSpec(1,2,width_ratios=[4,1])
+    fg = plt.figure(figsize=(15,15))
+    
+    ax = plt.subplot(gs[0])
+    ax = sns.heatmap(np.round(sent1_sent2_dist,3), annot = True)
+    ax.set_xticklabels(sentence2.split())
+    # set the y axis labels as input product title
+    ax.set_yticklabels(sentence1.split())
+    # set title as recommended product title
+    ax.set_title(sentence2)
+    
+    #setting the fontsize and rotation of x tick tables
+    ax.set_xticklabels(ax.get_xmajorticklabels(), fontsize = 12,rotation=90)
+    ax.set_yticklabels(ax.get_ymajorticklabels(), fontsize = 12,rotation=45)
+    
+    fg = plt.subplot(gs[1])
+    fg.set_xticks([])
+    fg.set_yticks([])
+    fig = display_img(url)
+    
+    #display combine figure
+    plt.show()   
+
+#define additional functions needed for IDF vectorization
+def containing(word, df):
+    #returns the number of documents which have the word
+    return sum(1 for sentence in df['title'] if word in sentence.split())
+
+def idf(word, df):
+    #return the idf value for a word
+    return math.log(df.shape[0]/(containing(word,df))) 
+
+#define additional functions needed for avg and weighted Word2Vec vectorization
+#Function for Word2Vec vectorization
+#perform Word2Vec vectorization in advance to use the vectorized array directly in distance based similarity recommendation
+#as performing Word2Vec vectorization each time is computationally intensive compared to Bag of words and idf based vectorization.
+
+def avg_word_vec(sentence,no_features,id_=0,model_name='avg',idf_title_vectorizer=0,idf_title_features=0):
+    
+    # sentence: title of the apparel
+    # num_features: the lenght of word2vec vector, its values = 300
+    # model_name: model information
+    # if  model_name == 'avg', add the value model[i], w2v representation of word i
+    # if mode_name ='weighted' add the value idf_title_features[doc_id,idf_title_vectorizer[word]] * model[word]
+    # idf_title_vectorizer : 0 for 'avg' and idf vectorized array for 'weighted'  
+    # idf_title_features : 0 for 'avg' and idf vectorized array for 'weighted'
+    
+    featureVec = np.zeros(shape=(300,), dtype="float32")
+    # initialize a vector of size 300 with all zeros
+    # add each word2vec(wordi) to this fetureVec
+
+    ncount = 0
+    for word in sentence.split():
+        ncount += 1
+        if word in vocab:
+            if model_name == 'avg':
+                featureVec = np.add(featureVec,modl[word])
+            elif model_name == 'weighted' and word in idf_title_vectorizer.vocabulary_:
+                featureVec = np.add(featureVec, modl[word] * idf_title_features[id_,idf_title_vectorizer.vocabulary_[word]])
+        if (ncount>0):
+            featureVec = np.divide(featureVec,ncount)
+
+    #return avg vec
+    return featureVec  
+
+def Vectorization(data,model):
+  #data : Data set containing text data
+  #model : method used for text vectorization
+
+  if model == 'bag_of_words':
+      #Vectorization using Bag of words
+      title_vectorizer = CountVectorizer()
+      title_features = title_vectorizer.fit_transform(data['title'])   
+      return title_features,title_vectorizer
+
+  elif model == 'Tfidf':
+      #Vectorization using tfidfVectorizer
+      tfidf_title_vectorizer = TfidfVectorizer()
+      tfidf_title_features = tfidf_title_vectorizer.fit_transform(data['title'])
+      return tfidf_title_features,tfidf_title_vectorizer
+  
+  elif model == 'idf':
+      #Vectorization using idf function
+      idf_title_vectorizer = CountVectorizer()
+      idf_title_features = idf_title_vectorizer.fit_transform(data['title'])
+      
+      #converting all the values into float
+      idf_title_features = idf_title_features.astype(np.float)
+
+      #assigning df value for idf[value] function
+      df = data.copy()
+
+      for i in idf_title_vectorizer.vocabulary_.keys():
+          idf_value = idf(i,df)
+          #j is the index of the nonzero values
+          for j in idf_title_features[:,idf_title_vectorizer.vocabulary_[i]].nonzero()[0]:
+              idf_title_features[j,idf_title_vectorizer.vocabulary_[i]] = idf_value
+  
+      scipy.sparse.save_npz('idf_title_features.npz', idf_title_features)
+
+      return idf_title_features,idf_title_vectorizer
+  
+  elif model == 'avg':
+      w2vec_title_features = []
+      #building vector for each title 
+      for i in data['title']:
+          w2vec_title_features.append(avg_word_vec(i,300))
+
+      #w2v_title_features = np.array(# number of doc/rows in courpus * 300) 
+      Word2Vec_features = np.array(w2vec_title_features)
+
+      #saving dataframe in a npz file
+      np.savez_compressed("Word2Vec_aveg.npz",Word2Vec_features)
+      
+      return Word2Vec_features
+  
+  elif model == 'weighted':
+      #Load the saved idf vectorized sparse array .npz
+      #title_features= Vectorization(data,'idf')
+      idf_title_features = scipy.sparse.load_npz('idf_title_features.npz') #OR we can Vectorize using the code above
+
+      #to get the words in columns implement count vectorizers
+      idf_title_vectorizer = CountVectorizer()
+      vectorizer = idf_title_vectorizer.fit_transform(data['title'])
+
+      id_ = 0 
+      w2vec_title_weight = []
+
+      #building vector for each title
+      for i in data['title']:
+          w2vec_title_weight.append(avg_word_vec(i,300,id_,'weighted',idf_title_vectorizer = idf_title_vectorizer ,idf_title_features = idf_title_features))
+          id_ += 1
+
+      #w2v_title_weight = np.array(# number of doc/rows in courpus * 300) 
+      w2vec_title_weight = np.array(w2vec_title_weight)
+
+      #saving dataframe in a npz file
+      np.savez_compressed("Word2Vec_weighted.npz",w2vec_title_weight)
+
+      return w2vec_title_weight
+
+_, _ = Vectorization(data, model='idf')
+
+%%time
+_ = Vectorization(data, model='avg')
+
+%%time
+_ = Vectorization(data, model='weighted')
+
+def distance_similarity(doc_id, data, model, cut_off):
+  #data : data contaning text for vectorization 
+  #model : method used for text vectorization
+  #Cut_off : the number of recommendations we give out
+  #df :  data set used to retrieve orignal movie description and genre
+  
+  if model == 'bag_of_words':  
+      title_features,title_vectorizer = Vectorization(data,model)
+
+      #doc_id is id on the new index formed after CountVectorizer is applied to the data['title']
+      #pairwise distances saves the distance between given input product and all other products
+      pairwise_dist = pairwise_distances(title_features,title_features[doc_id],metric = 'cosine')
+
+      #np.argsort returns indices of the smallest distances
+      indices = np.argsort(pairwise_dist.flatten())[:cut_off]
+
+      #get the index id of product in the original dataframe
+      data_indices = list(data.index[indices])
+      
+      for i in range(0,len(data_indices)):
+          visualization(indices[i], data['title'].loc[data_indices[0]], data['title'].loc[data_indices[i]], data['medium_image_url'].loc[data_indices[i]], 'bag_of_words',tfidf_title_vectorizer = 0,tfidf_title_features = 0, idf_title_vectorizer = 0,idf_title_features = 0)
+          print('The amazon ID of the apparel is {}'.format(data['asin'].loc[data_indices[i]]))
+
+  elif model == 'Tfidf':
+      #storing array after vectorization
+      tfidf_title_features,tfidf_title_vectorizer = Vectorization(data,model)
+
+      #doc_id is the id in the new index formed after CountVectorizer is applied to the data['title']
+      #pairwise distance saves the distance between given input product and all other products
+      pairwise_dist = pairwise_distances(tfidf_title_features,tfidf_title_features[doc_id],metric = 'cosine')
+
+      #np.argsort returns indices of the smallest distances
+      indices = np.argsort(pairwise_dist.flatten())[:cut_off]
+
+      #get the index id of product in the original dataframe
+      data_indices = list(data.index[indices])
+
+      for i in range(0,len(data_indices)):
+          visualization(indices[i], data['title'].loc[data_indices[0]], data['title'].loc[data_indices[i]], data['medium_image_url'].loc[data_indices[i]], 'Tfidf',tfidf_title_vectorizer,tfidf_title_features ,idf_title_vectorizer=0,idf_title_features=0)
+          print('The amazon ID of the apparel is {}'.format(data['asin'].loc[data_indices[i]]))
+          
+  elif model == 'idf':
+      #do not use vectorizer as it is computationally expensive to vectorize everytime
+      #Load the saved vectorized sparse array .npz
+      #title_features= Vectorization(data,'idf')
+      idf_title_features = scipy.sparse.load_npz('idf_title_features.npz') #OR we can Vectorize using the code above
+      
+      idf_title_features = idf_title_features.toarray()
+      
+      #to get the words in columns implement count vectorizers
+      idf_title_vectorizer = CountVectorizer()
+      vectorizer = idf_title_vectorizer.fit_transform(data['title'])
+
+      #doc_id is the id in the new index formed after CountVectorizer is applied to the data['title']
+      #pairwise distance will save the distance between given input product and all other products
+      pairwise_dist = pairwise_distances(idf_title_features,idf_title_features[doc_id].reshape(1,-1),metric = 'cosine')
+
+      #np.argsort will return indices of the smallest distances
+      indices = np.argsort(pairwise_dist.flatten())[:cut_off]
+
+      #get the index id of product in the original dataframe
+      data_indices = list(data.index[indices])
+
+      for i in range(0,len(data_indices)):
+          visualization(indices[i], data['title'].loc[data_indices[0]], data['title'].loc[data_indices[i]], data['medium_image_url'].loc[data_indices[i]], 'idf', tfidf_title_vectorizer=0, tfidf_title_features=0, idf_title_vectorizer = idf_title_vectorizer, idf_title_features = idf_title_features)
+          print('The amazon ID of the apparel is {}'.format(data['asin'].loc[data_indices[i]]))
+  
+  elif model == 'avg':
+      #Word2Vec_features = Vectorization(data['title'],'avg')
+      #do not use vectorizer as it is computationally expensive to vectorize everytime 
+      #Load the stored vectorized array .npz
+      Word2Vec_features = np.load("Word2Vec_aveg.npz")
+                
+      #uncompresing npz to numpy array array
+      Word2Vec_features  = Word2Vec_features['arr_0']
+
+      #doc_id is the id of the product in the new index formed after CountVectorizer is applied to the data['title']
+      #pairwise distance will save the distance between given input product and all other products
+      pairwise_dist = pairwise_distances(Word2Vec_features,Word2Vec_features[doc_id].reshape(1,-1))
+
+      #np.argsort will return indices of the smallest distances
+      indices = np.argsort(pairwise_dist.flatten())[:cut_off]
+
+      #get the index id of product in the original dataframe
+      data_indices = list(data.index[indices])
+
+      for i in range(0,len(data_indices)):
+          results_Word2Vec(data['title'].loc[data_indices[0]], data['title'].loc[data_indices[i]], data['medium_image_url'].loc[data_indices[i]], indices[0], indices[i],'avg',idf_title_vectorizer = 0,idf_title_features = 0)
+          print('The amazon ID of the apparel is {}'.format(data['asin'].loc[data_indices[i]]))
+                
+  elif model == 'weighted':
+      #do not use vectorizer as it is computationally expensive to vectorize everytime
+      #Load the saved vectorized sparse array .npz
+      #title_features= Vectorization(data,'weighted')
+      idf_title_features = scipy.sparse.load_npz('idf_title_features.npz') #OR we can Vectorize using the code above
+      
+  
+      #to get the words in columns CountVectorizer
+      idf_title_vectorizer = CountVectorizer()
+      vectorizer = idf_title_vectorizer.fit_transform(data['title'])
+
+      #Word2Vec_features = Vectorization(data['title'],'avg')
+      #do not use vectorizer as it is computationally expensive to vectorize everytime 
+      #Load the stored vectorized array .npz
+      Word2Vec_features = np.load("Word2Vec_weighted.npz") #OR we can Vectorize using the code above
+
+      #uncompresing npz to numpy array array
+      Word2Vec_feature  = Word2Vec_features['arr_0']
+
+      #doc_id is the id in the new index formed after CountVectorizer is applied to the data['title']
+      #pairwise distance will save the distance between given input product and all other products
+      pairwise_dist = pairwise_distances( Word2Vec_feature, Word2Vec_feature[doc_id].reshape(1,-1))
+
+      #np.argsort will return indices of the smallest distances
+      indices = np.argsort(pairwise_dist.flatten())[:cut_off]
+
+      #get the index of the original dataframe
+      data_indices = list(data.index[indices])
+
+      for i in range(0,len(data_indices)):
+          results_Word2Vec(data['title'].loc[data_indices[0]], data['title'].loc[data_indices[i]], data['medium_image_url'].loc[data_indices[i]], indices[0], indices[i],'weighted',idf_title_vectorizer,idf_title_features)
+          print('The amazon ID of the apparel is {}'.format(data['asin'].loc[data_indices[i]]))
+
+data.head()
+
+#doc_id, vectorization method = bag_of_words, dataset for modelling = data , cut_off = no. of recommendations
+distance_similarity(17, data, 'bag_of_words', 4)
+
+distance_similarity(17, data, 'Tfidf', 4)
+
+distance_similarity(17, data, 'idf', 4)
+
+distance_similarity(17, data, 'avg', 4)
+
+distance_similarity(17, data, 'weighted', 4)

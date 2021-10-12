@@ -1,0 +1,620 @@
+import torch
+
+x = torch.tensor([[1,2,3],[4,5,6]])
+y = torch.tensor([[7,8,9],[10,11,12]])
+z = x + y
+
+print(z)
+
+print(z.size())
+
+', '.join(dir(z))
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+x = torch.tensor([[1,2,3],[4,5,6]],
+                 device=device)
+y = torch.tensor([[7,8,9],[10,11,12]],
+                 device=device)
+z = x + y
+
+print(z)
+
+print(z.size())
+
+print(z.device)
+
+import numpy 
+
+# Created from pre-existing arrays
+w = torch.tensor([1,2,3]) # <1>
+w = torch.tensor((1,2,3)) # <2>
+w = torch.tensor(numpy.array([1,2,3])) # <3>
+
+# Initialized by size
+w = torch.empty(100,200) # <4>
+w = torch.zeros(100,200) # <5>
+w = torch.ones(100,200)  # <6>
+
+# Initialized by size with random values
+w = torch.rand(100,200)     # <7>
+w = torch.randn(100,200)    # <8>
+w = torch.randint(5,10,(100,200))  # <9> 
+
+# Initialized with specified data type or device
+w = torch.empty((100,200), dtype=torch.float64, 
+                device="cpu")
+
+# Initialized to have same size, data type, 
+#   and device as another tensor
+x = torch.empty_like(w)
+
+x = torch.tensor([[1,2,3],[4,5,6]])
+
+print(torch.empty_like(x))
+print(torch.empty_like(x))
+print(torch.zeros_like(x))
+print(torch.ones_like(x))
+
+print(torch.full_like(x, fill_value=5))
+
+# Specify data type at creation using dtype
+w = torch.tensor([1,2,3], dtype=torch.float32)
+
+# Use casting method to cast to a new data type
+w.int()       # w remains a float32 after cast
+w = w.int()   # w changes to int32 after cast
+
+# Use to() method to cast to a new type
+w = w.to(torch.float64) # <1>
+w = w.to(dtype=torch.float64) # <2>
+
+# Python automatically converts data types during operations
+x = torch.tensor([1,2,3], dtype=torch.int32)
+y = torch.tensor([1,2,3], dtype=torch.float32)
+z = x + y # <3>
+print(z.dtype)
+
+x = torch.tensor([[1,2],[3,4],[5,6],[7,8]])
+x
+
+# Indexing, returns a tensor
+print(x[1,1])
+
+# Indexing, returns a value as a Python number
+print(x[1,1].item())
+
+# Slicing
+print(x[:2,1])
+
+# Boolean indexing
+# Only keep elements less than 5
+print(x[x<5])
+
+# Transpose array; x.t() or x.T can be used
+print(x.t())
+
+# Change shape; usually view() is preferred over
+# reshape()
+print(x.view((2,4)))
+
+# Combining tensors
+y = torch.stack((x, x))
+print(y)
+
+x
+
+# Splitting tensors
+a,b = x.unbind(dim=1)
+print(a,b)
+
+# Splitting tensors
+a,b,c,d = x.unbind(dim=0)
+print(a,b,c,d)
+
+x = torch.tensor([[1,2,3],[4,5,6]], 
+         dtype=torch.float, requires_grad=True)
+print(x)
+
+f = x.pow(2).sum()
+print(f)
+
+f.backward()
+print(x.grad) # df/dx = 2x
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+#Some helper functions for plotting and drawing lines
+
+def plot_points(X, y):
+    admitted = X[np.argwhere(y==1)]
+    rejected = X[np.argwhere(y==0)]
+    plt.scatter([s[0][0] for s in rejected], [s[0][1] for s in rejected], s = 25, color = 'blue', edgecolor = 'k')
+    plt.scatter([s[0][0] for s in admitted], [s[0][1] for s in admitted], s = 25, color = 'red', edgecolor = 'k')
+
+def display(m, b, color='g--'):
+    plt.xlim(-0.05,1.05)
+    plt.ylim(-0.05,1.05)
+    x = np.arange(-10, 10, 0.1)
+    plt.plot(x, m*x+b, color)
+
+data = pd.read_csv('https://raw.githubusercontent.com/udacity/deep-learning-v2-pytorch/master/intro-neural-networks/gradient-descent/data.csv', header=None)
+X = np.array(data[[0,1]])
+y = np.array(data[2])
+plot_points(X,y)
+plt.show()
+
+# Activation (sigmoid) function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Output (prediction) formula
+def output_formula(features, weights, bias):
+    return sigmoid(np.dot(features, weights) + bias)
+
+# Error (log-loss) formula
+def error_formula(y, output):
+    return - y*np.log(output) - (1 - y) * np.log(1-output)
+
+# Gradient descent step
+def update_weights(x, y, weights, bias, learnrate):
+    output = output_formula(x, weights, bias)
+    d_error = y - output
+    weights += learnrate * d_error * x
+    bias += learnrate * d_error
+    return weights, bias
+
+np.random.seed(44)
+
+epochs = 100
+learnrate = 0.01
+
+def train(features, targets, epochs, learnrate, graph_lines=False):
+    
+    errors = []
+    n_records, n_features = features.shape
+    last_loss = None
+    weights = np.random.normal(scale=1 / n_features**.5, size=n_features)
+    bias = 0
+    for e in range(epochs):
+        del_w = np.zeros(weights.shape)
+        for x, y in zip(features, targets):
+            weights, bias = update_weights(x, y, weights, bias, learnrate)
+        
+        # Printing out the log-loss error on the training set
+        out = output_formula(features, weights, bias)
+        loss = np.mean(error_formula(targets, out))
+        errors.append(loss)
+        if e % (epochs / 10) == 0:
+            print("\n========== Epoch", e,"==========")
+            if last_loss and last_loss < loss:
+                print("Train loss: ", loss, "  WARNING - Loss Increasing")
+            else:
+                print("Train loss: ", loss)
+            last_loss = loss
+            
+            # Converting the output (float) to boolean as it is a binary classification
+            # e.g. 0.95 --> True (= 1), 0.31 --> False (= 0)
+            predictions = out > 0.5
+            
+            accuracy = np.mean(predictions == targets)
+            print("Accuracy: ", accuracy)
+        if graph_lines and e % (epochs / 100) == 0:
+            display(-weights[0]/weights[1], -bias/weights[1])
+            
+
+    # Plotting the solution boundary
+    plt.title("Solution boundary")
+    display(-weights[0]/weights[1], -bias/weights[1], 'black')
+
+    # Plotting the data
+    plot_points(features, targets)
+    plt.show()
+
+    # Plotting the error
+    plt.title("Error Plot")
+    plt.xlabel('Number of epochs')
+    plt.ylabel('Error')
+    plt.plot(errors)
+    plt.show()
+
+train(X, y, epochs, learnrate, True)
+
+# Importing pandas and numpy
+import pandas as pd
+import numpy as np
+
+# Reading the csv file into a pandas DataFrame
+data = pd.read_csv('https://raw.githubusercontent.com/udacity/deep-learning-v2-pytorch/master/intro-neural-networks/student-admissions/student_data.csv')
+
+# Printing out the first 10 rows of our data
+data.head()
+
+# %matplotlib inline
+import matplotlib.pyplot as plt
+
+# Function to help us plot
+def plot_points(data):
+    X = np.array(data[["gre","gpa"]])
+    y = np.array(data["admit"])
+    admitted = X[np.argwhere(y==1)]
+    rejected = X[np.argwhere(y==0)]
+    plt.scatter([s[0][0] for s in rejected], [s[0][1] for s in rejected], s = 25, color = 'red', edgecolor = 'k')
+    plt.scatter([s[0][0] for s in admitted], [s[0][1] for s in admitted], s = 25, color = 'cyan', edgecolor = 'k')
+    plt.xlabel('Test (GRE)')
+    plt.ylabel('Grades (GPA)')
+    
+# Plotting the points
+plot_points(data)
+plt.show()
+
+# Separating the ranks
+data_rank1 = data[data["rank"]==1]
+data_rank2 = data[data["rank"]==2]
+data_rank3 = data[data["rank"]==3]
+data_rank4 = data[data["rank"]==4]
+
+# Plotting the graphs
+plot_points(data_rank1)
+plt.title("Rank 1")
+plt.show()
+plot_points(data_rank2)
+plt.title("Rank 2")
+plt.show()
+plot_points(data_rank3)
+plt.title("Rank 3")
+plt.show()
+plot_points(data_rank4)
+plt.title("Rank 4")
+plt.show()
+
+# Make dummy variables for rank
+one_hot_data = pd.concat([data, pd.get_dummies(data['rank'], prefix='rank')], axis=1)
+
+# Drop the previous rank column
+one_hot_data = one_hot_data.drop('rank', axis=1)
+
+# Print the first 10 rows of our data
+one_hot_data[:10]
+
+# Copying our data
+processed_data = one_hot_data[:]
+
+# Scaling the columns
+processed_data['gre'] = processed_data['gre']/800
+processed_data['gpa'] = processed_data['gpa']/4.0
+processed_data[:10]
+
+sample = np.random.choice(processed_data.index, size=int(len(processed_data)*0.9), replace=False)
+train_data, test_data = processed_data.iloc[sample], processed_data.drop(sample)
+
+print("Number of training samples is", len(train_data))
+print("Number of testing samples is", len(test_data))
+print(train_data[:10])
+print(test_data[:10])
+
+features = train_data.drop('admit', axis=1)
+targets = train_data['admit']
+features_test = test_data.drop('admit', axis=1)
+targets_test = test_data['admit']
+
+print(features[:10])
+print(targets[:10])
+
+# Activation (sigmoid) function
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def sigmoid_prime(x):
+    return sigmoid(x) * (1-sigmoid(x))
+    
+def error_formula(y, output):
+    return - y*np.log(output) - (1 - y) * np.log(1-output)
+
+def error_term_formula(x, y, output):
+#    for binary cross entropy loss
+    return (y - output)*x
+#    for mean square error
+#    return (y - output)*sigmoid_prime(x)*x
+
+# Neural Network hyperparameters
+epochs = 1000
+learnrate = 0.0001
+
+# Training function
+def train_nn(features, targets, epochs, learnrate):
+    
+    # Use to same seed to make debugging easier
+    np.random.seed(42)
+
+    n_records, n_features = features.shape
+    last_loss = None
+
+    # Initialize weights
+    weights = np.random.normal(scale=1 / n_features**.5, size=n_features)
+
+    for e in range(epochs):
+        del_w = np.zeros(weights.shape)
+        for x, y in zip(features.values, targets):
+            # Loop through all records, x is the input, y is the target
+
+            # Activation of the output unit
+            #   Notice we multiply the inputs and the weights here 
+            #   rather than storing h as a separate variable 
+            output = sigmoid(np.dot(x, weights))
+
+            # The error term
+            error_term = error_term_formula(x, y, output)
+
+            # The gradient descent step, the error times the gradient times the inputs
+            del_w += error_term
+
+        # Update the weights here. The learning rate times the 
+        # change in weights
+        # don't have to divide by n_records since it is compensated by the learning rate
+        weights += learnrate * del_w #/ n_records  
+
+        # Printing out the mean square error on the training set
+        if e % (epochs / 10) == 0:
+            out = sigmoid(np.dot(features, weights))
+            loss = np.mean(error_formula(targets, out))
+            print("Epoch:", e)
+            if last_loss and last_loss < loss:
+                print("Train loss: ", loss, "  WARNING - Loss Increasing")
+            else:
+                print("Train loss: ", loss)
+            last_loss = loss
+            print("=========")
+    print("Finished training!")
+    return weights
+    
+weights = train_nn(features, targets, epochs, learnrate)
+
+# Calculate accuracy on test data
+test_out = sigmoid(np.dot(features_test, weights))
+predictions = test_out > 0.5
+accuracy = np.mean(predictions == targets_test)
+print("Prediction accuracy: {:.3f}".format(accuracy))
+
+import torch
+import torchvision
+
+from torchvision.datasets import CIFAR10
+
+train_data = CIFAR10(root="./train/",
+                    train=True, 
+                    download=True)
+
+print(train_data)
+print(len(train_data))
+print(train_data.data.shape)
+print(len(train_data.targets))
+print(train_data.classes)
+print(train_data.class_to_idx)
+print(type(train_data[0]))
+print(len(train_data[0]))
+
+data, label = train_data[0]
+print(type(data))
+print(data)
+print(type(label))
+print(label)
+print(train_data.classes[label])
+
+test_data = CIFAR10(root="./test/", 
+                    train=False, 
+                    download=True)
+
+print(test_data)
+print(len(test_data))
+print(test_data.data.shape)
+
+from torchvision import transforms
+
+train_transforms = transforms.Compose([
+  transforms.RandomCrop(32, padding=4),
+  transforms.RandomHorizontalFlip(),
+  transforms.ToTensor(),
+  transforms.Normalize(
+      (0.4914, 0.4822, 0.4465),
+      (0.2023, 0.1994, 0.2010))])
+
+train_data = CIFAR10(root="./train/",
+                    train=True, 
+                    download=True,
+                    transform=train_transforms)
+
+print(train_data)
+print(train_data.transforms)
+
+data, label = train_data[0]
+print(type(data))
+print(data.size())
+print(data)
+
+test_transforms = transforms.Compose([
+  transforms.ToTensor(),
+  transforms.Normalize(
+      (0.4914, 0.4822, 0.4465),
+      (0.2023, 0.1994, 0.2010))])
+
+test_data = torchvision.datasets.CIFAR10(
+      root="./test/", 
+      train=False, 
+      transform=test_transforms)
+
+print(test_data)
+
+trainloader = torch.utils.data.DataLoader(
+                    train_data,
+                    batch_size=16,
+                    shuffle=True)
+
+testloader = torch.utils.data.DataLoader(
+                    test_data,
+                    batch_size=16,
+                    shuffle=False)
+
+data_batch, labels_batch = next(iter(trainloader))
+
+print(data_batch.size())
+print(labels_batch.size())
+
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SimpleNet(nn.Module):
+
+    def __init__(self):
+        super(SimpleNet, self).__init__()
+        self.fc1 = nn.Linear(2048, 256)
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64,2)
+
+    def forward(self, x):
+        x = x.view(-1, 2048)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.softmax(self.fc3(x),dim=1)
+        return x
+
+simplenet = SimpleNet()
+print(simplenet)
+
+from torch import nn
+import torch.nn.functional as F
+
+class LeNet5(nn.Module):
+    def __init__(self):
+        super(LeNet5, self).__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5) # <1>
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
+        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        x = x.view(-1, int(x.nelement() / x.shape[0]))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = LeNet5().to(device=device)
+
+from torch import optim
+from torch import nn
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(),
+                      lr=0.001, 
+                      momentum=0.9)
+
+N_EPOCHS = 10 
+for epoch in range(N_EPOCHS): # <1>
+
+    epoch_loss = 0.0
+    for inputs, labels in trainloader:
+        inputs = inputs.to(device) # <2>
+        labels = labels.to(device)
+
+        optimizer.zero_grad() # <3>
+
+        outputs = model(inputs) # <4>
+        loss = criterion(outputs, labels) # <5>
+        loss.backward() # <6>
+        optimizer.step() # <7>
+
+        epoch_loss += loss.item() # <8>
+    print("Epoch: {} Loss: {}".format(epoch, 
+                  epoch_loss/len(trainloader)))
+
+from torch.utils.data import random_split
+
+train_set, val_set = random_split(
+                      train_data,
+                      [40000, 10000])
+
+trainloader = torch.utils.data.DataLoader(
+                    train_set,
+                    batch_size=16,
+                    shuffle=True)
+
+valloader = torch.utils.data.DataLoader(
+                    val_set,
+                    batch_size=16,
+                    shuffle=True)
+
+print(len(trainloader))
+print(len(valloader))
+
+from torch import optim
+from torch import nn
+
+model = LeNet5().to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), 
+                      lr=0.001, 
+                      momentum=0.9)
+
+N_EPOCHS = 10
+for epoch in range(N_EPOCHS):
+
+    # Training 
+    train_loss = 0.0
+    model.train() # <1>
+    for inputs, labels in trainloader:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+
+        optimizer.zero_grad()
+
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        train_loss += loss.item()
+
+    # Validation
+    val_loss = 0.0
+    model.eval() # <2>
+    for inputs, labels in valloader:
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+
+        val_loss += loss.item()
+
+    print("Epoch: {} Train Loss: {} Val Loss: {}".format(
+                  epoch, 
+                  train_loss/len(trainloader), 
+                  val_loss/len(valloader)))
+
+num_correct = 0.0
+
+for x_test_batch, y_test_batch in testloader:
+  model.eval()
+  y_test_batch = y_test_batch.to(device)
+  x_test_batch = x_test_batch.to(device)
+  y_pred_batch = model(x_test_batch)
+  _, predicted = torch.max(y_pred_batch, 1)
+  num_correct += (predicted == y_test_batch).float().sum()
+  
+accuracy = num_correct/(len(testloader)*testloader.batch_size) 
+
+print(len(testloader), testloader.batch_size)
+
+print("Test Accuracy: {}".format(accuracy))
+
+torch.save(model.state_dict(), "./lenet5_model.pt")
+
+model = LeNet5().to(device)
+model.load_state_dict(torch.load("./lenet5_model.pt"))

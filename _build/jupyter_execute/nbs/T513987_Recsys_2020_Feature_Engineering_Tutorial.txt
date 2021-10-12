@@ -1,0 +1,992 @@
+!pip install -q -U kaggle
+!pip install --upgrade --force-reinstall --no-deps kaggle
+!mkdir ~/.kaggle
+!cp /content/drive/MyDrive/kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+
+!kaggle datasets download -d mkechinov/ecommerce-behavior-data-from-multi-category-store
+
+!gdown --id 1qZIwMbMgMmgDC5EoMdJ8aI9lQPsWA3-P
+!gdown --id 1x5ohrrZNhWQN4Q-zww0RmXOwctKHH9PT
+!gdown --id 1-Rov9fFtGJqb7_ePc6qH-Rhzxn0cIcKB
+!gdown --id 1zr_RXpGvOWN2PrWI6itWL8HnRsCpyqz8
+!gdown --id 1g5WoIgLe05UMdREbxAjh0bEFgVCjA1UL
+
+import os
+import gc
+import glob
+import pandas as pd
+
+!unzip /content/ecommerce-behavior-data-from-multi-category-store.zip
+!rm /content/ecommerce-behavior-data-from-multi-category-store.zip
+
+list_gz_files = glob.glob('/content/*.gz')
+list_gz_files
+
+for file in list_gz_files:
+  print(file)
+  !gunzip $file
+
+snapshot = pd.read_csv("/content/2019-Oct.csv").sample(1000)
+snapshot.head()
+
+!mkdir -p /content/data/tmp
+snapshot.to_csv('/content/data/tmp/snapshot.csv', index=False)
+
+gc.collect()
+
+import os
+import gc
+import glob
+import pandas as pd
+from pathlib import Path
+
+file = '/content/data/tmp/snapshot.csv'
+
+df_tmp = pd.read_csv(file)
+df_tmp['session_purchase'] =  df_tmp['user_session'] + '_' + df_tmp['product_id'].astype(str)
+df_purchase = df_tmp[df_tmp['event_type']=='purchase']
+df_cart = df_tmp[df_tmp['event_type']=='cart']
+df_purchase = df_purchase[df_purchase['session_purchase'].isin(df_cart['session_purchase'])]
+df_cart = df_cart[~(df_cart['session_purchase'].isin(df_purchase['session_purchase']))]
+df_cart['target'] = 0
+df_purchase['target'] = 1
+df = pd.concat([df_cart, df_purchase])
+df = df.drop('category_id', axis=1)
+df = df.drop('session_purchase', axis=1)
+df.head()
+
+df[['cat_0', 'cat_1', 'cat_2']] = df['category_code'].str.split("\.", n = 3, expand = True).fillna('NA')
+# df[['cat_0', 'cat_1', 'cat_2', 'cat_3']] = df['category_code'].str.split("\.", n = 3, expand = True).fillna('NA')
+df['brand'] = df['brand'].fillna('NA')
+df = df.drop('category_code', axis=1)
+df['timestamp'] = pd.to_datetime(df['event_time'].str.replace(' UTC', ''))
+df['ts_hour'] = df['timestamp'].dt.hour
+df['ts_minute'] = df['timestamp'].dt.minute
+df['ts_weekday'] = df['timestamp'].dt.weekday
+df['ts_day'] = df['timestamp'].dt.day
+df['ts_month'] = df['timestamp'].dt.month
+df['ts_year'] = df['timestamp'].dt.year
+df.head()
+
+list_files = glob.glob('/content/*.csv')
+list_files
+
+def process_files(df_tmp, chunkname):
+    df_tmp['session_purchase'] =  df_tmp['user_session'] + '_' + df_tmp['product_id'].astype(str)
+    df_purchase = df_tmp[df_tmp['event_type']=='purchase']
+    df_cart = df_tmp[df_tmp['event_type']=='cart']
+    df_purchase = df_purchase[df_purchase['session_purchase'].isin(df_cart['session_purchase'])]
+    df_cart = df_cart[~(df_cart['session_purchase'].isin(df_purchase['session_purchase']))]
+    df_cart['target'] = 0
+    df_purchase['target'] = 1
+    df = pd.concat([df_cart, df_purchase])
+    df = df.drop('category_id', axis=1)
+    df = df.drop('session_purchase', axis=1)
+    # df[['cat_0', 'cat_1', 'cat_2', 'cat_3']] = df['category_code'].str.split("\.", n = 3, expand = True).fillna('NA')
+    df['brand'] = df['brand'].fillna('NA')
+    # df = df.drop('category_code', axis=1)
+    df['timestamp'] = pd.to_datetime(df['event_time'].str.replace(' UTC', ''))
+    df['ts_hour'] = df['timestamp'].dt.hour
+    df['ts_minute'] = df['timestamp'].dt.minute
+    df['ts_weekday'] = df['timestamp'].dt.weekday
+    df['ts_day'] = df['timestamp'].dt.day
+    df['ts_month'] = df['timestamp'].dt.month
+    df['ts_year'] = df['timestamp'].dt.year
+    df.to_csv(chunkname, index=False)
+
+base_path_silver = "/content/data/silver"
+!mkdir -p $base_path_silver
+
+for idx, chunk in enumerate(list_files[:2]):
+  chunkname = os.path.join(base_path_silver, Path(chunk).stem + '-' + str(idx) + '.csv')
+  print(chunkname)
+
+chunksize = 10 ** 6
+
+for file in list_files:
+    print(file)
+    for idx, chunk in enumerate(pd.read_csv(file, chunksize=chunksize)):
+      chunkname = os.path.join(base_path_silver, Path(file).stem + '-' + str(idx) + '.csv')
+      print(chunkname)
+      if not os.path.exists(chunkname):
+        process_files(chunk, chunkname)
+
+for file in list_files:
+  !rm $file
+
+list_chunks = glob.glob(os.path.join(base_path_silver,'*.csv'))
+list_chunks[:10]
+
+!cd $base_path_silver && zip /content/data_silver.zip ./*.csv
+
+!cp data_silver.zip /content/drive/MyDrive/Recommendation
+
+lp = []
+for file in list_chunks:
+  lp.append(pd.read_csv(file))
+
+df = pd.concat(lp)
+df.shape
+
+df.head()
+
+# df2 = df['category_code'].str.split("\.", n=3, expand=True).fillna('NA')
+# df2.columns = ['cat_{}'.format(x+1) for x in df2.columns]
+# df2.to_parquet('/content/data/silver_l2/df_cat.parquet', index=False)
+
+df_test = df[df['ts_month']==4]
+df_valid = df[df['ts_month']==3]
+df_train = df[(df['ts_month']!=3)&(df['ts_month']!=4)]
+
+df_train.shape, df_valid.shape, df_test.shape
+
+!mkdir -p /content/data/silver_l2
+df_train.to_parquet('/content/data/silver_l2/train.parquet', index=False)
+df_valid.to_parquet('/content/data/silver_l2/valid.parquet', index=False)
+df_test.to_parquet('/content/data/silver_l2/test.parquet', index=False)
+
+!cd /content/data/silver_l2 && zip /content/data_silver_l2.zip ./*.parquet
+!cp /content/data_silver_l2.zip /content/drive/MyDrive/Recommendation
+
+import pandas as pd
+
+df_train = pd.read_parquet('/content/data/silver_l2/train.parquet')
+df_valid = pd.read_parquet('/content/data/silver_l2/valid.parquet')
+df_test = pd.read_parquet('/content/data/silver_l2/test.parquet')
+
+df = pd.concat([df_train, df_valid, df_test],ignore_index=True)
+
+df.shape
+
+import IPython
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+import warnings
+warnings.filterwarnings("ignore")
+
+%matplotlib inline
+
+df.dtypes
+
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+df.target.mean()
+
+df['event_type'].value_counts(normalize=True)
+
+print('# of datapoints:' + str(df.shape))
+print('# of unique users:' + str(df['user_id'].drop_duplicates().shape))
+print('# of unique products:' + str(df['product_id'].drop_duplicates().shape))
+print('# of unique sessions:' + str(df['user_session'].drop_duplicates().shape))
+
+def plot_sparse(df, col):
+    stats = df[[col, 'target']].groupby(col).agg(['count', 'mean', 'sum'])
+    stats = stats.reset_index()
+    stats.columns = [col, 'count', 'mean', 'sum']
+    stats_sort = stats['count'].value_counts().reset_index()
+    stats_sort = stats_sort.sort_values('index')
+    plt.figure(figsize=(15,4))
+    plt.bar(stats_sort['index'].astype(str).values[0:20], stats_sort['count'].values[0:20])
+    plt.title('Frequency of ' + str(col))
+    plt.xlabel('Number frequency')
+    plt.ylabel('Frequency')
+
+plot_sparse(df, 'product_id')
+
+plot_sparse(df, 'user_id')
+
+plot_sparse(df, 'brand')
+
+def plot_top20(df, col):
+    stats = df[[col, 'target']].groupby(col).agg(['count', 'mean', 'sum'])
+    stats = stats.reset_index()
+    stats.columns = [col, 'count', 'mean', 'sum']
+    stats = stats.sort_values('count', ascending=False)
+    fig, ax1 = plt.subplots(figsize=(15,4))
+    ax2 = ax1.twinx()
+    ax1.bar(stats[col].astype(str).values[0:20], stats['count'].values[0:20])
+    ax1.set_xticklabels(stats[col].astype(str).values[0:20], rotation='vertical')
+    ax2.plot(stats['mean'].values[0:20], color='red')
+    ax2.set_ylim(0,1)
+    ax2.set_ylabel('Mean Target')
+    ax1.set_ylabel('Frequency')
+    ax1.set_xlabel(col)
+    ax1.set_title('Top20 ' + col + 's based on frequency')
+
+plot_top20(df, 'product_id')
+
+plot_top20(df, 'user_id')
+
+plot_top20(df, 'brand')
+
+df['date'] = pd.to_datetime(df['timestamp']).dt.date
+
+plt.figure(figsize=(15,4))
+plt.plot(df[['date', 'target']].groupby('date').target.mean())
+plt.ylabel('average mean')
+plt.xlabel('date')
+plt.xticks(df[['date', 'target']].groupby('date').target.mean().index[::3], rotation='vertical')
+print('')
+
+df[['date', 'target']].groupby('date').target.mean().sort_values().head(20)
+
+# Check Python Version
+!python --version
+
+# Check Ubuntu Version
+!lsb_release -a
+
+# Check CUDA/cuDNN Version
+!nvcc -V && which nvcc
+
+# Check GPU
+!nvidia-smi
+
+# This get the RAPIDS-Colab install files and test check your GPU.  Run this and the next cell only.
+# Please read the output of this cell.  If your Colab Instance is not RAPIDS compatible, it will warn you and give you remediation steps.
+!git clone https://github.com/rapidsai/rapidsai-csp-utils.git
+!python rapidsai-csp-utils/colab/env-check.py
+
+# This will update the Colab environment and restart the kernel.  Don't run the next cell until you see the session crash.
+!bash rapidsai-csp-utils/colab/update_gcc.sh
+import os
+os._exit(00)
+
+# This will install CondaColab.  This will restart your kernel one last time.  Run this cell by itself and only run the next cell once you see the session crash.
+import condacolab
+condacolab.install()
+
+# you can now run the rest of the cells as normal
+import condacolab
+condacolab.check()
+
+# Installing RAPIDS is now 'python rapidsai-csp-utils/colab/install_rapids.py <release> <packages>'
+# The <release> options are 'stable' and 'nightly'.  Leaving it blank or adding any other words will default to stable.
+# The <packages> option are default blank or 'core'.  By default, we install RAPIDSAI and BlazingSQL.  The 'core' option will install only RAPIDSAI and not include BlazingSQL, 
+!python rapidsai-csp-utils/colab/install_rapids.py stable
+
+import IPython
+
+import pandas as pd
+import cudf
+import numpy as np
+import cupy
+import matplotlib.pyplot as plt
+
+!cp /content/drive/MyDrive/Recommendation/data_silver_l2.zip /content
+!unzip /content/data_silver_l2.zip
+
+df_train = cudf.read_parquet('/content/train.parquet')
+df_valid = cudf.read_parquet('/content/valid.parquet')
+df_test = cudf.read_parquet('/content/test.parquet')
+
+df_train.isna().sum()
+
+_temp = df_train['category_code'].str.split(".", n=3, expand=True).fillna('NA')
+_temp.columns = ['cat_{}'.format(x) for x in _temp.columns]
+df_train.drop('category_code', axis=1, inplace=True)
+df_train = df_train.join(_temp)
+
+_temp = df_valid['category_code'].str.split(".", n=3, expand=True).fillna('NA')
+_temp.columns = ['cat_{}'.format(x) for x in _temp.columns]
+df_valid.drop('category_code', axis=1, inplace=True)
+df_valid = df_valid.join(_temp)
+
+_temp = df_test['category_code'].str.split(".", n=3, expand=True).fillna('NA')
+_temp.columns = ['cat_{}'.format(x) for x in _temp.columns]
+df_test.drop('category_code', axis=1, inplace=True)
+df_test = df_test.join(_temp)
+
+df_train.head()
+
+cols = ['brand', 'user_session', 'cat_0', 'cat_1', 'cat_2', 'cat_3']
+
+for col in cols:
+    df_train['NA_' + col] = df_train[col].isna().astype(np.int8)
+    df_train[col].fillna('UNKNOWN', inplace=True)
+
+df_train.isna().sum()
+
+np.random.seed(42)
+df_train.loc[np.random.random(df_train.shape[0])<0.01, 'price'] = None
+df_train['price'].isna().mean()
+
+df_median = df_train[['cat_2', 'price']].groupby('cat_2').median().reset_index()
+df_median.columns = ['cat_2', 'price_median_per_cat2']
+df_train = df_train.merge(df_median, how='left', on='cat_2')
+
+df_train['NA_price'] = df_train[col].isna().astype(np.int8)
+df_train.loc[df_train['price'].isna(), 'price'] = df_train.loc[df_train['price'].isna(), 'price_median_per_cat2']
+df_train.drop('price_median_per_cat2', axis=1, inplace=True)
+df_train.head(5)
+
+df_train['price'].isna().mean()
+
+f1 = [0]*45 + [1]*45 + [2]*10 + [0]*5 + [1]*5 + [2]*90 + [0]*5 + [1]*5 + [2]*90 + [0]*45 + [1]*45 + [2]*10
+f2 = [0]*45 + [0]*45 + [0]*10 + [1]*5 + [1]*5 + [1]*90 + [0]*5 + [0]*5 + [0]*90 + [1]*45 + [1]*45 + [1]*10
+t = [1]*45 + [1]*45 + [1]*10 + [1]*5 + [1]*5 + [1]*90 + [0]*5 + [0]*5 + [0]*90 + [0]*45 + [0]*45 + [0]*10
+
+data = cudf.DataFrame({
+    'f1': f1,
+    'f2': f2,
+})
+
+for i in range(3,5):
+    data['f' + str(i)] = np.random.choice(list(range(3)), data.shape[0])
+
+data['target'] = t
+
+data.head()
+
+data.groupby('f1').target.agg(['mean', 'count'])
+
+data.groupby('f2').target.agg(['mean', 'count'])
+
+data.groupby(['f1', 'f2']).target.agg(['mean', 'count'])
+
+df = data.to_pandas()
+
+import pydotplus
+import sklearn.tree as tree
+from IPython.display import Image
+
+def get_hotn_features(df):
+    out = []
+    for col in df.columns:
+        if col != 'target':
+            out.append(pd.get_dummies(df[col], prefix=col))
+    return(pd.concat(out, axis=1))
+
+def viz_tree(df, lf):
+    dt_feature_names = list(get_hotn_features(df).columns)
+    dt_target_names = 'target'
+    tree.export_graphviz(lf, out_file='tree.dot', 
+                         feature_names=dt_feature_names, class_names=dt_target_names,
+                         filled=True)  
+    graph = pydotplus.graph_from_dot_file('tree.dot')
+    return(graph.create_png())
+
+lf = tree.DecisionTreeClassifier(max_depth=2)
+lf.fit(get_hotn_features(df), df[['target']])
+Image(viz_tree(df, lf))
+
+df['f1_f2'] = df['f1'].astype(str) + df['f2'].astype(str)
+
+lf.fit(get_hotn_features(df), df[['target']])
+Image(viz_tree(df, lf))
+
+df.groupby([x for x in df.columns if 'target' not in x and 'f1_f2' not in x]).target.agg(['mean', 'count']).head(10)
+
+# Example of getting the cardinality for categories:
+df.astype(str).describe()
+
+def explore_cat(df, cats):
+    df_agg = df_train[cats + ['target']].groupby(cats).agg(['mean', 'count']).reset_index()
+    df_agg.columns = cats + ['mean', 'count']
+    print(df_agg.sort_values('count', ascending=False).head(20))
+    
+cats = ['product_id', 'user_id']  
+explore_cat(df_train, cats)
+
+cats = ['ts_weekday', 'ts_hour']  
+explore_cat(df_train, cats)
+
+cats = ['cat_2', 'brand']  
+explore_cat(df_train, cats)
+
+df_train['product_id'].unique()
+
+# Using factorize creates continous integers from a categorical feature
+codes, uniques = df_train['product_id'].factorize()
+codes
+
+uniques
+
+import hashlib
+from sys import getsizeof
+
+hashlib.md5(b'0').hexdigest()
+
+hashSeries = df_train['product_id'].to_pandas().apply(lambda x: hashlib.md5(bytes(str(x), encoding='utf-8')).hexdigest())
+hashSeries
+
+codes, uniques = hashSeries.factorize()
+
+print("product id column size is reduced from {} to {}. We need only {:.2f}% of the original DataSeries memory."\
+      .format(getsizeof(hashSeries), getsizeof(pd.DataFrame(codes)[0]),
+              getsizeof(hashSeries)/getsizeof(pd.DataFrame(codes)[0])))
+
+cat = 'product_id'
+
+freq = df_train[cat].value_counts()
+freq = freq.reset_index()
+freq.columns = [cat, 'count']
+freq = freq.reset_index()
+freq.columns = [cat + '_Categorify', cat, 'count']
+freq_filtered = freq[freq['count']>5]
+freq_filtered[cat + '_Categorify'] = freq_filtered[cat + '_Categorify']+1
+freq_filtered = freq_filtered.drop('count', axis=1)
+
+freq_filtered.head()
+
+freq_filtered.shape
+
+df_train = df_train.merge(freq_filtered, how='left', on=cat) #giving memory error
+df_train[cat + '_Categorify'] = df_train[cat + '_Categorify'].fillna(0)
+df_train['product_id_Categorify'].min(), df_train['product_id_Categorify'].max(), df_train['product_id_Categorify'].drop_duplicates().shape
+
+df_valid = df_valid.merge(freq_filtered, how='left', on=cat)
+df_valid[cat + '_Categorify'] = df_valid[cat + '_Categorify'].fillna(0)
+
+df_test = df_test.merge(freq_filtered, how='left', on=cat)
+df_test[cat + '_Categorify'] = df_test[cat + '_Categorify'].fillna(0)
+
+cat = 'brand'
+
+freq = df_train[cat].value_counts()
+freq = freq.reset_index()
+freq.columns = [cat, 'count']
+freq = freq.reset_index()
+freq.columns = [cat + '_Categorify', cat, 'count']
+freq[cat + '_Categorify'] = freq[cat + '_Categorify']+2
+freq.loc[freq['count']<20, cat + '_Categorify'] = 0
+
+freq = freq.drop('count', axis=1)
+
+# df_train = df_train.merge(freq, how='left', on=cat)
+# df_train[cat + '_Categorify'] = df_train[cat + '_Categorify'].fillna(1)
+
+df_valid = df_valid.merge(freq, how='left', on=cat)
+df_valid[cat + '_Categorify'] = df_valid[cat + '_Categorify'].fillna(1)
+
+df_test = df_test.merge(freq, how='left', on=cat)
+df_test[cat + '_Categorify'] = df_test[cat + '_Categorify'].fillna(1)
+
+df_test.head()
+
+df_test.describe()
+
+df_test.describe(include=['O'])
+
+df_train['brand'] = df_train['brand'].fillna('UNKNOWN')
+df_valid['brand'] = df_valid['brand'].fillna('UNKNOWN')
+df_test['brand'] = df_test['brand'].fillna('UNKNOWN')
+df_train['cat_2'] = df_train['cat_2'].fillna('UNKNOWN')
+df_valid['cat_2'] = df_valid['cat_2'].fillna('UNKNOWN')
+df_test['cat_2'] = df_test['cat_2'].fillna('UNKNOWN')
+
+cat = 'brand'
+
+te = df_train[[cat, 'target']].groupby(cat).mean()
+te
+
+te = te.reset_index()
+te.columns = [cat, 'TE_' + cat]
+
+
+
+# using small sample of 1 million records
+df_train.sample(1000000, random_state=42).merge(te, how='left', on=cat).head()
+
+te = df_train[['brand', 'cat_2', 'target']].groupby(['brand', 'cat_2']).mean()
+te
+
+te = te.reset_index()
+te.columns = ['brand', 'cat_2', 'TE_brand_cat_2']
+df_train.sample(1000000, random_state=42).merge(te, how='left', left_on=['brand', 'cat_2'], right_on=['brand', 'cat_2']).head()
+
+df_train[[cat, 'target']].groupby(cat).agg(['mean', 'count'])
+
+dd = df_train[[cat, 'target']].groupby(cat).agg(['mean', 'count']).reset_index()['target']['count']
+
+plt.bar(dd.groupby('count').count().index.to_array(), dd.groupby('count').count().to_array())
+plt.xlim(0,50)
+
+feat = ['brand', 'cat_2']
+w = 20
+
+mean_global = df_train.target.mean()
+te = df_train.groupby(feat)['target'].agg(['mean','count']).reset_index()
+te['TE_brand_cat_2'] = ((te['mean']*te['count'])+(mean_global*w))/(te['count']+w)
+
+df_train = df_train.sample(1e6, random_state=42).merge(te, on=feat, how='left')
+df_valid = df_valid.merge( te, on=feat, how='left' )
+df_test = df_test.merge( te, on=feat, how='left' )
+df_valid['TE_brand_cat_2'] = df_valid['TE_brand_cat_2'].fillna(mean_global)
+df_test['TE_brand_cat_2'] = df_test['TE_brand_cat_2'].fillna(mean_global)
+
+df_test.head()
+
+def target_encode(train, valid, col, target, kfold=5, smooth=20):
+    """
+        train:  train dataset
+        valid:  validation dataset
+        col:   column which will be encoded (in the example RESOURCE)
+        target: target column which will be used to calculate the statistic
+    """
+    
+    # We assume that the train dataset is shuffled
+    train['kfold'] = ((train.index) % kfold)
+    # We keep the original order as cudf merge will not preserve the original order
+    train['org_sorting'] = cupy.arange(len(train), dtype="int32")
+    # We create the output column, we fill with 0
+    col_name = '_'.join(col)
+    train['TE_' + col_name] = 0.
+    for i in range(kfold):
+        ###################################
+        # filter for out of fold
+        # calculate the mean/counts per group category
+        # calculate the global mean for the oof
+        # calculate the smoothed TE
+        # merge it to the original dataframe
+        ###################################
+        
+        df_tmp = train[train['kfold']!=i]
+        mn = df_tmp[target].mean()
+        df_tmp = df_tmp[col + [target]].groupby(col).agg(['mean', 'count']).reset_index()
+        df_tmp.columns = col + ['mean', 'count']
+        df_tmp['TE_tmp'] = ((df_tmp['mean']*df_tmp['count'])+(mn*smooth)) / (df_tmp['count']+smooth)
+        df_tmp_m = train[col + ['kfold', 'org_sorting', 'TE_' + col_name]].merge(df_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+        df_tmp_m.loc[df_tmp_m['kfold']==i, 'TE_' + col_name] = df_tmp_m.loc[df_tmp_m['kfold']==i, 'TE_tmp']
+        train['TE_' + col_name] = df_tmp_m['TE_' + col_name].fillna(mn).values
+
+    
+    ###################################
+    # calculate the mean/counts per group for the full training dataset
+    # calculate the global mean
+    # calculate the smoothed TE
+    # merge it to the original dataframe
+    # drop all temp columns
+    ###################################    
+    
+    df_tmp = train[col + [target]].groupby(col).agg(['mean', 'count']).reset_index()
+    mn = train[target].mean()
+    df_tmp.columns = col + ['mean', 'count']
+    df_tmp['TE_tmp'] = ((df_tmp['mean']*df_tmp['count'])+(mn*smooth)) / (df_tmp['count']+smooth)
+    valid['org_sorting'] = cupy.arange(len(valid), dtype="int32")
+    df_tmp_m = valid[col + ['org_sorting']].merge(df_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+    valid['TE_' + col_name] = df_tmp_m['TE_tmp'].fillna(mn).values
+    
+    valid = valid.drop('org_sorting', axis=1)
+    train = train.drop('kfold', axis=1)
+    train = train.drop('org_sorting', axis=1)
+    return(train, valid)
+
+col = 'user_id'
+
+df_train['org_sorting'] = cupy.arange(len(df_train), dtype="int32")
+    
+train_tmp = df_train[col].value_counts().reset_index()
+train_tmp.columns = [col,  'CE_' + col]
+df_tmp = df_train[[col, 'org_sorting']].merge(train_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+df_train['CE_' + col] = df_tmp['CE_' + col].fillna(0).values
+df_train = df_train.drop('org_sorting', axis=1)
+        
+df_valid['org_sorting'] = cupy.arange(len(df_valid), dtype="int32")
+df_tmp = df_valid[[col, 'org_sorting']].merge(train_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+df_valid['CE_' + col] = df_tmp['CE_' + col].fillna(0).values
+df_valid = df_valid.drop('org_sorting', axis=1)
+
+df_train.head()
+
+df_train[['ts_hour', 'target']].groupby('ts_hour').agg(['count', 'mean']).head(10)
+
+hour = list(range(0,24))
+hour_bin = [0]*4 + [1]*4 + [2]*7 + [3]*6 + [4]*3
+
+data = cudf.DataFrame({
+    'hour': hour,
+    'hour_bin': hour_bin,
+})
+
+data.head(10)
+
+df_train = df_train.merge(data, how='left', right_on='hour', left_on='ts_hour')
+
+df_train[['hour_bin', 'target']].groupby('hour_bin').agg(['count', 'mean'])
+
+plt.hist(df_train[df_train['cat_2']=='headphone'].price.to_pandas(), bins=50)
+plt.show()
+
+plt.hist(df_train[df_train['cat_1']=='smartphone'].price.to_pandas(), bins=50)
+plt.show()
+
+print('Headphones mean price: ' + str(df_train[df_train['cat_2']=='headphone'].price.mean()) + ' median price: ' + str(df_train[df_train['cat_2']=='headphone'].price.median()))
+print('Smartphones mean price: ' + str(df_train[df_train['cat_1']=='smartphone'].price.mean()) + ' median price: ' + str(df_train[df_train['cat_1']=='smartphone'].price.median()))
+
+df_train['cat_012'] = df_train['cat_0'].astype(str) + '_' + df_train['cat_1'].astype(str) + '_' + df_train['cat_2'].astype(str)
+q_list = [0.1, 0.25, 0.5, 0.75, 0.9]
+
+for q_value in q_list:
+    q = df_train[['cat_012', 'price']].groupby(['cat_012']).quantile(q_value)
+    q = q.reset_index()
+    q.columns = ['cat_012', 'price' + str(q_value)]
+    df_train = df_train.merge(q, how='left', on='cat_012')
+
+df_train['price_bin'] = -1
+
+for i, q_value in enumerate(q_list):
+    if i == 0:
+        df_train.loc[df_train['price']<=df_train['price' + str(q_value)], 'price_bin'] = i
+    else:
+        df_train.loc[(df_train['price']>df_train['price' + str(q_list[i-1])]) & (df_train['price']<=df_train['price' + str(q_value)]), 'price_bin'] = i
+        
+df_train.loc[df_train['price']>df_train['price' + str(q_value)], 'price_bin'] = i+1
+
+df_train[df_train['price_bin']==3][['price', 'price0.1', 'price0.25', 'price0.5', 'price0.75', 'price0.9', 'price_bin']].drop_duplicates()
+
+df_train = df_train.drop(['price' + str(x) for x in q_list], axis=1)
+
+df_train[['price_bin', 'target']].groupby('price_bin').agg(['count', 'mean'])
+
+df_train[['ts_weekday', 'target']].groupby('ts_weekday').agg(['count', 'mean'])
+
+weekday = list(range(0,7))
+weekday_bin = [0, 1, 1, 2, 2, 2, 0]
+
+data = cudf.DataFrame({
+    'weekday': weekday,
+    'weekday_bin': weekday_bin,
+})
+
+df_train = df_train.merge(data, how='left', right_on='weekday', left_on='ts_weekday')
+
+df_train[['weekday_bin', 'target']].groupby('weekday_bin').agg(['count', 'mean'])
+
+def target_encode(train, valid, col, target, kfold=5, smooth=20, gpu=True):
+    """
+        train:  train dataset
+        valid:  validation dataset
+        col:   column which will be encoded (in the example RESOURCE)
+        target: target column which will be used to calculate the statistic
+    """
+    
+    # We assume that the train dataset is shuffled
+    train['kfold'] = ((train.index) % kfold)
+    # We keep the original order as cudf merge will not preserve the original order
+    if gpu:
+        train['org_sorting'] = cupy.arange(len(train), dtype="int32")
+    else:
+        train['org_sorting'] = np.arange(len(train), dtype="int32")
+    # We create the output column, we fill with 0
+    col_name = '_'.join(col)
+    train['TE_' + col_name] = 0.
+    for i in range(kfold):
+        ###################################
+        # filter for out of fold
+        # calculate the mean/counts per group category
+        # calculate the global mean for the oof
+        # calculate the smoothed TE
+        # merge it to the original dataframe
+        ###################################
+        
+        df_tmp = train[train['kfold']!=i]
+        mn = df_tmp[target].mean()
+        df_tmp = df_tmp[col + [target]].groupby(col).agg(['mean', 'count']).reset_index()
+        df_tmp.columns = col + ['mean', 'count']
+        df_tmp['TE_tmp'] = ((df_tmp['mean']*df_tmp['count'])+(mn*smooth)) / (df_tmp['count']+smooth)
+        df_tmp_m = train[col + ['kfold', 'org_sorting', 'TE_' + col_name]].merge(df_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+        df_tmp_m.loc[df_tmp_m['kfold']==i, 'TE_' + col_name] = df_tmp_m.loc[df_tmp_m['kfold']==i, 'TE_tmp']
+        train['TE_' + col_name] = df_tmp_m['TE_' + col_name].fillna(mn).values
+
+    
+    ###################################
+    # calculate the mean/counts per group for the full training dataset
+    # calculate the global mean
+    # calculate the smoothed TE
+    # merge it to the original dataframe
+    # drop all temp columns
+    ###################################    
+    
+    df_tmp = train[col + [target]].groupby(col).agg(['mean', 'count']).reset_index()
+    mn = train[target].mean()
+    df_tmp.columns = col + ['mean', 'count']
+    df_tmp['TE_tmp'] = ((df_tmp['mean']*df_tmp['count'])+(mn*smooth)) / (df_tmp['count']+smooth)
+    if gpu:
+        valid['org_sorting'] = cupy.arange(len(valid), dtype="int32")
+    else:
+        valid['org_sorting'] = np.arange(len(valid), dtype="int32")
+    df_tmp_m = valid[col + ['org_sorting']].merge(df_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+    valid['TE_' + col_name] = df_tmp_m['TE_tmp'].fillna(mn).values
+    
+    valid = valid.drop('org_sorting', axis=1)
+    train = train.drop('kfold', axis=1)
+    train = train.drop('org_sorting', axis=1)
+    return(train, valid)
+
+cats = [['cat_0'], ['cat_1'], ['cat_2'], ['cat_0', 'cat_1', 'cat_2'], ['ts_hour'], ['ts_weekday'], ['ts_weekday', 'ts_hour', 'cat_2', 'brand']]
+
+for cat in cats:
+    df_train, df_valid = target_encode(df_train, df_valid, cat, 'target')
+
+def count_encode(train, valid, col, gpu=True):
+    """
+        train:  train dataset
+        valid:  validation dataset
+        col:    column which will be count encoded (in the example RESOURCE)
+    """
+    # We keep the original order as cudf merge will not preserve the original order
+    if gpu:
+        train['org_sorting'] = cupy.arange(len(train), dtype="int32")
+    else:
+        train['org_sorting'] = np.arange(len(train), dtype="int32")
+    
+    train_tmp = train[col].value_counts().reset_index()
+    train_tmp.columns = [col,  'CE_' + col]
+    df_tmp = train[[col, 'org_sorting']].merge(train_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+    train['CE_' + col] = df_tmp['CE_' + col].fillna(0).values
+        
+    if gpu:
+        valid['org_sorting'] = cupy.arange(len(valid), dtype="int32")
+    else:
+        valid['org_sorting'] = np.arange(len(valid), dtype="int32")
+    df_tmp = valid[[col, 'org_sorting']].merge(train_tmp, how='left', left_on=col, right_on=col).sort_values('org_sorting')
+    valid['CE_' + col] = df_tmp['CE_' + col].fillna(0).values
+    
+    valid = valid.drop('org_sorting', axis=1)
+    train = train.drop('org_sorting', axis=1)
+    return(train, valid)
+
+cats = ['brand', 'user_id', 'product_id', 'cat_0', 'cat_1', 'cat_2']
+
+for cat in cats:
+    df_train, df_valid = count_encode(df_train, df_valid, cat, gpu=True)
+
+df_train.head()
+
+df_train.columns
+
+cat = 'price'
+
+X = df_train[cat]
+X_norm = (X-X.mean())/X.std()
+
+X_log = np.log(X.to_pandas()+1)
+X_log_norm = (X_log-X_log.mean())/X_log.std()
+
+X_minmax = ((X-X.min())/(X.max()-X.min()))
+
+fig, axs = plt.subplots(1, 4, figsize=(16,3))
+axs[0].hist(X.sample(frac=0.01).to_pandas(), bins=50)
+axs[0].set_title('Histogram non-normalised')
+axs[1].hist(X_norm.sample(frac=0.01).to_pandas(), bins=50)
+axs[1].set_title('Histogram normalised')
+axs[2].hist(X_log_norm.sample(frac=0.01), bins=50)
+axs[2].set_title('Histogram log-normalised')
+axs[3].hist(X_minmax.sample(frac=0.01).to_pandas(), bins=50)
+axs[3].set_title('Histogram minmax')
+
+cat = 'TE_ts_weekday_ts_hour_cat_2_brand'
+
+X = df_train[cat]
+X_norm = (X-X.mean())/X.std()
+
+X_log = np.log(X.to_pandas()+1)
+X_log_norm = (X_log-X_log.mean())/X_log.std()
+
+X_minmax = ((X-X.min())/(X.max()-X.min()))
+
+fig, axs = plt.subplots(1, 4, figsize=(16,3))
+axs[0].hist(X.sample(frac=0.01).to_pandas(), bins=50)
+axs[0].set_title('Histogram non-normalised')
+axs[1].hist(X_norm.sample(frac=0.01).to_pandas(), bins=50)
+axs[1].set_title('Histogram normalised')
+axs[2].hist(X_log_norm.sample(frac=0.01), bins=50)
+axs[2].set_title('Histogram log-normalised')
+axs[3].hist(X_minmax.sample(frac=0.01).to_pandas(), bins=50)
+axs[3].set_title('Histogram minmax')
+
+cat = 'CE_cat_2'
+
+X = df_train[cat]
+X_norm = (X-X.mean())/X.std()
+
+X_log = np.log(X.to_pandas()+1)
+X_log_norm = (X_log-X_log.mean())/X_log.std()
+
+X_minmax = ((X-X.min())/(X.max()-X.min()))
+
+fig, axs = plt.subplots(1, 4, figsize=(16,3))
+axs[0].hist(X.sample(frac=0.01).to_pandas(), bins=50)
+axs[0].set_title('Histogram non-normalised')
+axs[1].hist(X_norm.sample(frac=0.01).to_pandas(), bins=50)
+axs[1].set_title('Histogram normalised')
+axs[2].hist(X_log_norm.sample(frac=0.01), bins=50)
+axs[2].set_title('Histogram log-normalised')
+axs[3].hist(X_minmax.sample(frac=0.01).to_pandas(), bins=50)
+axs[3].set_title('Histogram minmax')
+
+import cupy as cp
+from cupyx.scipy.special import erfinv
+import cudf as gd
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from scipy.special import erfinv as sp_erfinv
+
+def gaussrank_cpu(data, epsilon = 1e-6):
+    r_cpu = data.argsort().argsort()
+    r_cpu = (r_cpu/r_cpu.max()-0.5)*2 # scale to (-1,1)
+    r_cpu = np.clip(r_cpu,-1+epsilon,1-epsilon)
+    r_cpu = sp_erfinv(r_cpu)
+    return(r_cpu)
+
+def gaussrank_gpu(data, epsilon = 1e-6):
+    r_gpu = data.argsort().argsort()
+    r_gpu = (r_gpu/r_gpu.max()-0.5)*2 # scale to (-1,1)
+    r_gpu = cp.clip(r_gpu,-1+epsilon,1-epsilon)
+    r_gpu = erfinv(r_gpu)
+    return(r_gpu)
+
+fig, axs = plt.subplots(1, 2, figsize=(16,3))
+col = 'CE_product_id'
+data_sample = df_train[col].sample(frac=0.01)
+axs[0].hist(data_sample.to_pandas().values, bins=50)
+axs[1].hist(cp.asnumpy(gaussrank_gpu(df_train[col].values)), bins=50)
+axs[0].set_title('Histogram non-normalized')
+axs[1].set_title('Histogram Gauss Rank')
+
+fig, axs = plt.subplots(3, 2, figsize=(16,9))
+for i, col in enumerate(['price', 'TE_ts_weekday_ts_hour_cat_2_brand', 'CE_cat_2']):
+    data_sample = df_train[col].sample(frac=0.01)
+    axs[i, 0].hist(data_sample.to_pandas(), bins=50)
+    axs[i, 1].hist(cp.asnumpy(gaussrank_gpu(data_sample.values)), bins=50)
+    if i==0:
+        axs[i, 0].set_title('Histogram non-normalized')
+        axs[i, 1].set_title('Histogram Gauss Rank')
+
+itemid = [1000001]*10 + [1000002]*5 + [1000001]*5 + [1000002]*5 + [1000001]*1 + [1000002]*1 + [1000001]*2 + [1000002]*2
+itemid += [1000001]*3 + [1000002]*2 + [1000001]*1 + [1000002]*1 + [1000001]*6 + [1000002]*3 + [1000001]*2 + [1000002]*2
+userid = np.random.choice(list(range(10000)), len(itemid))
+action = np.random.choice(list(range(2)), len(itemid), p=[0.2, 0.8])
+timestamp = [pd.to_datetime('2020-01-01')]*15
+timestamp += [pd.to_datetime('2020-01-02')]*10
+timestamp += [pd.to_datetime('2020-01-03')]*2
+timestamp += [pd.to_datetime('2020-01-04')]*4
+timestamp += [pd.to_datetime('2020-01-05')]*5
+timestamp += [pd.to_datetime('2020-01-07')]*2
+timestamp += [pd.to_datetime('2020-01-08')]*9
+timestamp += [pd.to_datetime('2020-01-09')]*4
+
+data = pd.DataFrame({
+    'itemid': itemid,
+    'userid': userid,
+    'action': action,
+    'timestamp': timestamp
+})
+
+data = cudf.from_pandas(data)
+
+data[data['itemid']==1000001]
+
+data_window = data[['itemid', 'timestamp', 'action']].groupby(['itemid', 'timestamp']).agg(['count', 'sum']).reset_index()
+data_window.columns = ['itemid', 'timestamp', 'count', 'sum']
+data_window.index = data_window['timestamp']
+
+data_window
+
+offset = '3D'
+
+data_window_roll = data_window[['itemid', 'count', 'sum']].groupby(['itemid']).rolling(offset).sum().drop('itemid', axis=1)
+data_window_roll
+
+data_window_roll = data_window_roll.reset_index()
+data_window_roll.columns = ['itemid', 'timestamp', 'count_' + offset, 'sum_' + offset]
+data_window_roll[['count_' + offset, 'sum_' + offset]] = data_window_roll[['count_' + offset, 'sum_' + offset]].shift(1)
+data_window_roll.loc[data_window_roll['itemid']!=data_window_roll['itemid'].shift(1), ['count_' + offset, 'sum_' + offset]] = 0
+data_window_roll['avg_' + offset] = data_window_roll['sum_' + offset]/data_window_roll['count_' + offset]
+data_window_roll
+
+data = data.merge(data_window_roll, how='left', on=['itemid', 'timestamp'])
+data
+
+offset = '7D'
+
+data_window_roll = data_window[['itemid', 'count', 'sum']].groupby(['itemid']).rolling(offset).sum().drop('itemid', axis=1)
+data_window_roll = data_window_roll.reset_index()
+data_window_roll.columns = ['itemid', 'timestamp', 'count_' + offset, 'sum_' + offset]
+data_window_roll[['count_' + offset, 'sum_' + offset]] = data_window_roll[['count_' + offset, 'sum_' + offset]].shift(1)
+data_window_roll.loc[data_window_roll['itemid']!=data_window_roll['itemid'].shift(1), ['count_' + offset, 'sum_' + offset]] = 0
+data_window_roll['avg_' + offset] = data_window_roll['sum_' + offset]/data_window_roll['count_' + offset]
+data = data.merge(data_window_roll, how='left', on=['itemid', 'timestamp'])
+data
+
+# cuDF does not support date32, right now. We use pandas to transform the timestamp in only date values.
+df_train['date'] = cudf.from_pandas(pd.to_datetime(df_train['timestamp'].to_pandas()).dt.date)
+
+offset = '7D'
+
+data_window = df_train[['product_id', 'date', 'target']].groupby(['product_id', 'date']).agg(['count', 'sum']).reset_index()
+data_window.columns = ['product_id', 'date', 'count', 'sum']
+data_window.index = data_window['date']
+
+data_window_roll = data_window[['product_id', 'count', 'sum']].groupby(['product_id']).rolling(offset).sum().drop('product_id', axis=1)
+data_window_roll = data_window_roll.reset_index()
+data_window_roll.columns = ['product_id', 'date', 'count_' + offset, 'sum_' + offset]
+data_window_roll[['count_' + offset, 'sum_' + offset]] = data_window_roll[['count_' + offset, 'sum_' + offset]].shift(1)
+data_window_roll.loc[data_window_roll['product_id']!=data_window_roll['product_id'].shift(1), ['count_' + offset, 'sum_' + offset]] = 0
+data_window_roll['avg_' + offset] = data_window_roll['sum_' + offset]/data_window_roll['count_' + offset]
+data = df_train.merge(data_window_roll, how='left', on=['product_id', 'date'])
+data.head()
+
+itemid = [1000001]*10 + [1000002]*5 + [1000001]*5 + [1000002]*5 + [1000001]*1 + [1000002]*1 + [1000001]*2 + [1000002]*2
+itemid += [1000001]*3 + [1000002]*2 + [1000001]*1 + [1000002]*1 + [1000001]*6 + [1000002]*3 + [1000001]*2 + [1000002]*2
+userid = np.random.choice(list(range(10000)), len(itemid))
+action = np.random.choice(list(range(2)), len(itemid), p=[0.2, 0.8])
+
+price = [100.00]*10 + [25.00]*5 + [100.00]*5 + [30.00]*5 + [125.00]*1 + [30.00]*1 + [125.00]*2 + [30.00]*2
+price += [110.00]*3 + [30.00]*2 + [110.00]*1 + [20.00]*1 + [90.00]*6 + [20.00]*3 + [90.00]*2 + [20.00]*2
+
+timestamp = [pd.to_datetime('2020-01-01')]*15
+timestamp += [pd.to_datetime('2020-01-02')]*10
+timestamp += [pd.to_datetime('2020-01-03')]*2
+timestamp += [pd.to_datetime('2020-01-04')]*4
+timestamp += [pd.to_datetime('2020-01-05')]*5
+timestamp += [pd.to_datetime('2020-01-07')]*2
+timestamp += [pd.to_datetime('2020-01-08')]*9
+timestamp += [pd.to_datetime('2020-01-09')]*4
+
+data = pd.DataFrame({
+    'itemid': itemid,
+    'userid': userid,
+    'price': price,
+    'action': action,
+    'timestamp': timestamp
+})
+
+data = cudf.from_pandas(data)
+
+data[data['itemid']==1000001].head(10)
+
+offset = 1
+data_shift = data[['itemid', 'timestamp', 'price']].groupby(['itemid', 'timestamp']).mean().reset_index()
+data_shift.columns = ['itemid', 'timestamp', 'mean']
+data_shift['mean_' + str(offset)] = data_shift['mean'].shift(1)
+data_shift.loc[data_shift['itemid']!=data_shift['itemid'].shift(1), 'mean_' + str(offset)] = None
+data_shift['diff_' + str(offset)] = data_shift['mean'] - data_shift['mean_' + str(offset)]
+data_shift.head(10)
+
+data_shift.columns = ['itemid', 'timestamp', 'c1', 'c2', 'price_diff_1']
+data_shift.drop(['c1', 'c2'], inplace=True, axis=1)
+data_shift.head(10)
+
+data = data.merge(data_shift, how='left', on=['itemid', 'timestamp'])
+data.head()
+
+# cuDF does not support date32, right now. We use pandas to transform the timestamp in only date values.
+df_train['date'] = cudf.from_pandas(pd.to_datetime(df_train['timestamp'].to_pandas()).dt.date)
+
+offset = 1
+data_shift = df_train[['product_id', 'date', 'price']].groupby(['product_id', 'date']).mean().reset_index()
+data_shift.columns = ['product_id', 'date', 'mean']
+data_shift['mean_' + str(offset)] = data_shift['mean'].shift(1)
+data_shift.loc[data_shift['product_id']!=data_shift['product_id'].shift(1), 'mean_' + str(offset)] = None
+data_shift['diff_' + str(offset)] = data_shift['mean'] - data_shift['mean_' + str(offset)]
+data_shift.columns = ['product_id', 'date', 'c1', 'c2', 'price_diff_1']
+data_shift.drop(['c1', 'c2'], inplace=True, axis=1)
+df_train = df_train.merge(data_shift, how='left', on=['product_id', 'date'])
+df_train.head()

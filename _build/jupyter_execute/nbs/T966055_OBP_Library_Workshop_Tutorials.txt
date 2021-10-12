@@ -1,0 +1,1731 @@
+!pip install obp==0.5.1
+!pip install matplotlib==3.1.1
+
+from sklearn.linear_model import LogisticRegression
+
+import obp
+from obp.dataset import (
+    SyntheticBanditDataset,
+    logistic_reward_function,
+    linear_behavior_policy,
+)
+from obp.policy import IPWLearner
+from obp.ope import (
+    OffPolicyEvaluation, 
+    RegressionModel,
+    InverseProbabilityWeighting as IPS,
+    DirectMethod as DM,
+    DoublyRobust as DR,
+)
+
+# generate synthetic logged bandit data with 10 actions
+# we use `logistic function` as the reward function and `linear_behavior_policy` as the behavior policy.
+# one can define their own reward function and behavior policy such as nonlinear ones. 
+dataset = SyntheticBanditDataset(
+    n_actions=10, # number of actions; |A|
+    dim_context=5, # number of dimensions of context vector
+    reward_function=logistic_reward_function, # mean reward function; q(x,a)
+    behavior_policy_function=linear_behavior_policy, # behavior policy; \pi_b
+    random_state=12345,
+
+)
+training_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=10000)
+test_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=1000000)
+
+training_bandit_data
+
+ipw_learner = IPWLearner(
+    n_actions=dataset.n_actions, # number of actions; |A|
+    base_classifier=LogisticRegression(C=100, random_state=12345) # any sklearn classifier
+)
+
+# fit
+ipw_learner.fit(
+    context=training_bandit_data["context"], # context; x
+    action=training_bandit_data["action"], # action; a
+    reward=training_bandit_data["reward"], # reward; r
+    pscore=training_bandit_data["pscore"], # propensity score; pi_b(a|x)
+)
+
+# predict (action dist = action distribution)
+action_dist_ipw = ipw_learner.predict(
+    context=test_bandit_data["context"], # context in the test data
+)
+
+action_dist_ipw[:, :, 0] # which action to take for each context 
+
+policy_value_of_ipw = dataset.calc_ground_truth_policy_value(
+    expected_reward=test_bandit_data["expected_reward"], # expected rewards; q(x,a)
+    action_dist=action_dist_ipw, # action distribution of IPWLearner
+)
+
+# ground-truth policy value of `IPWLearner`
+policy_value_of_ipw
+
+# estimate the expected reward by using an ML model (Logistic Regression here)
+# the estimated rewards are used by model-dependent estimators such as DM and DR
+regression_model = RegressionModel(
+    n_actions=dataset.n_actions, # number of actions; |A|
+    base_model=LogisticRegression(C=100, random_state=12345) # any sklearn classifier
+)
+
+estimated_rewards = regression_model.fit_predict(
+    context=test_bandit_data["context"], # context; x
+    action=test_bandit_data["action"], # action; a
+    reward=test_bandit_data["reward"], # reward; r
+    random_state=12345,
+)
+
+estimated_rewards[:, :, 0] # \hat{q}(x,a)
+
+ope = OffPolicyEvaluation(
+    bandit_feedback=test_bandit_data, # test data
+    ope_estimators=[
+        IPS(estimator_name="IPS"), 
+        DM(estimator_name="DM"), 
+        DR(estimator_name="DR"),
+    ] # used estimators
+)
+
+estimated_policy_value = ope.estimate_policy_values(
+    action_dist=action_dist_ipw, # \pi_e(a|x)
+    estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}(x,a)
+)
+
+# OPE results given by the three estimators
+estimated_policy_value
+
+# estimate the policy value of IPWLearner with Logistic Regression
+estimated_policy_value_a, estimated_interval_a = ope.summarize_off_policy_estimates(
+    action_dist=action_dist_ipw,
+    estimated_rewards_by_reg_model=estimated_rewards
+)
+print(estimated_interval_a, '\n')
+
+# visualize policy values of IPWLearner with Logistic Regression estimated by the three OPE estimators
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist_ipw,
+    estimated_rewards_by_reg_model=estimated_rewards,
+    n_bootstrap_samples=1000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+squared_errors = ope.evaluate_performance_of_estimators(
+    ground_truth_policy_value=policy_value_of_ipw, # V(\pi_e)
+    action_dist=action_dist_ipw, # \pi_e(a|x)
+    estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}(x,a)
+    metric="se", # squared error
+)
+
+squared_errors # DR is the most accurate
+
+import time
+
+import numpy as np
+import pandas as pd
+from pandas import DataFrame
+from tqdm import tqdm
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+
+import obp
+from obp.dataset import (
+    SyntheticBanditDataset,
+    logistic_reward_function,
+    linear_behavior_policy
+)
+from obp.policy import IPWLearner
+from obp.ope import (
+    OffPolicyEvaluation, 
+    RegressionModel,
+    InverseProbabilityWeighting as IPS,
+    SelfNormalizedInverseProbabilityWeighting as SNIPS,
+    DirectMethod as DM,
+    DoublyRobust as DR,
+    DoublyRobustWithShrinkage as DRos,
+    DoublyRobustWithShrinkageTuning as DRosTuning,
+)
+from obp.utils import softmax
+
+import warnings
+warnings.simplefilter('ignore')
+
+### configurations
+num_runs = 200
+num_data_list = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+
+### define a dataset class
+dataset = SyntheticBanditDataset(
+    n_actions=10, 
+    dim_context=10,
+    tau=0.2, 
+    reward_function=logistic_reward_function,
+    behavior_policy_function=linear_behavior_policy,
+    random_state=12345,
+)
+#### training data is used to train an evaluation policy
+train_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=5000)
+#### test bandit data is used to approximate the ground-truth policy value
+test_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=100000)
+
+### evaluation policy training
+ipw_learner = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=RandomForestClassifier(random_state=12345),
+)
+ipw_learner.fit(
+    context=train_bandit_data["context"], 
+    action=train_bandit_data["action"], 
+    reward=train_bandit_data["reward"], 
+    pscore=train_bandit_data["pscore"], 
+)
+action_dist_ipw_test = ipw_learner.predict(
+    context=test_bandit_data["context"],
+)
+policy_value_of_ipw = dataset.calc_ground_truth_policy_value(
+    expected_reward=test_bandit_data["expected_reward"], 
+    action_dist=action_dist_ipw_test, 
+)
+
+### evaluation of OPE estimators
+se_df_list = []
+for num_data in num_data_list:
+    se_list = []
+    for _ in tqdm(range(num_runs), desc=f"num_data={num_data}..."):
+        ### generate validation data
+        validation_bandit_data = dataset.obtain_batch_bandit_feedback(
+            n_rounds=num_data
+        )
+
+        ### make decisions on vlidation data
+        action_dist_ipw_val = ipw_learner.predict(
+            context=validation_bandit_data["context"],
+        )
+
+        ### OPE using validation data
+        regression_model = RegressionModel(
+            n_actions=dataset.n_actions, 
+            base_model=LogisticRegression(C=100, max_iter=10000, random_state=12345),
+        )
+        estimated_rewards = regression_model.fit_predict(
+            context=validation_bandit_data["context"], # context; x
+            action=validation_bandit_data["action"], # action; a
+            reward=validation_bandit_data["reward"], # reward; r
+            n_folds=2, # 2-fold cross fitting
+            random_state=12345,
+        )
+        ope = OffPolicyEvaluation(
+            bandit_feedback=validation_bandit_data,
+            ope_estimators=[
+                IPS(estimator_name="IPS"), 
+                DM(estimator_name="DM"), 
+                IPS(lambda_=5, estimator_name="CIPS"), 
+                SNIPS(estimator_name="SNIPS"),
+                DR(estimator_name="DR"), 
+                DRos(lambda_=500, estimator_name="DRos"), 
+            ]
+        )
+        squared_errors = ope.evaluate_performance_of_estimators(
+            ground_truth_policy_value=policy_value_of_ipw, # V(\pi_e)
+            action_dist=action_dist_ipw_val, # \pi_e(a|x)
+            estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}(x,a)
+            metric="se", # squared error
+        )
+        se_list.append(squared_errors)
+    ### maximum importance weight in the validation data
+    #### a larger value indicates that the logging and evaluation policies are greatly different
+    max_iw = (action_dist_ipw_val[
+        np.arange(validation_bandit_data["n_rounds"]), 
+        validation_bandit_data["action"], 
+        0
+    ] / validation_bandit_data["pscore"]).max()
+    tqdm.write(f"maximum importance weight={np.round(max_iw, 5)}\n")
+
+    ### summarize results
+    se_df = DataFrame(DataFrame(se_list).stack())\
+        .reset_index(1).rename(columns={"level_1": "est", 0: "se"})
+    se_df["num_data"] = num_data
+    se_df_list.append(se_df)
+    tqdm.write("=====" * 15)
+    time.sleep(0.5)
+
+# aggregate all results 
+result_df = pd.concat(se_df_list).reset_index(level=0)
+
+# figure configs
+query = "(est == 'DM' or est == 'IPS') and num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query("(est == 'DM' or est == 'IPS') and num_data <= 12800"),
+)
+# title and legend
+ax.legend(["IPS", "DM"], loc="upper right", fontsize=25)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+# figure configs
+query = "(est == 'DM' or est == 'CIPS' or est == 'IPS' or est == 'SNIPS')" 
+query += "and num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS"], loc="upper right", fontsize=22)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+# figure configs
+query = "(est == 'DM' or est == 'IPS' or est == 'SNIPS' or est == 'CIPS' or est == 'DR')"
+query += "and num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR"], loc="upper right", fontsize=22)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(1e-4, 1)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+# figure configs
+query = "num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=4,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR", "DRos"], loc="upper right", fontsize=20)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(1e-4, 1)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+xlabels = [100, 6400, 25600, 51200]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df,
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR", "DRos"], loc="upper right", fontsize=20)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+### configurations
+num_runs = 200
+num_data_list = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+
+### define a dataset class
+dataset = SyntheticBanditDataset(
+    n_actions=10, 
+    dim_context=10,
+    tau=0.2, 
+    reward_function=logistic_reward_function,
+    behavior_policy_function=linear_behavior_policy,
+    random_state=12345,
+)
+#### training data is used to train an evaluation policy
+train_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=5000)
+#### test bandit data is used to approximate the ground-truth policy value
+test_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=100000)
+
+### evaluation policy training
+ipw_learner = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=LogisticRegression(C=100, max_iter=10000, random_state=12345)
+)
+ipw_learner.fit(
+    context=train_bandit_data["context"], 
+    action=train_bandit_data["action"], 
+    reward=train_bandit_data["reward"], 
+    pscore=train_bandit_data["pscore"], 
+)
+action_dist_ipw_test = ipw_learner.predict(
+    context=test_bandit_data["context"],
+)
+policy_value_of_ipw = dataset.calc_ground_truth_policy_value(
+    expected_reward=test_bandit_data["expected_reward"], 
+    action_dist=action_dist_ipw_test, 
+)
+
+### evaluation of OPE estimators
+se_df_list = []
+for num_data in num_data_list:
+    se_list = []
+    for _ in tqdm(range(num_runs), desc=f"num_data={num_data}..."):
+        ### generate validation data
+        validation_bandit_data = dataset.obtain_batch_bandit_feedback(
+            n_rounds=num_data
+        )
+
+        ### make decisions on vlidation data
+        action_dist_ipw_val = ipw_learner.predict(
+            context=validation_bandit_data["context"],
+        )
+
+        ### OPE using validation data
+        regression_model = RegressionModel(
+            n_actions=dataset.n_actions, 
+            base_model=LogisticRegression(C=100, max_iter=10000, random_state=12345),
+        )
+        estimated_rewards = regression_model.fit_predict(
+            context=validation_bandit_data["context"], # context; x
+            action=validation_bandit_data["action"], # action; a
+            reward=validation_bandit_data["reward"], # reward; r
+            n_folds=2, # 2-fold cross fitting
+            random_state=12345,
+        )
+        ope = OffPolicyEvaluation(
+            bandit_feedback=validation_bandit_data,
+            ope_estimators=[
+                IPS(estimator_name="IPS"), 
+                DM(estimator_name="DM"), 
+                IPS(lambda_=100, estimator_name="CIPS"), 
+                SNIPS(estimator_name="SNIPS"),
+                DR(estimator_name="DR"), 
+                DRos(lambda_=500, estimator_name="DRos"), 
+            ]
+        )
+        squared_errors = ope.evaluate_performance_of_estimators(
+            ground_truth_policy_value=policy_value_of_ipw, # V(\pi_e)
+            action_dist=action_dist_ipw_val, # \pi_e(a|x)
+            estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}(x,a)
+            metric="se", # squared error
+        )
+        se_list.append(squared_errors)
+    ### maximum importance weight in the validation data
+    #### a larger value indicates that the logging and evaluation policies are greatly different
+    max_iw = (action_dist_ipw_val[
+        np.arange(validation_bandit_data["n_rounds"]), 
+        validation_bandit_data["action"], 
+        0
+    ] / validation_bandit_data["pscore"]).max()
+    tqdm.write(f"maximum importance weight={np.round(max_iw, 5)}\n")
+
+    ### summarize results
+    se_df = DataFrame(DataFrame(se_list).stack())\
+        .reset_index(1).rename(columns={"level_1": "est", 0: "se"})
+    se_df["num_data"] = num_data
+    se_df_list.append(se_df)
+    tqdm.write("=====" * 15)
+    time.sleep(0.5)
+
+# aggregate all results 
+result_df = pd.concat(se_df_list).reset_index(level=0)
+
+# figure configs
+query = "(est == 'DM' or est == 'IPS' or est == 'SNIPS' or est == 'CIPS' or est == 'DR')"
+query += "and num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR"], loc="upper right", fontsize=22)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(1e-4, 1)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+query = "num_data <= 6400"
+xlabels = [100, 400, 1600, 6400]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR", "DRos"], loc="upper right", fontsize=20)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(1e-4, 1)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+xlabels = [100, 6400, 25600, 51200]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df,
+)
+# title and legend
+ax.legend(["IPS", "DM", "CIPS", "SNIPS", "DR", "DRos"], loc="upper right", fontsize=20)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.08, 0.5)
+# xaxis
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+### configurations
+num_runs = 100
+num_data_list = [100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200]
+
+### define a dataset class
+dataset = SyntheticBanditDataset(
+    n_actions=10, 
+    dim_context=10,
+    tau=0.2, 
+    reward_function=logistic_reward_function,
+    behavior_policy_function=linear_behavior_policy,
+    random_state=12345,
+)
+#### training data is used to train an evaluation policy
+train_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=5000)
+#### test bandit data is used to approximate the ground-truth policy value
+test_bandit_data = dataset.obtain_batch_bandit_feedback(n_rounds=100000)
+
+### evaluation policy training
+ipw_learner = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=LogisticRegression(C=100, max_iter=10000, random_state=12345)
+)
+ipw_learner.fit(
+    context=train_bandit_data["context"], 
+    action=train_bandit_data["action"], 
+    reward=train_bandit_data["reward"], 
+    pscore=train_bandit_data["pscore"], 
+)
+action_dist_ipw_test = ipw_learner.predict(
+    context=test_bandit_data["context"],
+)
+policy_value_of_ipw = dataset.calc_ground_truth_policy_value(
+    expected_reward=test_bandit_data["expected_reward"], 
+    action_dist=action_dist_ipw_test, 
+)
+
+### evaluation of OPE estimators
+se_df_list = []
+for num_data in num_data_list:
+    se_list = []
+    for _ in tqdm(range(num_runs), desc=f"num_data={num_data}..."):
+        ### generate validation data
+        validation_bandit_data = dataset.obtain_batch_bandit_feedback(
+            n_rounds=num_data
+        )
+
+        ### make decisions on vlidation data
+        action_dist_ipw_val = ipw_learner.predict(
+            context=validation_bandit_data["context"],
+        )
+
+        ### OPE using validation data
+        regression_model = RegressionModel(
+            n_actions=dataset.n_actions, 
+            base_model=LogisticRegression(C=100, max_iter=10000, random_state=12345)
+        )
+        estimated_rewards = regression_model.fit_predict(
+            context=validation_bandit_data["context"], # context; x
+            action=validation_bandit_data["action"], # action; a
+            reward=validation_bandit_data["reward"], # reward; r
+            n_folds=2, # 2-fold cross fitting
+            random_state=12345,
+        )
+        ope = OffPolicyEvaluation(
+            bandit_feedback=validation_bandit_data,
+            ope_estimators=[
+                DRos(lambda_=1, estimator_name="DRos (1)"), 
+                DRos(lambda_=100, estimator_name="DRos (100)"), 
+                DRos(lambda_=10000, estimator_name="DRos (10000)"),
+                DRosTuning(
+                    use_bias_upper_bound=False,
+                    lambdas=np.arange(1, 10002, 100).tolist(), 
+                    estimator_name="DRos (tuning)"
+                ), 
+            ]
+        )
+        squared_errors = ope.evaluate_performance_of_estimators(
+            ground_truth_policy_value=policy_value_of_ipw, # V(\pi_e)
+            action_dist=action_dist_ipw_val, # \pi_e(a|x)
+            estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}(x,a)
+            metric="se", # squared error
+        )
+        se_list.append(squared_errors)
+    ### maximum importance weight in the validation data
+    #### a larger value indicates that the logging and evaluation policies are greatly different
+    max_iw = (action_dist_ipw_val[
+        np.arange(validation_bandit_data["n_rounds"]), 
+        validation_bandit_data["action"], 
+        0
+    ] / validation_bandit_data["pscore"]).max()
+    tqdm.write(f"maximum importance weight={np.round(max_iw, 5)}\n")
+
+    ### summarize results
+    se_df = DataFrame(DataFrame(se_list).stack())\
+        .reset_index(1).rename(columns={"level_1": "est", 0: "se"})
+    se_df["num_data"] = num_data
+    se_df_list.append(se_df)
+    tqdm.write("=====" * 15)
+    time.sleep(0.5)
+
+# aggregate all results 
+result_df = pd.concat(se_df_list).reset_index(level=0)
+
+query = "est == 'DRos (1)' or est == 'DRos (100)' or est == 'DRos (10000)'"
+xlabels = [100, 6400, 25600, 51200]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df.query(query),
+)
+# title and legend
+ax.legend(
+    ["DRos (1)", "DRos (100)", "DRos (10000)"], 
+    loc="upper right", fontsize=25,
+)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(3e-4, 0.05)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.1, 0.5)
+# xaxis
+# ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+xlabels = [100, 6400, 25600, 51200]
+
+plt.style.use('ggplot')
+fig, ax = plt.subplots(figsize=(10, 7), tight_layout=True)
+sns.lineplot(
+    linewidth=5,
+    dashes=False,
+    legend=False,
+    x="num_data",
+    y="se",
+    hue="est",
+    ax=ax,
+    data=result_df,
+)
+# title and legend
+ax.legend(
+    ["DRos (1)", "DRos (100)", "DRos (10000)", "DRos (tuning)"], 
+    loc="upper right", fontsize=22,
+)
+# yaxis
+ax.set_yscale("log")
+ax.set_ylim(3e-4, 0.05)
+ax.set_ylabel("mean squared error (MSE)", fontsize=25)
+ax.tick_params(axis="y", labelsize=15)
+ax.yaxis.set_label_coords(-0.1, 0.5)
+# xaxis
+# ax.set_xscale("log")
+ax.set_xlabel("number of samples in the log data", fontsize=25)
+ax.set_xticks(xlabels)
+ax.set_xticklabels(xlabels, fontsize=15)
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+from sklearn.datasets import load_digits
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+
+import obp
+from obp.dataset import MultiClassToBanditReduction
+from obp.ope import (
+    OffPolicyEvaluation, 
+    RegressionModel,
+    InverseProbabilityWeighting as IPS,
+    DirectMethod as DM,
+    DoublyRobust as DR, 
+)
+
+# load raw digits data
+# `return_X_y` splits feature vectors and labels, instead of returning a Bunch object
+X, y = load_digits(return_X_y=True)
+
+# convert the raw classification data into a logged bandit dataset
+# we construct a behavior policy using Logistic Regression and parameter alpha_b
+# given a pair of a feature vector and a label (x, c), create a pair of a context vector and reward (x, r)
+# where r = 1 if the output of the behavior policy is equal to c and r = 0 otherwise
+# please refer to https://zr-obp.readthedocs.io/en/latest/_autosummary/obp.dataset.multiclass.html for the details
+dataset = MultiClassToBanditReduction(
+    X=X,
+    y=y,
+    base_classifier_b=LogisticRegression(max_iter=10000, random_state=12345),
+    alpha_b=0.8,
+    dataset_name="digits",
+)
+
+# split the original data into training and evaluation sets
+dataset.split_train_eval(eval_size=0.7, random_state=12345)
+
+# obtain logged bandit data generated by behavior policy
+bandit_data = dataset.obtain_batch_bandit_feedback(random_state=12345)
+
+# `bandit_data` is a dictionary storing logged bandit feedback
+bandit_data
+
+# obtain action choice probabilities by an evaluation policy
+# we construct an evaluation policy using Random Forest and parameter alpha_e
+action_dist = dataset.obtain_action_dist_by_eval_policy(
+    base_classifier_e=RandomForestClassifier(random_state=12345),
+    alpha_e=0.9,
+)
+
+# which action to take for each context (a probability distribution over actions)
+action_dist[:, :, 0]
+
+regression_model = RegressionModel(
+    n_actions=dataset.n_actions, # number of actions; |A|
+    base_model=LogisticRegression(C=100, max_iter=10000, random_state=12345), # any sklearn classifier
+)
+
+estimated_rewards = regression_model.fit_predict(
+    context=bandit_data["context"],
+    action=bandit_data["action"],
+    reward=bandit_data["reward"],
+    position=bandit_data["position"],
+    random_state=12345,
+)
+
+estimated_rewards[:, :, 0] # \hat{q}(x,a)
+
+ope = OffPolicyEvaluation(
+    bandit_feedback=bandit_data, # bandit data
+    ope_estimators=[
+        IPS(estimator_name="IPS"), 
+        DM(estimator_name="DM"), 
+        DR(estimator_name="DR"),
+    ] # used estimators
+)
+
+estimated_policy_value = ope.estimate_policy_values(
+    action_dist=action_dist, # \pi_e(a|x)
+    estimated_rewards_by_reg_model=estimated_rewards, # \hat{q}
+)
+
+# OPE results given by the three estimators
+estimated_policy_value
+
+# estimate the policy value of IPWLearner with Logistic Regression
+estimated_policy_value, estimated_interval = ope.summarize_off_policy_estimates(
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards
+)
+print(estimated_interval, '\n')
+
+# visualize policy values of the evaluation policy estimated by the three OPE estimators
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+# calculate the ground-truth performance of the evaluation policy
+true_policy_value = dataset.calc_ground_truth_policy_value(action_dist=action_dist)
+
+true_policy_value
+
+squared_errors = ope.evaluate_performance_of_estimators(
+    ground_truth_policy_value=true_policy_value,
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards,
+    metric="se", # squared error
+)
+
+squared_errors # DR is the most accurate 
+
+from sklearn.linear_model import LogisticRegression
+
+import obp
+from obp.dataset import OpenBanditDataset
+from obp.policy import BernoulliTS
+from obp.ope import (
+    OffPolicyEvaluation, 
+    RegressionModel,
+    DirectMethod,
+    InverseProbabilityWeighting,
+    DoublyRobust
+)
+
+# load and preprocess raw data in "All" campaign collected by the Random policy (behavior policy here)
+# When `data_path` is not given, this class downloads the small-sized version of the Open Bandit Dataset.
+dataset = OpenBanditDataset(behavior_policy='random', campaign='all')
+
+# obtain logged bandit feedback generated by behavior policy
+bandit_feedback = dataset.obtain_batch_bandit_feedback()
+
+# `bandit_feedback` is a dictionary storing logged bandit feedback
+bandit_feedback.keys()
+
+# name of the dataset is 'obd' (open bandit dataset)
+dataset.dataset_name
+
+# number of actions of the "All" campaign is 80
+dataset.n_actions
+
+# small sample example data has 10,000 samples (or rounds)
+dataset.n_rounds
+
+# default context (feature) engineering creates context vector with 20 dimensions
+dataset.dim_context
+
+# ZOZOTOWN recommendation interface has three positions
+# (please see https://github.com/st-tech/zr-obp/blob/master/images/recommended_fashion_items.png)
+dataset.len_list
+
+# define BernoulliTS as an evaluation policy
+evaluation_policy = BernoulliTS(
+    n_actions=dataset.n_actions, 
+    len_list=dataset.len_list, 
+    is_zozotown_prior=True, # replicate the BernoulliTS policy in the ZOZOTOWN production
+    campaign="all",
+    random_state=12345,
+)
+
+# compute the action choice probabilities of the evaluation policy using Monte Carlo simulation
+action_dist = evaluation_policy.compute_batch_action_dist(
+    n_sim=100000, n_rounds=bandit_feedback["n_rounds"],
+)
+
+# action_dist is an array of shape (n_rounds, n_actions, len_list) 
+# representing the distribution over actions by the evaluation policy
+action_dist
+
+# estimate the expected reward by using an ML model (Logistic Regression here)
+# the estimated rewards are used by model-dependent estimators such as DM and DR
+regression_model = RegressionModel(
+    n_actions=dataset.n_actions,
+    len_list=dataset.len_list,
+    action_context=dataset.action_context,
+    base_model=LogisticRegression(max_iter=1000, random_state=12345),
+)
+
+estimated_rewards_by_reg_model = regression_model.fit_predict(
+    context=bandit_feedback["context"],
+    action=bandit_feedback["action"],
+    reward=bandit_feedback["reward"],
+    position=bandit_feedback["position"],
+    pscore=bandit_feedback["pscore"],
+    n_folds=3, # use 3-fold cross-fitting
+    random_state=12345,
+)
+
+# estimate the policy value of BernoulliTS based on its action choice probabilities
+# it is possible to set multiple OPE estimators to the `ope_estimators` argument
+ope = OffPolicyEvaluation(
+    bandit_feedback=bandit_feedback,
+    ope_estimators=[InverseProbabilityWeighting(), DirectMethod(), DoublyRobust()]
+)
+
+# `summarize_off_policy_estimates` returns pandas dataframes including the OPE results
+estimated_policy_value, estimated_interval = ope.summarize_off_policy_estimates(
+    action_dist=action_dist, 
+    estimated_rewards_by_reg_model=estimated_rewards_by_reg_model,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure.
+    random_state=12345,
+)
+
+# the estimated policy value of the evaluation policy (the BernoulliTS policy)
+# relative_estimated_policy_value is the policy value of the evaluation policy 
+# relative to the ground-truth policy value of the behavior policy (the Random policy here)
+estimated_policy_value
+
+# confidence intervals of policy value of BernoulliTS estimated by OPE estimators
+# (`mean` values in this dataframe is also estimated via the non-parametric bootstrap procedure 
+# and is a bit different from the above values in `estimated_policy_value`)
+estimated_interval
+
+# visualize the policy values of BernoulliTS estimated by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards_by_reg_model,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+# by activating the `is_relative` option
+# we can visualize the estimated policy value of the evaluation policy
+# relative to the ground-truth policy value of the behavior policy
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards_by_reg_model,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    is_relative=True,
+    random_state=12345,
+)
+
+# we first calculate the ground-truth policy value of the evaluation policy
+# , which is estimated by averaging the factual (observed) rewards contained in the dataset (on-policy estimation)
+policy_value_bts = OpenBanditDataset.calc_on_policy_policy_value_estimate(
+    behavior_policy='bts', campaign='all'
+)
+
+# evaluate the estimation performance of OPE estimators 
+# `evaluate_performance_of_estimators` returns a dictionary containing estimation performance of given estimators 
+relative_ee = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=policy_value_bts,
+    action_dist=action_dist,
+    estimated_rewards_by_reg_model=estimated_rewards_by_reg_model,
+    metric="relative-ee", # "relative-ee" (relative estimation error) or "se" (squared error)
+)
+
+# estimation performances of the three estimators (lower means accurate)
+relative_ee
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+
+import obp
+from obp.dataset import OpenBanditDataset
+from obp.policy import IPWLearner, NNPolicyLearner
+from obp.ope import (
+    RegressionModel,
+    OffPolicyEvaluation,
+    SelfNormalizedInverseProbabilityWeighting as SNIPS,
+    DoublyRobust as DR,
+)
+
+# define OpenBanditDataset class to handle the real bandit data
+dataset = OpenBanditDataset(
+    behavior_policy="random", campaign="all"
+)
+
+# logged bandit data collected by the uniform random policy
+training_bandit_data, test_bandit_data = dataset.obtain_batch_bandit_feedback(
+    test_size=0.3, is_timeseries_split=True,
+)
+
+# ignore the position effect for a demo purpose
+training_bandit_data["position"] = None 
+test_bandit_data["position"] = None
+
+# number of actions
+dataset.n_actions
+
+# sample size
+dataset.n_rounds
+
+ipw_learner = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=RandomForestClassifier(
+        n_estimators=100, max_depth=5, min_samples_leaf=10, random_state=12345
+    ),
+)
+
+# fit
+ipw_learner.fit(
+    context=training_bandit_data["context"], # context; x
+    action=training_bandit_data["action"], # action; a
+    reward=training_bandit_data["reward"], # reward; r
+    pscore=training_bandit_data["pscore"], # propensity score; pi_b(a|x)
+)
+
+# predict (make new decisions)
+action_dist_ipw = ipw_learner.predict(
+    context=test_bandit_data["context"]
+)
+
+nn_learner = NNPolicyLearner(
+    n_actions=dataset.n_actions,
+    dim_context=dataset.dim_context,
+    solver="adam",
+    off_policy_objective="ipw", # = ips
+    batch_size=32, 
+    random_state=12345,
+)
+
+# fit
+nn_learner.fit(
+    context=training_bandit_data["context"], # context; x
+    action=training_bandit_data["action"], # action; a
+    reward=training_bandit_data["reward"], # reward; r
+    pscore=training_bandit_data["pscore"], # propensity score; pi_b(a|x)
+)
+
+# predict (make new decisions)
+action_dist_nn = nn_learner.predict(
+    context=test_bandit_data["context"]
+)
+
+regression_model = RegressionModel(
+    n_actions=dataset.n_actions, 
+    base_model=LogisticRegression(C=100, max_iter=500, random_state=12345),
+)
+
+estimated_rewards = regression_model.fit_predict(
+    context=test_bandit_data["context"], 
+    action=test_bandit_data["action"], 
+    reward=test_bandit_data["reward"], 
+    random_state=12345,
+)
+
+ope = OffPolicyEvaluation(
+    bandit_feedback=test_bandit_data,
+    ope_estimators=[
+        SNIPS(estimator_name="SNIPS"),
+        DR(estimator_name="DR"),
+    ]
+)
+
+ope.visualize_off_policy_estimates_of_multiple_policies(
+    policy_name_list=["IPWLearner", "NNPolicyLearner"],
+    action_dist_list=[action_dist_ipw, action_dist_nn],
+    estimated_rewards_by_reg_model=estimated_rewards,
+    n_bootstrap_samples=100,
+    is_relative=True,
+    random_state=12345,
+)
+
+import numpy as np
+import pandas as pd
+import obp
+
+from obp.ope import SlateStandardIPS, SlateIndependentIPS, SlateRewardInteractionIPS, SlateOffPolicyEvaluation
+from obp.dataset import (
+    logistic_reward_function,
+    SyntheticSlateBanditDataset,
+)
+
+from itertools import product
+from copy import deepcopy
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import warnings
+warnings.filterwarnings('ignore')
+
+# generate a synthetic bandit dataset with 10 actions
+# we use `logistic_reward_function` as the reward function and `linear_behavior_policy_logit` as the behavior policy.
+# one can define their own reward function and behavior policy such as nonlinear ones. 
+
+n_unique_action=10
+len_list = 3
+dim_context = 2
+reward_type = "binary"
+reward_structure="cascade_additive"
+click_model=None
+random_state=12345
+base_reward_function=logistic_reward_function
+
+# obtain  test sets of synthetic logged bandit feedback
+n_rounds_test = 10000
+
+# define Uniform Random Policy as a baseline behavior policy
+dataset_with_random_behavior = SyntheticSlateBanditDataset(
+    n_unique_action=n_unique_action,
+    len_list=len_list,
+    dim_context=dim_context,
+    reward_type=reward_type,
+    reward_structure=reward_structure,
+    click_model=click_model,
+    random_state=random_state,
+    behavior_policy_function=None,  # set to uniform random
+    base_reward_function=base_reward_function,
+)
+
+# compute the factual action choice probabililties for the test set of the synthetic logged bandit feedback
+bandit_feedback_with_random_behavior = dataset_with_random_behavior.obtain_batch_bandit_feedback(
+    n_rounds=n_rounds_test,
+    return_pscore_item_position=True,
+)
+
+# print policy value
+random_policy_value = dataset_with_random_behavior.calc_on_policy_policy_value(
+    reward=bandit_feedback_with_random_behavior["reward"],
+    slate_id=bandit_feedback_with_random_behavior["slate_id"],
+)
+print(random_policy_value)
+
+random_policy_logit_ = np.zeros((n_rounds_test, n_unique_action))
+
+base_expected_reward = dataset_with_random_behavior.base_reward_function(
+    context=bandit_feedback_with_random_behavior["context"],
+    action_context=dataset_with_random_behavior.action_context,
+    random_state=dataset_with_random_behavior.random_state,
+)
+
+optimal_policy_logit_ = base_expected_reward * 3
+anti_optimal_policy_logit_ = -3 * base_expected_reward
+
+random_policy_pscores = dataset_with_random_behavior.obtain_pscore_given_evaluation_policy_logit(
+    action=bandit_feedback_with_random_behavior["action"],
+    evaluation_policy_logit_=random_policy_logit_
+)
+
+optimal_policy_pscores = dataset_with_random_behavior.obtain_pscore_given_evaluation_policy_logit(
+    action=bandit_feedback_with_random_behavior["action"],
+    evaluation_policy_logit_=optimal_policy_logit_
+)
+
+anti_optimal_policy_pscores = dataset_with_random_behavior.obtain_pscore_given_evaluation_policy_logit(
+    action=bandit_feedback_with_random_behavior["action"],
+    evaluation_policy_logit_=anti_optimal_policy_logit_
+)
+
+# estimate the policy value of the evaluation policies based on their action choice probabilities
+# it is possible to set multiple OPE estimators to the `ope_estimators` argument
+
+sips = SlateStandardIPS(len_list=len_list)
+iips = SlateIndependentIPS(len_list=len_list)
+rips = SlateRewardInteractionIPS(len_list=len_list)
+
+ope = SlateOffPolicyEvaluation(
+    bandit_feedback=bandit_feedback_with_random_behavior,
+    ope_estimators=[sips, iips, rips]
+)
+
+_, estimated_interval_random = ope.summarize_off_policy_estimates(
+    evaluation_policy_pscore=random_policy_pscores[0],
+    evaluation_policy_pscore_item_position=random_policy_pscores[1],
+    evaluation_policy_pscore_cascade=random_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000,
+    random_state=dataset_with_random_behavior.random_state,
+)
+estimated_interval_random["policy_name"] = "random"
+
+print(estimated_interval_random, '\n')
+# visualize estimated policy values of Uniform Random by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    evaluation_policy_pscore=random_policy_pscores[0],
+    evaluation_policy_pscore_item_position=random_policy_pscores[1],
+    evaluation_policy_pscore_cascade=random_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000, # number of resampling performed in the bootstrap procedure
+    random_state=dataset_with_random_behavior.random_state,
+)
+
+_, estimated_interval_optimal = ope.summarize_off_policy_estimates(
+    evaluation_policy_pscore=optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=optimal_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000,
+    random_state=dataset_with_random_behavior.random_state,
+)
+
+estimated_interval_optimal["policy_name"] = "optimal"
+
+print(estimated_interval_optimal, '\n')
+# visualize estimated policy values of Optimal by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    evaluation_policy_pscore=optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=optimal_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000, # number of resampling performed in the bootstrap procedure
+    random_state=dataset_with_random_behavior.random_state,
+)
+
+_, estimated_interval_anti_optimal = ope.summarize_off_policy_estimates(
+    evaluation_policy_pscore=anti_optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=anti_optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=anti_optimal_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000,
+    random_state=dataset_with_random_behavior.random_state,
+)
+estimated_interval_anti_optimal["policy_name"] = "anti-optimal"
+
+print(estimated_interval_anti_optimal, '\n')
+# visualize estimated policy values of Anti-optimal by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    evaluation_policy_pscore=anti_optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=anti_optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=anti_optimal_policy_pscores[2],
+    alpha=0.05,
+    n_bootstrap_samples=1000, # number of resampling performed in the bootstrap procedure
+    random_state=dataset_with_random_behavior.random_state,
+)
+
+ground_truth_policy_value_random = dataset_with_random_behavior.calc_ground_truth_policy_value(
+    context=bandit_feedback_with_random_behavior["context"],
+    evaluation_policy_logit_=random_policy_logit_
+)
+ground_truth_policy_value_random
+
+ground_truth_policy_value_optimal = dataset_with_random_behavior.calc_ground_truth_policy_value(
+    context=bandit_feedback_with_random_behavior["context"],
+    evaluation_policy_logit_=optimal_policy_logit_
+)
+ground_truth_policy_value_optimal
+
+ground_truth_policy_value_anti_optimal = dataset_with_random_behavior.calc_ground_truth_policy_value(
+    context=bandit_feedback_with_random_behavior["context"],
+    evaluation_policy_logit_=anti_optimal_policy_logit_
+)
+ground_truth_policy_value_anti_optimal
+
+estimated_interval_random["ground_truth"] = ground_truth_policy_value_random
+estimated_interval_optimal["ground_truth"] = ground_truth_policy_value_optimal
+estimated_interval_anti_optimal["ground_truth"] = ground_truth_policy_value_anti_optimal
+
+estimated_intervals = pd.concat(
+    [
+        estimated_interval_random,
+        estimated_interval_optimal,
+        estimated_interval_anti_optimal
+    ]
+)
+
+estimated_intervals
+
+# evaluate the estimation performances of OPE estimators 
+# by comparing the estimated policy values and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+
+relative_ee_for_random_evaluation_policy = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=ground_truth_policy_value_random,
+    evaluation_policy_pscore=random_policy_pscores[0],
+    evaluation_policy_pscore_item_position=random_policy_pscores[1],
+    evaluation_policy_pscore_cascade=random_policy_pscores[2],
+)
+relative_ee_for_random_evaluation_policy
+
+# evaluate the estimation performances of OPE estimators 
+# by comparing the estimated policy values and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+
+relative_ee_for_optimal_evaluation_policy = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=ground_truth_policy_value_optimal,
+    evaluation_policy_pscore=optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=optimal_policy_pscores[2],
+)
+relative_ee_for_optimal_evaluation_policy
+
+# evaluate the estimation performances of OPE estimators 
+# by comparing the estimated policy values and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+
+relative_ee_for_anti_optimal_evaluation_policy = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=ground_truth_policy_value_anti_optimal,
+    evaluation_policy_pscore=anti_optimal_policy_pscores[0],
+    evaluation_policy_pscore_item_position=anti_optimal_policy_pscores[1],
+    evaluation_policy_pscore_cascade=anti_optimal_policy_pscores[2],
+)
+relative_ee_for_anti_optimal_evaluation_policy
+
+estimated_intervals["errbar_length"] = (
+    estimated_intervals.drop(["mean", "policy_name", "ground_truth"], axis=1).diff(axis=1).iloc[:, -1].abs()
+)
+
+alpha = 0.05
+plt.style.use("ggplot")
+
+def errplot(x, y, yerr, **kwargs):
+    ax = plt.gca()
+    data = kwargs.pop("data")
+    data.plot(x=x, y=y, yerr=yerr, kind="bar", ax=ax, **kwargs)
+    ax.hlines(data["ground_truth"].iloc[0], -1, len(x)+1)
+#     ax.set_xlabel("OPE estimator")
+    
+g = sns.FacetGrid(
+    estimated_intervals.reset_index().rename(columns={"index": "OPE estimator", "mean": "Policy value"}),
+    col="policy_name"
+)
+g.map_dataframe(errplot, "OPE estimator", "Policy value", "errbar_length")
+plt.ylim((1.7, 1.9))
+
+import obp
+from obp.dataset import (
+    SyntheticBanditDataset,
+    logistic_reward_function
+)
+from obp.policy import EpsilonGreedy, LinTS, LinUCB
+from obp.ope import (
+    OffPolicyEvaluation, 
+    ReplayMethod
+)
+from obp.simulator import (
+    calc_ground_truth_policy_value,
+    run_bandit_simulation
+)
+
+# generate a synthetic bandit dataset with 10 actions
+# we use `logistic function` as the reward function
+# we use the uniformly random behavior policy because it is desriable for RM
+# one can define their own reward function and behavior policy such as nonlinear ones. 
+dataset = SyntheticBanditDataset(
+    n_actions=10,
+    dim_context=5,
+    reward_type="binary", # "binary" or "continuous"
+    reward_function=logistic_reward_function,
+    behavior_policy_function=None, # uniformly random
+    random_state=12345,
+)
+# obtain a set of synthetic logged bandit feedback
+n_rounds = 10000
+bandit_feedback = dataset.obtain_batch_bandit_feedback(n_rounds=n_rounds)
+
+# `bandit_feedback` is a dictionary storing synthetic logged bandit feedback
+bandit_feedback
+
+# simulations of online bandit algorithms
+# obtain a deterministic action distribution representing which action is selected at each round in the simulation
+# policies are updated only when the selected action is the same as that of the logged data
+epsilon_greedy = EpsilonGreedy(
+    n_actions=dataset.n_actions,
+    epsilon=0.1,
+    random_state=12345
+)
+action_dist_epsilon_greedy = run_bandit_simulation(
+    bandit_feedback=bandit_feedback,
+    policy=epsilon_greedy
+)
+
+lin_ts = LinTS(
+    dim=dataset.dim_context,
+    n_actions=dataset.n_actions,
+    random_state=12345
+)
+action_dist_lin_ts = run_bandit_simulation(
+    bandit_feedback=bandit_feedback,
+    policy=lin_ts
+)
+
+lin_ucb = LinUCB(
+    dim=dataset.dim_context,
+    n_actions=dataset.n_actions,
+    random_state=12345
+)
+action_dist_lin_ucb = run_bandit_simulation(
+    bandit_feedback=bandit_feedback,
+    policy=lin_ucb
+)
+
+# estimate the policy value of the online bandit algorithms using RM
+ope = OffPolicyEvaluation(
+    bandit_feedback=bandit_feedback,
+    ope_estimators=[ReplayMethod()]
+)
+
+# estimate the policy value of EpsilonGreedy
+estimated_policy_value_epsilon_greedy, estimated_interval_epsilon_greedy = ope.summarize_off_policy_estimates(
+    action_dist=action_dist_epsilon_greedy
+)
+print(estimated_interval_epsilon_greedy, '\n')
+
+# visualize estimated policy values of EpsilonGreedy by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist_epsilon_greedy,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+# estimate the policy value of LinTS
+estimated_policy_value_lin_ts, estimated_interval_lin_ts = ope.summarize_off_policy_estimates(
+    action_dist=action_dist_lin_ts
+)
+print(estimated_interval_lin_ts, '\n')
+
+# visualize estimated policy values of LinTS by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist_lin_ts,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+# estimate the policy value of LinUCB
+estimated_policy_value_lin_ucb, estimated_interval_lin_ucb = ope.summarize_off_policy_estimates(
+    action_dist=action_dist_lin_ucb
+)
+print(estimated_interval_lin_ucb, '\n')
+
+# visualize estimated policy values of LinUCB by the three OPE estimators
+# and their 95% confidence intervals (estimated by nonparametric bootstrap method)
+ope.visualize_off_policy_estimates(
+    action_dist=action_dist_lin_ucb,
+    n_bootstrap_samples=10000, # number of resampling performed in the bootstrap procedure
+    random_state=12345,
+)
+
+# we first calculate the policy values of the three evaluation policies
+# in synthetic data, we know p(r|x,a), the reward distribution, so we can perform simulations
+# here, a policy is updated at each round according to actions and rewards sampled from the policy and p(r|x,a)
+# the policy values are averaged over `n_sim` simulations
+policy_value_epsilon_greedy = calc_ground_truth_policy_value(
+    bandit_feedback=bandit_feedback,
+    reward_sampler=dataset.sample_reward, # p(r|x,a)
+    policy=epsilon_greedy,
+    n_sim=3 # the number of simulations
+)
+policy_value_lin_ts = calc_ground_truth_policy_value(
+    bandit_feedback=bandit_feedback,
+    reward_sampler=dataset.sample_reward, # p(r|x,a)
+    policy=lin_ts,
+    n_sim=3 # the number of simulations
+)
+policy_value_lin_ucb = calc_ground_truth_policy_value(
+    bandit_feedback=bandit_feedback,
+    reward_sampler=dataset.sample_reward, # p(r|x,a)
+    policy=lin_ucb,
+    n_sim=3 # the number of simulations
+)
+
+print(f'policy value of EpsilonGreedy: {policy_value_epsilon_greedy}')
+print(f'policy value of LinTS: {policy_value_lin_ts}')
+print(f'policy value of LinUCB: {policy_value_lin_ucb}')
+
+# evaluate the estimation performances of OPE estimators 
+# by comparing the estimated policy values of EpsilonGreedy and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+relative_ee_epsilon_greedy = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=policy_value_epsilon_greedy,
+    action_dist=action_dist_epsilon_greedy,
+    metric="relative-ee", # "relative-ee" (relative estimation error) or "se" (squared error)
+)
+
+# estimation performances of the three estimators (lower means accurate)
+relative_ee_epsilon_greedy
+
+# evaluate the estimation performance of OPE estimators 
+# by comparing the estimated policy values of LinTS t and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+relative_ee_lin_ts = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=policy_value_lin_ts,
+    action_dist=action_dist_lin_ts,
+    metric="relative-ee", # "relative-ee" (relative estimation error) or "se" (squared error)
+)
+
+# estimation performances of the three estimators (lower means accurate)
+relative_ee_lin_ts
+
+# evaluate the estimation performance of OPE estimators 
+# by comparing the estimated policy values of LinUCB and its ground-truth.
+# `summarize_estimators_comparison` returns a pandas dataframe containing estimation performances of given estimators 
+relative_ee_lin_ucb = ope.summarize_estimators_comparison(
+    ground_truth_policy_value=policy_value_lin_ucb,
+    action_dist=action_dist_lin_ucb,
+    metric="relative-ee", # "relative-ee" (relative estimation error) or "se" (squared error)
+)
+
+# estimation performances of the three estimators (lower means accurate)
+relative_ee_lin_ucb
+
+from sklearn.ensemble import RandomForestClassifier as RandomForest
+from sklearn.linear_model import LogisticRegression
+
+import obp
+from obp.dataset import (
+    SyntheticBanditDataset,
+    logistic_reward_function,
+    linear_reward_function,
+    linear_behavior_policy
+)
+from obp.policy import (
+    IPWLearner, 
+    NNPolicyLearner, 
+    Random
+)
+
+# generate a synthetic bandit dataset with 10 actions
+# we use `logistic function` as the reward function and `linear_behavior_policy` as the behavior policy.
+# one can define their own reward function and behavior policy such as nonlinear ones. 
+dataset = SyntheticBanditDataset(
+    n_actions=10,
+    dim_context=5,
+    tau=0.2, # temperature hyperparameter to control the entropy of the behavior policy
+    reward_type="binary", # "binary" or "continuous"
+    reward_function=logistic_reward_function,
+    behavior_policy_function=linear_behavior_policy,
+    random_state=12345,
+)
+
+# obtain training and test sets of synthetic logged bandit data
+n_rounds_train, n_rounds_test = 10000, 10000
+bandit_feedback_train = dataset.obtain_batch_bandit_feedback(n_rounds=n_rounds_train)
+bandit_feedback_test = dataset.obtain_batch_bandit_feedback(n_rounds=n_rounds_test)
+
+# `bandit_feedback` is a dictionary storing synthetic logged bandit feedback
+bandit_feedback_train
+
+# define NNPolicyLearner with DM as its objective function
+nn_dm = NNPolicyLearner(
+    n_actions=dataset.n_actions,
+    dim_context=dataset.dim_context,
+    off_policy_objective="dm",
+    batch_size=64,
+    random_state=12345,
+)
+
+# train NNPolicyLearner on the training set of logged bandit data
+nn_dm.fit(
+    context=bandit_feedback_train["context"],
+    action=bandit_feedback_train["action"],
+    reward=bandit_feedback_train["reward"],
+)
+
+# obtains action choice probabilities for the test set
+action_dist_nn_dm = nn_dm.predict_proba(
+    context=bandit_feedback_test["context"]
+)
+
+# define NNPolicyLearner with IPW as its objective function
+nn_ipw = NNPolicyLearner(
+    n_actions=dataset.n_actions,
+    dim_context=dataset.dim_context,
+    off_policy_objective="ipw",
+    batch_size=64,
+    random_state=12345,
+)
+
+# train NNPolicyLearner on the training set of logged bandit data
+nn_ipw.fit(
+    context=bandit_feedback_train["context"],
+    action=bandit_feedback_train["action"],
+    reward=bandit_feedback_train["reward"],
+    pscore=bandit_feedback_train["pscore"],
+)
+
+# obtains action choice probabilities for the test set
+action_dist_nn_ipw = nn_ipw.predict_proba(
+    context=bandit_feedback_test["context"]
+)
+
+# define NNPolicyLearner with DR as its objective function
+nn_dr = NNPolicyLearner(
+    n_actions=dataset.n_actions,
+    dim_context=dataset.dim_context,
+    off_policy_objective="dr",
+    batch_size=64,
+    random_state=12345,
+)
+
+# train NNPolicyLearner on the training set of logged bandit data
+nn_dr.fit(
+    context=bandit_feedback_train["context"],
+    action=bandit_feedback_train["action"],
+    reward=bandit_feedback_train["reward"],
+    pscore=bandit_feedback_train["pscore"],
+)
+
+# obtains action choice probabilities for the test set
+action_dist_nn_dr = nn_dr.predict_proba(
+    context=bandit_feedback_test["context"]
+)
+
+# define IPWLearner with Logistic Regression as its base ML model
+ipw_lr = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=LogisticRegression(C=100, random_state=12345)
+)
+
+# train IPWLearner on the training set of logged bandit data
+ipw_lr.fit(
+    context=bandit_feedback_train["context"],
+    action=bandit_feedback_train["action"],
+    reward=bandit_feedback_train["reward"],
+    pscore=bandit_feedback_train["pscore"]
+)
+
+# obtains action choice probabilities for the test set
+action_dist_ipw_lr = ipw_lr.predict(
+    context=bandit_feedback_test["context"]
+)
+
+# define IPWLearner with Random Forest as its base ML model
+ipw_rf = IPWLearner(
+    n_actions=dataset.n_actions,
+    base_classifier=RandomForest(
+        n_estimators=30, min_samples_leaf=10, random_state=12345
+    )
+)
+
+# train IPWLearner on the training set of logged bandit data
+ipw_rf.fit(
+    context=bandit_feedback_train["context"],
+    action=bandit_feedback_train["action"],
+    reward=bandit_feedback_train["reward"],
+    pscore=bandit_feedback_train["pscore"]
+)
+
+# obtains action choice probabilities for the test set
+action_dist_ipw_rf = ipw_rf.predict(
+    context=bandit_feedback_test["context"]
+)
+
+# define Uniform Random Policy as a baseline evaluation policy
+random = Random(n_actions=dataset.n_actions,)
+
+# compute the action choice probabilities for the test set
+action_dist_random = random.compute_batch_action_dist(
+    n_rounds=bandit_feedback_test["n_rounds"]
+)
+
+# action_dist is a probability distribution over actions (can be deterministic)
+action_dist_ipw_lr[:, :, 0]
+
+# we calculate the policy values of the trained policies based on the expected rewards of the test data
+policy_names = [
+    "NN Policy Learner with DM",
+    "NN Policy Learner with IPW",
+    "NN Policy Learner with DR",
+    "IPW Learner with Logistic Regression",
+    "IPW Learner with Random Forest",
+    "Unifrom Random"
+]
+action_dist_list = [
+    action_dist_nn_dm,
+    action_dist_nn_ipw,
+    action_dist_nn_dr,
+    action_dist_ipw_lr,
+    action_dist_ipw_rf,
+    action_dist_random
+]
+
+for name, action_dist in zip(policy_names, action_dist_list):
+    true_policy_value = dataset.calc_ground_truth_policy_value(
+        expected_reward=bandit_feedback_test["expected_reward"],
+        action_dist=action_dist,
+    )
+    print(f'policy value of {name}: {true_policy_value}')

@@ -1,0 +1,1353 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Node2vec from scratch referencing node2vec library &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BPR from scratch" href="T331379_bayesian_personalized_ranking.html" />
+    <link rel="prev" title="Node2vec from scratch in PyTorch Geometric" href="T611050_Node2vec_PyG.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T186367_Node2vec_library.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T186367_Node2vec_library.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#codebase">
+   Codebase
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scenario">
+   Scenario
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <p><a href="https://colab.research.google.com/github/sparsh-ai/reco-book/blob/stage/nbs/T186367_Node2vec_library.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<div class="section" id="node2vec-from-scratch-referencing-node2vec-library">
+<h1>Node2vec from scratch referencing node2vec library<a class="headerlink" href="#node2vec-from-scratch-referencing-node2vec-library" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="codebase">
+<h2>Codebase<a class="headerlink" href="#codebase" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">import</span> <span class="nn">gensim</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations_with_replacement</span>
+
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">parallel_generate_walks</span><span class="p">(</span><span class="n">d_graph</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">global_walk_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_walks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cpu_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">sampling_strategy</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">num_walks_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">walk_length_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">neighbors_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">probabilities_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">first_travel_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates the random walks which will be used as the skip-gram input.</span>
+<span class="sd">    :return: List of walks. Each walk is a list of nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">walks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_walks</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating walks (CPU: </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cpu_num</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">n_walk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_walks</span><span class="p">):</span>
+
+        <span class="c1"># Update progress bar</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Shuffle the nodes</span>
+        <span class="n">shuffled_nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">d_graph</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">shuffled_nodes</span><span class="p">)</span>
+
+        <span class="c1"># Start a random walk from every node</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">shuffled_nodes</span><span class="p">:</span>
+
+            <span class="c1"># Skip nodes with specific num_walks</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sampling_strategy</span> <span class="ow">and</span> \
+                    <span class="n">num_walks_key</span> <span class="ow">in</span> <span class="n">sampling_strategy</span><span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="ow">and</span> \
+                    <span class="n">sampling_strategy</span><span class="p">[</span><span class="n">source</span><span class="p">][</span><span class="n">num_walks_key</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">n_walk</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Start walk</span>
+            <span class="n">walk</span> <span class="o">=</span> <span class="p">[</span><span class="n">source</span><span class="p">]</span>
+
+            <span class="c1"># Calculate walk length</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">sampling_strategy</span><span class="p">:</span>
+                <span class="n">walk_length</span> <span class="o">=</span> <span class="n">sampling_strategy</span><span class="p">[</span><span class="n">source</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">walk_length_key</span><span class="p">,</span> <span class="n">global_walk_length</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">walk_length</span> <span class="o">=</span> <span class="n">global_walk_length</span>
+
+            <span class="c1"># Perform walk</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">walk_length</span><span class="p">:</span>
+
+                <span class="n">walk_options</span> <span class="o">=</span> <span class="n">d_graph</span><span class="p">[</span><span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">neighbors_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                <span class="c1"># Skip dead end nodes</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">walk_options</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># For the first step</span>
+                    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">d_graph</span><span class="p">[</span><span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]][</span><span class="n">first_travel_key</span><span class="p">]</span>
+                    <span class="n">walk_to</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">walk_options</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">d_graph</span><span class="p">[</span><span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]][</span><span class="n">probabilities_key</span><span class="p">][</span><span class="n">walk</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]]</span>
+                    <span class="n">walk_to</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">walk_options</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probabilities</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="n">walk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walk_to</span><span class="p">)</span>
+
+            <span class="n">walk</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">walk</span><span class="p">))</span>  <span class="c1"># Convert all to strings</span>
+
+            <span class="n">walks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">walk</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">quiet</span><span class="p">:</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">walks</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Node2Vec</span><span class="p">:</span>
+    <span class="n">FIRST_TRAVEL_KEY</span> <span class="o">=</span> <span class="s1">&#39;first_travel_key&#39;</span>
+    <span class="n">PROBABILITIES_KEY</span> <span class="o">=</span> <span class="s1">&#39;probabilities&#39;</span>
+    <span class="n">NEIGHBORS_KEY</span> <span class="o">=</span> <span class="s1">&#39;neighbors&#39;</span>
+    <span class="n">WEIGHT_KEY</span> <span class="o">=</span> <span class="s1">&#39;weight&#39;</span>
+    <span class="n">NUM_WALKS_KEY</span> <span class="o">=</span> <span class="s1">&#39;num_walks&#39;</span>
+    <span class="n">WALK_LENGTH_KEY</span> <span class="o">=</span> <span class="s1">&#39;walk_length&#39;</span>
+    <span class="n">P_KEY</span> <span class="o">=</span> <span class="s1">&#39;p&#39;</span>
+    <span class="n">Q_KEY</span> <span class="o">=</span> <span class="s1">&#39;q&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">,</span> <span class="n">dimensions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">walk_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">num_walks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weight_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">temp_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.</span>
+<span class="sd">        :param graph: Input graph</span>
+<span class="sd">        :param dimensions: Embedding dimensions (default: 128)</span>
+<span class="sd">        :param walk_length: Number of nodes in each walk (default: 80)</span>
+<span class="sd">        :param num_walks: Number of walks per node (default: 10)</span>
+<span class="sd">        :param p: Return hyper parameter (default: 1)</span>
+<span class="sd">        :param q: Inout parameter (default: 1)</span>
+<span class="sd">        :param weight_key: On weighted graphs, this is the key for the weight attribute (default: &#39;weight&#39;)</span>
+<span class="sd">        :param workers: Number of workers for parallel execution (default: 1)</span>
+<span class="sd">        :param sampling_strategy: Node specific sampling strategies, supports setting node specific &#39;q&#39;, &#39;p&#39;, &#39;num_walks&#39; and &#39;walk_length&#39;.</span>
+<span class="sd">        :param seed: Seed for the random number generator.</span>
+<span class="sd">        Use these keys exactly. If not set, will use the global ones which were passed on the object initialization</span>
+<span class="sd">        :param temp_folder: Path to folder with enough space to hold the memory map of self.d_graph (for big graphs); to be passed joblib.Parallel.temp_folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="n">dimensions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">walk_length</span> <span class="o">=</span> <span class="n">walk_length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_walks</span> <span class="o">=</span> <span class="n">num_walks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight_key</span> <span class="o">=</span> <span class="n">weight_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workers</span> <span class="o">=</span> <span class="n">workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span> <span class="o">=</span> <span class="n">quiet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_graph</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sampling_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="o">=</span> <span class="n">sampling_strategy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">require</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">temp_folder</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">temp_folder</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="s2">&quot;temp_folder does not exist or is not a directory. (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp_folder</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">temp_folder</span> <span class="o">=</span> <span class="n">temp_folder</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">require</span> <span class="o">=</span> <span class="s2">&quot;sharedmem&quot;</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_precompute_probabilities</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">walks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_walks</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_precompute_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Precomputes transition probabilities for each node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">d_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_graph</span>
+
+        <span class="n">nodes_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span> \
+            <span class="k">else</span> <span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(),</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Computing transition probabilities&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">nodes_generator</span><span class="p">:</span>
+
+            <span class="c1"># Init probabilities dict for first travel</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d_graph</span><span class="p">[</span><span class="n">source</span><span class="p">]:</span>
+                <span class="n">d_graph</span><span class="p">[</span><span class="n">source</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">current_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+
+                <span class="c1"># Init probabilities dict</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d_graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">]:</span>
+                    <span class="n">d_graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+                <span class="n">unnormalized_weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+                <span class="n">d_neighbors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+                <span class="c1"># Calculate unnormalized weights</span>
+                <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">current_node</span><span class="p">):</span>
+
+                    <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span><span class="p">[</span><span class="n">current_node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_KEY</span><span class="p">,</span>
+                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">)</span> <span class="k">if</span> <span class="n">current_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span><span class="p">[</span><span class="n">current_node</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Q_KEY</span><span class="p">,</span>
+                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="k">if</span> <span class="n">current_node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span>
+
+                    <span class="k">if</span> <span class="n">destination</span> <span class="o">==</span> <span class="n">source</span><span class="p">:</span>  <span class="c1"># Backwards probability</span>
+                        <span class="n">ss_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">][</span><span class="n">destination</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_key</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">p</span>
+                    <span class="k">elif</span> <span class="n">destination</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">source</span><span class="p">]:</span>  <span class="c1"># If the neighbor is connected to the source</span>
+                        <span class="n">ss_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">][</span><span class="n">destination</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_key</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">ss_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">][</span><span class="n">destination</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_key</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">q</span>
+
+                    <span class="c1"># Assign the unnormalized sampling strategy weight, normalize during random walk</span>
+                    <span class="n">unnormalized_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ss_weight</span><span class="p">)</span>
+                    <span class="n">d_neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+                <span class="c1"># Normalize</span>
+                <span class="n">unnormalized_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">unnormalized_weights</span><span class="p">)</span>
+                <span class="n">d_graph</span><span class="p">[</span><span class="n">current_node</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span><span class="p">][</span>
+                    <span class="n">source</span><span class="p">]</span> <span class="o">=</span> <span class="n">unnormalized_weights</span> <span class="o">/</span> <span class="n">unnormalized_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Calculate first_travel weights for source</span>
+            <span class="n">first_travel_weights</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+                <span class="n">first_travel_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="n">source</span><span class="p">][</span><span class="n">destination</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_key</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+            <span class="n">first_travel_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">first_travel_weights</span><span class="p">)</span>
+            <span class="n">d_graph</span><span class="p">[</span><span class="n">source</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">FIRST_TRAVEL_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_travel_weights</span> <span class="o">/</span> <span class="n">first_travel_weights</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Save neighbors</span>
+            <span class="n">d_graph</span><span class="p">[</span><span class="n">source</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">NEIGHBORS_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_generate_walks</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the random walks which will be used as the skip-gram input.</span>
+<span class="sd">        :return: List of walks. Each walk is a list of nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">flatten</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">l</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+
+        <span class="c1"># Split num_walks for each worker</span>
+        <span class="n">num_walks_lists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_walks</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">)</span>
+
+        <span class="n">walk_results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">workers</span><span class="p">,</span> <span class="n">temp_folder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_folder</span><span class="p">,</span> <span class="n">require</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">require</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">parallel_generate_walks</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_graph</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">walk_length</span><span class="p">,</span>
+                                             <span class="nb">len</span><span class="p">(</span><span class="n">num_walks</span><span class="p">),</span>
+                                             <span class="n">idx</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">sampling_strategy</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">NUM_WALKS_KEY</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">WALK_LENGTH_KEY</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">NEIGHBORS_KEY</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">PROBABILITIES_KEY</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">FIRST_TRAVEL_KEY</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">)</span> <span class="k">for</span>
+            <span class="n">idx</span><span class="p">,</span> <span class="n">num_walks</span>
+            <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">num_walks_lists</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">walks</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">walk_results</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">walks</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">skip_gram_params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Word2Vec</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the embeddings using gensim&#39;s Word2Vec.</span>
+<span class="sd">        :param skip_gram_params: Parameters for gensim.models.Word2Vec - do not supply &#39;size&#39; / &#39;vector_size&#39; it is</span>
+<span class="sd">            taken from the Node2Vec &#39;dimensions&#39; parameter</span>
+<span class="sd">        :type skip_gram_params: dict</span>
+<span class="sd">        :return: A gensim word2vec model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;workers&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_gram_params</span><span class="p">:</span>
+            <span class="n">skip_gram_params</span><span class="p">[</span><span class="s1">&#39;workers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workers</span>
+
+        <span class="c1"># Figure out gensim version, naming of output dimensions changed from size to vector_size in v4.0.0</span>
+        <span class="n">gensim_version</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s2">&quot;gensim&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="s1">&#39;size&#39;</span> <span class="k">if</span> <span class="n">gensim_version</span> <span class="o">&lt;</span> <span class="s1">&#39;4.0.0&#39;</span> <span class="k">else</span> <span class="s1">&#39;vector_size&#39;</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_gram_params</span><span class="p">:</span>
+            <span class="n">skip_gram_params</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dimensions</span>
+
+        <span class="k">if</span> <span class="s1">&#39;sg&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_gram_params</span><span class="p">:</span>
+            <span class="n">skip_gram_params</span><span class="p">[</span><span class="s1">&#39;sg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Word2Vec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">walks</span><span class="p">,</span> <span class="o">**</span><span class="n">skip_gram_params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">EdgeEmbedder</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="n">INDEX_MAPPING_KEY</span> <span class="o">=</span> <span class="s1">&#39;index2word&#39;</span> <span class="k">if</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s2">&quot;gensim&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="s1">&#39;4.0.0&#39;</span> <span class="k">else</span> <span class="s1">&#39;index_to_key&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyed_vectors</span><span class="p">:</span> <span class="n">KeyedVectors</span><span class="p">,</span> <span class="n">quiet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param keyed_vectors: KeyedVectors containing nodes and embeddings to calculate edges for</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kv</span> <span class="o">=</span> <span class="n">keyed_vectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span> <span class="o">=</span> <span class="n">quiet</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Abstract method for implementing the embedding method</span>
+<span class="sd">        :param edge: tuple of two nodes</span>
+<span class="sd">        :return: Edge embedding</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;edge must be a tuple of two nodes&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INDEX_MAPPING_KEY</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;node </span><span class="si">{}</span><span class="s1"> does not exist in given KeyedVectors&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INDEX_MAPPING_KEY</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;node </span><span class="si">{}</span><span class="s1"> does not exist in given KeyedVectors&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embed</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_keyed_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeyedVectors</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generated a KeyedVectors instance with all the possible edge embeddings</span>
+<span class="sd">        :return: Edge embeddings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">edge_generator</span> <span class="o">=</span> <span class="n">combinations_with_replacement</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INDEX_MAPPING_KEY</span><span class="p">),</span> <span class="n">r</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INDEX_MAPPING_KEY</span><span class="p">))</span>
+            <span class="n">total_size</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vocab_size</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> \
+                         <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)))</span>
+
+            <span class="n">edge_generator</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">edge_generator</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Generating edge features&#39;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total_size</span><span class="p">)</span>
+
+        <span class="c1"># Generate features</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edge_generator</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">edge</span><span class="p">)))</span>
+            <span class="n">embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_embed</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+
+        <span class="c1"># Build KV instance</span>
+        <span class="n">edge_kv</span> <span class="o">=</span> <span class="n">KeyedVectors</span><span class="p">(</span><span class="n">vector_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="o">.</span><span class="n">vector_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="s2">&quot;gensim&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="s1">&#39;4.0.0&#39;</span><span class="p">:</span>
+            <span class="n">edge_kv</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">entities</span><span class="o">=</span><span class="n">tokens</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">edge_kv</span><span class="o">.</span><span class="n">add_vectors</span><span class="p">(</span>
+                <span class="n">keys</span><span class="o">=</span><span class="n">tokens</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">edge_kv</span>
+
+
+<span class="k">class</span> <span class="nc">AverageEmbedder</span><span class="p">(</span><span class="n">EdgeEmbedder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average node features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span>
+
+
+<span class="k">class</span> <span class="nc">HadamardEmbedder</span><span class="p">(</span><span class="n">EdgeEmbedder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hadamard product node features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+
+<span class="k">class</span> <span class="nc">WeightedL1Embedder</span><span class="p">(</span><span class="n">EdgeEmbedder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Weighted L1 node features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+
+<span class="k">class</span> <span class="nc">WeightedL2Embedder</span><span class="p">(</span><span class="n">EdgeEmbedder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Weighted L2 node features</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kv</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">**</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="scenario">
+<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a graph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">fast_gnp_random_graph</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="c1"># Precompute probabilities and generate walks - **ON WINDOWS ONLY WORKS WITH workers=1**</span>
+<span class="n">node2vec</span> <span class="o">=</span> <span class="n">Node2Vec</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">dimensions</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">walk_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">num_walks</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Use temp_folder for big graphs</span>
+
+<span class="c1"># Embed nodes</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">node2vec</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_words</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Any keywords acceptable by gensim.Word2Vec can be passed, `dimensions` and `workers` are automatically passed (from the Node2Vec constructor)</span>
+
+<span class="c1"># Look for most similar nodes</span>
+<span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>  <span class="c1"># Output node names are always strings</span>
+
+<span class="c1"># Save embeddings for later use</span>
+<span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">save_word2vec_format</span><span class="p">(</span><span class="s1">&#39;embeddings.p&#39;</span><span class="p">)</span>
+
+<span class="c1"># Save model for later use</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;model.p&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">edges_embs</span> <span class="o">=</span> <span class="n">HadamardEmbedder</span><span class="p">(</span><span class="n">keyed_vectors</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="p">)</span>
+
+<span class="c1"># Look for embeddings on the fly - here we pass normal tuples</span>
+<span class="n">edges_embs</span><span class="p">[(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)]</span>
+<span class="sd">&#39;&#39;&#39; OUTPUT</span>
+<span class="sd">array([ 5.75068220e-03, -1.10937878e-02,  3.76693785e-01,  2.69105062e-02,</span>
+<span class="sd">       ... ... ....</span>
+<span class="sd">       ..................................................................],</span>
+<span class="sd">      dtype=float32)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># Get all edges in a separate KeyedVectors instance - use with caution could be huge for big networks</span>
+<span class="n">edges_kv</span> <span class="o">=</span> <span class="n">edges_embs</span><span class="o">.</span><span class="n">as_keyed_vectors</span><span class="p">()</span>
+
+<span class="c1"># Look for most similar edges - this time tuples must be sorted and as str</span>
+<span class="n">edges_kv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="nb">str</span><span class="p">((</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)))</span>
+
+<span class="c1"># Save embeddings for later use</span>
+<span class="n">edges_kv</span><span class="o">.</span><span class="n">save_word2vec_format</span><span class="p">(</span><span class="s1">&#39;edge_embeddings.p&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>![image.png](data:image/png;base64,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)</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T611050_Node2vec_PyG.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Node2vec from scratch in PyTorch Geometric</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T331379_bayesian_personalized_ranking.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">BPR from scratch</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

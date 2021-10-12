@@ -1,0 +1,100 @@
+import os
+import numpy as np
+! pip install -q -U trax
+import trax
+
+# Create a Transformer model.
+# Have to use the same configuration of the pre-trained model we'll load next
+model = trax.models.TransformerLM(  
+    d_model=32, d_ff=128, n_layers=2, 
+    vocab_size=32, mode='predict')
+
+# Initialize using pre-trained weights.
+model.init_from_file('gs://ml-intro/models/sort-transformer.pkl.gz',
+                     weights_only=True, 
+                     input_signature=trax.shapes.ShapeDtype((1,1), dtype=np.int32))
+
+# Input sequence
+# The 0s indicate the beginning and end of the input sequence
+input = [0, 3, 15, 14, 9, 0]
+
+
+# Run the model
+output = trax.supervised.decoding.autoregressive_sample(
+    model, np.array([input]), temperature=0.0, max_length=4)
+
+# Show us the output
+output
+
+# Create a Transformer model.
+def tiny_transformer_lm(mode='train'):
+  return trax.models.TransformerLM(  
+          d_model=32, d_ff=128, n_layers=2, 
+          vocab_size=32, mode=mode)
+
+def reverse_ints_task(batch_size, length=4):
+  while True:
+    random_ints = m = np.random.randint(1, 31, (batch_size,length))
+    source = random_ints
+
+    target = np.flip(source, 1)
+
+    zero = np.zeros([batch_size, 1], np.int32)
+    x = np.concatenate([zero, source, zero, target], axis=1)
+
+    loss_weights = np.concatenate([np.zeros((batch_size, length+2)),
+                                    np.ones((batch_size, length))], axis=1)
+    yield (x, x, loss_weights)  # Here inputs and targets are the same.
+
+reverse_ints_inputs =  reverse_ints_task(16)
+
+a = reverse_ints_task(8)
+sequence_batch, _ , masks = next(a)
+sequence_batch
+
+from trax.supervised import training
+from trax import layers as tl
+
+# Training task.
+train_task = training.TrainTask(
+    labeled_data=reverse_ints_inputs,
+    loss_layer=tl.CrossEntropyLoss(),
+    optimizer=trax.optimizers.Adam(0.01),
+    n_steps_per_checkpoint=500,
+)
+
+
+# Evaluaton task.
+eval_task = training.EvalTask(
+    labeled_data=reverse_ints_inputs,
+    metrics=[tl.CrossEntropyLoss(), tl.Accuracy()],
+    n_eval_batches=20  # For less variance in eval numbers.
+)
+
+output_dir = os.path.expanduser('~/train_dir/')
+!rm -f ~/train_dir/model.pkl.gz  # Remove old model.
+
+# Train tiny model with Loop.
+training_loop = training.Loop(
+    tiny_transformer_lm(),
+    train_task,
+    eval_tasks=[eval_task],
+    output_dir=output_dir)
+
+# run 1000 steps (batches)
+training_loop.run(1000)
+
+input = np.array([[0, 4, 6, 8, 10, 0]])
+
+# Initialize model for inference.
+predict_model = tiny_transformer_lm(mode='predict')
+predict_signature = trax.shapes.ShapeDtype((1,1), dtype=np.int32)
+predict_model.init_from_file(os.path.join(output_dir, "model.pkl.gz"),
+                             weights_only=True, input_signature=predict_signature)
+
+# Run the model
+output = trax.supervised.decoding.autoregressive_sample(
+    predict_model, input, temperature=0.0, max_length=4)
+
+# Print the contents of output
+print(output)

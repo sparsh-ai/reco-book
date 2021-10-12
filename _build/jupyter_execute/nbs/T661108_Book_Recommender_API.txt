@@ -1,0 +1,206 @@
+!pip install -q tensorflow_text
+
+import numpy as np
+import pandas as pd
+import nltk
+import json
+import re
+import csv
+import pickle
+
+from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.metrics.pairwise import cosine_similarity
+
+import tensorflow_hub as hub
+import tensorflow_text
+
+data = pd.read_json('https://raw.githubusercontent.com/sparsh-ai/reco-data/master/books.json', lines=True)
+data.head()
+
+df = data[['title', 'authors', 'isbn','shortDescription','thumbnailUrl']].copy()
+df['authors'] = df['authors'].str[0]
+df.dropna(subset = ["shortDescription"], inplace=True)
+
+embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder-multilingual/3")
+
+full_data = df.to_dict('records')
+
+# add vectors to the data
+for element in full_data:
+  element['vector'] = embed(element['shortDescription'])[0]
+
+vectors = [item['vector'] for item in full_data]
+X = np.array(vectors)
+
+# calculate similarity based on Euclidean distance
+sim = euclidean_distances(X)
+indices = np.vstack([np.argsort(-arr) for arr in sim])
+
+# calculate similarity based on cosine distance
+cos_sim = cosine_similarity(X)
+cos_indices = np.vstack([np.argsort(-arr) for arr in cos_sim])
+
+# find top-k most similar books for each case
+topk = 20
+for i, book in enumerate(full_data):
+  book['euclidean'] = indices[i][1:topk+1]
+  book['cosine'] = cos_indices[i][1:topk+1]
+
+# remove vectors from dict
+for book in full_data:
+  book.pop('vector')
+
+full_data[0]
+
+# save the data
+with open('model_01.pkl', 'wb') as f:
+  pickle.dump(full_data, f)
+
+%%writefile Procfile
+web: gunicorn app:app
+
+!mkdir templates static
+
+!wget -O ./static/logo.png https://images-platform.99static.com//JY78phRJ6tT1yo1QGGfhZOVlrAw=/68x2062:932x2926/fit-in/500x500/99designs-contests-attachments/87/87917/attachment_87917977
+
+%%writefile ./templates/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book recommendation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body class="bg-dark">
+<style>
+body {
+	background-color:coral;
+}
+   #content {
+        position: relative;
+    }
+    #content img {
+        position: absolute;
+        top: 0px;
+        right: 25px;
+    }
+	 #content p {
+        position: absolute;
+        top: 150px;
+        right: 0px;}
+</style>
+    <div class="p-3 text-white">
+	<div id="content">
+		<img src="{{ url_for('static', filename='logo.png') }}" width=150 class="ribbon"/>
+	</div>
+        <div class="row">
+            <div class="col-6">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="sel2" style="font-size:25pt;color:yellow;font-style:bold;">CHOOSE A METRIC:</label>
+                        <select class="form-control" id="sel2" name="selected_metric">
+                            <option>cosine</option>
+                            <option>euclidean</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sel1" style="font-size:25pt;color:yellow;font-style:bold;">CHOOSE A BOOK:</label>
+                        <select class="form-control" id="sel1" name="selected_title">
+                            {% for title in list_books %}
+                            <option>{{ title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="submit" class="btn btn-light" value="Recommender"/>
+                </form>
+            </div>
+            <div class="col-6">
+                {% if book_selected is defined %}
+                <h2 style="font-size:11pt;color:red;font-style:bold;">SELECTED BOOK</h2>
+                &nbsp;&nbsp;<img src="{{ book_selected.thumbnailUrl }}">
+                {% endif %}
+            </div>
+        </div>
+        {% if similar_books is defined %}
+		<br/><br/>
+        <h2>Here are your other reading suggestions:</h2>
+        <div class="row">
+            {% for book in similar_books %}
+            <div class="col-2 p-3 d-flex justify-content-center">
+                <img src="{{ book.thumbnailUrl }}">
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+!pip install flask_ngrok
+from flask_ngrok import run_with_ngrok
+
+%%writefile app.py
+import pickle
+
+from flask import Flask, request, render_template, jsonify
+from flask_ngrok import run_with_ngrok
+import numpy as np
+
+app = Flask(__name__)
+run_with_ngrok(app)
+
+# load data and extract all the vectors
+with open('model_01.pkl', 'rb') as f:
+  book_data = pickle.load(f)
+
+list_books = sorted([book['title'] for book in book_data])
+isbn_list = [item['isbn'] for item in book_data]
+
+
+@app.route("/", methods=['GET', 'POST'])
+def template_test():
+    if request.method == 'POST':
+        selected_title = request.form.get('selected_title')
+        selected_metric = request.form.get('selected_metric')
+        selected_book = next(item for item in book_data if item['title'] == selected_title)
+        similar_books = [book_data[i] for i in selected_book[selected_metric]]
+        return render_template('index.html',
+                               list_books=list_books,
+                               book_selected=selected_book,
+                               similar_books=similar_books[:6])
+    else:
+        return render_template('index.html', list_books=list_books)
+
+
+@app.route("/recommendations", methods=['GET'])
+def get_recommendations():
+    isbn = request.args.get('isbn', default=None, type=str)
+    num_reco = request.args.get("number", default=5, type=int)
+    distance = request.args.get("distance", default="cosine", type=str)
+    field = request.args.get("field", default="isbn", type=str)
+    if not isbn:
+        return jsonify("Missing ISBN for the book"), 400
+    elif distance not in ["cosine", "euclidean"]:
+        return jsonify("Distance can only be cosine or euclidean"), 400
+    elif num_reco not in range(1, 21):
+        return jsonify("Can only request between 1 and 20 books"), 400
+    elif isbn not in isbn_list:
+        return jsonify("ISBN not in supported books"), 400
+    elif field not in book_data[0].keys():
+        return jsonify("Field not available in the data"), 400
+    else:
+        try:
+            selected_book = next(item for item in book_data if item['isbn'] == isbn)
+            similar_books = [book_data[i][field] for i in selected_book[distance]]
+            return jsonify(similar_books[:num_reco]), 200
+        except Exception as e:
+            return jsonify(str(e)), 500
+
+
+if __name__ == '__main__':
+  app.run()
+
+!python app.py

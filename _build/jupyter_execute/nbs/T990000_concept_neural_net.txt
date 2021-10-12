@@ -1,0 +1,85 @@
+import numpy as np
+import pandas as pd
+
+import altair as alt
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+import keras
+from keras.preprocessing.image import ImageDataGenerator
+
+%matplotlib inline
+
+# Plot a 3d 
+def plot3d(X,Y,Z):
+    fig = plt.figure(figsize=(8,8))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, Y, Z, color='y')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+    plt.show()
+    
+        
+# Visualise the metrics from the model
+def metrics(history):
+    df = pd.DataFrame(history)
+    df.reset_index()
+    df["batch"] = df.index + 1
+    df = df.melt("batch", var_name="name")
+    df["val"] = df.name.str.startswith("val")
+    df["type"] = df["val"]
+    df["metrics"] = df["val"]
+    df.loc[df.val == False, "type"] = "training"
+    df.loc[df.val == True, "type"] = "validation"
+    df.loc[df.val == False, "metrics"] = df.name
+    df.loc[df.val == True, "metrics"] = df.name.str.split("val_", expand=True)[1]
+    df = df.drop(["name", "val"], axis=1)
+    
+    base = alt.Chart().encode(
+        x = "batch:Q",
+        y = "value:Q",
+        color = "type"
+    ).properties(width = 300, height = 300)
+
+    layers = base.mark_circle(size = 50).encode(tooltip = ["batch", "value"]) + base.mark_line()
+    chart = layers.facet(column='metrics:N', data=df).resolve_scale(y='independent')    
+    
+    return chart
+
+x = np.arange(-1,1,0.01)
+y = np.arange(-1,1,0.01)
+
+X, Y = np.meshgrid(x, y)
+c = np.ones((200,200))
+e = np.random.rand(200,200)*0.1
+
+Z = 2*X*X - 3*Y*Y + 5*c + e
+
+plot3d(X,Y,Z)
+
+from keras.models import Sequential
+from keras.layers import Dense
+
+input_xy = np.c_[X.reshape(-1),Y.reshape(-1)]
+output_z = Z.reshape(-1)
+
+output_z.shape, input_xy.shape
+
+model = Sequential()
+model.add(Dense(64, input_dim=2,  activation="relu"))
+model.add(Dense(32, input_dim=2,  activation="relu"))
+model.add(Dense(1))
+
+model.summary()
+
+model.compile(loss='mean_squared_error', optimizer="sgd", metrics=["mse"])
+
+%%time
+output = model.fit(input_xy, output_z, epochs=10, validation_split=0.2, shuffle=True, verbose=1)
+
+metrics(output.history)
+
+Z_pred = model.predict(input_xy).reshape(200,200)
+
+plot3d(X,Y,Z_pred)

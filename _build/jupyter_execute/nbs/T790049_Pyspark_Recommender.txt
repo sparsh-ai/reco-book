@@ -1,0 +1,778 @@
+#hide-output
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+!wget https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
+!tar -xvf spark-3.1.2-bin-hadoop3.2.tgz
+!pip install findspark
+
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+os.environ["SPARK_HOME"] = "/content/spark-3.1.2-bin-hadoop3.2"
+
+import findspark
+findspark.init()
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.master("local[*]").getOrCreate()
+
+df = spark.createDataFrame([{"hello": "world"} for x in range(1000)])
+df.show(3)
+
+!git clone https://github.com/PacktPublishing/Mastering-Big-Data-Analytics-with-PySpark
+
+%cd Mastering-Big-Data-Analytics-with-PySpark/
+
+!python download_data.py
+
+# !apt-get install openjdk-8-jdk-headless -qq > /dev/null
+# !wget https://downloads.apache.org/spark/spark-3.0.2/spark-3.0.2-bin-hadoop3.2.tgz
+# !tar -xvf spark-3.0.2-bin-hadoop3.2.tgz
+# !pip install -q findspark
+
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+os.environ["SPARK_HOME"] = "/content/Mastering-Big-Data-Analytics-with-PySpark/spark-3.0.2-bin-hadoop3.2"
+
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("HelloWorldApp").getOrCreate()
+
+# Using Spark SQL, we create a dataframe which holds our `hello world` data
+df = spark.sql('SELECT "hello world" as c1')
+
+# We can then use the `show()` method to see what the DataFrame we just created looks like
+df.show()
+
+spark.stop()
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("31LoadingDataFromCSV").getOrCreate()
+
+RATINGS_CSV_LOCATION = "/content/Mastering-Big-Data-Analytics-with-PySpark/data-sets/ml-latest-small/ratings.csv"
+
+df = spark.read.csv(RATINGS_CSV_LOCATION)
+
+df.show()
+df.printSchema()
+
+# Loading CSV file with proper parsing and inferSchema
+df = spark.read.csv(
+    path=RATINGS_CSV_LOCATION,
+    sep=",",
+    header=True,
+    quote='"',
+    encoding="UTF-8",
+    inferSchema=True,
+)
+
+# Displaying results of the load
+df.show()
+df.printSchema()
+
+#  Type safe loading of ratings.csv file
+df = spark.read.csv(
+    path=RATINGS_CSV_LOCATION,
+    sep=",",
+    header=True,
+    quote='"',
+    encoding="UTF-8",
+    schema="userId INT, movieId INT, rating DOUBLE, timestamp INT",
+)
+
+# Displaying results of the load
+df.show()
+df.printSchema()
+df.describe().show()
+df.explain()
+
+from pyspark.sql import functions as f
+
+ratings = (
+    spark.read.csv(
+        path=RATINGS_CSV_LOCATION,
+        sep=",",
+        header=True,
+        quote='"',
+        schema="userId INT, movieId INT, rating DOUBLE, timestamp INT",
+    )
+    .withColumnRenamed("timestamp", "timestamp_unix")
+    .withColumn("timestamp", f.to_timestamp(f.from_unixtime("timestamp_unix")))
+)
+
+ratings.show(5)
+ratings.printSchema()
+ratings.drop("timestamp_unix", "foobar").show(5)
+
+MOVIES_CSV_LOCATION = "/content/Mastering-Big-Data-Analytics-with-PySpark/data-sets/ml-latest-small/movies.csv"
+
+movies = (
+    spark.read.csv(
+        path=MOVIES_CSV_LOCATION,
+        sep=",",
+        header=True,
+        quote='"',
+        schema="movieId INT, title STRING, genres STRING",
+    )
+)
+movies.show(15, truncate=False)
+movies.printSchema()
+
+movies.where(f.col("genres") == "Action").show(5, False)
+movies.where("genres == 'Action'").show(5, False)
+
+movie_genre = (
+    movies
+    .withColumn("genres_array", f.split("genres", "\|"))
+    .withColumn("genre", f.explode("genres_array"))
+    .select("movieId", "title", "genre")
+)
+
+movie_genre.show(10, False)
+
+available_genres = movie_genre.select("genre").distinct()
+available_genres.show()
+
+movies_without_genre = movies.where(f.col("genres") == "(no genres listed)")
+print(movies_without_genre.count())
+movies_without_genre.show()
+
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StringType, IntegerType, StructType, StructField
+
+spark = SparkSession.builder.appName("join_tests").getOrCreate()
+schema = StructType(
+    [StructField("id", IntegerType()), StructField("value", StringType())]
+)
+
+
+A = spark.createDataFrame(
+    schema=schema, data=[
+        (1, "A"),
+        (2, "B"),
+        (3, "C"),
+        (4, "D"),
+        (5, "E"),
+        (None, "Z")
+    ]
+)
+
+B = spark.createDataFrame(
+    schema=schema, data=[
+        (3, "C"),
+        (4, "D"),
+        (5, "E"),
+        (6, "F"),
+        (7, "G")
+    ]
+)
+
+A.show()
+B.show()
+
+# INNER JOINS
+# A.join(B, ["id"], "inner").show()
+
+# CROSS JOINS (CARTESIAN PRODUCT)
+# A.crossJoin(B).show()
+
+# FULL JOINS
+# A.join(B, ["id"], "outer").show()
+# A.join(B, ["id"], "full").show()
+# A.join(B, ["id"], "full_outer").show()
+
+# LEFT OUTER
+# A.join(B, ["id"], "left").show()
+# A.join(B, ["id"], "left_outer").show()
+
+# RIGHT OUTER
+# A.join(B, ["id"], "right").show()
+# A.join(B, ["id"], "right_outer").show()
+
+# LEFT SPECIAL
+# A.join(B, ["id"], "left_semi").show()
+# A.join(B, ["id"], "left_anti").show()
+
+links = spark.read.csv(
+    path="/content/Mastering-Big-Data-Analytics-with-PySpark/data-sets/ml-latest-small/links.csv",
+    sep=",",
+    header=True,
+    quote='"',
+    schema="movieId INT, imdbId STRING, tmdbId INT",
+)
+
+tags = spark.read.csv(
+    path="/content/Mastering-Big-Data-Analytics-with-PySpark/data-sets/ml-latest-small/tags.csv",
+    sep=",",
+    header=True,
+    quote='"',
+    inferSchema=True,
+    schema="userId INT, movieId INT, tag STRING, timestamp INT",
+).withColumn("timestamp", f.to_timestamp(f.from_unixtime("timestamp")))
+
+links.show(5)
+tags.show(5)
+
+movie_per_genre = movie_genre.groupBy("genre").count()
+movie_per_genre.show()
+
+# opinions = movies.join(tags, movies['movieId'] == tags['movieId'])
+# opinions = movies.join(tags, ["movieId"])
+opinions = movies.join(tags, ["movieId"], "inner")
+opinions.show()
+
+opinions = (
+    movies
+    .join(tags, ["movieId"], "inner")
+    .select("userId", "movieId", "title", "tag", "timestamp")
+)
+opinions.show(5, False)
+
+opinions_ext = opinions.withColumnRenamed("timestamp", "tag_time").join(ratings, ["movieId", "userId"])
+opinions_ext.show(5)
+
+ratings.groupBy("movieId").agg(
+    f.count("*"),
+    f.min("rating"),
+    f.min("rating"),
+    f.avg("rating"),
+    f.min("timestamp"),
+    f.max("timestamp"),
+).show(5)
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as f
+
+spark = SparkSession.builder.appName("als-recommender").getOrCreate()
+
+ratings = (
+    spark.read.csv(
+        path="/content/Mastering-Big-Data-Analytics-with-PySpark/data-sets/ml-latest-small/ratings.csv",
+        sep=",",
+        header=True,
+        quote='"',
+        schema="userId INT, movieId INT, rating DOUBLE, timestamp INT",
+    )
+    # .withColumn("timestamp", f.to_timestamp(f.from_unixtime("timestamp")))
+    .drop("timestamp")
+    .cache()
+)
+
+from pyspark.ml.recommendation import ALS
+
+model = (
+    ALS(
+        userCol="userId",
+        itemCol="movieId",
+        ratingCol="rating",
+    ).fit(ratings)
+)
+
+predictions = model.transform(ratings)
+predictions.show(10, False)
+
+model.userFactors.show(5)
+
+model.itemFactors.show(5)
+
+from pyspark.ml.recommendation import ALS
+from pyspark.ml.evaluation import RegressionEvaluator
+
+als = ALS(
+    userCol="userId",
+    itemCol="movieId",
+    ratingCol="rating",
+)
+
+(training_data, validation_data) = ratings.randomSplit([8.0, 2.0])
+
+evaluator = RegressionEvaluator(
+    metricName="rmse", labelCol="rating", predictionCol="prediction"
+)
+
+model = als.fit(training_data)
+predictions = model.transform(validation_data)
+
+predictions.show(10, False)
+
+rmse = evaluator.evaluate(predictions.na.drop())
+print(rmse)
+
+from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+
+parameter_grid = (
+    ParamGridBuilder()
+    .addGrid(als.rank, [1, 5, 10])
+    .addGrid(als.maxIter, [20])
+    .addGrid(als.regParam, [0.05, 0.1])
+    .build()
+)
+
+from pprint import pprint
+
+pprint(parameter_grid)
+
+crossvalidator = CrossValidator(
+    estimator=als,
+    estimatorParamMaps=parameter_grid,
+    evaluator=evaluator,
+    numFolds=2,
+)
+
+crossval_model = crossvalidator.fit(training_data)
+predictions = crossval_model.transform(validation_data)
+
+rmse = evaluator.evaluate(predictions.na.drop())
+print(rmse)
+
+model = crossval_model.bestModel
+
+import numpy as np
+import scipy.sparse as sps
+from pyspark.sql import SparkSession
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.linalg import Matrix, Matrices
+
+spark = SparkSession.builder.getOrCreate()
+
+# Use a NumPy array as a dense vector.
+dv1 = np.array([1.0, 0.0, 3.0])
+# Use a Python list as a dense vector.
+dv2 = [1.0, 0.0, 3.0]
+print("Dense vector 1:", dv1)
+print("Dense vector 2:", dv2)
+
+# Create a SparseVector.
+sv1 = Vectors.sparse(3, [0, 2], [1.0, 3.0])
+# Use a single-column SciPy csc_matrix as a sparse vector.
+sv2 = sps.csc_matrix((np.array([1.0, 3.0]), np.array([0, 2]), np.array([0, 2])), shape=(3, 1))
+print("Sparse vector 1:", sv1)
+print("Sparse vector 2:", sv2)
+
+# Create a dense matrix
+dm = Matrices.dense(3, 2, [1, 3, 5, 2, 4, 6])
+# Create a sparse matrix
+sm = Matrices.sparse(3, 2, [0, 1, 3], [0, 2, 1], [9, 6, 8])
+print("Dense matrix:", dm)
+print("Sparse matrix:", sm)
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+PATH = "./spark-3.0.2-bin-hadoop3.2/data/mllib/images/origin/kittens"
+df = (
+    spark.read.format("image")
+    .option("dropInvalid", True)
+    .load(PATH)
+    .select("image.origin", "image.height", "image.width", "image.nChannels", "image.mode", "image.data")
+)
+df.toPandas()
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+PATH = "./spark-3.0.2-bin-hadoop3.2/data/mllib/sample_libsvm_data.txt"
+
+df = spark.read.format("libsvm").option("numFeatures", "780").load(PATH)
+df.show()
+
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.getOrCreate()
+
+from pyspark.ml import Pipeline
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.feature import HashingTF, Tokenizer
+from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+
+# Prepare training documents, which are labeled.
+training_data = [
+    (0, "a b c d e spark", 1.0),
+    (1, "b d", 0.0),
+    (2, "spark f g h", 1.0),
+    (3, "hadoop mapreduce", 0.0),
+    (4, "b spark who", 1.0),
+    (5, "g d a y", 0.0),
+    (6, "spark fly", 1.0),
+    (7, "was mapreduce", 0.0),
+    (8, "e spark program", 1.0),
+    (9, "a e c l", 0.0),
+    (10, "spark compile", 1.0),
+    (11, "hadoop software", 0.0),
+]
+training = spark.createDataFrame(training_data, ["id", "text", "label"])
+print("Dataset used for training (labeled):")
+training.show()
+
+# Prepare test documents, which are unlabeled.
+test_data = [
+    (4, "spark i j k"),
+    (5, "l m n"),
+    (6, "mapreduce spark"),
+    (7, "apache hadoop"),
+]
+test = spark.createDataFrame(test_data, ["id", "text"],)
+print("Dataset used for testing (unlabeled):")
+test.show()
+
+# Configure an ML pipeline, which consists of tree stages: tokenizer, hashingTF, and lr.
+tokenizer = Tokenizer(inputCol="text", outputCol="words")
+hashingTF = HashingTF(inputCol=tokenizer.getOutputCol(), outputCol="features")
+lr = LogisticRegression(maxIter=10)
+pipeline = Pipeline(stages=[tokenizer, hashingTF, lr])
+
+# We now treat the Pipeline as an Estimator, wrapping it in a CrossValidator instance.
+# This will allow us to jointly choose parameters for all Pipeline stages.
+# A CrossValidator requires an Estimator, a set of Estimator ParamMaps, and an Evaluator.
+# We use a ParamGridBuilder to construct a grid of parameters to search over.
+# With 3 values for hashingTF.numFeatures and 2 values for lr.regParam,
+# this grid will have 3 x 2 = 6 parameter settings for CrossValidator to choose from.
+paramGrid = (
+    ParamGridBuilder()
+    .addGrid(hashingTF.numFeatures, [10, 100, 1000])
+    .addGrid(lr.regParam, [0.1, 0.01])
+    .build()
+)
+
+crossval = CrossValidator(
+    estimator=pipeline,
+    estimatorParamMaps=paramGrid,
+    evaluator=BinaryClassificationEvaluator(),
+    numFolds=2,
+)  # use 3+ folds in practice
+
+# Run cross-validation, and choose the best set of parameters.
+cvModel = crossval.fit(training)
+
+# Make predictions on test documents. cvModel uses the best model found (lrModel).
+prediction = cvModel.transform(test)
+selected = prediction.select("id", "text", "probability", "prediction")
+selected.show(100, False)
+
+import pandas as pd
+from IPython.core.display import display
+import seaborn as sns
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as f
+
+# General settings for display purposes
+pd.options.display.max_columns = None
+pd.options.display.max_rows = None
+pd.options.display.max_colwidth = 144
+sns.set(color_codes=True)
+
+spark = SparkSession.builder.getOrCreate()
+
+# Source sentiment140: http://help.sentiment140.com/for-students/
+schema = "polarity FLOAT, id LONG, date_time STRING, query STRING, user STRING, text STRING"
+spark_reader = spark.read.schema(schema)
+
+# file 1: testdata.manual.2009.06.14.csv
+TESTDATA_PATH = ("./data-sets/sentiment-140-training-data/testdata.manual.2009.06.14.csv")
+raw_test_data = spark_reader.csv(
+    TESTDATA_PATH,
+    quote='"',
+    header=False,
+    inferSchema=True,
+    columnNameOfCorruptRecord="corrupt_data",
+).cache()
+
+# file 2: training.1600000.processed.noemoticon.csv
+TRAININGDATA_PATH = "./data-sets/sentiment-140-training-data/training.1600000.processed.noemoticon.csv"
+raw_training_data = spark_reader.csv(
+    TRAININGDATA_PATH,
+    quote='"',
+    header=False,
+    inferSchema=True,
+    columnNameOfCorruptRecord="corrupt_data",
+).cache()
+
+# path that we will write our raw data to
+OUTPUT_PATH = ("./data-sets/sentiment-140-training-data/RAW")
+
+# Count of data
+print(f"Overall data count: {raw_test_data.count()}")
+
+# Data summary
+display(raw_test_data.summary().toPandas())
+print("Data schema")
+raw_test_data.printSchema()
+
+# Let's look at 50 rows of data
+display(raw_test_data.limit(50).toPandas())
+
+# Count of data
+print(f"Overall data count: {raw_training_data.count()}")
+
+# Data summary
+display(raw_training_data.summary().toPandas())
+print("Data schema")
+raw_training_data.printSchema()
+
+# Let's look at 50 rows of data
+display(raw_training_data.limit(50).toPandas())
+
+df = raw_training_data.select("polarity").na.drop()
+print(f"No of rows with Polarity: {df.count()} / {raw_training_data.count()}")
+
+display(df.groupBy("polarity").count().toPandas())
+sns.displot(df.toPandas());
+
+raw_training_data.repartition(20).write.partitionBy("polarity").csv(OUTPUT_PATH, mode="overwrite")
+
+import html
+import pandas as pd
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as f
+
+spark = SparkSession.builder.appName("DataCleaning").getOrCreate()
+
+pd.options.display.max_columns = None
+pd.options.display.max_rows = 250
+pd.options.display.max_colwidth = 150
+
+schema = "polarity FLOAT, id LONG, date_time TIMESTAMP, query STRING, user STRING, text STRING"
+timestampformat = "EEE MMM dd HH:mm:ss zzz yyyy"
+
+IN_PATH = "./data-sets/sentiment-140-training-data/RAW"
+OUT_PATH = "./data-sets/sentiment-140-training-data/CLEAN"
+
+spark_reader = spark.read.schema(schema)
+
+url_regex = r"((https?|ftp|file):\/{2,3})+([-\w+&@#/%=~|$?!:,.]*)|(www.)+([-\w+&@#/%=~|$?!:,.]*)"
+email_regex = r"[\w.-]+@[\w.-]+\.[a-zA-Z]{1,}"
+user_regex = r"(@\w{1,15})"
+hashtag_regex = "(#\w{1,})"
+hashtag_replace_regex = "#(\w{1,})"
+
+@f.udf
+def html_unescape(s: str):
+    if isinstance(s, str):
+        return html.unescape(s)
+    return s
+
+
+def clean_data(df):
+    df = (
+        df
+        .withColumn("original_text", f.col("text"))
+        .withColumn("text", f.regexp_replace(f.col("text"), url_regex, ""))
+        .withColumn("text", f.regexp_replace(f.col("text"), email_regex, ""))
+        .withColumn("text", f.regexp_replace(f.col("text"), user_regex, ""))
+        .withColumn("text", f.regexp_replace(f.col("text"), "#", " "))
+        .withColumn("text", html_unescape(f.col("text")))
+        .filter("text != ''")
+    )
+    return df
+
+df_raw = spark_reader.csv(IN_PATH, timestampFormat=timestampformat) 
+df_clean = clean_data(df_raw)
+
+df_clean.write.partitionBy("polarity").parquet(OUT_PATH, mode="overwrite")
+
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+!wget https://downloads.apache.org/spark/spark-3.1.1/spark-3.1.1-bin-hadoop3.2.tgz
+!tar -xvf spark-3.1.1-bin-hadoop3.2.tgz
+!pip install -q findspark
+
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+os.environ["SPARK_HOME"] = "/content/spark-3.1.1-bin-hadoop3.2"
+
+# import findspark
+# findspark.init()
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.master("local[*]").getOrCreate()
+
+# df = spark.createDataFrame([{"hello": "world"} for x in range(1000)])
+# df.show(3)
+
+!pip install koalas
+
+# Default Packages (available by Default in Google Colab)
+import math
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import seaborn as sns
+import random
+from pprint import pprint
+from matplotlib.lines import Line2D
+
+# Downloaded Packages (not available by Default)
+import databricks.koalas
+
+# PySpark Utilities
+import pyspark.sql.functions as F
+from pyspark.sql.types import *
+from pyspark.sql import SparkSession, Row
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.ml.recommendation import ALS
+from pyspark.ml.recommendation import ALS, ALSModel
+from pyspark.ml.evaluation import RegressionEvaluator, BinaryClassificationEvaluator
+from pyspark.ml.tuning import ParamGridBuilder, TrainValidationSplit
+from pyspark.mllib.evaluation import RegressionMetrics, RankingMetrics
+
+# Random Seed
+SEED = 1492
+
+# Set-up
+plt.style.use('seaborn')
+
+complete_dataset_url = 'http://files.grouplens.org/datasets/movielens/ml-latest.zip'
+small_dataset_url = 'http://files.grouplens.org/datasets/movielens/ml-latest-small.zip'
+
+import os
+
+datasets_path = os.path.join('.', 'datasets')
+os.makedirs(datasets_path, exist_ok=True)
+complete_dataset_path = os.path.join(datasets_path, 'ml-latest.zip')
+small_dataset_path = os.path.join(datasets_path, 'ml-latest-small.zip')
+
+import urllib.request
+
+small_f = urllib.request.urlretrieve (small_dataset_url, small_dataset_path)
+complete_f = urllib.request.urlretrieve (complete_dataset_url, complete_dataset_path)
+
+import zipfile
+
+with zipfile.ZipFile(small_dataset_path, "r") as z:
+    z.extractall(datasets_path)
+
+with zipfile.ZipFile(complete_dataset_path, "r") as z:
+    z.extractall(datasets_path)
+
+spark = SparkSession\
+    .builder\
+    .appName("ALSExample")\
+    .getOrCreate()
+
+lines = spark.read.text(os.path.join(os.getenv('SPARK_HOME'),"data/mllib/als/sample_movielens_ratings.txt")).rdd
+parts = lines.map(lambda row: row.value.split("::"))
+ratingsRDD = parts.map(lambda p: Row(userId=int(p[0]), movieId=int(p[1]),
+                                      rating=float(p[2]), timestamp=int(p[3])))
+ratings = spark.createDataFrame(ratingsRDD)
+(training, test) = ratings.randomSplit([0.8, 0.2])
+
+# Build the recommendation model using ALS on the training data
+# Note we set cold start strategy to 'drop' to ensure we don't get NaN evaluation metrics
+als = ALS(maxIter=5, regParam=0.01, userCol="userId", itemCol="movieId", ratingCol="rating")
+# als = ALS(maxIter=5, regParam=0.01, userCol="userId", itemCol="movieId", ratingCol="rating", coldStartStrategy="drop")
+model = als.fit(training)
+
+# Evaluate the model by computing the RMSE on the test data
+predictions = model.transform(test)
+evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
+                                predictionCol="prediction")
+rmse = evaluator.evaluate(predictions)
+print("Root-mean-square error = " + str(rmse))
+
+# Generate top 10 movie recommendations for each user
+userRecs = model.recommendForAllUsers(10)
+userRecs.show()
+
+# Generate top 10 user recommendations for each movie
+movieRecs = model.recommendForAllItems(10)
+movieRecs.show()
+
+# Generate top 10 movie recommendations for a specified set of users
+users = ratings.select(als.getUserCol()).distinct().limit(3)
+userSubsetRecs = model.recommendForUserSubset(users, 10)
+userSubsetRecs.show()
+
+# Generate top 10 user recommendations for a specified set of movies
+movies = ratings.select(als.getItemCol()).distinct().limit(3)
+movieSubSetRecs = model.recommendForItemSubset(movies, 10)
+movieSubSetRecs.show()
+
+spark.stop()
+
+spark = SparkSession.builder.appName("Reco-Spark-Example2").getOrCreate()
+
+data = spark.read.csv(os.path.join(datasets_path,'ml-latest-small','ratings.csv'),
+                      inferSchema=True, header=True)
+
+data.show(5)
+data.printSchema()
+data.describe().show()
+
+titles = spark.read.csv(os.path.join(datasets_path,'ml-latest-small','movies.csv'),
+                        inferSchema=True, header=True)
+
+titles.show(5)
+
+data = data.join(titles,data.movieId==titles.movieId,"left").select([data.movieId,
+                                                              titles.title,
+                                                              data.userId,
+                                                              data.rating])
+data.show(5)
+
+from pyspark.sql.functions import rand, col, lit
+
+data.orderBy(rand()).show(10,False)
+data.groupBy('userId').count().orderBy('count',ascending=False).show(10,False)
+data.groupBy('userId').count().orderBy('count',ascending=True).show(10,False)
+data.groupBy('title').count().orderBy('count',ascending=False).show(10,False)
+data.groupBy('title').count().orderBy('count',ascending=True).show(10,False)
+
+# Smaller dataset so we will use 0.8 / 0.2
+(train_data, test_data) = data.randomSplit([0.8, 0.2], seed=42)
+
+# Build the recommendation model using ALS on the training data
+als = ALS(maxIter=5, regParam=0.01, userCol="userId", itemCol="movieId", ratingCol="rating")
+# als = ALS(maxIter=5, regParam=0.01, userCol="userId", itemCol="movieId", ratingCol="rating", coldStartStrategy="drop")
+model = als.fit(train_data)
+
+# Evaluate the model by computing the RMSE on the test data
+predictions = model.transform(test_data)
+
+predictions.show()
+
+evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating", predictionCol="prediction")
+rmse = evaluator.evaluate(predictions)
+print("Root-mean-square error = " + str(rmse))
+
+avgRatings = data.select('rating').groupBy().avg().first()[0]
+print('The average rating in the dataset is: {}'.format(avgRatings))
+
+evaluator = RegressionEvaluator(metricName='rmse', labelCol='rating', predictionCol='prediction')
+print('The root mean squared error for our model is: {}'.format(evaluator.evaluate(predictions.na.fill(avgRatings))))
+
+evaluator = RegressionEvaluator(metricName='rmse', labelCol='rating', predictionCol='prediction')
+print ('The root mean squared error for our model is: {}'.format(evaluator.evaluate(predictions.na.drop())))
+
+single_user = test_data.filter(test_data['userId']==12).select(['movieId','userId'])
+single_user.show()
+
+recommendations = model.transform(single_user)
+recommendations.orderBy('prediction', ascending=False).show()
+
+#create dataset of all distinct movies 
+unique_movies=data.select('movieId').distinct()
+unique_movies.count()
+
+#assigning alias name 'a' to unique movies df
+a = unique_movies.alias('a')
+
+#selecting a user
+user_id=12
+
+#creating another dataframe which contains already watched movie by active user 
+watched_movies=indexed.filter(indexed['userId'] == user_id).select('movieId').distinct()
+watched_movies.count()
+
+#assigning alias name 'b' to watched movies df
+b=watched_movies.alias('b')
+
+#joining both tables on left join 
+total_movies = a.join(b, a.movieId == b.movieId,how='left')
+
+#selecting movies which active user is yet to rate or watch
+remaining_movies=total_movies.where(col("b.movieId").isNull()).select(a.movieId).distinct()
+remaining_movies=remaining_movies.withColumn("userId",lit(int(user_id)))
+
+#making recommendations using ALS recommender model and selecting only top 'n' movies
+recommendations=model.transform(remaining_movies).orderBy('prediction',ascending=False)
+recommendations.show(5,False)

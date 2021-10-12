@@ -1,0 +1,1915 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import sys
+import os
+
+from scipy.sparse import csr_matrix
+from sklearn.preprocessing import LabelEncoder
+
+!wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!unzip ml-latest-small.zip
+
+DOWNLOAD_DESTINATION_DIR = "/content/ml-latest-small"
+
+ratings_path = os.path.join(DOWNLOAD_DESTINATION_DIR, 'ratings.csv')
+ratings = pd.read_csv(
+    ratings_path,
+    sep=',',
+    names=["userid", "itemid", "rating", "timestamp"],
+    skiprows=1
+)
+
+movies_path = os.path.join(DOWNLOAD_DESTINATION_DIR, 'movies.csv')
+movies = pd.read_csv(
+    movies_path,
+    sep=',',
+    names=["itemid", "title", "genres"],
+    encoding='latin-1',
+    skiprows=1
+)
+
+ratings.head()
+
+movies.head()
+
+print("There are {} users and {} movies in this dataset."\
+      .format(ratings.userid.nunique(),
+              ratings.itemid.nunique()))
+
+# histogram of ratings
+ratings.groupby('rating').size().plot(kind='bar');
+
+# average rating of movies
+movie_means = ratings.join(movies['title'], on='itemid').groupby('title').rating.mean()
+movie_means[:50].plot(kind='bar', grid=True, figsize=(16,6), title="mean ratings of 50 movies");
+
+# 30 most rated movies vs. 30 less rated movies
+fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(16,4), sharey=True)
+movie_means.nlargest(30).plot(kind='bar', ax=ax1, title="Top 30 movies in data set");
+movie_means.nsmallest(30).plot(kind='bar', ax=ax2, title="Bottom 30 movies in data set");
+
+def ids_encoder(ratings):
+    users = sorted(ratings['userid'].unique())
+    items = sorted(ratings['itemid'].unique())
+
+    # create users and items encoders
+    uencoder = LabelEncoder()
+    iencoder = LabelEncoder()
+
+    # fit users and items ids to the corresponding encoder
+    uencoder.fit(users)
+    iencoder.fit(items)
+
+    # encode userids and itemids
+    ratings.userid = uencoder.transform(ratings.userid.tolist())
+    ratings.itemid = iencoder.transform(ratings.itemid.tolist())
+
+    return ratings, uencoder, iencoder
+
+# userids and itemids encoding
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# transform rating dataframe to matrix
+def ratings_matrix(ratings):    
+    return csr_matrix(pd.crosstab(ratings.userid, ratings.itemid, ratings.rating, aggfunc=sum).fillna(0).values)    
+
+R = ratings_matrix(ratings)
+
+R[:10,:10].todense()
+
+plt.figure(figsize=(20,10))
+plt.imshow(csr_matrix(R).todense(), cmap='hot', interpolation='nearest')
+plt.show()
+
+plt.figure(figsize=(5,5))
+plt.imshow(csr_matrix(R[:100,:100]).todense(), cmap='hot', interpolation='nearest')
+plt.show()
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from sklearn.neighbors import NearestNeighbors
+from scipy.sparse import csr_matrix
+
+from recsys.datasets import ml100k
+from recsys.preprocessing import ids_encoder
+
+import pandas as pd
+import numpy as np
+import zipfile
+
+ratings, movies = ml100k.load()
+
+# create the encoder
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+def ratings_matrix(ratings):    
+    return csr_matrix(pd.crosstab(ratings.userid, ratings.itemid, ratings.rating, aggfunc=sum).fillna(0).values)    
+
+R = ratings_matrix(ratings)
+
+def create_model(rating_matrix, metric):
+    """
+    - create the nearest neighbors model with the corresponding similarity metric
+    - fit the model
+    """
+    model = NearestNeighbors(metric=metric, n_neighbors=21, algorithm='brute')
+    model.fit(rating_matrix)    
+    return model
+
+def nearest_neighbors(rating_matrix, model):
+    """    
+    :param rating_matrix : rating matrix of shape (nb_users, nb_items)
+    :param model : nearest neighbors model    
+    :return
+        - similarities : distances of the neighbors from the referenced user
+        - neighbors : neighbors of the referenced user in decreasing order of similarities
+    """    
+    similarities, neighbors = model.kneighbors(rating_matrix)        
+    return similarities[:, 1:], neighbors[:, 1:]
+
+model = create_model(rating_matrix=R, metric='cosine') # we can also use the 'euclidian' distance
+similarities, neighbors = nearest_neighbors(R, model)
+
+def find_candidate_items(userid):
+    """
+    Find candidate items for an active user
+    
+    :param userid : active user
+    :param neighbors : users similar to the active user        
+    :return candidates : top 30 of candidate items
+    """
+    user_neighbors = neighbors[userid]
+    activities = ratings.loc[ratings.userid.isin(user_neighbors)]
+    
+    # sort items in decreasing order of frequency
+    frequency = activities.groupby('itemid')['rating'].count().reset_index(name='count').sort_values(['count'],ascending=False)
+    Gu_items = frequency.itemid
+    active_items = ratings.loc[ratings.userid == userid].itemid.to_list()
+    candidates = np.setdiff1d(Gu_items, active_items, assume_unique=True)[:30]
+        
+    return candidates
+
+# mean ratings for each user
+mean = ratings.groupby(by='userid', as_index=False)['rating'].mean()
+mean_ratings = pd.merge(ratings, mean, suffixes=('','_mean'), on='userid')
+
+# normalized ratings for each items
+mean_ratings['norm_rating'] = mean_ratings['rating'] - mean_ratings['rating_mean']
+
+mean = mean.to_numpy()[:, 1]
+
+np_ratings = mean_ratings.to_numpy()
+
+def predict(userid, itemid):
+    """
+    predict what score userid would have given to itemid.
+    
+    :param
+        - userid : user id for which we want to make prediction
+        - itemid : item id on which we want to make prediction
+        
+    :return
+        - r_hat : predicted rating of user userid on item itemid
+    """
+    user_similarities = similarities[userid]
+    user_neighbors = neighbors[userid]
+    # get mean rating of user userid
+    user_mean = mean[userid]
+    
+    # find users who rated item 'itemid'
+    iratings = np_ratings[np_ratings[:, 1].astype('int') == itemid]
+    
+    # find similar users to 'userid' who rated item 'itemid'
+    suri = iratings[np.isin(iratings[:, 0], user_neighbors)]
+    
+    # similar users who rated current item (surci)
+    normalized_ratings = suri[:,4]
+    indexes = [np.where(user_neighbors == uid)[0][0] for uid in suri[:, 0].astype('int')]
+    sims = user_similarities[indexes]
+    
+    num = np.dot(normalized_ratings, sims)
+    den = np.sum(np.abs(sims))
+    
+    if num == 0 or den == 0:
+        return user_mean
+    
+    r_hat = user_mean + np.dot(normalized_ratings, sims) / np.sum(np.abs(sims))
+    
+    return r_hat
+
+def user2userPredictions(userid, pred_path):
+    """
+    Make rating prediction for the active user on each candidate item and save in file prediction.csv
+    
+    :param
+        - userid : id of the active user
+        - pred_path : where to save predictions
+    """    
+    # find candidate items for the active user
+    candidates = find_candidate_items(userid)
+    
+    # loop over candidates items to make predictions
+    for itemid in candidates:
+        
+        # prediction for userid on itemid
+        r_hat = predict(userid, itemid)
+        
+        # save predictions
+        with open(pred_path, 'a+') as file:
+            line = '{},{},{}\n'.format(userid, itemid, r_hat)
+            file.write(line)
+
+import sys
+
+def user2userCF():
+    """
+    Make predictions for each user in the database.    
+    """
+    # get list of users in the database
+    users = ratings.userid.unique()
+    
+    def _progress(count):
+        sys.stdout.write('\rRating predictions. Progress status : %.1f%%' % (float(count/len(users))*100.0))
+        sys.stdout.flush()
+    
+    saved_predictions = 'predictions.csv'    
+    if os.path.exists(saved_predictions):
+        os.remove(saved_predictions)
+    
+    for count, userid in enumerate(users):        
+        # make rating predictions for the current user
+        user2userPredictions(userid, saved_predictions)
+        _progress(count)
+
+user2userCF()
+
+def user2userRecommendation(userid):
+    """
+    """
+    # encode the userid
+    uid = uencoder.transform([userid])[0]
+    saved_predictions = 'predictions.csv'
+    
+    predictions = pd.read_csv(saved_predictions, sep=',', names=['userid', 'itemid', 'predicted_rating'])
+    predictions = predictions[predictions.userid==uid]
+    List = predictions.sort_values(by=['predicted_rating'], ascending=False)
+    
+    List.userid = uencoder.inverse_transform(List.userid.tolist())
+    List.itemid = iencoder.inverse_transform(List.itemid.tolist())
+    
+    List = pd.merge(List, movies, on='itemid', how='inner')
+    
+    return List
+
+user2userRecommendation(212)
+
+from recsys.preprocessing import train_test_split, get_examples
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+def evaluate(x_test, y_test):
+    print('Evaluate the model on {} test data ...'.format(x_test.shape[0]))
+    preds = list(predict(u,i) for (u,i) in x_test)
+    mae = np.sum(np.absolute(y_test - np.array(preds))) / x_test.shape[0]
+    print('\nMAE :', mae)
+    return mae
+
+evaluate(x_test, y_test)
+
+from recsys.memories.UserToUser import UserToUser
+
+# load ml100k ratings
+ratings, movies = ml100k.load()
+
+# prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the user-based CF
+usertouser = UserToUser(ratings, movies, metric='cosine')
+
+# evaluate the user-based CF on the ml100k test data
+usertouser.evaluate(x_test, y_test)
+
+from recsys.datasets import ml1m
+from recsys.preprocessing import ids_encoder, get_examples, train_test_split
+from recsys.memories.UserToUser import UserToUser
+
+# load ml100k ratings
+ratings, movies = ml1m.load()
+
+# prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the user-based CF
+usertouser = UserToUser(ratings, movies, k=20, metric='cosine')
+
+# evaluate the user-based CF on the ml1m test data
+print("==========================")
+usertouser.evaluate(x_test, y_test)
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from sklearn.neighbors import NearestNeighbors
+from scipy.sparse import csr_matrix
+
+from recsys.datasets import ml1m, ml100k
+from recsys.preprocessing import ids_encoder
+
+import pandas as pd
+import numpy as np
+import os
+import sys
+
+ratings, movies = ml100k.load()
+
+# create the encoder
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+def normalize():
+    # compute mean rating for each user
+    mean = ratings.groupby(by='userid', as_index=False)['rating'].mean()
+    norm_ratings = pd.merge(ratings, mean, suffixes=('','_mean'), on='userid')
+    
+    # normalize each rating by substracting the mean rating of the corresponding user
+    norm_ratings['norm_rating'] = norm_ratings['rating'] - norm_ratings['rating_mean']
+    return mean.to_numpy()[:, 1], norm_ratings
+
+mean, norm_ratings = normalize()
+np_ratings = norm_ratings.to_numpy()
+norm_ratings.head()
+
+def item_representation(ratings):    
+    return csr_matrix(
+        pd.crosstab(ratings.itemid, ratings.userid, ratings.norm_rating, aggfunc=sum).fillna(0).values
+    )
+
+R = item_representation(norm_ratings)
+
+def create_model(rating_matrix, k=20, metric="cosine"):
+    """
+    :param R : numpy array of item representations
+    :param k : number of nearest neighbors to return    
+    :return model : our knn model
+    """    
+    model = NearestNeighbors(metric=metric, n_neighbors=k+1, algorithm='brute')
+    model.fit(rating_matrix)    
+    return model
+
+def nearest_neighbors(rating_matrix, model):
+    """
+    compute the top n similar items for each item.    
+    :param rating_matrix : items representations
+    :param model : nearest neighbors model    
+    :return similarities, neighbors
+    """    
+    similarities, neighbors = model.kneighbors(rating_matrix)    
+    return similarities[:,1:], neighbors[:,1:]
+
+def save_similarities(similarities, neighbors, dataset_name):    
+    base_dir = 'recsys/weights/item2item'
+    save_dir = os.path.join(base_dir, dataset_name)
+    os.makedirs(save_dir, exist_ok=True)    
+    similarities_file_name = os.path.join(save_dir, 'similarities.npy')
+    neighbors_file_name = os.path.join(save_dir, 'neighbors.npy')    
+    try:
+        np.save(similarities_file_name, similarities)
+        np.save(neighbors_file_name, neighbors)        
+    except ValueError as error:
+        print(f"An error occured when saving similarities, due to : \n ValueError : {error}")
+
+        
+def load_similarities(dataset_name, k=20):
+    base_dir = 'recsys/weights/item2item'
+    save_dir = os.path.join(base_dir, dataset_name)    
+    similiraties_file = os.path.join(save_dir, 'similarities.npy')
+    neighbors_file = os.path.join(save_dir, 'neighbors.npy')    
+    similarities = np.load(similiraties_file)
+    neighbors = np.load(neighbors_file)    
+    return similarities[:,:k], neighbors[:,:k]
+
+
+def cosine(x, y):
+    return np.dot(x, y) / (np.linalg.norm(x) * np.linalg.norm(y))
+
+
+def adjusted_cosine(np_ratings, nb_items, dataset_name):
+    similarities = np.zeros(shape=(nb_items, nb_items))
+    similarities.fill(-1)
+    
+    def _progress(count):
+        sys.stdout.write('\rComputing similarities. Progress status : %.1f%%' % (float(count / nb_items)*100.0))
+        sys.stdout.flush()
+        
+    items = sorted(ratings.itemid.unique())    
+    for i in items[:-1]:
+        for j in items[i+1:]:            
+            scores = np_ratings[(np_ratings[:, 1] == i) | (np_ratings[:, 1] == j), :]
+            vals, count = np.unique(scores[:,0], return_counts = True)
+            scores = scores[np.isin(scores[:,0], vals[count > 1]),:]
+
+            if scores.shape[0] > 2:
+                x = scores[scores[:, 1].astype('int') == i, 4]
+                y = scores[scores[:, 1].astype('int') == j, 4]
+                w = cosine(x, y)
+
+                similarities[i, j] = w
+                similarities[j, i] = w
+        _progress(i)
+    _progress(nb_items)
+    
+    # get neighbors by their neighbors in decreasing order of similarities
+    neighbors = np.flip(np.argsort(similarities), axis=1)
+    
+    # sort similarities in decreasing order
+    similarities = np.flip(np.sort(similarities), axis=1)
+    
+    # save similarities to disk
+    save_similarities(similarities, neighbors, dataset_name=dataset_name) 
+    
+    return similarities, neighbors
+
+# nb_items = ratings.itemid.nunique()
+# similarities, neighbors = adjusted_cosine(np_ratings, nb_items=nb_items, dataset_name='ml100k')
+
+# metric : choose among [cosine, euclidean, adjusted_cosine]
+
+metric = 'adjusted_cosine'
+
+if metric == 'adjusted_cosine':
+    similarities, neighbors = load_similarities('ml100k')
+else:
+    model = create_model(R, k=21, metric=metric)
+    similarities, neighbors = nearest_neighbors(R, model)
+
+print('neighbors shape : ', neighbors.shape)
+print('similarities shape : ', similarities.shape)
+
+def candidate_items(userid):
+    """
+    :param userid : user id for which we wish to find candidate items    
+    :return : I_u, candidates
+    """
+    
+    # 1. Finding the set I_u of items already rated by user userid
+    I_u = np_ratings[np_ratings[:, 0] == userid]
+    I_u = I_u[:, 1].astype('int')
+    
+    # 2. Taking the union of similar items for all items in I_u to form the set of candidate items
+    c = set()
+        
+    for iid in I_u:    
+        # add the neighbors of item iid in the set of candidate items
+        c.update(neighbors[iid])
+        
+    c = list(c)
+    # 3. exclude from the set C all items in I_u.
+    candidates = np.setdiff1d(c, I_u, assume_unique=True)
+    
+    return I_u, candidates
+
+test_user = uencoder.transform([1])[0]
+i_u, u_candidates = candidate_items(test_user)
+
+print('number of items purchased by user 1 : ', len(i_u))
+print('number of candidate items for user 1 : ', len(u_candidates))
+
+def similarity_with_Iu(c, I_u):
+    """
+    compute similarity between an item c and a set of items I_u. For each item i in I_u, get similarity between 
+    i and c, if c exists in the set of items similar to itemid.    
+    :param c : itemid of a candidate item
+    :param I_u : set of items already purchased by a given user    
+    :return w : similarity between c and I_u
+    """
+    w = 0    
+    for iid in I_u :        
+        # get similarity between itemid and c, if c is one of the k nearest neighbors of itemid
+        if c in neighbors[iid] :
+            w = w + similarities[iid, neighbors[iid] == c][0]    
+    return w
+
+def rank_candidates(candidates, I_u):
+    """
+    rank candidate items according to their similarities with i_u    
+    :param candidates : list of candidate items
+    :param I_u : list of items purchased by the user    
+    :return ranked_candidates : dataframe of candidate items, ranked in descending order of similarities with I_u
+    """
+    
+    # list of candidate items mapped to their corresponding similarities to I_u
+    sims = [similarity_with_Iu(c, I_u) for c in candidates]
+    candidates = iencoder.inverse_transform(candidates)    
+    mapping = list(zip(candidates, sims))
+    
+    ranked_candidates = sorted(mapping, key=lambda couple:couple[1], reverse=True)    
+    return ranked_candidates
+
+def topn_recommendation(userid, N=30):
+    """
+    Produce top-N recommendation for a given user    
+    :param userid : user for which we produce top-N recommendation
+    :param n : length of the top-N recommendation list    
+    :return topn
+    """
+    # find candidate items
+    I_u, candidates = candidate_items(userid)
+    
+    # rank candidate items according to their similarities with I_u
+    ranked_candidates = rank_candidates(candidates, I_u)
+    
+    # get the first N row of ranked_candidates to build the top N recommendation list
+    topn = pd.DataFrame(ranked_candidates[:N], columns=['itemid','similarity_with_Iu'])    
+    topn = pd.merge(topn, movies, on='itemid', how='inner')    
+    return topn
+
+topn_recommendation(test_user)
+
+def predict(userid, itemid):
+    """
+    Make rating prediction for user userid on item itemid    
+    :param userid : id of the active user
+    :param itemid : id of the item for which we are making prediction        
+    :return r_hat : predicted rating
+    """
+    
+    # Get items similar to item itemid with their corresponding similarities
+    item_neighbors = neighbors[itemid]
+    item_similarities = similarities[itemid]
+    
+    # get ratings of user with id userid
+    uratings = np_ratings[np_ratings[:, 0].astype('int') == userid]
+    
+    # similar items rated by item the user of i
+    siru = uratings[np.isin(uratings[:, 1], item_neighbors)]
+    scores = siru[:, 2]
+    indexes = [np.where(item_neighbors == iid)[0][0] for iid in siru[:,1].astype('int')]    
+    sims = item_similarities[indexes]
+    
+    dot = np.dot(scores, sims)
+    som = np.sum(np.abs(sims))
+
+    if dot == 0 or som == 0:
+        return mean[userid]
+    
+    return dot / som
+
+def topn_prediction(userid):
+    """
+    :param userid : id of the active user    
+    :return topn : initial topN recommendations returned by the function item2item_topN
+    :return topn_predict : topN recommendations reordered according to rating predictions
+    """
+    # make top N recommendation for the active user
+    topn = topn_recommendation(userid)
+    
+    # get list of items of the top N list
+    itemids = topn.itemid.to_list()
+    
+    predictions = []
+    
+    # make prediction for each item in the top N list
+    for itemid in itemids:
+        r = predict(userid, itemid)
+        
+        predictions.append((itemid,r))
+    
+    predictions = pd.DataFrame(predictions, columns=['itemid','prediction'])
+    
+    # merge the predictions to topN_list and rearrange the list according to predictions
+    topn_predict = pd.merge(topn, predictions, on='itemid', how='inner')
+    topn_predict = topn_predict.sort_values(by=['prediction'], ascending=False)
+    
+    return topn, topn_predict
+
+topn, topn_predict = topn_prediction(userid=test_user)
+
+topn_predict
+
+from recsys.preprocessing import train_test_split, get_examples
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+def evaluate(x_test, y_test):
+    print('Evaluate the model on {} test data ...'.format(x_test.shape[0]))
+    preds = list(predict(u,i) for (u,i) in x_test)
+    mae = np.sum(np.absolute(y_test - np.array(preds))) / x_test.shape[0]
+    print('\nMAE :', mae)
+    return mae
+
+evaluate(x_test, y_test)
+
+from recsys.memories.ItemToItem import ItemToItem
+from recsys.preprocessing import ids_encoder, train_test_split, get_examples
+from recsys.datasets import ml100k
+
+# load data
+ratings, movies = ml100k.load()
+
+# prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the Item-based CF
+item2item = ItemToItem(ratings, movies, k=20, metric='cosine', dataset_name='ml100k')
+
+# evaluate the algorithm on test dataset
+item2item.evaluate(x_test, y_test)
+
+from recsys.memories.ItemToItem import ItemToItem
+from recsys.preprocessing import ids_encoder, train_test_split, get_examples
+from recsys.datasets import ml1m
+
+# load data
+ratings, movies = ml1m.load()
+
+# prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the Item-based CF
+item2item = ItemToItem(ratings, movies, k=20, metric='cosine', dataset_name='ml1m')
+
+# evaluate the algorithm on test dataset
+print("=========================")
+item2item.evaluate(x_test, y_test)
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from recsys.datasets import mlLastedSmall, ml100k, ml1m
+from sklearn.preprocessing import LabelEncoder
+from scipy.sparse import csr_matrix
+
+import pandas as pd
+import numpy as np
+import os
+
+ratings, movies = mlLastedSmall.load()
+
+pd.crosstab(ratings.userid, ratings.itemid, ratings.rating, aggfunc=sum)
+
+# get user's mean rating
+umean = ratings.groupby(by='userid')['rating'].mean()
+
+def rating_matrix(ratings):
+    """
+    1. Fill NaN values with item's average ratings
+    2. Normalize ratings by subtracting user's mean ratings
+    
+    :param ratings : DataFrame of ratings data
+    :return
+        - R : Numpy array of normalized ratings
+        - df : DataFrame of normalized ratings
+    """
+    
+    # fill missing values with item's average ratings
+    df = pd.crosstab(ratings.userid, ratings.itemid, ratings.rating, aggfunc=sum)
+    df = df.fillna(df.mean(axis=0))
+    
+    # subtract user's mean ratings to normalize data
+    df = df.subtract(umean, axis=0)
+    
+    # convert our dataframe to numpy array
+    R = df.to_numpy()
+    
+    return R, df
+
+# generate rating matrix by calling function rating_matrix
+R, df = rating_matrix(ratings)
+
+df
+
+users = sorted(ratings['userid'].unique())
+items = sorted(ratings['itemid'].unique())
+
+# create our id encoders
+uencoder = LabelEncoder()
+iencoder = LabelEncoder()
+
+# fit our label encoder
+uencoder.fit(users)
+iencoder.fit(items)
+
+class SVD:
+    
+    def __init__(self, umeam):
+        """
+        :param
+            - umean : mean ratings of users
+        """
+        self.umean = umean.to_numpy()
+        
+        # init svd resultant matrices
+        self.P = np.array([])
+        self.S = np.array([])
+        self.Qh = np.array([])
+        
+        # init users and items latent factors
+        self.u_factors = np.array([])
+        self.i_factors = np.array([])
+    
+    def fit(self, R):
+        """
+        Fit the SVD model with rating matrix R
+        """
+        P, s, Qh = np.linalg.svd(R, full_matrices=False)
+        
+        self.P = P
+        self.S = np.diag(s)
+        self.Qh = Qh
+        
+        # latent factors of users (u_factors) and items (i_factors)
+        self.u_factors = np.dot(self.P, np.sqrt(self.S))
+        self.i_factors = np.dot(np.sqrt(self.S), self.Qh)
+    
+    def predict(self, userid, itemid):
+        """
+        Make rating prediction for a given user on an item
+        
+        :param
+            - userid : user's id
+            - itemid : item's id
+            
+        :return
+            - r_hat : predicted rating
+        """
+        # encode user and item ids
+        u = uencoder.transform([userid])[0]
+        i = iencoder.transform([itemid])[0]
+        
+        # the predicted rating is the dot product between the uth row 
+        # of u_factors and the ith column of i_factors
+        r_hat = np.dot(self.u_factors[u,:], self.i_factors[:,i])
+        
+        # add the mean rating of user u to the predicted value
+        r_hat += self.umean[u]
+        
+        return r_hat
+        
+    
+    def recommend(self, userid):
+        """
+        :param
+            - userid : user's id
+        """
+        # encode user
+        u = uencoder.transform([userid])[0]
+        
+        # the dot product between the uth row of u_factors and i_factors returns
+        # the predicted value for user u on all items        
+        predictions = np.dot(self.u_factors[u,:], self.i_factors) + self.umean[u]
+        
+        # sort item ids in decreasing order of predictions
+        top_idx = np.flip(np.argsort(predictions))
+
+        # decode indices to get their corresponding itemids
+        top_items = iencoder.inverse_transform(top_idx)
+        
+        # sorted predictions
+        preds = predictions[top_idx]
+        
+        return top_items, preds
+        
+
+# create our svd model
+svd = SVD(umean)
+
+# fit our model with normalized ratings
+svd.fit(R)
+
+ratings.head(10)
+
+# user for which we make predictions
+userid = 1
+
+# list of items for which we are making predictions for user 1
+items = [1,3,6,47,50,70,101,110,151,157]
+
+# predictions
+for itemid in items:
+    r = svd.predict(userid=userid, itemid=itemid)
+    print('prediction for userid={} and itemid={} : {}'.format(userid, itemid, r))
+
+userid = 1
+
+# items sorted in decreasing order of predictions for user 1
+sorted_items, preds = svd.recommend(userid=userid)
+
+##
+# Now let's exclud from that sorted list items already purchased by the user
+##
+
+# list of items rated by the user
+uitems = ratings.loc[ratings.userid == userid].itemid.to_list()
+
+# remove from sorted_items items already in uitems and pick the top 30 ones
+# as recommendation list
+top30 = np.setdiff1d(sorted_items, uitems, assume_unique=True)[:30]
+
+# get corresponding predictions from the top30 items
+top30_idx = list(np.where(sorted_items == idx)[0][0] for idx in top30)
+top30_predictions = preds[top30_idx]
+
+# find corresponding movie titles
+zipped_top30 = list(zip(top30,top30_predictions))
+top30 = pd.DataFrame(zipped_top30, columns=['itemid','predictions'])
+List = pd.merge(top30, movies, on='itemid', how='inner')
+
+# show the list
+List
+
+import os
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from recsys.preprocessing import mean_ratings
+from recsys.preprocessing import normalized_ratings
+from recsys.preprocessing import ids_encoder
+from recsys.preprocessing import train_test_split
+from recsys.preprocessing import rating_matrix
+from recsys.preprocessing import get_examples
+from recsys.preprocessing import scale_ratings
+
+from recsys.datasets import ml100k
+from recsys.datasets import ml1m
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+import os
+
+class MatrixFactorization:
+    
+    def __init__(self, m, n, k=10, alpha=0.001, lamb=0.01):
+        """
+        Initialization of the model        
+        : param
+            - m : number of users
+            - n : number of items
+            - k : length of latent factor, both for users and items. 50 by default
+            - alpha : learning rate. 0.001 by default
+            - lamb : regularizer parameter. 0.02 by default
+        """
+        np.random.seed(32)
+        
+        # initialize the latent factor matrices P and Q (of shapes (m,k) and (n,k) respectively) that will be learnt
+        self.k = k
+        self.P = np.random.normal(size=(m, k))
+        self.Q = np.random.normal(size=(n, k))
+        
+        # hyperparameter initialization
+        self.alpha = alpha
+        self.lamb = lamb
+        
+        # training history
+        self.history = {
+            "epochs":[],
+            "loss":[],
+            "val_loss":[],
+            "lr":[]
+        }
+    
+    def print_training_parameters(self):
+        print('Training Matrix Factorization Model ...')
+        print(f'k={self.k} \t alpha={self.alpha} \t lambda={self.lamb}')
+    
+    def update_rule(self, u, i, error):
+        self.P[u] = self.P[u] + self.alpha * (error * self.Q[i] - self.lamb * self.P[u])
+        self.Q[i] = self.Q[i] + self.alpha * (error * self.P[u] - self.lamb * self.Q[i])
+        
+    def mae(self,  x_train, y_train):
+        """
+        returns the Mean Absolute Error
+        """
+        # number of training exemples
+        M = x_train.shape[0]
+        error = 0
+        for pair, r in zip(x_train, y_train):
+            u, i = pair
+            error += abs(r - np.dot(self.P[u], self.Q[i]))
+        return error/M
+    
+    def print_training_progress(self, epoch, epochs, error, val_error, steps=5):
+        if epoch == 1 or epoch % steps == 0 :
+                print("epoch {}/{} - loss : {} - val_loss : {}".format(epoch, epochs, round(error,3), round(val_error,3)))
+                
+    def learning_rate_schedule(self, epoch, target_epochs = 20):
+        if (epoch >= target_epochs) and (epoch % target_epochs == 0):
+                factor = epoch // target_epochs
+                self.alpha = self.alpha * (1 / (factor * 20))
+                print("\nLearning Rate : {}\n".format(self.alpha))
+    
+    def fit(self, x_train, y_train, validation_data, epochs=1000):
+        """
+        Train latent factors P and Q according to the training set
+        
+        :param
+            - x_train : training pairs (u,i) for which rating r_ui is known
+            - y_train : set of ratings r_ui for all training pairs (u,i)
+            - validation_data : tuple (x_test, y_test)
+            - epochs : number of time to loop over the entire training set. 
+            1000 epochs by default
+            
+        Note that u and i are encoded values of userid and itemid
+        """
+        self.print_training_parameters()
+        
+        # validation data
+        x_test, y_test = validation_data
+        
+        # loop over the number of epochs
+        for epoch in range(1, epochs+1):
+            
+            # for each pair (u,i) and the corresponding rating r
+            for pair, r in zip(x_train, y_train):
+                
+                # get encoded values of userid and itemid from pair
+                u,i = pair
+                
+                # compute the predicted rating r_hat
+                r_hat = np.dot(self.P[u], self.Q[i])
+                
+                # compute the prediction error
+                e = abs(r - r_hat)
+                
+                # update rules
+                self.update_rule(u, i, e)
+                
+            # training and validation error  after this epochs
+            error = self.mae(x_train, y_train)
+            val_error = self.mae(x_test, y_test)
+            
+            # update history
+            self.history['epochs'].append(epoch)
+            self.history['loss'].append(error)
+            self.history['val_loss'].append(val_error)
+            
+            # update history
+            self.update_history(epoch, error, val_error)
+            
+            # print training progress after each steps epochs
+            self.print_training_progress(epoch, epochs, error, val_error, steps=1)
+              
+            # leaning rate scheduler : redure the learning rate as we go deeper in the number of epochs
+            # self.learning_rate_schedule(epoch)
+        
+        return self.history
+    
+    def update_history(self, epoch, error, val_error):
+        self.history['epochs'].append(epoch)
+        self.history['loss'].append(error)
+        self.history['val_loss'].append(val_error)
+        self.history['lr'].append(self.alpha)
+    
+    def evaluate(self, x_test, y_test):
+        """
+        compute the global error on the test set        
+        :param x_test : test pairs (u,i) for which rating r_ui is known
+        :param y_test : set of ratings r_ui for all test pairs (u,i)
+        """
+        error = self.mae(x_test, y_test)
+        print(f"validation error : {round(error,3)}")
+        
+        return error
+      
+    def predict(self, userid, itemid):
+        """
+        Make rating prediction for a user on an item
+        :param userid
+        :param itemid
+        :return r : predicted rating
+        """
+        # encode user and item ids to be able to access their latent factors in
+        # matrices P and Q
+        u = uencoder.transform([userid])[0]
+        i = iencoder.transform([itemid])[0]
+
+        # rating prediction using encoded ids. Dot product between P_u and Q_i
+        r = np.dot(self.P[u], self.Q[i])
+        return r
+
+    def recommend(self, userid, N=30):
+        """
+        make to N recommendations for a given user
+
+        :return(top_items,preds) : top N items with the highest predictions 
+        with their corresponding predictions
+        """
+        # encode the userid
+        u = uencoder.transform([userid])[0]
+
+        # predictions for users userid on all product
+        predictions = np.dot(self.P[u], self.Q.T)
+
+        # get the indices of the top N predictions
+        top_idx = np.flip(np.argsort(predictions))[:N]
+
+        # decode indices to get their corresponding itemids
+        top_items = iencoder.inverse_transform(top_idx)
+
+        # take corresponding predictions for top N indices
+        preds = predictions[top_idx]
+
+        return top_items, preds        
+
+epochs = 10
+
+# load the ml100k dataset
+ratings, movies = ml100k.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings.userid.nunique()   # total number of users
+n = ratings.itemid.nunique()   # total number of items
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the model
+MF = MatrixFactorization(m, n, k=10, alpha=0.01, lamb=1.5)
+
+# fit the model on the training set
+history = MF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+MF.evaluate(x_test, y_test)
+
+# load data
+ratings, movies = ml100k.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings['userid'].nunique()   # total number of users
+n = ratings['itemid'].nunique()   # total number of items
+
+# normalize ratings by substracting means
+normalized_column_name = "norm_rating"
+ratings = normalized_ratings(ratings, norm_column=normalized_column_name)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column=normalized_column_name)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the model
+MF = MatrixFactorization(m, n, k=10, alpha=0.01, lamb=1.5)
+
+# fit the model on the training set
+history = MF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+MF.evaluate(x_test, y_test)
+
+# load the ml1m dataset
+ratings, movies = ml1m.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings.userid.nunique()   # total number of users
+n = ratings.itemid.nunique()   # total number of items
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the model
+MF = MatrixFactorization(m, n, k=10, alpha=0.01, lamb=1.5)
+
+# fit the model on the training set
+history = MF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+MF.evaluate(x_test, y_test)
+
+# load data
+ratings, movies = ml1m.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings['userid'].nunique()   # total number of users
+n = ratings['itemid'].nunique()   # total number of items
+
+# normalize ratings by substracting means
+normalized_column_name = "norm_rating"
+ratings = normalized_ratings(ratings, norm_column=normalized_column_name)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column=normalized_column_name)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the model
+MF = MatrixFactorization(m, n, k=10, alpha=0.01, lamb=1.5)
+
+# fit the model on the training set
+history = MF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+MF.evaluate(x_test, y_test)
+
+ratings.userid = uencoder.inverse_transform(ratings.userid.to_list())
+ratings.itemid = uencoder.inverse_transform(ratings.itemid.to_list())
+ratings.head(5)
+
+4.188679 + MF.predict(userid=1, itemid=1) # add the mean because we have used the normalised ratings for training
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from recsys.preprocessing import mean_ratings
+from recsys.preprocessing import normalized_ratings
+from recsys.preprocessing import ids_encoder
+from recsys.preprocessing import train_test_split
+from recsys.preprocessing import rating_matrix
+from recsys.preprocessing import get_examples
+from recsys.preprocessing import scale_ratings
+
+from recsys.datasets import ml1m
+from recsys.datasets import ml100k
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+import os
+
+# load data
+ratings, movies = ml100k.load()
+
+# prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# convert ratings from dataframe to numpy array
+np_ratings = ratings.to_numpy()
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column="rating")
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+class NMF:
+    
+    def __init__(self, ratings, m, n, uencoder, iencoder, K=10, lambda_P=0.01, lambda_Q=0.01):
+        
+        np.random.seed(32)
+        
+        # initialize the latent factor matrices P and Q (of shapes (m,k) and (n,k) respectively) that will be learnt
+        self.ratings = ratings
+        self.np_ratings = ratings.to_numpy()
+        self.K = K
+        self.P = np.random.rand(m, K)
+        self.Q = np.random.rand(n, K)
+        
+        # hyper parameter initialization
+        self.lambda_P = lambda_P
+        self.lambda_Q = lambda_Q
+
+        # initialize encoders
+        self.uencoder = uencoder
+        self.iencoder = iencoder
+        
+        # training history
+        self.history = {
+            "epochs": [],
+            "loss": [],
+            "val_loss": [],
+        }
+    
+    def print_training_parameters(self):
+        print('Training NMF ...')
+        print(f'k={self.K}')
+        
+    def mae(self, x_train, y_train):
+        """
+        returns the Mean Absolute Error
+        """
+        # number of training examples
+        m = x_train.shape[0]
+        error = 0
+        for pair, r in zip(x_train, y_train):
+            u, i = pair
+            error += abs(r - np.dot(self.P[u], self.Q[i]))
+        return error / m
+    
+    def update_rule(self, u, i, error):
+        I = self.np_ratings[self.np_ratings[:, 0] == u][:, [1, 2]]
+        U = self.np_ratings[self.np_ratings[:, 1] == i][:, [0, 2]]    
+                    
+        num = self.P[u] * np.dot(self.Q[I[:, 0]].T, I[:, 1])
+        dem = np.dot(self.Q[I[:, 0]].T, np.dot(self.P[u], self.Q[I[:, 0]].T)) + self.lambda_P * len(I) * self.P[u]
+        self.P[u] = num / dem
+
+        num = self.Q[i] * np.dot(self.P[U[:, 0]].T, U[:, 1])
+        dem = np.dot(self.P[U[:, 0]].T, np.dot(self.P[U[:, 0]], self.Q[i].T)) + self.lambda_Q * len(U) * self.Q[i]
+        self.Q[i] = num / dem
+    
+    @staticmethod
+    def print_training_progress(epoch, epochs, error, val_error, steps=5):
+        if epoch == 1 or epoch % steps == 0:
+            print(f"epoch {epoch}/{epochs} - loss : {round(error, 3)} - val_loss : {round(val_error, 3)}")
+                
+    def fit(self, x_train, y_train, validation_data, epochs=10):
+
+        self.print_training_parameters()
+        x_test, y_test = validation_data
+        for epoch in range(1, epochs+1):
+            for pair, r in zip(x_train, y_train):
+                u, i = pair
+                r_hat = np.dot(self.P[u], self.Q[i])
+                e = abs(r - r_hat)
+                self.update_rule(u, i, e)                
+            # training and validation error  after this epochs
+            error = self.mae(x_train, y_train)
+            val_error = self.mae(x_test, y_test)
+            self.update_history(epoch, error, val_error)
+            self.print_training_progress(epoch, epochs, error, val_error, steps=1)
+        
+        return self.history
+    
+    def update_history(self, epoch, error, val_error):
+        self.history['epochs'].append(epoch)
+        self.history['loss'].append(error)
+        self.history['val_loss'].append(val_error)
+    
+    def evaluate(self, x_test, y_test):        
+        error = self.mae(x_test, y_test)
+        print(f"validation error : {round(error,3)}")
+        print('MAE : ', error)        
+        return error
+      
+    def predict(self, userid, itemid):
+        u = self.uencoder.transform([userid])[0]
+        i = self.iencoder.transform([itemid])[0]
+        r = np.dot(self.P[u], self.Q[i])
+        return r
+
+    def recommend(self, userid, N=30):
+        # encode the userid
+        u = self.uencoder.transform([userid])[0]
+
+        # predictions for users userid on all product
+        predictions = np.dot(self.P[u], self.Q.T)
+
+        # get the indices of the top N predictions
+        top_idx = np.flip(np.argsort(predictions))[:N]
+
+        # decode indices to get their corresponding itemids
+        top_items = self.iencoder.inverse_transform(top_idx)
+
+        # take corresponding predictions for top N indices
+        preds = predictions[top_idx]
+
+        return top_items, preds
+
+
+m = ratings['userid'].nunique()   # total number of users
+n = ratings['itemid'].nunique()   # total number of items
+
+# create and train the model
+nmf = NMF(ratings, m, n, uencoder, iencoder, K=10, lambda_P=0.6, lambda_Q=0.6)
+history = nmf.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+
+nmf.evaluate(x_test, y_test)
+
+from surprise import NMF
+from surprise import Dataset
+from surprise.model_selection import cross_validate
+
+# Load the movielens-100k dataset (download it if needed).
+data = Dataset.load_builtin('ml-100k')
+
+# Use the NMF algorithm.
+nmf = NMF(n_factors=10, n_epochs=10)
+
+# Run 5-fold cross-validation and print results.
+history = cross_validate(nmf, data, measures=['MAE'], cv=5, verbose=True)
+
+data = Dataset.load_builtin('ml-1m')
+nmf = NMF(n_factors=10, n_epochs=10)
+history = cross_validate(nmf, data, measures=['MAE'], cv=5, verbose=True)
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from recsys.memories.UserToUser import UserToUser
+
+from recsys.preprocessing import mean_ratings
+from recsys.preprocessing import normalized_ratings
+from recsys.preprocessing import ids_encoder
+from recsys.preprocessing import train_test_split
+from recsys.preprocessing import rating_matrix
+from recsys.preprocessing import get_examples
+
+from recsys.datasets import ml100k, ml1m
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+import sys
+import os
+
+def explainable_score(user2user, users, items, theta=0):
+    
+    def _progress(count):
+        sys.stdout.write('\rCompute Explainable score. Progress status : %.1f%%'%(float(count/len(users))*100.0))
+        sys.stdout.flush()
+    # initialize explainable score to zeros
+    W = np.zeros((len(users), len(items)))
+
+    for count, u in enumerate(users):            
+        candidate_items = user2user.find_user_candidate_items(u)        
+        for i in candidate_items:                
+            user_who_rated_i, similar_user_who_rated_i = \
+                user2user.similar_users_who_rated_this_item(u, i)
+            if user_who_rated_i.shape[0] == 0:
+                w = 0.0
+            else:
+                w = similar_user_who_rated_i.shape[0] / user_who_rated_i.shape[0]
+            W[u,i] =  w  if w > theta else 0.0
+        _progress(count)
+    return W
+
+class ExplainableMatrixFactorization:
+    
+    def __init__(self, m, n, W, alpha=0.001, beta=0.01, lamb=0.1, k=10):
+        """
+            - R : Rating matrix of shape (m,n) 
+            - W : Explainability Weights of shape (m,n)
+            - k : number of latent factors
+            - beta : L2 regularization parameter
+            - lamb : explainability regularization coefficient
+            - theta : threshold above which an item is explainable for a user
+        """
+        self.W = W
+        self.m = m
+        self.n = n
+        
+        np.random.seed(64)
+        
+        # initialize the latent factor matrices P and Q (of shapes (m,k) and (n,k) respectively) that will be learnt
+        self.k = k
+        self.P = np.random.normal(size=(self.m,k))
+        self.Q = np.random.normal(size=(self.n,k))
+        
+        # hyperparameter initialization
+        self.alpha = alpha
+        self.beta = beta
+        self.lamb = lamb
+        
+        # training history
+        self.history = {
+            "epochs":[],
+            "loss":[],
+            "val_loss":[],
+        }
+        
+    def print_training_parameters(self):
+        print('Training EMF')
+        print(f'k={self.k} \t alpha={self.alpha} \t beta={self.beta} \t lambda={self.lamb}')
+        
+    def update_rule(self, u, i, error):
+        self.P[u] = self.P[u] + \
+            self.alpha*(2 * error*self.Q[i] - self.beta*self.P[u] - self.lamb*(self.P[u] - self.Q[i]) * self.W[u,i])
+        
+        self.Q[i] = self.Q[i] + \
+            self.alpha*(2 * error*self.P[u] - self.beta*self.Q[i] + self.lamb*(self.P[u] - self.Q[i]) * self.W[u,i])
+        
+    def mae(self,  x_train, y_train):
+        """
+        returns the Mean Absolute Error
+        """
+        # number of training exemples
+        M = x_train.shape[0]
+        error = 0
+        for pair, r in zip(x_train, y_train):
+            u, i = pair
+            error += np.absolute(r - np.dot(self.P[u], self.Q[i]))
+        return error/M
+    
+    def print_training_progress(self, epoch, epochs, error, val_error, steps=5):
+        if epoch == 1 or epoch % steps == 0 :
+                print(f"epoch {epoch}/{epochs} - loss : {round(error,3)} - val_loss : {round(val_error,3)}")
+                
+    def learning_rate_schedule(self, epoch, target_epochs = 20):
+        if (epoch >= target_epochs) and (epoch % target_epochs == 0):
+                factor = epoch // target_epochs
+                self.alpha = self.alpha * (1 / (factor * 20))
+                print("\nLearning Rate : {}\n".format(self.alpha))
+        
+    def fit(self, x_train, y_train, validation_data, epochs=10):
+        """
+        Train latent factors P and Q according to the training set
+        
+        :param
+            - x_train : training pairs (u,i) for which rating r_ui is known
+            - y_train : set of ratings r_ui for all training pairs (u,i)
+            - validation_data : tuple (x_test, y_test)
+            - epochs : number of time to loop over the entire training set. 
+            10 epochs by default
+            
+        Note that u and i are encoded values of userid and itemid
+        """
+        self.print_training_parameters()
+        
+        # get validation data
+        x_test, y_test = validation_data
+        
+        for epoch in range(1, epochs+1):
+            for pair, r in zip(x_train, y_train):                
+                u,i = pair                
+                r_hat = np.dot(self.P[u], self.Q[i])                
+                e = r - r_hat
+                self.update_rule(u, i, error=e)
+                
+            # training and validation error  after this epochs
+            error = self.mae(x_train, y_train)
+            val_error = self.mae(x_test, y_test)
+            self.update_history(epoch, error, val_error)            
+            self.print_training_progress(epoch, epochs, error, val_error, steps=1)
+        
+        return self.history
+    
+    def update_history(self, epoch, error, val_error):
+        self.history['epochs'].append(epoch)
+        self.history['loss'].append(error)
+        self.history['val_loss'].append(val_error)
+    
+    def evaluate(self, x_test, y_test):
+        """
+        compute the global error on the test set
+        
+        :param
+            - x_test : test pairs (u,i) for which rating r_ui is known
+            - y_test : set of ratings r_ui for all test pairs (u,i)
+        """
+        error = self.mae(x_test, y_test)
+        print(f"validation error : {round(error,3)}")
+      
+    def predict(self, userid, itemid):
+        """
+        Make rating prediction for a user on an item
+
+        :param
+        - userid
+        - itemid
+
+        :return
+        - r : predicted rating
+        """
+        # encode user and item ids to be able to access their latent factors in
+        # matrices P and Q
+        u = uencoder.transform([userid])[0]
+        i = iencoder.transform([itemid])[0]
+
+        # rating prediction using encoded ids. Dot product between P_u and Q_i
+        r = np.dot(self.P[u], self.Q[i])
+
+        return r
+
+    def recommend(self, userid, N=30):
+        """
+        make to N recommendations for a given user
+
+        :return 
+        - (top_items,preds) : top N items with the highest predictions 
+        """
+        # encode the userid
+        u = uencoder.transform([userid])[0]
+
+        # predictions for this user on all product
+        predictions = np.dot(self.P[u], self.Q.T)
+
+        # get the indices of the top N predictions
+        top_idx = np.flip(np.argsort(predictions))[:N]
+
+        # decode indices to get their corresponding itemids
+        top_items = iencoder.inverse_transform(top_idx)
+
+        # take corresponding predictions for top N indices
+        preds = predictions[top_idx]
+
+        return top_items, preds
+
+epochs = 10
+
+# load data
+ratings, movies = ml100k.load()
+
+# encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+users = sorted(ratings.userid.unique())
+items = sorted(ratings.itemid.unique())
+
+m = len(users)
+n = len(items)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the user to user model for similarity measure
+usertouser = UserToUser(ratings, movies)
+
+# compute explainable score
+W = explainable_score(usertouser, users, items)
+
+# initialize the model
+EMF = ExplainableMatrixFactorization(m, n, W, alpha=0.01, beta=0.4, lamb=0.01, k=10)
+
+history = EMF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+EMF.evaluate(x_test, y_test)
+
+# load data
+ratings, movies = ml100k.load()
+
+# encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+users = sorted(ratings.userid.unique())
+items = sorted(ratings.itemid.unique())
+
+m = len(users)
+n = len(items)
+
+# normalize ratings by substracting means
+normalized_column_name = "norm_rating"
+ratings = normalized_ratings(ratings, norm_column=normalized_column_name)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column=normalized_column_name)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# initialize the model
+EMF = ExplainableMatrixFactorization(m, n, W, alpha=0.022, beta=0.65, lamb=0.01, k=10)
+
+history = EMF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+# load data
+ratings, movies = ml1m.load()
+
+# encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+users = sorted(ratings.userid.unique())
+items = sorted(ratings.itemid.unique())
+
+m = len(users)
+n = len(items)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# create the user to user model for similarity measure
+usertouser = UserToUser(ratings, movies)
+
+# compute explainable score
+W = explainable_score(usertouser, users, items)
+
+# initialize the model
+EMF = ExplainableMatrixFactorization(m, n, W, alpha=0.01, beta=0.4, lamb=0.01, k=10)
+
+history = EMF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+# load data
+ratings, movies = ml1m.load()
+
+# encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+# normalize ratings by substracting means
+normalized_column_name = "norm_rating"
+ratings = normalized_ratings(ratings, norm_column=normalized_column_name)
+
+# get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column=normalized_column_name)
+
+# train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+# initialize the model
+EMF = ExplainableMatrixFactorization(m, n, W, alpha=0.023, beta=0.59, lamb=0.01, k=10)
+
+history = EMF.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+# get list of top N items with their corresponding predicted ratings
+userid = 42
+recommended_items, predictions = EMF.recommend(userid=userid)
+
+# find corresponding movie titles
+top_N = list(zip(recommended_items,predictions))
+top_N = pd.DataFrame(top_N, columns=['itemid','predictions'])
+top_N.predictions = top_N.predictions + ratings.loc[ratings.userid==userid].rating_mean.values[0]
+List = pd.merge(top_N, movies, on='itemid', how='inner')
+
+# show the list
+List
+
+import os
+
+if not (os.path.exists("recsys.zip") or os.path.exists("recsys")):
+    !wget https://github.com/nzhinusoftcm/review-on-collaborative-filtering/raw/master/recsys.zip    
+    !unzip recsys.zip
+
+from recsys.memories.UserToUser import UserToUser
+from recsys.memories.ItemToItem import ItemToItem
+
+from recsys.models.MatrixFactorization import MF
+from recsys.models.ExplainableMF import EMF, explainable_score
+
+from recsys.preprocessing import normalized_ratings
+from recsys.preprocessing import train_test_split
+from recsys.preprocessing import rating_matrix
+from recsys.preprocessing import scale_ratings
+from recsys.preprocessing import mean_ratings
+from recsys.preprocessing import get_examples
+from recsys.preprocessing import ids_encoder
+
+from recsys.datasets import ml100k
+from recsys.datasets import ml1m
+
+from sklearn.preprocessing import LabelEncoder
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+import os
+
+## load data
+ratings, movies = ml100k.load()
+
+## prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## evaluate with Euclidean distance
+usertouser = UserToUser(ratings, movies, metric='euclidean')
+print("==========================")
+usertouser.evaluate(x_test, y_test)
+
+## evaluate with cosine similarity
+usertouser = UserToUser(ratings, movies, metric='cosine')
+print("=========================")
+usertouser.evaluate(x_test, y_test)
+
+## load data
+ratings, movies = ml100k.load()
+
+## prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## evaluation with cosine similarity
+itemtoitem = ItemToItem(ratings, movies, metric='cosine')
+print("==================")
+itemtoitem.evaluate(x_test, y_test)
+
+## evaluation with Euclidean distance
+itemtoitem = ItemToItem(ratings, movies, metric='euclidean')
+print("==================")
+itemtoitem.evaluate(x_test, y_test)
+
+epochs = 10
+
+## load the ml100k dataset
+ratings, movies = ml100k.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings.userid.nunique()   ## total number of users
+n = ratings.itemid.nunique()   ## total number of items
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## create and train the model
+mf = MF(m, n, k=10, alpha=0.01, lamb=1.5)
+
+## fit the model on the training set
+history = mf.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+from surprise import NMF
+from surprise import Dataset
+from surprise.model_selection import cross_validate
+
+## Load the movielens-100k dataset (download it if needed).
+data = Dataset.load_builtin('ml-100k')
+
+## Use the NMF algorithm.
+nmf = NMF(n_factors=10, n_epochs=10)
+
+## Run 5-fold cross-validation and print results.
+history = cross_validate(nmf, data, measures=['MAE'], cv=5, verbose=True)
+
+## load data
+ratings, movies = ml100k.load()
+
+## encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+users = sorted(ratings.userid.unique())
+items = sorted(ratings.itemid.unique())
+
+m = len(users)
+n = len(items)
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## create the user to user model for similarity measure
+usertouser = UserToUser(ratings, movies)
+
+## compute explainable score
+W = explainable_score(usertouser, users, items)
+
+print("===================")
+## initialize the model
+emf = EMF(m, n, W, alpha=0.01, beta=0.4, lamb=0.01, k=10)
+
+history = emf.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+print("===================")
+emf.evaluate(x_test, y_test)
+
+## load ml100k ratings
+ratings, movies = ml1m.load()
+
+## prepare data
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings, labels_column='rating')
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## metric : cosine
+
+## create the user-based CF
+usertouser = UserToUser(ratings, movies, k=20, metric='cosine')
+
+## evaluate the user-based CF on the ml1m test data
+print("==========================")
+usertouser.evaluate(x_test, y_test)
+
+## metric : euclidean
+
+## create the user-based CF
+usertouser = UserToUser(ratings, movies, k=20, metric='euclidean')
+
+## evaluate the user-based CF on the ml1m test data
+print("==========================")
+usertouser.evaluate(x_test, y_test)
+
+itemtoitem = ItemToItem(ratings, movies, metric='cosine')
+print("==========================")
+itemtoitem.evaluate(x_test, y_test)
+
+itemtoitem = ItemToItem(ratings, movies, metric='euclidean')
+print("==========================")
+itemtoitem.evaluate(x_test, y_test)
+
+## load the ml1m dataset
+ratings, movies = ml1m.load()
+
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+m = ratings.userid.nunique()   ## total number of users
+n = ratings.itemid.nunique()   ## total number of items
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## create the model
+model = MF(m, n, k=10, alpha=0.01, lamb=1.5)
+
+## fit the model on the training set
+history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))
+
+print("===================")
+model.evaluate(x_test, y_test)
+
+from surprise import NMF
+from surprise import Dataset
+from surprise.model_selection import cross_validate
+
+## Load the movielens-100k dataset (download it if needed).
+data = Dataset.load_builtin('ml-1m')
+
+## Use the NMF algorithm.
+nmf = NMF(n_factors=10, n_epochs=10)
+
+## Run 5-fold cross-validation and print results.
+history = cross_validate(nmf, data, measures=['MAE'], cv=5, verbose=True)
+
+## load data
+ratings, movies = ml1m.load()
+
+## encode users and items ids
+ratings, uencoder, iencoder = ids_encoder(ratings)
+
+users = sorted(ratings.userid.unique())
+items = sorted(ratings.itemid.unique())
+
+m = len(users)
+n = len(items)
+
+## get examples as tuples of userids and itemids and labels from normalize ratings
+raw_examples, raw_labels = get_examples(ratings)
+
+## train test split
+(x_train, x_test), (y_train, y_test) = train_test_split(examples=raw_examples, labels=raw_labels)
+
+## create the user to user model for similarity measure
+usertouser = UserToUser(ratings, movies)
+
+## compute explainable score
+W = explainable_score(usertouser, users, items)
+
+## initialize the model
+emf = EMF(m, n, W, alpha=0.01, beta=0.4, lamb=0.01, k=10)
+
+history = emf.fit(x_train, y_train, epochs=epochs, validation_data=(x_test, y_test))

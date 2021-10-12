@@ -1,0 +1,338 @@
+!mkdir '/content/data'
+
+from google_drive_downloader import GoogleDriveDownloader as gdd
+
+gdd.download_file_from_google_drive(file_id='1Of9rK8ds1a1iyl1jFnf_7oRgPB-8bfdK',
+                                    dest_path='/content/data/data.zip',
+                                    unzip=True)
+
+import os
+import numpy as np
+import pandas as pd
+from ast import literal_eval
+
+#hide-output
+md = pd.read_csv("/content/data/imdb/movies_metadata.csv")
+credits = pd.read_csv('/content/data/imdb/credits.csv')
+keywords = pd.read_csv('/content/data/imdb/keywords.csv')
+links_small = pd.read_csv('/content/data/imdb/links_small.csv')
+
+md.head()
+
+#hide-output
+links_small = links_small[links_small['tmdbId'].notnull()]['tmdbId'].astype('int')
+
+md['year'] = pd.to_datetime(md['release_date'], errors='coerce').apply(lambda x: str(x).split('-')[0] if x != np.nan else np.nan)
+md.loc[:, 'genres'] = md['genres'].fillna('[]').apply(literal_eval).apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+md = md.drop([19730, 29503, 35587])
+keywords.loc[:, 'id'] = keywords['id'].astype('int')
+credits.loc[:, 'id'] = credits['id'].astype('int')
+md.loc[:, 'id'] = md['id'].astype('int')
+
+md = md.merge(credits, on='id')
+md = md.merge(keywords, on='id')
+
+smd = md[md['id'].isin(links_small)]
+
+smd.loc[:, 'tagline'] = smd['tagline'].fillna('')
+
+smd.loc[:,'cast'] = smd['cast'].apply(literal_eval)
+smd.loc[:,'crew'] = smd['crew'].apply(literal_eval)
+smd.loc[:,'keywords'] = smd['keywords'].apply(literal_eval)
+smd.loc[:,'cast_size'] = smd['cast'].apply(lambda x: len(x))
+smd.loc[:,'crew_size'] = smd['crew'].apply(lambda x: len(x))
+
+def get_director(x):
+    for i in x:
+        if i['job'] == 'Director':
+            return i['name']
+    return np.nan
+
+smd.loc[:,'director'] = smd['crew'].apply(get_director)
+smd.loc[:,'cast'] = smd['cast'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+smd.loc[:,'cast'] = smd['cast'].apply(lambda x: x[:3] if len(x) >=3 else x)
+smd.loc[:,'keywords'] = smd['keywords'].apply(lambda x: [i['name'] for i in x] if isinstance(x, list) else [])
+
+s = smd.apply(lambda x: pd.Series(x['keywords']),axis=1).stack().reset_index(level=1, drop=True)
+s.name = 'keyword'
+s = s.value_counts()
+s = s[s > 1]
+
+def filter_keywords(x):
+    words = []
+    for i in x:
+        if i in s:
+            words.append(i)
+    return words
+smd.loc[:,'keywords'] = smd['keywords'].apply(filter_keywords)
+smd.drop_duplicates(subset ="title",
+                     keep = 'first', inplace = True)
+
+out_df = smd[['id', 'title', 'year', 'director', 'cast',  'genres', 'vote_count', 'vote_average',  'overview', 'keywords']]
+out_df.head()
+out_df.to_csv('super_clean_data.csv', index=False)
+
+out_df.head()
+
+import pandas as pd
+import numpy as np
+from ast import literal_eval
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
+
+ori_df = pd.read_csv('/content/super_clean_data.csv')
+df = ori_df.copy()
+df.head()
+
+print(f"No of records: {len(df)}")
+
+df.loc[:,'cast'] = df['cast'].apply(literal_eval)
+df.loc[:,'genres'] = df['genres'].apply(literal_eval)
+df.loc[:,'keywords'] = df['keywords'].apply(literal_eval)
+
+stemmer = SnowballStemmer('english')
+
+def preprocess(x, remove_spaces=False, stemming=False):
+    if isinstance(x, list):
+        y = []
+        for i in x:
+            token = preprocess(i, remove_spaces, stemming)
+            if token is not None:
+                y.append(token)
+    else:
+        
+        y = str(x)
+
+        # Lower all words
+        y = str.lower(y)
+
+        # Remove spaces (for person's name)
+        if remove_spaces:
+            y = y.replace(" ", "")
+
+        # Remove digits
+        y = ''.join([i for i in y if not i.isdigit()])
+
+        # Stemming words
+        if stemming:
+            y = stemmer.stem(y)
+
+        if len(y) <=1:
+            return None
+
+    return y
+
+
+df.loc[:,'cast'] = df['cast'].apply(lambda x: preprocess(x, remove_spaces=True))
+df.loc[:,'director'] = df['director'].astype('str').apply(lambda x: preprocess(x, remove_spaces=True))
+df.loc[:, 'title'] = df['title'].apply(lambda x: preprocess(x, stemming=True))
+df.loc[:, 'overview'] = df['overview'].apply(lambda x: preprocess(str.split(str(x)), stemming=True))
+df.loc[:, 'genres'] = df['genres'].apply(lambda x: preprocess(x, stemming=True))
+df.loc[:,'keywords'] = df['keywords'].apply(lambda x: preprocess(x, stemming=True))
+df.head()
+
+df.shape
+
+dictionary = []
+for i, row in df.iterrows():
+    item = [row.title, row.director] + row.cast + row.genres + row.keywords
+    string = ' '.join([j for j in item if j is not None])
+    dictionary.append(string)
+
+
+tf = TfidfVectorizer(analyzer='word',min_df=2, stop_words='english')
+tfidf_matrix = tf.fit_transform(dictionary)
+print(tfidf_matrix.shape)
+print(tf.get_feature_names()[:10])
+
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
+def get_recommendations(query_title, cosine_sim, df, top_k=10):
+    df = df.reset_index()
+    titles = df['title']
+    indices = pd.Series(df.index, index=df['title'])
+
+    # query_title = preprocess(query_title)
+    query_idx = indices[query_title]
+
+    # Get similarity score of current movie with others
+    sim_scores = list(enumerate(cosine_sim[query_idx]))
+
+    # Sort scores and get top k
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:top_k+1]
+
+    movie_indices = [i[0] for i in sim_scores]
+    movie_scores = [i[1] for i in sim_scores]
+    result = titles.iloc[movie_indices].to_frame()
+    result['matching_score'] = movie_scores
+    return result
+
+get_recommendations("The Dark Knight", cosine_sim, ori_df)
+
+import pandas as pd
+import numpy as np
+from ast import literal_eval
+from sklearn.metrics.pairwise import cosine_similarity
+
+ratings = pd.read_csv("/content/data/imdb/ratings_small.csv")
+ratings.head()
+
+movie_data = pd.read_csv("/content/super_clean_data.csv")
+movie_id_title = movie_data[['id', 'title']]
+movie_id_title.head()
+
+top_ratings = movie_data[['title', 'vote_count']]
+top_ratings.sort_values('vote_count', ascending=False).head(10)
+
+new_ratings = ratings.merge(movie_id_title, left_on='movieId', right_on='id')
+new_ratings.head()
+
+ui_matrix = new_ratings.pivot(index = 'userId', columns ='title', values = 'rating').fillna(0)
+ui_matrix.head()
+
+movie_title = ui_matrix.columns
+index_movies = pd.Series(movie_title, index=(range(len(movie_title))))
+movie_indices = pd.Series(range(len(movie_title)), index=movie_title)
+
+movie_indices
+
+sum_ratings = ui_matrix.sum(axis=0)
+num_ratings = ui_matrix[ui_matrix>0].count()
+mean_ratings = sum_ratings/num_ratings
+mean_ratings.head()
+
+def predict_score(ui_matrix, user_name, movie_name, mean_ratings, k =2):
+    
+    movie_id = movie_indices[movie_name]
+    ui_matrix_ = ui_matrix.dropna()
+    cosine_sim = cosine_similarity(ui_matrix_.T, ui_matrix_.T)
+
+    # nearest neighbors
+    sim_scores = list(enumerate(cosine_sim[movie_id]))
+    
+    # Sort scores and get top k
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:k+1]
+
+    # print(f"Nearest movies of {movie_name}:", end='')
+    # nearest_neighor_movies = [index_movies[i[0]] for i in sim_scores]
+    # print(nearest_neighor_movies)
+
+    r_ui = mean_ratings[movie_name]
+
+    total_scores = sum([i[1] for i in sim_scores])
+    for movie_j, score_ij in sim_scores:
+        r_uj = ui_matrix.loc[user_name, index_movies[movie_j]]
+        rmean_j = mean_ratings.iloc[movie_j]
+        r_ui += ((score_ij*(r_uj - rmean_j))/total_scores)
+
+    return r_ui
+
+user_id = 4
+movie_name = "Young Frankenstein"
+num_neighbors = 10
+
+score_4yf = ui_matrix.loc[user_id, movie_name]
+print(f"True real rating of user {user_id} for movie {movie_name} is {score_4yf}")
+
+pred_4yf = predict_score(ui_matrix, user_id, movie_name, mean_ratings, k=num_neighbors)
+print(f"True predicted rating of {user_id} for movie {movie_name} is {pred_4yf}")
+
+import pandas as pd
+import numpy as np
+from ast import literal_eval
+from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import svds
+from sklearn.metrics.pairwise import cosine_similarity
+
+ratings = pd.read_csv("/content/data/imdb/ratings_small.csv")
+ratings.head()
+
+movie_data = pd.read_csv("/content/super_clean_data.csv")
+movie_id_title = movie_data[['id', 'title']]
+movie_id_title.head()
+
+new_ratings = ratings.merge(movie_id_title, left_on='movieId', right_on='id')
+new_ratings.head()
+
+ui_matrix = new_ratings.pivot(index = 'userId', columns ='title', values = 'rating').fillna(0)
+ui_matrix.head()
+
+# Singular Value Decomposition
+U, sigma, Vt = svds(ui_matrix, k = 600)
+
+# Construct diagonal array in SVD
+sigma = np.diag(sigma)
+
+print("X = U * sigma * Vt")
+print(f"{ui_matrix.shape} = {U.shape} * {sigma.shape} * {Vt.shape}")
+
+# Low-rank matrix
+all_user_predicted_ratings = np.dot(np.dot(U, sigma), Vt) 
+
+# Convert predicted ratings to dataframe
+pred_ui_matrix = pd.DataFrame(all_user_predicted_ratings, columns = ui_matrix.columns)
+pred_ui_matrix.head()
+
+def predict_score(pred_ui_matrix, user_id, movie_name):
+    return pred_ui_matrix.loc[user_id-1, movie_name]
+
+user_id = 4
+movie_name = "Young Frankenstein"
+
+score_4yf = ui_matrix.loc[user_id, movie_name]
+print(f"True real rating of user {user_id} for movie {movie_name} is {score_4yf}")
+
+pred_4yf = predict_score(pred_ui_matrix, user_id, movie_name)
+print(f"True predicted rating of {user_id} for movie {movie_name} is {pred_4yf}")
+
+rmse_df = pd.concat([ui_matrix.mean(), pred_ui_matrix.mean()], axis=1)
+rmse_df.columns = ['Avg_actual_ratings', 'Avg_predicted_ratings']
+rmse_df['item_index'] = np.arange(0, rmse_df.shape[0], 1)
+rmse_df.head()
+
+RMSE = round((((rmse_df.Avg_actual_ratings - rmse_df.Avg_predicted_ratings) ** 2).mean() ** 0.5), 5)
+print(f'RMSE SVD Model = {RMSE}')
+
+for i in [10, 100, 300, 500, 600]:
+
+    # Singular Value Decomposition
+    U, sigma, Vt = svds(ui_matrix, k = i)
+
+    # Construct diagonal array in SVD
+    sigma = np.diag(sigma)
+
+    # Low-rank matrix
+    all_user_predicted_ratings = np.dot(np.dot(U, sigma), Vt) 
+
+    # Convert predicted ratings to dataframe
+    pred_ui_matrix = pd.DataFrame(all_user_predicted_ratings, columns = ui_matrix.columns)
+
+    rmse_df = pd.concat([ui_matrix.mean(), pred_ui_matrix.mean()], axis=1)
+    rmse_df.columns = ['Avg_actual_ratings', 'Avg_predicted_ratings']
+    rmse_df['item_index'] = np.arange(0, rmse_df.shape[0], 1)
+
+    RMSE = round((((rmse_df.Avg_actual_ratings - rmse_df.Avg_predicted_ratings) ** 2).mean() ** 0.5), 5)
+    print(f'RMSE with value k = {i} : {RMSE}')
+
+# Recommend the items with the highest predicted ratings
+
+def recommend_items(user_id, ui_matrix, pred_ui_matrix, num_recommendations=5):
+
+    # Get and sort the user's ratings
+    sorted_user_ratings = ui_matrix.loc[user_id].sort_values(ascending=False)
+    #sorted_user_ratings
+    sorted_user_predictions = pred_ui_matrix.loc[user_id-1].sort_values(ascending=False)
+    #sorted_user_predictions
+    temp = pd.concat([sorted_user_ratings, sorted_user_predictions], axis=1)
+    temp.index.name = 'Recommended Items'
+    temp.columns = ['user_ratings', 'user_predictions']
+    temp = temp.loc[temp.user_ratings == 0]   
+    temp = temp.sort_values('user_predictions', ascending=False)
+    print('\nBelow are the recommended items for user(user_id = {}):\n'.format(user_id))
+    print(temp.head(num_recommendations))
+
+recommend_items(4, ui_matrix, pred_ui_matrix, num_recommendations=5)

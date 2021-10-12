@@ -1,0 +1,488 @@
+!pip install -q git+https://github.com/sparsh-ai/recochef.git
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import pickle
+
+from sklearn import model_selection
+
+import warnings
+warnings.filterwarnings('ignore')
+
+plt.style.use('seaborn-white')
+plt.rcParams.update({'font.size': 15})
+%matplotlib inline
+
+from recochef.datasets.bookcrossing import BookCrossing
+
+bookcrossing = BookCrossing()
+users = bookcrossing.load_users()
+books = bookcrossing.load_items()
+book_ratings = bookcrossing.load_interactions()
+
+users.head()
+
+books.head()
+
+book_ratings.head()
+
+print(f'Users: {len(users)}\nBooks: {len(books)}\nRatings: {len(book_ratings)}')
+
+users.describe(include='all').T
+
+users.loc[(users.AGE<5) | (users.AGE>100), 'AGE'] = np.nan
+
+u = users.AGE.value_counts().sort_index()
+plt.figure(figsize=(20, 10))
+plt.bar(u.index, u.values)
+plt.xlabel('Age')
+plt.ylabel('counts')
+plt.show()
+
+user_location_expanded = users.LOCATION.str.split(',', 2, expand=True)
+user_location_expanded.columns = ['CITY', 'STATE', 'COUNTRY']
+users = users.join(user_location_expanded)
+users.COUNTRY.replace('', np.nan, inplace=True)
+users.drop(columns=['LOCATION'], inplace=True)
+users.head()
+
+books.head(2)
+
+books.describe(include='all').T
+
+# Convert years to float
+books.YEAR = pd.to_numeric(books.YEAR, errors='coerce')
+
+# Replace all years of zero with NaN
+books.YEAR.replace(0, np.nan, inplace=True)
+
+yr = books.YEAR.value_counts().sort_index()
+yr = yr.where(yr>5) # filter out counts less than 5
+plt.figure(figsize=(20, 10))
+plt.bar(yr.index, yr.values)
+plt.xlabel('Year of Publication')
+plt.ylabel('counts')
+plt.show()
+
+historical_books = books[books.YEAR<1900] # create df of old books
+books_from_the_future = books[books.YEAR>2018] # create df of books with publication yrs in the future!
+
+hist_books_mini = historical_books[['TITLE', 'YEAR']]
+future_books_mini = books_from_the_future[['TITLE', 'YEAR']]
+print(f'Historical books:\n{hist_books_mini}')
+print('\n')
+print(f'Future books:\n{future_books_mini}')
+
+print(f'Length of books dataset before removal: {len(books)}')
+books = books.loc[~(books.ITEMID.isin(historical_books.ITEMID))] # remove historical books
+books = books.loc[~(books.ITEMID.isin(books_from_the_future.ITEMID))] # remove historical books
+print(f'Length of books dataset after removal: {len(books)}')
+
+books.PUBLISHER = books.PUBLISHER.str.replace('&amp', '&', regex=False)
+books.head()
+
+uniq_books = books.ITEMID.nunique()
+all_books = books.ITEMID.count()
+print(f'No. of unique books: {uniq_books} | All book entries: {all_books}')
+
+top_publishers = books.PUBLISHER.value_counts()[:10]
+print(f'The 10 publishers with the most entries in the books table are:\n{top_publishers}')
+
+top_authors = books.AUTHOR.value_counts()[:10]
+print(f'The 10 authors with the most entries in the books table are:\n{top_authors}')
+
+empty_string_publisher = books[books.PUBLISHER == ''].PUBLISHER.count()
+nan_publisher = books.PUBLISHER.isnull().sum()
+print(f'There are {empty_string_publisher} entries with empty strings, and {nan_publisher} NaN entries in the Publisher field')
+
+empty_string_author = books[books.AUTHOR == ''].AUTHOR.count()
+nan_author = books.AUTHOR.isnull().sum()
+print(f'There are {empty_string_author} entries with empty strings, and {nan_author} NaN entries in the Author field')
+
+top_titles = books.TITLE.value_counts()[:10]
+print(f'The 10 book titles with the most entries in the books table are:\n{top_titles}')
+
+books[books.TITLE=='Jane Eyre']
+
+book_ratings.head()
+
+book_ratings.describe(include='all').T
+
+book_ratings.dtypes
+
+super_users = book_ratings.groupby('USERID').ITEMID.count().sort_values(ascending=False)
+print(f'The 20 users with the most ratings:\n{super_users[:20]}')
+
+# user distribution - users with more than 50 ratings removed
+user_hist = super_users.where(super_users<50)
+user_hist.hist(bins=30)
+plt.xlabel('No. of ratings')
+plt.ylabel('count')
+plt.show()
+
+# only users with more than 1000 ratings
+super_user_hist = super_users.where(super_users>1000)
+super_user_hist.hist(bins=30)
+plt.xlabel('No. of ratings (min. 1000)')
+plt.ylabel('count')
+plt.show()
+
+rtg = book_ratings.RATING.value_counts().sort_index()
+
+plt.figure(figsize=(10, 5))
+plt.bar(rtg.index, rtg.values)
+plt.xlabel('Rating')
+plt.ylabel('counts')
+plt.show()
+
+print(f'Size of book_ratings before removing zero ratings: {len(book_ratings)}')
+book_ratings = book_ratings[book_ratings.RATING != 0]
+print(f'Size of book_ratings after removing zero ratings: {len(book_ratings)}')
+
+rtg = book_ratings.RATING.value_counts().sort_index()
+
+plt.figure(figsize=(10, 5))
+plt.bar(rtg.index, rtg.values)
+plt.xlabel('Rating')
+plt.ylabel('counts')
+plt.show()
+
+print(f'Books table size: {len(books)}')
+print(f'Ratings table size: {len(book_ratings)}')
+books_with_ratings = book_ratings.join(books.set_index('ITEMID'), on='ITEMID')
+print(f'New table size: {len(books_with_ratings)}')
+
+books_with_ratings.head()
+
+print(f'There are {books_with_ratings.TITLE.isnull().sum()} books with no title/author information.')
+print(f'This represents {len(books_with_ratings)/books_with_ratings.TITLE.isnull().sum():.2f}% of the ratings dataset.')
+
+books_with_ratings.info()
+
+books_with_ratings.dropna(subset=['TITLE'], inplace=True) # remove rows with missing title/author data
+
+cm_rtg = books_with_ratings.groupby('TITLE').RATING.sum()
+cm_rtg = cm_rtg.sort_values(ascending=False)[:10]
+idx = cm_rtg.index.tolist() # Get sorted book titles
+vals = cm_rtg.values.tolist() # Get corresponding cm_rtg values
+
+plt.figure(figsize=(10, 5))
+plt.bar(range(len(idx)), vals)
+plt.xticks(range(len(idx)), idx, rotation='vertical')
+plt.ylabel('cumulative rating score')
+plt.show()
+
+cutoff = books_with_ratings.TITLE.value_counts()
+mean_rtg = books_with_ratings[books_with_ratings.TITLE.isin(cutoff[cutoff>50].index)].groupby('TITLE')['RATING'].mean()
+mean_rtg.sort_values(ascending=False)[:10] # show only top 10
+
+mean_rtg.sort_values(ascending=False)[-10:] # bottom 10 only
+
+books_with_ratings.groupby('TITLE').ITEMID.nunique().sort_values(ascending=False)[:10]
+
+multiple_isbns = books_with_ratings.groupby('TITLE').ITEMID.nunique()
+multiple_isbns.value_counts()
+
+has_mult_isbns = multiple_isbns.where(multiple_isbns>1)
+has_mult_isbns.dropna(inplace=True) # remove NaNs, which in this case is books with a single ISBN number
+
+print(f'There are {len(has_mult_isbns)} book titles with multiple ISBN numbers which we will try to re-assign to a unique identifier')
+
+# Check to see that our friend Jane Eyre still has multiple ISBN values
+has_mult_isbns['Jane Eyre']
+
+# Create dictionary for books with multiple isbns
+def make_isbn_dict(df):
+    title_isbn_dict = {}
+    for title in has_mult_isbns.index:
+        isbn_series = df.loc[df.TITLE==title].ITEMID.unique() # returns only the unique ISBNs
+        title_isbn_dict[title] = isbn_series.tolist()
+    return title_isbn_dict
+
+%time dict_UNIQUE_ITEMIDS = make_isbn_dict(books_with_ratings)
+
+# As the loop takes a while to run (8 min on the full dataset), pickle this dict for future use
+with open('multiple_isbn_dict.pickle', 'wb') as handle:
+    pickle.dump(dict_UNIQUE_ITEMIDS, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# LOAD isbn_dict back into namespace
+with open('multiple_isbn_dict.pickle', 'rb') as handle:
+    multiple_isbn_dict = pickle.load(handle)
+
+print(f'There are now {len(multiple_isbn_dict)} books in the ISBN dictionary that have multiple ISBN numbers')
+
+print(f'Length of Jane Eyre dict entry: {len(multiple_isbn_dict["Jane Eyre"])}\n')
+multiple_isbn_dict['Jane Eyre']
+
+# Add 'UNIQUE_ITEMIDS' column to 'books_with_ratings' dataframe that includes the first ISBN if multiple ISBNS,
+# or just the ISBN if only 1 ISBN present anyway.
+def add_UNIQUE_ITEMIDS_col(df):
+    df['UNIQUE_ITEMIDS'] = df.apply(lambda row: multiple_isbn_dict[row.TITLE][0] if row.TITLE in multiple_isbn_dict.keys() else row.ITEMID, axis=1)
+    return df
+
+%time books_with_ratings = add_UNIQUE_ITEMIDS_col(books_with_ratings)
+
+books_with_ratings.head()
+
+books_with_ratings[books_with_ratings.TITLE=='Jane Eyre'].head()
+
+books_users_ratings.drop(['URLSMALL', 'URLLARGE'], axis=1, inplace=True)
+
+print(f'Books+Ratings table size: {len(books_with_ratings)}')
+print(f'Users table size: {len(users)}')
+books_users_ratings = books_with_ratings.join(users.set_index('USERID'), on='USERID')
+print(f'New "books_users_ratings" table size: {len(books_users_ratings)}')
+
+books_users_ratings.head()
+
+books_users_ratings.info()
+
+books_users_ratings.shape
+
+user_item_rating = books_users_ratings[['USERID', 'UNIQUE_ITEMIDS', 'RATING']]
+user_item_rating.head()
+
+rtg = user_item_rating.RATING.value_counts().sort_index()
+
+plt.figure(figsize=(10, 5))
+plt.bar(rtg.index, rtg.values)
+plt.xlabel('Rating')
+plt.ylabel('counts')
+plt.show()
+
+train_data, test_data = model_selection.train_test_split(user_item_rating, test_size=0.20)
+
+print(f'Training set size: {len(train_data)}')
+print(f'Testing set size: {len(test_data)}')
+print(f'Test set is {(len(test_data)/(len(train_data)+len(test_data))*100):.0f}% of the full dataset.')
+
+### TRAINING SET
+# Get int mapping for USERID
+u_unique_train = train_data.USERID.unique()  # create a 'set' (i.e. all unique) list of vals
+train_data_user2idx = {o:i for i, o in enumerate(u_unique_train)}
+# Get int mapping for UNIQUE_ITEMIDS
+b_unique_train = train_data.UNIQUE_ITEMIDS.unique()  # create a 'set' (i.e. all unique) list of vals
+train_data_book2idx = {o:i for i, o in enumerate(b_unique_train)}
+
+### TESTING SET
+# Get int mapping for USERID
+u_unique_test = test_data.USERID.unique()  # create a 'set' (i.e. all unique) list of vals
+test_data_user2idx = {o:i for i, o in enumerate(u_unique_test)}
+# Get int mapping for UNIQUE_ITEMIDS
+b_unique_test = test_data.UNIQUE_ITEMIDS.unique()  # create a 'set' (i.e. all unique) list of vals
+test_data_book2idx = {o:i for i, o in enumerate(b_unique_test)}
+
+### TRAINING SET
+train_data['USER_UNIQUE'] = train_data['USERID'].map(train_data_user2idx)
+train_data['ITEM_UNIQUE'] = train_data['UNIQUE_ITEMIDS'].map(train_data_book2idx)
+
+### TESTING SET
+test_data['USER_UNIQUE'] = test_data['USERID'].map(test_data_user2idx)
+test_data['ITEM_UNIQUE'] = test_data['UNIQUE_ITEMIDS'].map(test_data_book2idx)
+
+### Convert back to 3-column df
+train_data = train_data[['USER_UNIQUE', 'ITEM_UNIQUE', 'RATING']]
+test_data = test_data[['USER_UNIQUE', 'ITEM_UNIQUE', 'RATING']]
+
+train_data.tail()
+
+train_data.dtypes
+
+### TRAINING SET
+# Create user-item matrices
+n_users = train_data['USER_UNIQUE'].nunique()
+n_books = train_data['ITEM_UNIQUE'].nunique()
+
+# First, create an empty matrix of size USERS x BOOKS (this speeds up the later steps)
+train_matrix = np.zeros((n_users, n_books))
+
+# Then, add the appropriate vals to the matrix by extracting them from the df with itertuples
+for entry in train_data.itertuples(): # entry[1] is the user-id, entry[2] is the book-isbn
+    train_matrix[entry[1]-1, entry[2]-1] = entry[3] # -1 is to counter 0-based indexing
+
+train_matrix.shape
+
+### TESTING SET
+# Create user-item matrices
+n_users = test_data['u_unique'].nunique()
+n_books = test_data['b_unique'].nunique()
+
+# First, create an empty matrix of size USERS x BOOKS (this speeds up the later steps)
+test_matrix = np.zeros((n_users, n_books))
+
+# Then, add the appropriate vals to the matrix by extracting them from the df with itertuples
+for entry in test_data.itertuples(): # entry[1] is the user-id, entry[2] is the book-isbn
+    test_matrix[entry[1]-1, entry[2]-1] = entry[3] # -1 is to counter 0-based indexing
+
+test_matrix.shape
+
+# It may take a while to calculate, so I'll perform on a subset initially
+train_matrix_small = train_matrix[:10000, :10000]
+test_matrix_small = test_matrix[:10000, :10000]
+
+from sklearn.metrics.pairwise import pairwise_distances
+user_similarity = pairwise_distances(train_matrix_small, metric='cosine')
+item_similarity = pairwise_distances(train_matrix_small.T, metric='cosine') # .T transposes the matrix (NumPy)
+
+def predict(ratings, similarity, type='user'): # default type is 'user'
+    if type == 'user':
+        mean_user_rating = ratings.mean(axis=1)
+        # Use np.newaxis so that mean_user_rating has the same format as ratings
+        ratings_diff = (ratings - mean_user_rating[:, np.newaxis])
+        pred = mean_user_rating[:, np.newaxis] + similarity.dot(ratings_diff) / np.array([np.abs(similarity).sum(axis=1)]).T
+    elif type == 'item':
+        pred = ratings.dot(similarity) / np.array([np.abs(similarity).sum(axis=1)])
+    return pred
+
+item_prediction = predict(train_matrix_small, item_similarity, type='item')
+user_prediction = predict(train_matrix_small, user_similarity, type='user')
+
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+def rmse(prediction, test_matrix):
+    prediction = prediction[test_matrix.nonzero()].flatten()
+    test_matrix = test_matrix[test_matrix.nonzero()].flatten()
+    return sqrt(mean_squared_error(prediction, test_matrix))
+
+# Call on test set to get error from each approach ('user' or 'item')
+print(f'User-based CF RMSE: {rmse(user_prediction, test_matrix_small)}')
+print(f'Item-based CF RMSE: {rmse(item_prediction, test_matrix_small)}')
+
+from surprise import Reader, Dataset
+
+user_item_rating.head() # take a look at our data
+
+# First need to create a 'Reader' object to set the scale/limit of the ratings field
+reader = Reader(rating_scale=(1, 10))
+
+# Load the data into a 'Dataset' object directly from the pandas df.
+# Note: The fields must be in the order: user, item, rating
+data = Dataset.load_from_df(user_item_rating, reader)
+
+# Load the models and 'evaluation' method
+from surprise import SVD, NMF, model_selection, accuracy
+
+# Load SVD algorithm
+model = SVD()
+
+# Train on books dataset
+%time model_selection.cross_validate(model, data, measures=['RMSE'], cv=5, verbose=True)
+
+# set test set to 20%.
+trainset, testset = model_selection.train_test_split(data, test_size=0.2)
+
+# Instantiate the SVD model.
+model = SVD()
+
+# Train the algorithm on the training set, and predict ratings for the test set
+model.fit(trainset)
+predictions = model.test(testset)
+
+# Then compute RMSE
+accuracy.rmse(predictions)
+
+# Load NMF algorithm
+model = NMF()
+# Train on books dataset
+%time model_selection.cross_validate(model, data, measures=['RMSE'], cv=5, verbose=True)
+
+# We'll remake the training set, keeping 20% for testing
+trainset, testset = model_selection.train_test_split(data, test_size=0.2)
+
+### Fine-tune Surprise SVD model useing GridSearchCV
+from surprise.model_selection import GridSearchCV
+
+param_grid = {'n_factors': [80, 100, 120], 'lr_all': [0.001, 0.005, 0.01], 'reg_all': [0.01, 0.02, 0.04]}
+
+# Optimize SVD algorithm for both root mean squared error ('rmse') and mean average error ('mae')
+gs = GridSearchCV(SVD, param_grid, measures=['rmse', 'mae'], cv=3)
+
+# Fit the gridsearch result on the entire dataset
+%time gs.fit(data)
+
+# Return the best version of the SVD algorithm
+model = gs.best_estimator['rmse']
+
+print(gs.best_score['rmse'])
+print(gs.best_params['rmse'])
+
+model_selection.cross_validate(model, data, measures=['rmse', 'mae'], cv=5, verbose=True)
+
+### Use the new parameters with the training set
+model = SVD(n_factors=80, lr_all=0.005, reg_all=0.04)
+model.fit(trainset) # re-fit on only the training data using the best hyperparameters
+test_pred = model.test(testset)
+print("SVD : Test Set")
+accuracy.rmse(test_pred, verbose=True)
+
+# get a prediction for specific users and items.
+uid = 276744  # the USERID int
+iid = '038550120X' # the UNIQUE_ITEMIDS string
+# This pair has an actual rating of 7!
+
+pred = model.predict(uid, iid, verbose=True)
+
+print(f'The estimated rating for the book with the "UNIQUE_ITEMIDS" code {pred.iid} from user #{pred.uid} is {pred.est:.2f}.\n')
+actual_rtg = user_item_rating[(user_item_rating.USERID==pred.uid) & (user_item_rating.UNIQUE_ITEMIDS==pred.iid)].RATING.values[0]
+print(f'The real rating given for this was {actual_rtg:.2f}.')
+
+# get a prediction for specific users and items.
+uid = 95095  # the USERID int
+iid = '0140079963' # the UNIQUE_ITEMIDS string
+# This pair has an actual rating of 6.0!
+
+pred = model.predict(uid, iid, verbose=True)
+
+print(f'The estimated rating for the book with the "UNIQUE_ITEMIDS" code {pred.iid} from user #{pred.uid} is {pred.est:.2f}.\n')
+actual_rtg = user_item_rating[(user_item_rating.USERID==pred.uid) & (user_item_rating.UNIQUE_ITEMIDS==pred.iid)].RATING.values[0]
+print(f'The real rating given for this was {actual_rtg:.2f}.')
+
+from collections import defaultdict
+
+def get_top_n(predictions, n=10):
+    '''Return the top-N recommendation for each user from a set of predictions.
+
+    Args:
+        predictions(list of Prediction objects): The list of predictions, as
+            returned by the test method of an algorithm.
+        n(int): The number of recommendation to output for each user. Default
+            is 10.
+
+    Returns:
+    A dict where keys are user (raw) ids and values are lists of tuples:
+        [(raw item id, rating estimation), ...] of size n.
+    '''
+
+    # First map the predictions to each user.
+    top_n = defaultdict(list)
+    for uid, iid, true_r, est, _ in predictions:
+        top_n[uid].append((iid, est))
+
+    # Then sort the predictions for each user and retrieve the k highest ones.
+    for uid, user_ratings in top_n.items():
+        user_ratings.sort(key=lambda x: x[1], reverse=True)
+        top_n[uid] = user_ratings[:n]
+        
+    return top_n
+
+pred = model.test(testset)
+top_n = get_top_n(pred)
+
+def get_reading_list(userid):
+    """
+    Retrieve full book titles from full 'books_users_ratings' dataframe
+    """
+    reading_list = defaultdict(list)
+    top_n = get_top_n(predictions, n=10)
+    for n in top_n[userid]:
+        book, rating = n
+        title = books_users_ratings.loc[books_users_ratings.UNIQUE_ITEMIDS==book].TITLE.unique()[0]
+        reading_list[title] = rating
+    return reading_list
+
+# Just take a random look at USERID=60337
+example_reading_list = get_reading_list(userid=60337)
+for book, rating in example_reading_list.items():
+    print(f'{book}: {rating}')

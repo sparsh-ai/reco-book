@@ -1,0 +1,2399 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon Product Recommender &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Anime Recommender with Bi-partite Graph Network" href="T990001_anime_recommender_graph_network.html" />
+    <link rel="prev" title="CareerVillage Questions Recommendation" href="T964554_Career_Village_Questions_Recommendation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990001_amazon_women_apparel_tfidf_word2vec.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990001_amazon_women_apparel_tfidf_word2vec.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#download-the-data">
+   Download the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-loading">
+   Data loading
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exploration">
+   Exploration
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#data-cleaning">
+   Data cleaning
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#text-based-product-similarity-results">
+   Text based product similarity results
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#bag-of-words-vectorization-based-model">
+     Bag of words Vectorization based model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tfidfvectorization-based-model">
+     TfidfVectorization based model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#idfvectorization-based-model">
+     IdfVectorization based model
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#semantic-meaning-based-apparel-similarity-models">
+   Semantic meaning based apparel similarity models
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#avg-word2vec">
+     Avg Word2Vec
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#weighted-word2vec">
+     Weighted Word2Vec
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#reflection">
+   Reflection
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#text-preprocessing">
+     Text preprocessing
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#methods-of-sentence-to-vector-conversion">
+     Methods of sentence to vector conversion
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-based-similarity-cosine">
+     Distance based similarity (Cosine)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#distance-based-similarity-euclidean">
+     Distance based similarity (Euclidean)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusion-improvements">
+   Conclusion &amp; Improvements
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="amazon-product-recommender">
+<h1>Amazon Product Recommender<a class="headerlink" href="#amazon-product-recommender" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Applying product title descriptions based text semantic methods to recommend similar products.</p>
+</div></blockquote>
+<div class="section" id="download-the-data">
+<h2>Download the data<a class="headerlink" href="#download-the-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># !pip install -q -U kaggle</span>
+<span class="c1"># !pip install --upgrade --force-reinstall --no-deps kaggle</span>
+<span class="c1"># !mkdir ~/.kaggle</span>
+<span class="c1"># !cp /content/drive/MyDrive/kaggle.json ~/.kaggle/</span>
+<span class="c1"># !chmod 600 ~/.kaggle/kaggle.json</span>
+<span class="c1"># !kaggle datasets download -d ajaysh/women-apparel-recommendation-engine-amazoncom</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!unzip /content/women-apparel-recommendation-engine-amazoncom.zip
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">KeyedVectors</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">gridspec</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">pairwise_distances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;stopwords&#39;</span><span class="p">)</span>
+<span class="n">stopword</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="data-loading">
+<h2>Data loading<a class="headerlink" href="#data-loading" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;tops_fashion.json&#39;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(183138, 19)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sku</th>
+      <th>asin</th>
+      <th>product_type_name</th>
+      <th>formatted_price</th>
+      <th>author</th>
+      <th>color</th>
+      <th>brand</th>
+      <th>publisher</th>
+      <th>availability</th>
+      <th>reviews</th>
+      <th>large_image_url</th>
+      <th>availability_type</th>
+      <th>small_image_url</th>
+      <th>editorial_review</th>
+      <th>title</th>
+      <th>model</th>
+      <th>medium_image_url</th>
+      <th>manufacturer</th>
+      <th>editorial_reivew</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>None</td>
+      <td>B016I2TS4W</td>
+      <td>SHIRT</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>FNC7C</td>
+      <td>None</td>
+      <td>None</td>
+      <td>[False, https://www.amazon.com/reviews/iframe?...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>Minions Como Superheroes Ironman Women's O Nec...</td>
+      <td>Minions Como Superheroes Ironman Long Sleeve R...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>None</td>
+      <td>B01N49AI08</td>
+      <td>SHIRT</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>FIG Clothing</td>
+      <td>None</td>
+      <td>None</td>
+      <td>[False, https://www.amazon.com/reviews/iframe?...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>Sizing runs on the small side. FIG® recommends...</td>
+      <td>FIG Clothing Womens Izo Tunic</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>None</td>
+      <td>B01JDPCOHO</td>
+      <td>SHIRT</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>FIG Clothing</td>
+      <td>None</td>
+      <td>None</td>
+      <td>[False, https://www.amazon.com/reviews/iframe?...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>Sizing runs on the small side. FIG® recommends...</td>
+      <td>FIG Clothing Womens Won Top</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>None</td>
+      <td>B01N19U5H5</td>
+      <td>SHIRT</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Focal18</td>
+      <td>None</td>
+      <td>None</td>
+      <td>[True, https://www.amazon.com/reviews/iframe?a...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>100% Brand New &amp; Fashion&lt;br&gt; Quantity: 1 Piece...</td>
+      <td>Focal18 Sailor Collar Bubble Sleeve Blouse Shi...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>None</td>
+      <td>B004GSI2OS</td>
+      <td>SHIRT</td>
+      <td>$26.26</td>
+      <td>None</td>
+      <td>Onyx Black/ Stone</td>
+      <td>FeatherLite</td>
+      <td>None</td>
+      <td>Usually ships in 6-10 business days</td>
+      <td>[False, https://www.amazon.com/reviews/iframe?...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>now</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td></td>
+      <td>Featherlite Ladies' Long Sleeve Stain Resistan...</td>
+      <td>None</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+      <td>None</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># keeping just the pertinent features</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;asin&#39;</span><span class="p">,</span><span class="s1">&#39;product_type_name&#39;</span><span class="p">,</span> <span class="s1">&#39;formatted_price&#39;</span><span class="p">,</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="exploration">
+<h2>Exploration<a class="headerlink" href="#exploration" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>asin                 object
+product_type_name    object
+formatted_price      object
+title                object
+medium_image_url     object
+dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">memory_usage</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># memory usage in bytes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index                     128
+asin                 12270246
+product_type_name    11455348
+formatted_price       5497912
+title                21603054
+medium_image_url     23670528
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>asin</th>
+      <th>product_type_name</th>
+      <th>formatted_price</th>
+      <th>title</th>
+      <th>medium_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>183138</td>
+      <td>183138</td>
+      <td>28395</td>
+      <td>183138</td>
+      <td>183138</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>183138</td>
+      <td>72</td>
+      <td>3135</td>
+      <td>175985</td>
+      <td>170782</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>B01D936ANU</td>
+      <td>SHIRT</td>
+      <td>$19.99</td>
+      <td>Nakoda Cotton Self Print Straight Kurti For Women</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>1</td>
+      <td>167794</td>
+      <td>945</td>
+      <td>77</td>
+      <td>23</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>asin</th>
+      <th>product_type_name</th>
+      <th>formatted_price</th>
+      <th>title</th>
+      <th>medium_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>183138</td>
+      <td>183138</td>
+      <td>28395</td>
+      <td>183138</td>
+      <td>183138</td>
+    </tr>
+    <tr>
+      <th>unique</th>
+      <td>183138</td>
+      <td>72</td>
+      <td>3135</td>
+      <td>175985</td>
+      <td>170782</td>
+    </tr>
+    <tr>
+      <th>top</th>
+      <td>B01D936ANU</td>
+      <td>SHIRT</td>
+      <td>$19.99</td>
+      <td>Nakoda Cotton Self Print Straight Kurti For Women</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>freq</th>
+      <td>1</td>
+      <td>167794</td>
+      <td>945</td>
+      <td>77</td>
+      <td>23</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Basic stats for product type</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The basic statistics for product type on amazon are as follows: </span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;product_type_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()))</span>
+
+<span class="c1">#product type segregation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Product type count:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;product_type_name&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span>
+
+<span class="c1">#basic stats for titles</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The basic statistics for product ttiles on amazon are as follows: </span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()))</span>
+
+<span class="c1">#Basic stats for product type</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">% o</span><span class="s1">f the total points have a listed price </span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;formatted_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The basic statistics for product type on amazon are as follows: 
+count     183138
+unique        72
+top        SHIRT
+freq      167794
+Name: product_type_name, dtype: object
+
+
+Product type count:
+[(&#39;SHIRT&#39;, 167794), (&#39;APPAREL&#39;, 3549), (&#39;BOOKS_1973_AND_LATER&#39;, 3336), (&#39;DRESS&#39;, 1584), (&#39;SPORTING_GOODS&#39;, 1281), (&#39;SWEATER&#39;, 837), (&#39;OUTERWEAR&#39;, 796), (&#39;OUTDOOR_RECREATION_PRODUCT&#39;, 729), (&#39;ACCESSORY&#39;, 636), (&#39;UNDERWEAR&#39;, 425)]
+
+
+The basic statistics for product ttiles on amazon are as follows: 
+count                                                183138
+unique                                               175985
+top       Nakoda Cotton Self Print Straight Kurti For Women
+freq                                                     77
+Name: title, dtype: object
+
+
+15.504701372735314 % of the total points have a listed price 
+ 
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="data-cleaning">
+<h2>Data cleaning<a class="headerlink" href="#data-cleaning" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># data.memory_usage(deep=True)  # memory usage before encoding</span>
+
+<span class="c1"># # convert &quot;product type&quot; column data type to category</span>
+<span class="c1"># data[&quot;product_type_name&quot;] = data[&quot;product_type_name&quot;].astype(&quot;category&quot;)</span>
+
+<span class="c1"># # label encode the &quot;asin&quot; column</span>
+<span class="c1"># # because it is currently in object form, and taking lots of storage memory</span>
+<span class="c1"># le_asin = preprocessing.LabelEncoder()</span>
+<span class="c1"># data.loc[:,&quot;asin&quot;] = le_asin.fit_transform(data[&quot;asin&quot;].values)</span>
+
+<span class="c1"># # label encode the &quot;url&quot; column also</span>
+<span class="c1"># le_url = preprocessing.LabelEncoder()</span>
+<span class="c1"># data.loc[:,&quot;medium_image_url&quot;] = le_url.fit_transform(data[&quot;medium_image_url&quot;].values)</span>
+
+<span class="c1"># # convert &quot;price&quot; column to float</span>
+<span class="c1"># data.loc[:,&quot;formatted_price&quot;] = data[&quot;formatted_price&quot;].replace(&#39;Too low to display&#39;, None)</span>
+<span class="c1"># data.loc[:,&quot;formatted_price&quot;] = data[&quot;formatted_price&quot;].replace(&#39;[\$,]&#39;, &#39;&#39;, regex=True).astype(float)</span>
+
+<span class="c1"># data.memory_usage(deep=True)  # memory usage after encoding</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># removing products without a price as we need a price to sell products</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;formatted_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The number of products (data points) remaining after removing products without a price: </span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+
+<span class="c1">#removing products without a title as we need titles for vectorization</span>
+<span class="c1">#distance based similarity recommendation for title vectorization</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The number of products (data points) remaining after removing products without a title description required for vectorization:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+
+<span class="c1">#removing products with small length titles as they might not adequately describe product</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">())</span><span class="o">&gt;</span><span class="mi">4</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The number of products (data points) remaining after removing products with insufficient title descriptions required for vectorization:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The number of products (data points) remaining after removing products without a price: 
+28395
+
+The number of products (data points) remaining after removing products without a title description required for vectorization:
+28395
+
+The number of products (data points) remaining after removing products with insufficient title descriptions required for vectorization:
+27958
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#removing stopwords, terms which are not alphanumeric and lowering text</span>
+<span class="k">def</span> <span class="nf">text_clean</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
+  <span class="n">txt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[^A-Za-z0-9]+&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+  <span class="n">txt</span> <span class="o">=</span> <span class="n">txt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+  <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\b(&#39;</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stopword</span><span class="p">)</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;)\b\s*&#39;</span><span class="p">)</span>
+  <span class="n">txt</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">txt</span><span class="p">)</span>
+  <span class="n">txt</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">txt</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+  <span class="k">return</span> <span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">values</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;Free People Womens Break of Dawn Criss-Cross Back Oversized Tank Top Purple XS&#39;,
+       &quot;Women&#39;s The New Riders Of The Purple Sage Long Sleeve T-Shirt&quot;,
+       &quot;Nimbus Women&#39;s Augusta feminine elegance tunic - Light Blue - M&quot;,
+       &#39;Entro Womens Printed Peplum Top (Navy )&#39;,
+       &quot;Guns N&#39; Roses Popular Card Tee Shirt for Pretty Lady XXL Red&quot;],
+      dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">text_clean</span><span class="p">(</span><span class="n">_x</span><span class="p">)</span> <span class="k">for</span> <span class="n">_x</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;free people womens break dawn criss cross back oversized tank top purple xs&#39;,
+ &#39;women new riders purple sage long sleeve shirt&#39;,
+ &#39;nimbus women augusta feminine elegance tunic light blue&#39;,
+ &#39;entro womens printed peplum top navy&#39;,
+ &#39;guns n roses popular card tee shirt pretty lady xxl red&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">text_clean</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>asin</th>
+      <th>product_type_name</th>
+      <th>formatted_price</th>
+      <th>title</th>
+      <th>medium_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>B004GSI2OS</td>
+      <td>SHIRT</td>
+      <td>$26.26</td>
+      <td>featherlite ladies long sleeve stain resistant...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>B012YX2ZPI</td>
+      <td>SHIRT</td>
+      <td>$9.99</td>
+      <td>women unique 100 cotton special olympics world...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>B001LOUGE4</td>
+      <td>SHIRT</td>
+      <td>$11.99</td>
+      <td>ladies cotton tank 2x1 ribbed tank top</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>B003BSRPB0</td>
+      <td>SHIRT</td>
+      <td>$20.54</td>
+      <td>featherlite ladies moisture free mesh sport sh...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>B014ICEDNA</td>
+      <td>SHIRT</td>
+      <td>$7.50</td>
+      <td>supernatural chibis sam dean castiel short sle...</td>
+      <td>https://images-na.ssl-images-amazon.com/images...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#Downloading Googles Word2Vec library to be used in all word to vec models using a pretrained model by google
+!wget -c &quot;https://s3.amazonaws.com/dl4j-distribution/GoogleNews-vectors-negative300.bin.gz&quot;
+!gzip -d GoogleNews-vectors-negative300.bin.gz
+
+modl = KeyedVectors.load_word2vec_format(&#39;GoogleNews-vectors-negative300.bin&#39;, binary=True)
+
+#vocab = stores all the words in google Word2vec model
+vocab = modl.vocab
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Utility function for results </span>
+<span class="k">def</span> <span class="nf">display_img</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="c1">#Get url of the product and download it</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">heatmap_image</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span><span class="n">values</span><span class="p">,</span><span class="n">labels</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>
+    <span class="c1">#keys gives the list of words for recommended title</span>
+    <span class="c1">#divide the figure into two parts</span>
+    
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">width_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">fg</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+    
+    <span class="c1">#1st figure plotting a heatmap that represents the most commonly occuring words</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">values</span><span class="p">]),</span><span class="n">annot</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">labels</span><span class="p">]))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>                 
+    
+    <span class="c1">#2nd figure plotting a heatmap that represents the image of the product</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ln</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ln</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">display_img</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    
+    <span class="c1">#display combine figure</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">heatmap_image_plot</span><span class="p">(</span><span class="n">doc_id</span><span class="p">,</span><span class="n">vec1</span><span class="p">,</span><span class="n">vec2</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">text</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span><span class="p">,</span><span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">):</span>
+    
+                     
+    <span class="n">intersection</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vec1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    
+    <span class="c1">#set the value of non intersecting word to zero in vec2                 </span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">intersection</span><span class="p">:</span>
+            <span class="n">vec2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+    <span class="c1">#if ith word in intersection(list of words of title1 and list of words of title2): values(i)=count of that word in title2 else values(i)=0                 </span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">vec2</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+    
+    <span class="c1">#labels for heatmap</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                     
+    <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;bag_of_words&#39;</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">values</span>
+    
+    <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;Tfidf&#39;</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tfidf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">:</span>
+                <span class="c1">#idf_title_vectorizer.vocabulary contains all the words in the corpus         </span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tfidf_title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+        
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;idf&#39;</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vec2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">:</span>
+                <span class="c1">#idf_title_vectorizer.vocabulary contains all the words in the corpus         </span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idf_title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+        
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                     
+    <span class="n">heatmap_image</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span><span class="n">values</span><span class="p">,</span><span class="n">labels</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">text</span><span class="p">)</span>
+                     
+                     
+<span class="k">def</span> <span class="nf">text_vector</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>    
+    <span class="k">return</span> <span class="n">Counter</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">visualization</span><span class="p">(</span><span class="n">doc_id</span><span class="p">,</span><span class="n">sentence1</span><span class="p">,</span><span class="n">sentence2</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span><span class="p">,</span><span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">):</span>
+    <span class="n">vec1</span> <span class="o">=</span> <span class="n">text_vector</span><span class="p">(</span><span class="n">sentence1</span><span class="p">)</span>
+    <span class="n">vec2</span> <span class="o">=</span> <span class="n">text_vector</span><span class="p">(</span><span class="n">sentence2</span><span class="p">)</span>
+                     
+    <span class="n">heatmap_image_plot</span><span class="p">(</span><span class="n">doc_id</span><span class="p">,</span><span class="n">vec1</span><span class="p">,</span><span class="n">vec2</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">sentence2</span><span class="p">,</span><span class="n">model</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span><span class="p">,</span><span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">)</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#utility function to better visualize and understand results</span>
+
+<span class="k">def</span> <span class="nf">get_word_vec</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span><span class="n">doc_id</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">):</span>
+    <span class="c1">#doc_id : index id in vectorized array</span>
+    <span class="c1">#sentence : title of product</span>
+    <span class="c1">#model_name : &#39;avg&#39;, we will append the model[i], w2v representation of word i</span>
+    
+    <span class="n">vec</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span>
+                <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">modl</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;weighted&#39;</span> <span class="ow">and</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">:</span>
+                <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idf_title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">modl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,)))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_distance</span><span class="p">(</span><span class="n">vec1</span><span class="p">,</span><span class="n">vec2</span><span class="p">):</span>
+    <span class="c1"># vec1 = np.array(#number_of_words_title1 * 300), each row is a vector of length 300 corresponds to each word in give title</span>
+    <span class="c1"># vec2 = np.array(#number_of_words_title2 * 300), each row is a vector of length 300 corresponds to each word in give title</span>
+    <span class="n">final_dist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">vec1</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">vec2</span><span class="p">:</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">))</span>
+        <span class="n">final_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+            
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">final_dist</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">results_Word2Vec</span><span class="p">(</span><span class="n">sentence1</span><span class="p">,</span><span class="n">sentence2</span><span class="p">,</span><span class="n">url</span><span class="p">,</span><span class="n">doc_id1</span><span class="p">,</span><span class="n">doc_id2</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">):</span>
+    <span class="c1"># sentence1 : title1, input product</span>
+    <span class="c1"># sentence2 : title2, recommended product</span>
+    <span class="c1"># model:  &#39;avg&#39;</span>
+
+    <span class="n">sentence_vec1</span> <span class="o">=</span> <span class="n">get_word_vec</span><span class="p">(</span><span class="n">sentence1</span><span class="p">,</span><span class="n">doc_id1</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">)</span>
+    <span class="n">sentence_vec2</span> <span class="o">=</span> <span class="n">get_word_vec</span><span class="p">(</span><span class="n">sentence2</span><span class="p">,</span><span class="n">doc_id2</span><span class="p">,</span><span class="n">model_name</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">)</span>
+    
+    <span class="c1">#sent1_sent2_dist = eucledian distance between i and j</span>
+    <span class="c1">#sent1_sent2_dist = np array with dimensions(#number of words in title1 * #number of words in title2)</span>
+    <span class="n">sent1_sent2_dist</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">sentence_vec1</span><span class="p">,</span><span class="n">sentence_vec2</span><span class="p">)</span>
+    
+    <span class="c1"># divide whole figure into 2 parts 1st part displays heatmap 2nd part displays image of products</span>
+    
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">fg</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">sent1_sent2_dist</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">annot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">sentence2</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="c1"># set the y axis labels as input product title</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">sentence1</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="c1"># set title as recommended product title</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">sentence2</span><span class="p">)</span>
+    
+    <span class="c1">#setting the fontsize and rotation of x tick tables</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xmajorticklabels</span><span class="p">(),</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ymajorticklabels</span><span class="p">(),</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    
+    <span class="n">fg</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">fg</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">fg</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">display_img</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    
+    <span class="c1">#display combine figure</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>   
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define additional functions needed for IDF vectorization</span>
+<span class="k">def</span> <span class="nf">containing</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="c1">#returns the number of documents which have the word</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">idf</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+    <span class="c1">#return the idf value for a word</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">containing</span><span class="p">(</span><span class="n">word</span><span class="p">,</span><span class="n">df</span><span class="p">)))</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#define additional functions needed for avg and weighted Word2Vec vectorization</span>
+<span class="c1">#Function for Word2Vec vectorization</span>
+<span class="c1">#perform Word2Vec vectorization in advance to use the vectorized array directly in distance based similarity recommendation</span>
+<span class="c1">#as performing Word2Vec vectorization each time is computationally intensive compared to Bag of words and idf based vectorization.</span>
+
+<span class="k">def</span> <span class="nf">avg_word_vec</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span><span class="n">no_features</span><span class="p">,</span><span class="n">id_</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">idf_title_features</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    
+    <span class="c1"># sentence: title of the apparel</span>
+    <span class="c1"># num_features: the lenght of word2vec vector, its values = 300</span>
+    <span class="c1"># model_name: model information</span>
+    <span class="c1"># if  model_name == &#39;avg&#39;, add the value model[i], w2v representation of word i</span>
+    <span class="c1"># if mode_name =&#39;weighted&#39; add the value idf_title_features[doc_id,idf_title_vectorizer[word]] * model[word]</span>
+    <span class="c1"># idf_title_vectorizer : 0 for &#39;avg&#39; and idf vectorized array for &#39;weighted&#39;  </span>
+    <span class="c1"># idf_title_features : 0 for &#39;avg&#39; and idf vectorized array for &#39;weighted&#39;</span>
+    
+    <span class="n">featureVec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">)</span>
+    <span class="c1"># initialize a vector of size 300 with all zeros</span>
+    <span class="c1"># add each word2vec(wordi) to this fetureVec</span>
+
+    <span class="n">ncount</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="n">ncount</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">vocab</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span>
+                <span class="n">featureVec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">featureVec</span><span class="p">,</span><span class="n">modl</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;weighted&#39;</span> <span class="ow">and</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">:</span>
+                <span class="n">featureVec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">featureVec</span><span class="p">,</span> <span class="n">modl</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">*</span> <span class="n">idf_title_features</span><span class="p">[</span><span class="n">id_</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">word</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ncount</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
+            <span class="n">featureVec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">featureVec</span><span class="p">,</span><span class="n">ncount</span><span class="p">)</span>
+
+    <span class="c1">#return avg vec</span>
+    <span class="k">return</span> <span class="n">featureVec</span>  
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">model</span><span class="p">):</span>
+  <span class="c1">#data : Data set containing text data</span>
+  <span class="c1">#model : method used for text vectorization</span>
+
+  <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;bag_of_words&#39;</span><span class="p">:</span>
+      <span class="c1">#Vectorization using Bag of words</span>
+      <span class="n">title_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+      <span class="n">title_features</span> <span class="o">=</span> <span class="n">title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>   
+      <span class="k">return</span> <span class="n">title_features</span><span class="p">,</span><span class="n">title_vectorizer</span>
+
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;Tfidf&#39;</span><span class="p">:</span>
+      <span class="c1">#Vectorization using tfidfVectorizer</span>
+      <span class="n">tfidf_title_vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+      <span class="n">tfidf_title_features</span> <span class="o">=</span> <span class="n">tfidf_title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+      <span class="k">return</span> <span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span>
+  
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;idf&#39;</span><span class="p">:</span>
+      <span class="c1">#Vectorization using idf function</span>
+      <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+      
+      <span class="c1">#converting all the values into float</span>
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">idf_title_features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+      <span class="c1">#assigning df value for idf[value] function</span>
+      <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+          <span class="n">idf_value</span> <span class="o">=</span> <span class="n">idf</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">df</span><span class="p">)</span>
+          <span class="c1">#j is the index of the nonzero values</span>
+          <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idf_title_features</span><span class="p">[:,</span><span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span>
+              <span class="n">idf_title_features</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">vocabulary_</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">idf_value</span>
+  
+      <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">save_npz</span><span class="p">(</span><span class="s1">&#39;idf_title_features.npz&#39;</span><span class="p">,</span> <span class="n">idf_title_features</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="n">idf_title_features</span><span class="p">,</span><span class="n">idf_title_vectorizer</span>
+  
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span>
+      <span class="n">w2vec_title_features</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="c1">#building vector for each title </span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]:</span>
+          <span class="n">w2vec_title_features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_word_vec</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">300</span><span class="p">))</span>
+
+      <span class="c1">#w2v_title_features = np.array(# number of doc/rows in courpus * 300) </span>
+      <span class="n">Word2Vec_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">w2vec_title_features</span><span class="p">)</span>
+
+      <span class="c1">#saving dataframe in a npz file</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="s2">&quot;Word2Vec_aveg.npz&quot;</span><span class="p">,</span><span class="n">Word2Vec_features</span><span class="p">)</span>
+      
+      <span class="k">return</span> <span class="n">Word2Vec_features</span>
+  
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;weighted&#39;</span><span class="p">:</span>
+      <span class="c1">#Load the saved idf vectorized sparse array .npz</span>
+      <span class="c1">#title_features= Vectorization(data,&#39;idf&#39;)</span>
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">load_npz</span><span class="p">(</span><span class="s1">&#39;idf_title_features.npz&#39;</span><span class="p">)</span> <span class="c1">#OR we can Vectorize using the code above</span>
+
+      <span class="c1">#to get the words in columns implement count vectorizers</span>
+      <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+      <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+      <span class="n">id_</span> <span class="o">=</span> <span class="mi">0</span> 
+      <span class="n">w2vec_title_weight</span> <span class="o">=</span> <span class="p">[]</span>
+
+      <span class="c1">#building vector for each title</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]:</span>
+          <span class="n">w2vec_title_weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avg_word_vec</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="n">id_</span><span class="p">,</span><span class="s1">&#39;weighted&#39;</span><span class="p">,</span><span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span> <span class="p">,</span><span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">idf_title_features</span><span class="p">))</span>
+          <span class="n">id_</span> <span class="o">+=</span> <span class="mi">1</span>
+
+      <span class="c1">#w2v_title_weight = np.array(# number of doc/rows in courpus * 300) </span>
+      <span class="n">w2vec_title_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">w2vec_title_weight</span><span class="p">)</span>
+
+      <span class="c1">#saving dataframe in a npz file</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="s2">&quot;Word2Vec_weighted.npz&quot;</span><span class="p">,</span><span class="n">w2vec_title_weight</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="n">w2vec_title_weight</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;idf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Note: Storing the vectorization array as a .npz file because performing Avg Word2Vec vectorization each time is computationally expensive for Word2Vec</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.2 s, sys: 365 ms, total: 4.56 s
+Wall time: 4.19 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;weighted&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.8 s, sys: 794 ms, total: 12.6 s
+Wall time: 11.8 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">distance_similarity</span><span class="p">(</span><span class="n">doc_id</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">cut_off</span><span class="p">):</span>
+  <span class="c1">#data : data contaning text for vectorization </span>
+  <span class="c1">#model : method used for text vectorization</span>
+  <span class="c1">#Cut_off : the number of recommendations we give out</span>
+  <span class="c1">#df :  data set used to retrieve orignal movie description and genre</span>
+  
+  <span class="k">if</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;bag_of_words&#39;</span><span class="p">:</span>  
+      <span class="n">title_features</span><span class="p">,</span><span class="n">title_vectorizer</span> <span class="o">=</span> <span class="n">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+
+      <span class="c1">#doc_id is id on the new index formed after CountVectorizer is applied to the data[&#39;title&#39;]</span>
+      <span class="c1">#pairwise distances saves the distance between given input product and all other products</span>
+      <span class="n">pairwise_dist</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">title_features</span><span class="p">,</span><span class="n">title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">],</span><span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
+
+      <span class="c1">#np.argsort returns indices of the smallest distances</span>
+      <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pairwise_dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[:</span><span class="n">cut_off</span><span class="p">]</span>
+
+      <span class="c1">#get the index id of product in the original dataframe</span>
+      <span class="n">data_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+      
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data_indices</span><span class="p">)):</span>
+          <span class="n">visualization</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="s1">&#39;bag_of_words&#39;</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">tfidf_title_features</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">idf_title_features</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The amazon ID of the apparel is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;asin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;Tfidf&#39;</span><span class="p">:</span>
+      <span class="c1">#storing array after vectorization</span>
+      <span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span> <span class="o">=</span> <span class="n">Vectorization</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">model</span><span class="p">)</span>
+
+      <span class="c1">#doc_id is the id in the new index formed after CountVectorizer is applied to the data[&#39;title&#39;]</span>
+      <span class="c1">#pairwise distance saves the distance between given input product and all other products</span>
+      <span class="n">pairwise_dist</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">tfidf_title_features</span><span class="p">,</span><span class="n">tfidf_title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">],</span><span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
+
+      <span class="c1">#np.argsort returns indices of the smallest distances</span>
+      <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pairwise_dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[:</span><span class="n">cut_off</span><span class="p">]</span>
+
+      <span class="c1">#get the index id of product in the original dataframe</span>
+      <span class="n">data_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data_indices</span><span class="p">)):</span>
+          <span class="n">visualization</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="s1">&#39;Tfidf&#39;</span><span class="p">,</span><span class="n">tfidf_title_vectorizer</span><span class="p">,</span><span class="n">tfidf_title_features</span> <span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">idf_title_features</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The amazon ID of the apparel is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;asin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+          
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;idf&#39;</span><span class="p">:</span>
+      <span class="c1">#do not use vectorizer as it is computationally expensive to vectorize everytime</span>
+      <span class="c1">#Load the saved vectorized sparse array .npz</span>
+      <span class="c1">#title_features= Vectorization(data,&#39;idf&#39;)</span>
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">load_npz</span><span class="p">(</span><span class="s1">&#39;idf_title_features.npz&#39;</span><span class="p">)</span> <span class="c1">#OR we can Vectorize using the code above</span>
+      
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">idf_title_features</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+      
+      <span class="c1">#to get the words in columns implement count vectorizers</span>
+      <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+      <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+      <span class="c1">#doc_id is the id in the new index formed after CountVectorizer is applied to the data[&#39;title&#39;]</span>
+      <span class="c1">#pairwise distance will save the distance between given input product and all other products</span>
+      <span class="n">pairwise_dist</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">idf_title_features</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">metric</span> <span class="o">=</span> <span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
+
+      <span class="c1">#np.argsort will return indices of the smallest distances</span>
+      <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pairwise_dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[:</span><span class="n">cut_off</span><span class="p">]</span>
+
+      <span class="c1">#get the index id of product in the original dataframe</span>
+      <span class="n">data_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data_indices</span><span class="p">)):</span>
+          <span class="n">visualization</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="s1">&#39;idf&#39;</span><span class="p">,</span> <span class="n">tfidf_title_vectorizer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tfidf_title_features</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span><span class="p">,</span> <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">idf_title_features</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The amazon ID of the apparel is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;asin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+  
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span>
+      <span class="c1">#Word2Vec_features = Vectorization(data[&#39;title&#39;],&#39;avg&#39;)</span>
+      <span class="c1">#do not use vectorizer as it is computationally expensive to vectorize everytime </span>
+      <span class="c1">#Load the stored vectorized array .npz</span>
+      <span class="n">Word2Vec_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Word2Vec_aveg.npz&quot;</span><span class="p">)</span>
+                
+      <span class="c1">#uncompresing npz to numpy array array</span>
+      <span class="n">Word2Vec_features</span>  <span class="o">=</span> <span class="n">Word2Vec_features</span><span class="p">[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
+
+      <span class="c1">#doc_id is the id of the product in the new index formed after CountVectorizer is applied to the data[&#39;title&#39;]</span>
+      <span class="c1">#pairwise distance will save the distance between given input product and all other products</span>
+      <span class="n">pairwise_dist</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span><span class="n">Word2Vec_features</span><span class="p">,</span><span class="n">Word2Vec_features</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+      <span class="c1">#np.argsort will return indices of the smallest distances</span>
+      <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pairwise_dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[:</span><span class="n">cut_off</span><span class="p">]</span>
+
+      <span class="c1">#get the index id of product in the original dataframe</span>
+      <span class="n">data_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data_indices</span><span class="p">)):</span>
+          <span class="n">results_Word2Vec</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;avg&#39;</span><span class="p">,</span><span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">idf_title_features</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The amazon ID of the apparel is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;asin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+                
+  <span class="k">elif</span> <span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;weighted&#39;</span><span class="p">:</span>
+      <span class="c1">#do not use vectorizer as it is computationally expensive to vectorize everytime</span>
+      <span class="c1">#Load the saved vectorized sparse array .npz</span>
+      <span class="c1">#title_features= Vectorization(data,&#39;weighted&#39;)</span>
+      <span class="n">idf_title_features</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">load_npz</span><span class="p">(</span><span class="s1">&#39;idf_title_features.npz&#39;</span><span class="p">)</span> <span class="c1">#OR we can Vectorize using the code above</span>
+      
+  
+      <span class="c1">#to get the words in columns CountVectorizer</span>
+      <span class="n">idf_title_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+      <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">idf_title_vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+      <span class="c1">#Word2Vec_features = Vectorization(data[&#39;title&#39;],&#39;avg&#39;)</span>
+      <span class="c1">#do not use vectorizer as it is computationally expensive to vectorize everytime </span>
+      <span class="c1">#Load the stored vectorized array .npz</span>
+      <span class="n">Word2Vec_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;Word2Vec_weighted.npz&quot;</span><span class="p">)</span> <span class="c1">#OR we can Vectorize using the code above</span>
+
+      <span class="c1">#uncompresing npz to numpy array array</span>
+      <span class="n">Word2Vec_feature</span>  <span class="o">=</span> <span class="n">Word2Vec_features</span><span class="p">[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
+
+      <span class="c1">#doc_id is the id in the new index formed after CountVectorizer is applied to the data[&#39;title&#39;]</span>
+      <span class="c1">#pairwise distance will save the distance between given input product and all other products</span>
+      <span class="n">pairwise_dist</span> <span class="o">=</span> <span class="n">pairwise_distances</span><span class="p">(</span> <span class="n">Word2Vec_feature</span><span class="p">,</span> <span class="n">Word2Vec_feature</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+      <span class="c1">#np.argsort will return indices of the smallest distances</span>
+      <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">pairwise_dist</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[:</span><span class="n">cut_off</span><span class="p">]</span>
+
+      <span class="c1">#get the index of the original dataframe</span>
+      <span class="n">data_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">indices</span><span class="p">])</span>
+
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data_indices</span><span class="p">)):</span>
+          <span class="n">results_Word2Vec</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;medium_image_url&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;weighted&#39;</span><span class="p">,</span><span class="n">idf_title_vectorizer</span><span class="p">,</span><span class="n">idf_title_features</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The amazon ID of the apparel is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;asin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="text-based-product-similarity-results">
+<h2>Text based product similarity results<a class="headerlink" href="#text-based-product-similarity-results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bag-of-words-vectorization-based-model">
+<h3>Bag of words Vectorization based model<a class="headerlink" href="#bag-of-words-vectorization-based-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>asin</th>
+      <th>product_type_name</th>
+      <th>formatted_price</th>
+      <th>title</th>
+      <th>medium_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>1035</td>
+      <td>SHIRT</td>
+      <td>26.26</td>
+      <td>featherlite ladies long sleeve stain resistant...</td>
+      <td>6094</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>24361</td>
+      <td>SHIRT</td>
+      <td>9.99</td>
+      <td>women unique 100 cotton special olympics world...</td>
+      <td>39463</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>309</td>
+      <td>SHIRT</td>
+      <td>11.99</td>
+      <td>ladies cotton tank 2x1 ribbed tank top</td>
+      <td>10201</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>724</td>
+      <td>SHIRT</td>
+      <td>20.54</td>
+      <td>featherlite ladies moisture free mesh sport sh...</td>
+      <td>80139</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>26417</td>
+      <td>SHIRT</td>
+      <td>7.50</td>
+      <td>supernatural chibis sam dean castiel short sle...</td>
+      <td>36087</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#doc_id, vectorization method = bag_of_words, dataset for modelling = data , cut_off = no. of recommendations</span>
+<span class="n">distance_similarity</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;bag_of_words&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_0.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS52
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_2.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRPI
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_4.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS3Y
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_6.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_39_6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480GNQS
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="tfidfvectorization-based-model">
+<h3>TfidfVectorization based model<a class="headerlink" href="#tfidfvectorization-based-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distance_similarity</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;Tfidf&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_0.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS52
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_2.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRPI
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_4.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRZS
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_6.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_41_6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS3Y
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="idfvectorization-based-model">
+<h3>IdfVectorization based model<a class="headerlink" href="#idfvectorization-based-model" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distance_similarity</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;idf&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_0.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS52
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_2.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRPI
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_4.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRZS
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_6.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_43_6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS3Y
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="semantic-meaning-based-apparel-similarity-models">
+<h2>Semantic meaning based apparel similarity models<a class="headerlink" href="#semantic-meaning-based-apparel-similarity-models" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="avg-word2vec">
+<h3>Avg Word2Vec<a class="headerlink" href="#avg-word2vec" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distance_similarity</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_0.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS52
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_2.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480GNQS
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_4.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS3Y
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_6.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_46_6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRPI
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="weighted-word2vec">
+<h3>Weighted Word2Vec<a class="headerlink" href="#weighted-word2vec" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">distance_similarity</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;weighted&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_0.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_0.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS52
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_2.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_2.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480GNQS
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_4.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_4.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IRPI
+</pre></div>
+</div>
+<img alt="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_6.png" src="../_images/T990001_amazon_women_apparel_tfidf_word2vec_48_6.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The amazon ID of the apparel is B00480IS3Y
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="reflection">
+<h2>Reflection<a class="headerlink" href="#reflection" title="Permalink to this headline">¶</a></h2>
+<p>The purpose of the project is to make an product recommendation engine for Amazon. We are given simulated data that gives us various characteristics of the products on amazon. The recommendations are to be made based on these characteristics of the products and hence, we are building a content based fliter recommendation system.</p>
+<div class="section" id="text-preprocessing">
+<h3>Text preprocessing<a class="headerlink" href="#text-preprocessing" title="Permalink to this headline">¶</a></h3>
+<p>After initial data analysis and data cleaning, we build our model using the ‘title’ feature which describes the various characteristices of the products in the form of strings. At first we need to preprocess the string of words that come under title feature inorder to use them to build vectors. These vector representation of strings are used to build a distance based similarity recommendation system. The steps of preprocessing are as follows:</p>
+<ol class="simple">
+<li><p>First we make words in strings lower case in order to make the computer understand ‘Amazon’ and ‘amazon’ are the same words as the computer does not really understand the semantic meaning of words.</p></li>
+<li><p>We use Natural language processing toolkit to remove stopwords from our ‘title’ strings. Stopwords are most commonly used words present in every sentence like ‘they’ , ‘hey’, ‘he’ etc which do not add much to the semantic meaning of the sentences.</p></li>
+<li><p>We use Natural language processing to perform stemming  on our ‘title’ string. Stemming is a technique to reduce a base to its base form for example ‘argument’ becomes argu. The base form does not need to have any semantic meaning. Stemming did not work very well in our case hence we did not apply it.</p></li>
+</ol>
+</div>
+<div class="section" id="methods-of-sentence-to-vector-conversion">
+<h3>Methods of sentence to vector conversion<a class="headerlink" href="#methods-of-sentence-to-vector-conversion" title="Permalink to this headline">¶</a></h3>
+<p>Now data[‘title’] is ready to be converted into vector form. These are methods of creating vector form for our string of words. They are as follows:</p>
+<ol class="simple">
+<li><p>Bag of words:  Using CountVectorizer from sklearn we can convert a string of words to vectors. The CountVectorizer forms an array with features(columns) as words from the corpus of words from the input data and sentences as data points(rows). If the word exists in the sentence the feature value for that sentence becomes else 0. This method ends up creating a vector of 1’s and 0’s with dimensions equal to the number of words(feature) in our input text corpus. All vector representation of sentences are usually sparse arrays as they have very few words compared to the entire corpus of words.</p></li>
+<li><p>Tfidf : Using TfidfVectorizer from sklearn we can convert a string of words to a vector. The TfidfVectorizer forms an array with features(columns) as words from the corpus of words present in the input text data and sentences as data points(rows). If a word exists in a sentence the Tfidf value for that feature in the sentence(data point) is term frequency of the word in that sentence multiplied by inverse document frequency. Term frequency (TF) is the number of times a word(feature) occurs in a sentence(data point) divided by the total number of words present in that sentence. If the word occurs more than once in a statement it has more term frequency/weightage. This makes sense as a higher weightage/magnitude of a feature in a vector will signify the higher importance of that word in the sentence. Inverse document frequency (IDF) is the log value of the total number of documents(sentences) in the input data divided by the number of documents(sentences) in which the feature(word) occurs. As log is an increasing function, the Inverse document log will have a higher value when the number of sentences in which the word(feature) occurs will be low (denominator), thus making the resulting IDF value(result of division) high. As the word occurs in less number of sentences(data points) as compared to commonly occurring words in sentences. It makes sense as we give more weightage/importance to a word occurring only in a few sentences as compared to a word commonly occurring in sentences, as this word might play a more important role in the meaning of the sentence.</p></li>
+<li><p>IDF : We build an IdfVectorizer function in order to convert our sentence to a vector. IdfVectorizer forms an array with features(columns) as words from the corpus of words present in the text data and sentences as data points(rows). The Idf value is calculated in the same way as mentioned in the TfidfVectorizer model above. We only assign Idf value to the cells and ignore the TF values to avoid the bias of Termfrequency values towards sentences with less number of words present in them. The lower the number of words occurring in a statement the higher will the be term frequency value for a word because the denominator(total no of words in our sentence) will be lower(please refer to Tfidf description for formula).</p></li>
+<li><p>Avg Word2Vec : We use Google’s word2vec library which has vector representation of 3 million words in it. This library was created using neural network models to learn word association from a large corpus of texts. Each word has 300 dimension vector representation. The words having similar semantic meaning are assigned similar vector representation by the model. We make a function which gives us the vector representation of our sentences(data points) by adding all the vector representing the words in our sentence and dividing the resulting vector by the number of words in the sentence. The resulting 300 dimensions vector formed is an average vector representation of all the word in our sentence. This method is called as an Avg Word2Vec.</p></li>
+<li><p>Weighted Word2Vec : We use google’s word2vec library which has vector representation of 3 million words in it. This library was created using neural network models to learn word association from a large corpus of texts. Each vector (word) has 300 dimensions. The words having similar semantic meaning  are assigned similar vector representation by using a neural network model bascially placing them close to each other in a N(300) dimension space representation.</p></li>
+</ol>
+</div>
+<div class="section" id="distance-based-similarity-cosine">
+<h3>Distance based similarity (Cosine)<a class="headerlink" href="#distance-based-similarity-cosine" title="Permalink to this headline">¶</a></h3>
+<p>Cosine distance is the measure of the angle between between two vectors in an N-dimensional space. N in our case is the number of features or the number of words present in our corpus of words formed from all the sentences in our data.
+In distance based similarity recommendations, we use Cosine distance as a metric for distance measure when the magnitude of the vectors does not matter. Let us understand this with an example, suppose we are working with text data represented by word counts. We make an assumption that when a word for example ‘physics’ occurs more frequently in a given sentence 1 than it does in a given sentence 2, the magnitude of the vector tells us that sentence 1 is more similar to the topic of physics. However, it could be the case that we are working with sentences of unequal lengths. Physics probably occurred more in sentence 1 because the sentence is longer as compared to sentence 2. Cosine similarity corrects this bias. Text data is the most typical example for when to use this metric, you would want to apply cosine similarity for cases where the features weights might be larger without meaning anything different. If we would use Euclidean distance instead of Cosine distance the magnitude of the distance between the vectors of sentence 1 and sentence 2 would make it seem they are far apart. This is the case because Euclidean distance is affected by the magnitude of the vector.</p>
+<p>To summarize if we plot in an N-dimensional space, where each dimension represents a word in the sentence, the cosine similarity captures the the angle between the sentences(vectors) and not the magnitude of distance between them. If we need the magnitude, we should compute the Euclidean distance instead.</p>
+</div>
+<div class="section" id="distance-based-similarity-euclidean">
+<h3>Distance based similarity (Euclidean)<a class="headerlink" href="#distance-based-similarity-euclidean" title="Permalink to this headline">¶</a></h3>
+<p>In case of average Word2Vec model each word is assigned a 300 dimension vector based on its semantic meaning. The words are preassigned these vectors and features by Google and have nothing to do with the word corpus of our sentences unlike the other vectorization methods. As the vector cell magnitude does not represent the presence of a word in a sentence, the magnitude of the vector will matter in case of average word2vec. It makes more sense to use Euclidean distance instead of Cosine distance to make distance based similarity recommendations when magnitude of the vector plays a role in measuring distance between the vectors (refer to the Cosine distance description above).</p>
+</div>
+</div>
+<div class="section" id="conclusion-improvements">
+<h2>Conclusion &amp; Improvements<a class="headerlink" href="#conclusion-improvements" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li><p>We are still getting same products as recommendation even after removing products with duplicate descriptions, this happens because of different words used in description of similar products. Inorder to remove these duplicates we can use image processing techniques on downloaded images of products and remove the duplicate images.</p></li>
+<li><p>Word2Vec vectorization does not work well in our case because of the null vectors assigned to unique words not present in the Google’s word to vec dictionary such as specific brand names, unique product nitty-gritties etc. In order to make Word2Vec vectorization give more relevant results we will need to make our own Word2Vec dictionary using the corpus of words present in the relevant features of the dataset we model.</p></li>
+<li><p>Seeing our results we cannot determine which vectorization model is giving us better results amongst bag of words, Tfidf and idf vectorized models. To find out which model is better we would have to first live test our recommendation models. We would divide our customers into random test groups of equal sizes and live test a model on each group. Second step would be to collect various response parameters or business parameters such as purchase conversion rate of recommendations, recommendation selection rate etc. Third step would be to perform multivariate A/B testing using these parameters after collecting sufficiently large data to select the best performing model.</p></li>
+</ol>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T964554_Career_Village_Questions_Recommendation.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">CareerVillage Questions Recommendation</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990001_anime_recommender_graph_network.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Anime Recommender with Bi-partite Graph Network</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

@@ -1,0 +1,79 @@
+import numpy as np
+import pandas as pd
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+audible_data = pd.read_csv("https://github.com/sparsh-ai/reco-data/raw/audible/audible/audible.csv",
+                           encoding='latin1')
+audible_data.head()
+
+audible_data.info()
+
+# Selecting 4 columns: Title, Author, Narrator,Categories(Genre)
+audible_data = audible_data[['Book Title', 'Book Author', 'Book Narrator', 'Categories']]
+
+# Remove all 'Categories', and 'Book Narrator' NaN records
+audible_data = audible_data[audible_data['Categories'].notna()]
+audible_data = audible_data[audible_data['Book Narrator'].notna()]
+
+# lower case and split on commas or &-sign 'Categories'
+audible_data['Categories'] = audible_data['Categories'].map(
+    lambda x: x.lower().replace(' &', ',').replace('genre', '').split(','))
+# Book Author
+audible_data['Book Author'] = audible_data['Book Author'].map(lambda x: x.lower().replace(' ', '').split(' '))
+# Book Narrator
+audible_data['Book Narrator'] = audible_data['Book Narrator'].map(lambda x: x.lower().replace(' ', '').split(' '))
+
+for index, row in audible_data.iterrows():
+    # row['Book Narrator'] = [x.replace(' ','') for x in row['Book Narrator']]
+    row['Book Author'] = ''.join(row['Book Author'])
+
+# make 'Book Title' as an index
+audible_data.set_index('Book Title', inplace=True)
+
+audible_data['bag_of_words'] = ''
+for index, row in audible_data.iterrows():
+    words = ''
+    for col in audible_data.columns:
+        if col != 'Book Author':
+            words = words + ' '.join(row[col]) + ' '
+        else:
+            words = words + row[col] + ' '
+    row['bag_of_words'] = words
+
+audible_data.drop(columns=[x for x in audible_data.columns if x != 'bag_of_words'], inplace=True)
+
+recommendation_movies = []
+
+# Vectorizing the entire matrix as described above!
+count = CountVectorizer(stop_words='english')
+count_matrix = count.fit_transform(audible_data['bag_of_words'])
+
+# running pairwise cosine similarity
+cosine_sim2 = cosine_similarity(count_matrix, count_matrix)  # getting a similarity matrix
+
+def recommend(k=5):
+    # gettin the index of the book that matches the title
+    indices = pd.Series(audible_data.index)
+    idx = indices.sample(1)
+
+    # creating a Series with the similarity scores in descending order
+    score_series = pd.Series(cosine_sim2[idx.index[0]]).sort_values(ascending=False)
+
+    # getting the indexes of the k most similar audiobooks
+    top_k_indexes = list(score_series.iloc[1:k+1].index)
+
+    topk = indices[top_k_indexes].tolist()
+
+    print("For '{}', Top {} similar audiobooks are {}".format(idx.values[0], k, topk))
+
+recommend()
+
+recommend()
+
+recommend()
+
+recommend()
+
+recommend(10)

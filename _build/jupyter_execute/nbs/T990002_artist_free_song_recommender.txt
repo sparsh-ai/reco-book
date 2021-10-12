@@ -1,0 +1,534 @@
+!pip install shap
+!pip install spotipy
+
+import os
+import numpy as np
+import pandas as pd
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, f1_score, recall_score, precision_score
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.metrics import plot_confusion_matrix
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.neighbors import NearestNeighbors
+from sklearn import preprocessing
+
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+# import imbalanced pipeline since you can't use SMOTE with the regular python pipeline
+from imblearn.pipeline import Pipeline as imbpipeline
+from imblearn.over_sampling import SMOTE
+from sklearn.model_selection import GridSearchCV
+
+import xgboost
+from xgboost import XGBClassifier
+
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
+
+import pickle
+
+import shap
+
+import warnings
+warnings.filterwarnings('ignore')
+
+%config InlineBackend.figure_format = 'svg'
+
+plt.style.use('fivethirtyeight')
+plt.style.use('seaborn-notebook')
+plt.style.use('default')
+
+!pip install -q watermark
+%reload_ext watermark
+%watermark -m -iv -u -t -d
+
+!cp /content/drive/MyDrive/mykeys.py /content
+import mykeys
+!rm /content/mykeys.py
+
+client_id = mykeys.spotify_client_id
+client_secret = mykeys.spotify_client_secret
+
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
+
+# to convert keys to values
+key_octave_values = ['C', 'C#/Db','D','D#/Eb', 'E',
+                    'F', 'F#/Gb', 'G', 'G#/Ab', 'A',
+                    'A#/Bb', 'B']
+
+mode_mm_values = ['Minor', 'Major']
+explicit_values = ['Clean', 'Explicit']
+
+# static column names to use to build dataframe
+column_names = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'acousticness', 
+                'instrumentalness', 'liveness', 'valence', 'tempo', 'type', 'id', 'uri', 
+                'track_href', 'analysis_url', 'duration_ms', 'time_signature']
+
+# convert playlists (From a playlist id) to dataframe 
+def user_playlist_tracks_full(spotify_connection=sp, user=None, 
+                              playlist_id=None, genre=None):
+
+    # first run through also retrieves total no of songs in library
+    response = spotify_connection.user_playlist_tracks(user, playlist_id, limit=100)
+    results = response["items"]
+
+    # subsequently runs until it hits the user-defined limit or has read all songs in the library
+    # spotify limits 100 songs per request so used a while loop to read all songs
+    while len(results) < response["total"]:
+        response = spotify_connection.user_playlist_tracks(
+            user, playlist_id, limit=100, offset=len(results)
+        )
+        results.extend(response["items"])
+    
+    #Retrieve song ids
+    playlist_song_ids = []
+    for each in range(len(results)):
+        playlist_song_ids.append((results[each]['track']['id']))
+    #Remove possible nones
+    playlist_song_ids = [i for i in playlist_song_ids if i]
+    
+    #Create dataframe
+    theDataFrame = pd.DataFrame(columns = column_names)
+    #Add features
+    while(len(playlist_song_ids)>0):
+        theDataFrame = theDataFrame.append(sp.audio_features(playlist_song_ids[:100]),ignore_index=True)
+        playlist_song_ids = playlist_song_ids[100:]
+    
+    #Pass in genre dependent on name of playlist
+    theDataFrame['genre'] = genre
+
+    return theDataFrame
+
+# retrieving data for 4 genres from their respective playlists
+alt_metal_songs = user_playlist_tracks_full(playlist_id = '40DeXsA9tEIwNwBmrZ4rkt', genre = 'alt-metal')
+hiphop_songs = user_playlist_tracks_full(playlist_id = '13u9Bn677jEHePtS7XKmih', genre = 'hip-hop')
+rock_songs = user_playlist_tracks_full(playlist_id = '1SY54UtMrIadoVThZsJShG', genre = 'rock')
+pop_songs = user_playlist_tracks_full(playlist_id = '1szFiylNjSI99tpQgVZ3ki', genre = 'pop')
+
+# combine the dataframes
+all_songs = hiphop_songs.append([pop_songs, rock_songs, alt_metal_songs], ignore_index=True)
+
+# to make sure the number of records are same
+assert len(all_songs) == len(alt_metal_songs) + len(hiphop_songs) + len(rock_songs) + len(pop_songs)
+
+# printing number of records of each genre
+len(alt_metal_songs), len(hiphop_songs), len(rock_songs), len(pop_songs)
+
+all_songs.head()
+
+all_songs.info()
+
+# drop unneccessary attributes
+all_songs.drop(['type', 'uri', 'track_href', 'analysis_url'], axis = 1, inplace = True)
+
+# convert from object to float
+all_songs['duration_ms'] = all_songs['duration_ms'].astype(float)
+
+all_songs.describe(include='all').T
+
+all_songs.query("danceability == 0")
+
+def song_artist_from_key(sp,key):
+    theTrack = sp.track(key)
+    if(theTrack is not None):
+        song_title = theTrack['name']
+        artist_title = theTrack['artists'][0]['name']
+        song_link = theTrack['external_urls']['spotify']
+        return (song_title, artist_title, song_link)
+    else:
+        return None
+
+zero_dance_list = all_songs.query("danceability == 0")['id']
+for each in zero_dance_list:
+    print(song_artist_from_key(sp,each))
+
+zero_tempo_list = all_songs.query("tempo == 0")['id']
+for each in zero_tempo_list:
+    print(song_artist_from_key(sp,each))
+
+all_songs = all_songs.query("danceability != 0")
+all_songs = all_songs.query(f"duration_ms < {1e6}")
+
+def mean_by_genre_plot(ax, groupby, feature):
+    sns.barplot(x = all_songs.groupby('genre')[feature].mean().index,
+                y = all_songs.groupby('genre')[feature].mean().values,
+                ax = ax,)
+    ax.set_title(f'Average {feature.title()} by Genre')
+    ax.set_ylabel(f'{feature}')
+    return ax
+
+genre_group = all_songs.groupby('genre')
+continuous_features = list(all_songs.select_dtypes(include = [float, int]).columns)
+
+# for i, each in enumerate(continuous_features):
+#     mean_by_genre_plot(genre_group, each)
+
+fig, ax = plt.subplots(2, 5, figsize=(30,12), constrained_layout=True)
+
+# for i in range(3):
+#     for j in range(3):
+#         col_name = n_cols[i*3+j]
+#         ax[i,j] = plot(data[col_name])
+
+for i, each in enumerate(continuous_features):
+    n = 5
+    try:
+        _ax = ax[i//n,i%n]
+        ax[i//n,i%n] = mean_by_genre_plot(_ax, genre_group, each)
+    except:
+        pass
+
+plt.show()
+
+fig, ax = plt.subplots(figsize=(12,5))
+sns.heatmap(all_songs.corr(), annot=True, cmap='YlGnBu')
+plt.title('Correlation Matrix')
+plt.show()
+
+all_songs.to_parquet('songs_data.parquet.gzip', compression='gzip')
+
+df = pd.read_parquet('songs_data.parquet.gzip')
+df.set_index('id', inplace=True)
+df.head()
+
+df.info()
+
+cat_cols = ['key','mode','time_signature']
+df[cat_cols] = df[cat_cols].astype('str')
+
+# drop duplicates
+print(df.duplicated().sum())
+df.drop_duplicates(inplace=True)
+print(df.duplicated().sum())
+
+# split the columns to easily use later
+categorical_columns = list(df.drop('genre', axis = 1).select_dtypes('object').columns)
+numerical_columns = list(df.drop('genre', axis = 1).select_dtypes(exclude = 'object').columns)
+
+# train test split 
+X_train, X_test, y_train, y_test = train_test_split(df.drop(['genre'], axis=1),
+                                                    df.genre,
+                                                    random_state=42)
+
+# see the percentage of each genre in the whole set
+print(y_train.value_counts(normalize=True))
+
+# function to easily view results
+def evaluation_report(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    print(f"F1 Score: {f1_score(y_test, model.predict(X_test), average = 'macro')}")
+    plot_confusion_matrix(model, X_test, y_test, cmap='GnBu',xticks_rotation='vertical',
+                          values_format = '')
+
+lr = LogisticRegression(random_state=42)
+ss = StandardScaler()
+lr.fit(ss.fit_transform(X_train), y_train)
+print(lr.classes_)
+
+print('Training')
+evaluation_report(lr, ss.fit_transform(X_train), y_train)
+
+print('Testing')
+evaluation_report(lr, ss.transform(X_test), y_test)
+
+# create pipelines for preprocessing. One for numerical data, one for categorical data and a column transformer to do both.
+numerical_pipeline = imbpipeline(verbose=False,steps=[
+                                ('ss', StandardScaler())
+                            ])
+
+categorical_pipeline = imbpipeline(verbose=False,steps=[
+                            ('ohe', OneHotEncoder(drop='first',
+                                                 sparse=False,))
+                            ])
+
+col_trans = ColumnTransformer(verbose=False,transformers=[
+    ('numerical', numerical_pipeline, numerical_columns),
+    ('categorical', categorical_pipeline, categorical_columns)
+])
+
+col_ohe_solo = ColumnTransformer(verbose=False,transformers=[
+    ('categorical', categorical_pipeline, categorical_columns)
+])
+
+pipe_log = imbpipeline(verbose=False, steps=[
+    ('col_trans', col_trans),
+    ('lr', LogisticRegression(max_iter = 10000, random_state=9, class_weight='balanced'))
+])
+
+param_grid = [
+    {
+     'lr__penalty' : ['l1','l2'],
+     'lr__C' : [.75,.5,.25],
+     'lr__solver' : ['saga','sag', 'lbfgs']
+    }, 
+]
+
+gs_lr = GridSearchCV(pipe_log, param_grid = param_grid, 
+                        scoring = 'f1_macro', n_jobs=-1, verbose=True)
+gs_lr.fit(X_train, y_train)
+
+gs_lr.best_params_
+
+print('Training')
+evaluation_report(gs_lr, X_train, y_train)
+
+print('Testing')
+evaluation_report(gs_lr, X_test, y_test)
+
+ohe = OneHotEncoder(drop='first', sparse=False)
+sm = SMOTE(random_state = 42)
+
+train_ohe = ohe.fit_transform(X_train[categorical_columns])
+test_ohe = ohe.transform(X_test[categorical_columns])
+
+train_ohe = X_train[numerical_columns].reset_index().join(pd.DataFrame(train_ohe)).set_index('id')
+
+train_sm = sm.fit_resample(train_ohe, y_train)
+test_ohe = X_test[numerical_columns].reset_index().join(pd.DataFrame(test_ohe)).set_index('id')
+
+# make sure not to over fit
+xgbc = XGBClassifier(random_state = 9, n_jobs = -1)
+params = {
+    'learning_rate': [.1,.01,.005],
+    'n_estimators': range(180,200,20),
+    'booster': ['gbtree', 'dart']
+}
+
+# run gridsearch
+gs_xgbc = GridSearchCV(xgbc, param_grid=params, scoring='f1_macro', n_jobs =-1)
+
+gs_xgbc.fit(train_sm[0], train_sm[1])
+
+gs_xgbc.best_params_
+
+print('Training')
+evaluation_report(gs_xgbc, train_sm[0], train_sm[1])
+
+rf = RandomForestClassifier(n_jobs = -1, random_state = 9, class_weight = 'balanced')
+
+params = {
+    'max_depth': [6,7],
+    'n_estimators': [197,198,199,300],
+    'criterion': ['gini', 'entropy'],
+}
+
+#Run gridsearch
+gs_rf = GridSearchCV(rf, param_grid=params, scoring='f1_macro', n_jobs =-1 )
+gs_rf.fit(train_ohe, y_train)
+
+gs_rf.best_params_
+
+print('Training')
+evaluation_report(gs_rf, train_ohe, y_train)
+
+print('Testing')
+evaluation_report(gs_rf, test_ohe, y_test)
+
+voting_clf = VotingClassifier(
+                estimators=[('xgb', gs_xgbc.best_estimator_),
+                             ('rf', gs_rf.best_estimator_)], 
+                voting='hard')
+
+voting_clf.fit(train_ohe, y_train);
+
+print("Training")
+evaluation_report(voting_clf, train_ohe, y_train)
+
+print("Testing")
+evaluation_report(voting_clf, test_ohe, y_test)
+
+best_model = voting_clf
+
+X_final = df.drop('genre', axis = 1)
+y_final = df.genre
+
+# follow the same transformation on the initial model and do the same to whole dataframe
+final_ohe = ohe.transform(X_final[categorical_columns])
+final_ohe = X_final[numerical_columns].reset_index().join(pd.DataFrame(final_ohe)).set_index('id')
+
+# fit best model on whole dataset
+best_model.fit(final_ohe, y_final)
+
+# See how well it does
+evaluation_report(best_model, final_ohe, y_final)
+
+vclf_xgbc = best_model.estimators_[0]
+
+# plot feature importance from gradient boosting classifier
+pd.DataFrame([final_ohe.columns,vclf_xgbc.feature_importances_]).T.set_index(0).sort_values(by=1, ascending = False)[:10].sort_values(by=1, ascending = True)\
+.plot(kind="barh", width=.2, grid=True, title = "XGB Feature Importance");
+
+vclf_rf = best_model.estimators_[1]
+
+# plot feature importance from random forest classifier
+pd.DataFrame([final_ohe.columns,vclf_rf.feature_importances_]).T.set_index(0).sort_values(by=1, ascending = False)[:10].sort_values(by=1, ascending = True)\
+.plot(kind="barh", width=.2, grid=True, title = "RF Feature Importance");
+
+explainer = shap.TreeExplainer(vclf_xgbc)
+shap_values = explainer.shap_values(final_ohe)
+shap.summary_plot(shap_values, features=final_ohe, 
+                  feature_names=final_ohe.columns, 
+                  class_names = voting_clf.classes_,
+                  title = "XGBC Feature Importance")
+
+explainer = shap.TreeExplainer(vclf_rf)
+shap_values = explainer.shap_values(final_ohe)
+shap.summary_plot(shap_values, features=final_ohe, 
+                  feature_names=final_ohe.columns, 
+                  class_names = voting_clf.classes_)
+
+# modify the dataset with the results
+all_songs = df.copy()
+all_songs['predicted_genre'] = best_model.predict(final_ohe)
+all_songs.drop(['genre'], axis = 1, inplace = True)
+
+# export the data
+all_songs.to_parquet('songs_data_processed.parquet.gzip', compression='gzip')
+
+# export the model
+with open('genre_predictor.pkl', 'wb') as model_file:
+  pickle.dump(best_model, model_file)
+
+# export the OHE encoder
+with open('ohe_encoder.pkl', 'wb') as encoder_file:
+  pickle.dump(ohe, encoder_file)
+
+# Convert a song_id to a dataframe row
+def song_to_df (sp, key):
+    cat_cols = ['key', 'mode', 'time_signature']
+    num_cols = ['danceability','energy','loudness','speechiness','acousticness',
+                'instrumentalness','liveness','valence','tempo','duration_ms']
+    
+    row = pd.DataFrame(sp.audio_features(key)).drop(['type','uri',
+                                               'track_href','analysis_url'], axis=1).set_index('id')
+    row[cat_cols] = row[cat_cols].astype('str')
+    return row
+
+# Do preprocessing and make a genre prediction for a song 
+def make_genre_prediction(sp, key, ohe, model):
+    cat_cols = ['key', 'mode', 'time_signature']
+    num_cols = ['danceability','energy','loudness','speechiness','acousticness',
+                'instrumentalness','liveness','valence','tempo','duration_ms']
+    row = song_to_df(sp,key)
+    temp_ohe = ohe.transform(row[cat_cols])
+    returning_obj = row[num_cols].reset_index().join(pd.DataFrame(temp_ohe)).set_index('id')
+    return model.predict(returning_obj)
+
+# Get the song info from song_id
+def song_artist_from_key(sp,key):
+    theTrack = sp.track(key)
+    song_title = theTrack['name']
+    artist_title = theTrack['artists'][0]['name']
+    song_link = theTrack['external_urls']['spotify']
+    return (song_title, artist_title, song_link)
+
+# Get the song id from a query
+def song_id_from_query(sp, query):
+    q = query
+    if(sp.search(q, limit=1, offset=0, type='track')['tracks']['total']>0):
+        return sp.search( q, limit=1, offset=0, type='track')['tracks']['items'][0]['id']
+    else:
+        return None
+
+# import the data
+all_songs = pd.read_parquet('songs_data_processed.parquet.gzip')
+
+# import the encoder
+with open('ohe_encoder.pkl', 'rb') as encoder_file:
+  ohe_make_genre_pred = pickle.load(encoder_file)
+
+# import the model
+with open('genre_predictor.pkl', 'rb') as model_file:
+  best_model = pickle.load(model_file)
+
+all_songs.info()
+
+# create variables to easily access categorical and numerical columns
+categorical_columns = list(all_songs.select_dtypes('object').columns)
+numerical_columns = list(all_songs.select_dtypes(exclude = 'object').columns)
+categorical_columns
+
+all_songs.head()
+
+# create a nearest neighbors object using cosine similarity metric.
+neigh = NearestNeighbors(n_neighbors=15, radius=0.45, metric='cosine')
+
+X_knn = all_songs
+
+# total dataframe normalizing for nearest neighbors
+MMScaler = preprocessing.MinMaxScaler()
+MinMaxScaler = preprocessing.MinMaxScaler()
+X_knn[numerical_columns] = MinMaxScaler.fit_transform(X_knn[numerical_columns])
+
+# total dataframe dummying
+ohe_knn = OneHotEncoder(drop='first', sparse=False)
+X_knn_ohe = ohe_knn.fit_transform(X_knn[categorical_columns])
+X_knn_transformed = X_knn[numerical_columns].reset_index().join(pd.DataFrame(X_knn_ohe, columns = ohe_knn.get_feature_names(categorical_columns))).set_index('id')
+
+# fit the model
+neigh.fit(X_knn_transformed)
+
+# preprocessing for a single song
+def knn_preprocessing(sp, key, num_col = numerical_columns, 
+                      cat_col = categorical_columns,
+                      mmScaler = MinMaxScaler, bm = best_model,
+                      ohe_knn = ohe_knn, ohe_make_genre_pred = ohe_make_genre_pred):
+    # Convert song to the dataframe
+    row = song_to_df(sp, key)
+    # Make genre prediction for inputted song
+    genre = make_genre_prediction(sp,key, ohe_make_genre_pred, bm)
+    # Append the predicted genre
+    row['predicted_genre'] = genre[0]
+    # Dummy the categorical
+    row_dummied = ohe_knn.transform(row[cat_col])
+    # Normalize the numerical
+    row[num_col] = mmScaler.transform(row[num_col])
+    # Combine the preprocessed rows and return it
+    row = row[num_col].reset_index().join(pd.DataFrame(row_dummied, columns = ohe_knn.get_feature_names(cat_col))).set_index('id')
+    return row
+
+def make_song_recommendations(sp, kneighs, query):
+    #If the query is aspace or not filled, return no results
+    if(query.isspace() or not query):
+        return "No results found"
+    song_id = song_id_from_query(sp, query)
+    # If the query doesn't return an id, return no results
+    if(song_id == None):
+        return "No results found"
+    # Get the song info
+    song_plus_artist = song_artist_from_key(sp, song_id)
+    # Preprocess the tracks
+    song_to_rec = knn_preprocessing(sp, song_id)
+    # Get the 15 nearest neighbors to inputted song
+    nbrs = neigh.kneighbors(
+       song_to_rec, 15, return_distance=False
+    )
+    # Properly retrieve the song info of each neighbor and return it
+    playlist = []
+    for each in nbrs[0]:
+        the_rec_song = song_artist_from_key(sp, X_knn_transformed.iloc[each].name)
+        if (((the_rec_song[0:2]) != song_plus_artist[0:2]) and
+           ((the_rec_song[0:2]) not in playlist)):
+            playlist.append(song_artist_from_key(sp, X_knn_transformed.iloc[each].name))
+    return (playlist)
+
+# knowledge check to see if it matches
+song_artist_from_key(sp, '6XGddj522FQRHXEhBtjiJu')
+
+# get the ID from query
+song_id_from_query(sp, "strobelite")
+
+# make the genre prediction
+make_genre_prediction(sp, '6XGddj522FQRHXEhBtjiJu', ohe_make_genre_pred, best_model)[0]
+
+# make the song recommendations
+make_song_recommendations(sp, neigh, "strobelite")

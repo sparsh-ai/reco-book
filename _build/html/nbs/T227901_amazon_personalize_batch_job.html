@@ -1,0 +1,2564 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon Personalize Batch Job &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Amazon Personalize Workshop" href="T022961_Amazon_Personalize_Workshop.html" />
+    <link rel="prev" title="Recsys’20 Feature Engineering Tutorial" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T227901_amazon_personalize_batch_job.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T227901_amazon_personalize_batch_job.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prepare-data">
+   Prepare Data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#get-dataset">
+     Get dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id1">
+     Prepare data
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-related-datasets-and-a-dataset-group">
+   Create related datasets and a dataset group.
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-personalize-dataset-group">
+     Create the personalize dataset group
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checkpoint-1-wait-for-dataset-group-creation-to-complete">
+     CHECKPOINT #1 - Wait for dataset group creation to complete
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-dataset">
+     Create the dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configuring-s3-and-iam">
+   Configuring S3 and IAM
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#attach-policy-to-s3-bucket">
+     Attach Policy to S3 Bucket
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-personalize-role">
+     Create Personalize Role
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#upload-dataset-to-s3">
+   Upload dataset to S3
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#importing-the-interactions-data">
+   Importing the Interactions Data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-dataset-import-job">
+     Create Dataset Import Job
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checkpoint-2-wait-for-dataset-import-job-to-have-active-status">
+     CHECKPOINT #2 - Wait for Dataset Import Job to Have ACTIVE Status
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-solution">
+   Create solution
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#create-the-solution-version">
+   Create the solution version
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checkpoint-3-wait-for-solution-version-creation-to-be-completed">
+     CHECKPOINT #3 - Wait for solution version creation to be completed
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#viewing-solution-creation-status">
+       Viewing Solution Creation Status
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluate-solution-metrics">
+   Evaluate solution metrics
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#batch-recommendation">
+   Batch Recommendation
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#checkpoint-4-wait-for-batch-recommendation-job-to-complete">
+     CHECKPOINT #4 - Wait for batch recommendation job to complete
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#challenge">
+   Challenge
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cleanup">
+   Cleanup
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="amazon-personalize-batch-job">
+<h1>Amazon Personalize Batch Job<a class="headerlink" href="#amazon-personalize-batch-job" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Train and create batch recommendations using Amazon Personalize. Expected completion time is 1.5-2 hours</p>
+</div></blockquote>
+<p><strong>Amazon Personalize Workflow</strong></p>
+<p>The general workflow for training, deploying, and getting recommendations from a campaign is as follows:</p>
+<ol class="simple">
+<li><p>Prepare data</p></li>
+<li><p>Create related datasets and a dataset group.</p></li>
+<li><p>Get training data.</p>
+<ul class="simple">
+<li><p>Import historical data to the dataset group.</p></li>
+<li><p>Record user events to the dataset group.</p></li>
+</ul>
+</li>
+<li><p>Create a solution version (trained model) using a recipe.</p></li>
+<li><p>Evaluate the solution version using metrics.</p></li>
+<li><p>Create a campaign (deploy the solution version).</p></li>
+<li><p>Provide recommendations for users by running Batch Recommendation.</p></li>
+</ol>
+<p>In this lab, we will step through the workflow and with some additional steps to setup your IAM permissions and S3 buckets as a data source for your dataset and output for the batch recommendations.</p>
+<p><strong>Note:</strong> This lab will not cover the deployment of a real-time personalize campaign.</p>
+<div class="section" id="prepare-data">
+<h2>Prepare Data<a class="headerlink" href="#prepare-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-dataset">
+<h3>Get dataset<a class="headerlink" href="#get-dataset" title="Permalink to this headline">¶</a></h3>
+<p>In thie lab, we will be using the the <a class="reference external" href="http://grouplens.org/datasets/movielens/">Movielens dataset</a> to train and make movie recommendations.</p>
+<p>Movielens provide several datasets. To achieve better model accuracy, it is recommendeded to train the Personalize model with a large dataset, however the tradeoff would mean a longer training time. To minimise the time required to complete this lab, we will be sacrificing accuracy for time and will be using the small dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data_dir = &quot;movie_data&quot;
+!mkdir $data_dir
+!cd $data_dir &amp;&amp; wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!cd $data_dir &amp;&amp; unzip ml-latest-small.zip
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Prepare data<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Load the dataset and preview the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">original_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">&#39;/ml-latest-small/ratings.csv&#39;</span><span class="p">)</span>
+<span class="n">original_data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>964982703</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>964981247</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>6</td>
+      <td>4.0</td>
+      <td>964982224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>47</td>
+      <td>5.0</td>
+      <td>964983815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>50</td>
+      <td>5.0</td>
+      <td>964982931</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1</td>
+      <td>70</td>
+      <td>3.0</td>
+      <td>964982400</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>101</td>
+      <td>5.0</td>
+      <td>964980868</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>110</td>
+      <td>4.0</td>
+      <td>964982176</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>151</td>
+      <td>5.0</td>
+      <td>964984041</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>157</td>
+      <td>5.0</td>
+      <td>964984100</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>In the lab, we will be using the movie rating dataset and considering movies with ratings greater or equal to 4 to use for the recommendation as we only want to recommend movies that have been positively rated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interactions_df</span> <span class="o">=</span> <span class="n">original_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Only want ratings greater or equal to 4, filter out ratings less than 4</span>
+<span class="n">interactions_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="p">[</span><span class="n">interactions_df</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mf">4.0</span><span class="p">]</span>
+
+<span class="n">interactions_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>userId</th>
+      <th>movieId</th>
+      <th>rating</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>964982703</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>964981247</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>6</td>
+      <td>4.0</td>
+      <td>964982224</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>47</td>
+      <td>5.0</td>
+      <td>964983815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>50</td>
+      <td>5.0</td>
+      <td>964982931</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>101</td>
+      <td>5.0</td>
+      <td>964980868</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>110</td>
+      <td>4.0</td>
+      <td>964982176</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>151</td>
+      <td>5.0</td>
+      <td>964984041</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>157</td>
+      <td>5.0</td>
+      <td>964984100</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>163</td>
+      <td>5.0</td>
+      <td>964983650</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The next step is to map the dataset to the personalize schema by renaming the column name.</p>
+<p>For more information about the schema, refer to the following URL: <a class="reference external" href="https://docs.aws.amazon.com/personalize/latest/dg/how-it-works-dataset-schema.html">https://docs.aws.amazon.com/personalize/latest/dg/how-it-works-dataset-schema.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interactions_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="p">[[</span><span class="s1">&#39;userId&#39;</span><span class="p">,</span> <span class="s1">&#39;movieId&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">]]</span>
+<span class="n">interactions_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">interactions_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;userId&#39;</span><span class="p">:</span><span class="s1">&#39;USER_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;movieId&#39;</span><span class="p">:</span><span class="s1">&#39;ITEM_ID&#39;</span><span class="p">,</span> 
+                              <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span><span class="s1">&#39;TIMESTAMP&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, we save the dataset to CSV file which we will later upload to S3 for Personalize to use.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interactions_filename</span> <span class="o">=</span> <span class="s2">&quot;interactions.csv&quot;</span>
+<span class="n">interactions_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">((</span><span class="n">data_dir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">interactions_filename</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">float_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%.0f</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-related-datasets-and-a-dataset-group">
+<h2>Create related datasets and a dataset group.<a class="headerlink" href="#create-related-datasets-and-a-dataset-group" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will setup the Amazon Personalize dataset group and load the inteaction dataset into Amazon Personalize which will be used for training.</p>
+<p>Amazon Personalize requires data, stored in Amazon Personalize datasets, in order to train a model.</p>
+<p>There are two ways to provide the training data. You can import historical data from an Amazon S3 bucket, and you can record event data as it is created.</p>
+<p>A dataset group contains related datasets. Three types of historical datasets are created by the customer (users, items, and interactions), and one type is created by Amazon Personalize for live-event interactions. A dataset group can contain only one of each kind of dataset.</p>
+<p>You can create dataset groups to serve different purposes. For example, you might have an application that provides recommendations for purchasing shoes and another that provides recommendations for places to visit in Europe. In Amazon Personalize, each application would have its own dataset group.</p>
+<p>Historical data must be provided in a CSV file. Each dataset type has a unique schema that specifies the contents of the CSV file.</p>
+<p>There is a <a class="reference external" href="https://docs.aws.amazon.com/personalize/latest/dg/limits.html">minimum amount of data</a> that is necessary to train a model. Using existing data allows you to immediately start training a model. If you rely on recorded data as it is created, and there is no historical data, it can take a while before training can begin.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configure the SDK to Personalize:</span>
+<span class="n">personalize</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;personalize&#39;</span><span class="p">)</span>
+<span class="n">personalize_runtime</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;personalize-runtime&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-the-personalize-dataset-group">
+<h3>Create the personalize dataset group<a class="headerlink" href="#create-the-personalize-dataset-group" title="Permalink to this headline">¶</a></h3>
+<p>We start by creating the personalize dataset group named “<strong>personalize-devlab-movies-dataset-group</strong>” which will be used to to store our interactive (ratings) dataset we prepared earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_dataset_group_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_dataset_group</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;personalize-devlab-movies-dataset-group&quot;</span>
+<span class="p">)</span>
+
+<span class="n">dataset_group_arn</span> <span class="o">=</span> <span class="n">create_dataset_group_response</span><span class="p">[</span><span class="s1">&#39;datasetGroupArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_dataset_group_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;datasetGroupArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:dataset-group/personalize-devlab-movies-dataset-group&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;0374647e-baae-470f-87b1-0664f3d225d5&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 06:46:00 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;0374647e-baae-470f-87b1-0664f3d225d5&quot;,
+      &quot;content-length&quot;: &quot;118&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="checkpoint-1-wait-for-dataset-group-creation-to-complete">
+<h3>CHECKPOINT #1 - Wait for dataset group creation to complete<a class="headerlink" href="#checkpoint-1-wait-for-dataset-group-creation-to-complete" title="Permalink to this headline">¶</a></h3>
+<p>The dataset group will take some time to be created. <strong>Execute the following cell and wait for it to show “ACTIVE” before proceeding to the next step.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Started on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+
+<span class="n">max_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="c1"># 3 hours</span>
+<span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">max_time</span><span class="p">:</span>
+    <span class="n">describe_dataset_group_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">describe_dataset_group</span><span class="p">(</span>
+        <span class="n">datasetGroupArn</span> <span class="o">=</span> <span class="n">dataset_group_arn</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">describe_dataset_group_response</span><span class="p">[</span><span class="s2">&quot;datasetGroup&quot;</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DatasetGroup: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ACTIVE&quot;</span> <span class="ow">or</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;CREATE FAILED&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+        
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completed on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Started on:  06:46:03 AM
+DatasetGroup: CREATE PENDING
+DatasetGroup: ACTIVE
+Completed on:  06:47:03 AM
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-the-dataset">
+<h3>Create the dataset<a class="headerlink" href="#create-the-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Once the dataset group have been complete, the next step is to defined the interaction schema and we will name it “<strong>personalize-devlab-movies-interactions-schema</strong>”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">interactions_schema</span> <span class="o">=</span> <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Interactions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;namespace&quot;</span><span class="p">:</span> <span class="s2">&quot;com.amazonaws.personalize.schema&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;USER_ID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ITEM_ID&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;TIMESTAMP&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;long&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span>
+<span class="p">}</span>
+
+<span class="n">create_schema_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_schema</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;personalize-devlab-movies-interactions-schema&quot;</span><span class="p">,</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">interactions_schema</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">schema_arn</span> <span class="o">=</span> <span class="n">create_schema_response</span><span class="p">[</span><span class="s1">&#39;schemaArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_schema_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;schemaArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:schema/personalize-devlab-movies-interactions-schema&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;82e560cc-a51a-4061-9b1e-38c607985d04&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 06:47:20 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;82e560cc-a51a-4061-9b1e-38c607985d04&quot;,
+      &quot;content-length&quot;: &quot;111&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once the schema has been defined, we will define the interactiion dataset using the schema we created above and provide it with the following name “personalize-devlab-movies-interactions-dataset”</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dataset_type</span> <span class="o">=</span> <span class="s2">&quot;INTERACTIONS&quot;</span>
+<span class="n">create_dataset_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;personalize-devlab-movies-interactions-dataset&quot;</span><span class="p">,</span>
+    <span class="n">datasetType</span> <span class="o">=</span> <span class="n">dataset_type</span><span class="p">,</span>
+    <span class="n">datasetGroupArn</span> <span class="o">=</span> <span class="n">dataset_group_arn</span><span class="p">,</span>
+    <span class="n">schemaArn</span> <span class="o">=</span> <span class="n">schema_arn</span>
+<span class="p">)</span>
+
+<span class="n">dataset_arn</span> <span class="o">=</span> <span class="n">create_dataset_response</span><span class="p">[</span><span class="s1">&#39;datasetArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_dataset_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;datasetArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:dataset/personalize-devlab-movies-dataset-group/INTERACTIONS&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;8d113327-296b-45fd-8f40-1b97a195f699&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 06:47:21 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;8d113327-296b-45fd-8f40-1b97a195f699&quot;,
+      &quot;content-length&quot;: &quot;120&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Record the interaction dataset arn to be used later</span>
+<span class="n">interactions_dataset_arn</span> <span class="o">=</span> <span class="n">dataset_arn</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="configuring-s3-and-iam">
+<h2>Configuring S3 and IAM<a class="headerlink" href="#configuring-s3-and-iam" title="Permalink to this headline">¶</a></h2>
+<p>Amazon Personalize will need an S3 bucket to act as the source of your data, as well as IAM roles for accessing it. The code below will set all that up.</p>
+<p>Now using the metada stored on this instance of a SageMaker Notebook determine the region we are operating in. If you are using a Jupyter Notebook outside of SageMaker simply define region as the string that indicates the region you would like to use for Forecast and S3.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/opt/ml/metadata/resource-metadata.json&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">notebook_info</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">notebook_info</span><span class="p">)</span>
+    <span class="n">resource_arn</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ResourceArn&#39;</span><span class="p">]</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">resource_arn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
+    
+<span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="n">account_id</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;sts&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_caller_identity</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Account&#39;</span><span class="p">)</span>
+<span class="n">bucket_name</span> <span class="o">=</span> <span class="n">account_id</span> <span class="o">+</span> <span class="s2">&quot;personalizedevlab&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">region</span> <span class="o">!=</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">:</span>
+    <span class="n">s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">CreateBucketConfiguration</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;LocationConstraint&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">})</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">s3</span><span class="o">.</span><span class="n">create_bucket</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>us-east-2
+931343413930personalizedevlab
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="attach-policy-to-s3-bucket">
+<h3>Attach Policy to S3 Bucket<a class="headerlink" href="#attach-policy-to-s3-bucket" title="Permalink to this headline">¶</a></h3>
+<p>Amazon Personalize needs to be able to read the content of your S3 bucket that you created earlier. The lines below will do that.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>
+
+<span class="n">policy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Id&quot;</span><span class="p">:</span> <span class="s2">&quot;PersonalizeS3BucketAccessPolicy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Sid&quot;</span><span class="p">:</span> <span class="s2">&quot;PersonalizeS3BucketAccessPolicy&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Principal&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Service&quot;</span><span class="p">:</span> <span class="s2">&quot;personalize.amazonaws.com&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;s3:*Object&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;s3:ListBucket&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;arn:aws:s3:::</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">),</span>
+                <span class="s2">&quot;arn:aws:s3:::</span><span class="si">{}</span><span class="s2">/*&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">s3</span><span class="o">.</span><span class="n">put_bucket_policy</span><span class="p">(</span><span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">Policy</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;ResponseMetadata&#39;: {&#39;RequestId&#39;: &#39;039C39BD0ADB3BFE&#39;,
+  &#39;HostId&#39;: &#39;C6i18rymISNGlhn+y6WXKM/YIw/lVDWD6082jKgk3ggJq43St4JOKljBFBSRd07X+1h6jNRczCA=&#39;,
+  &#39;HTTPStatusCode&#39;: 204,
+  &#39;HTTPHeaders&#39;: {&#39;x-amz-id-2&#39;: &#39;C6i18rymISNGlhn+y6WXKM/YIw/lVDWD6082jKgk3ggJq43St4JOKljBFBSRd07X+1h6jNRczCA=&#39;,
+   &#39;x-amz-request-id&#39;: &#39;039C39BD0ADB3BFE&#39;,
+   &#39;date&#39;: &#39;Thu, 16 Apr 2020 06:48:30 GMT&#39;,
+   &#39;server&#39;: &#39;AmazonS3&#39;},
+  &#39;RetryAttempts&#39;: 0}}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-personalize-role">
+<h3>Create Personalize Role<a class="headerlink" href="#create-personalize-role" title="Permalink to this headline">¶</a></h3>
+<p>Also Amazon Personalize needs the ability to assume Roles in AWS in order to have the permissions to execute certain tasks, the lines below grant that.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iam</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;iam&quot;</span><span class="p">)</span>
+
+<span class="n">role_name</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span>
+<span class="n">assume_role_policy_document</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Principal&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;Service&quot;</span><span class="p">:</span> <span class="s2">&quot;personalize.amazonaws.com&quot;</span>
+          <span class="p">},</span>
+          <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;sts:AssumeRole&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">create_role_response</span> <span class="o">=</span> <span class="n">iam</span><span class="o">.</span><span class="n">create_role</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="n">role_name</span><span class="p">,</span>
+    <span class="n">AssumeRolePolicyDocument</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">assume_role_policy_document</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># AmazonPersonalizeFullAccess provides access to any S3 bucket with a name that includes &quot;personalize&quot; or &quot;Personalize&quot; </span>
+<span class="c1"># if you would like to use a bucket with a different name, please consider creating and attaching a new policy</span>
+<span class="c1"># that provides read access to your bucket or attaching the AmazonS3ReadOnlyAccess policy to the role</span>
+<span class="n">policy_arn</span> <span class="o">=</span> <span class="s2">&quot;arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess&quot;</span>
+<span class="n">iam</span><span class="o">.</span><span class="n">attach_role_policy</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="n">role_name</span><span class="p">,</span>
+    <span class="n">PolicyArn</span> <span class="o">=</span> <span class="n">policy_arn</span>
+<span class="p">)</span>
+
+<span class="c1"># Now add S3 support</span>
+<span class="n">iam</span><span class="o">.</span><span class="n">attach_role_policy</span><span class="p">(</span>
+    <span class="n">PolicyArn</span><span class="o">=</span><span class="s1">&#39;arn:aws:iam::aws:policy/AmazonS3FullAccess&#39;</span><span class="p">,</span>
+    <span class="n">RoleName</span><span class="o">=</span><span class="n">role_name</span>
+<span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span> <span class="c1"># wait for a minute to allow IAM role policy attachment to propagate</span>
+
+<span class="n">role_arn</span> <span class="o">=</span> <span class="n">create_role_response</span><span class="p">[</span><span class="s2">&quot;Role&quot;</span><span class="p">][</span><span class="s2">&quot;Arn&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">role_arn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>arn:aws:iam::931343413930:role/PersonalizeRoleDevLab
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="upload-dataset-to-s3">
+<h2>Upload dataset to S3<a class="headerlink" href="#upload-dataset-to-s3" title="Permalink to this headline">¶</a></h2>
+<p>Before Personalize can import the data, it needs to be in S3.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Upload Interactions File</span>
+<span class="n">interactions_file_path</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">interactions_filename</span>
+<span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">interactions_filename</span><span class="p">)</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">interactions_file_path</span><span class="p">)</span>
+<span class="n">interactions_s3DataPath</span> <span class="o">=</span> <span class="s2">&quot;s3://&quot;</span><span class="o">+</span><span class="n">bucket_name</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">interactions_filename</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="importing-the-interactions-data">
+<h2>Importing the Interactions Data<a class="headerlink" href="#importing-the-interactions-data" title="Permalink to this headline">¶</a></h2>
+<p>Earlier you created the DatasetGroup and Dataset to house your information, now you will execute an import job that will load the data from S3 into Amazon Personalize for usage building your model.</p>
+<div class="section" id="create-dataset-import-job">
+<h3>Create Dataset Import Job<a class="headerlink" href="#create-dataset-import-job" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">create_dataset_import_job_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_dataset_import_job</span><span class="p">(</span>
+    <span class="n">jobName</span> <span class="o">=</span> <span class="s2">&quot;personalize-devlab-import1&quot;</span><span class="p">,</span>
+    <span class="n">datasetArn</span> <span class="o">=</span> <span class="n">interactions_dataset_arn</span><span class="p">,</span>
+    <span class="n">dataSource</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;dataLocation&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">interactions_filename</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="n">roleArn</span> <span class="o">=</span> <span class="n">role_arn</span>
+<span class="p">)</span>
+
+<span class="n">dataset_import_job_arn</span> <span class="o">=</span> <span class="n">create_dataset_import_job_response</span><span class="p">[</span><span class="s1">&#39;datasetImportJobArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">create_dataset_import_job_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;datasetImportJobArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:dataset-import-job/personalize-devlab-import1&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;185c9da7-fa80-4af1-b6ca-ed7dafc83c17&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 06:59:06 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;185c9da7-fa80-4af1-b6ca-ed7dafc83c17&quot;,
+      &quot;content-length&quot;: &quot;114&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="checkpoint-2-wait-for-dataset-import-job-to-have-active-status">
+<h3>CHECKPOINT #2 - Wait for Dataset Import Job to Have ACTIVE Status<a class="headerlink" href="#checkpoint-2-wait-for-dataset-import-job-to-have-active-status" title="Permalink to this headline">¶</a></h3>
+<p>It can take a while before the import job completes. <strong>Execute the following cell and wait for it to show “ACTIVE” before proceeding to the next step.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Started on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+
+<span class="n">max_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="c1"># 3 hours</span>
+<span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">max_time</span><span class="p">:</span>
+    <span class="n">describe_dataset_import_job_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">describe_dataset_import_job</span><span class="p">(</span>
+        <span class="n">datasetImportJobArn</span> <span class="o">=</span> <span class="n">dataset_import_job_arn</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">describe_dataset_import_job_response</span><span class="p">[</span><span class="s2">&quot;datasetImportJob&quot;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DatasetImportJob: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ACTIVE&quot;</span> <span class="ow">or</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;CREATE FAILED&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+        
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completed on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Started on:  06:59:09 AM
+DatasetImportJob: CREATE PENDING
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: CREATE IN_PROGRESS
+DatasetImportJob: ACTIVE
+Completed on:  07:11:09 AM
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-solution">
+<h2>Create solution<a class="headerlink" href="#create-solution" title="Permalink to this headline">¶</a></h2>
+<p>In this section we will define a solution using the HRNN recipe to generate user personalization recommendation. There are several other recipes available such as HRNN-Metadata, HRNN-Coldstart etc. More information about the additional recipes can be found here:
+<a class="reference external" href="https://docs.aws.amazon.com/personalize/latest/dg/working-with-predefined-recipes.html">https://docs.aws.amazon.com/personalize/latest/dg/working-with-predefined-recipes.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">HRNN_recipe_arn</span> <span class="o">=</span> <span class="s2">&quot;arn:aws:personalize:::recipe/aws-hrnn&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hrnn_create_solution_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_solution</span><span class="p">(</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;personalize-devlab-hrnn&quot;</span><span class="p">,</span>
+    <span class="n">datasetGroupArn</span> <span class="o">=</span> <span class="n">dataset_group_arn</span><span class="p">,</span>
+    <span class="n">recipeArn</span> <span class="o">=</span> <span class="n">HRNN_recipe_arn</span>
+<span class="p">)</span>
+
+<span class="n">hrnn_solution_arn</span> <span class="o">=</span> <span class="n">hrnn_create_solution_response</span><span class="p">[</span><span class="s1">&#39;solutionArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hrnn_create_solution_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;solutionArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:solution/personalize-devlab-hrnn&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;ab61bc26-fe23-471e-8ebc-9929535840c8&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 07:11:17 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;ab61bc26-fe23-471e-8ebc-9929535840c8&quot;,
+      &quot;content-length&quot;: &quot;93&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="create-the-solution-version">
+<h2>Create the solution version<a class="headerlink" href="#create-the-solution-version" title="Permalink to this headline">¶</a></h2>
+<p>In this section we will train a solution version using the dataset that we loaded and using the HRNN recipe.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hrnn_create_solution_version_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_solution_version</span><span class="p">(</span>
+    <span class="n">solutionArn</span> <span class="o">=</span> <span class="n">hrnn_solution_arn</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hrnn_solution_version_arn</span> <span class="o">=</span> <span class="n">hrnn_create_solution_version_response</span><span class="p">[</span><span class="s1">&#39;solutionVersionArn&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hrnn_create_solution_version_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;solutionVersionArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:solution/personalize-devlab-hrnn/960341f6&quot;,
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;007a14cd-6ac0-4248-97a0-5e666c8a03e8&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 07:11:19 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;007a14cd-6ac0-4248-97a0-5e666c8a03e8&quot;,
+      &quot;content-length&quot;: &quot;109&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="checkpoint-3-wait-for-solution-version-creation-to-be-completed">
+<h3>CHECKPOINT #3 - Wait for solution version creation to be completed<a class="headerlink" href="#checkpoint-3-wait-for-solution-version-creation-to-be-completed" title="Permalink to this headline">¶</a></h3>
+<p>Training the solution version will take some time to complete training. <strong>Execute the following cell and wait for it to show “ACTIVE” before proceeding to the next step.</strong></p>
+<div class="section" id="viewing-solution-creation-status">
+<h4>Viewing Solution Creation Status<a class="headerlink" href="#viewing-solution-creation-status" title="Permalink to this headline">¶</a></h4>
+<p>You can also view the status updates in the console. To do so,</p>
+<ul class="simple">
+<li><p>In another browser tab you should already have the AWS Console up from opening this notebook instance.</p></li>
+<li><p>Switch to that tab and search at the top for the service <code class="docutils literal notranslate"><span class="pre">Personalize</span></code>, then go to that service page.</p></li>
+<li><p>Click <code class="docutils literal notranslate"><span class="pre">View</span> <span class="pre">dataset</span> <span class="pre">groups</span></code>.</p></li>
+<li><p>Click the name of your dataset group, most likely something with DevLab in the name.</p></li>
+<li><p>Click <code class="docutils literal notranslate"><span class="pre">Solutions</span> <span class="pre">and</span> <span class="pre">recipes</span></code>.</p></li>
+<li><p>You will now see a list of all of the solutions you created above. Click any one of them.</p></li>
+<li><p>Note in <code class="docutils literal notranslate"><span class="pre">Solution</span> <span class="pre">versions</span></code> the job that is in progress. Once it is <code class="docutils literal notranslate"><span class="pre">Active</span></code> you solution is ready to be reviewed. It is also capable of being deployed.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Started on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+
+<span class="n">max_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="c1"># 3 hours</span>
+<span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">max_time</span><span class="p">:</span>
+    <span class="n">describe_solution_version_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">describe_solution_version</span><span class="p">(</span>
+        <span class="n">solutionVersionArn</span> <span class="o">=</span> <span class="n">hrnn_solution_version_arn</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">describe_solution_version_response</span><span class="p">[</span><span class="s2">&quot;solutionVersion&quot;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SolutionVersion Status: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ACTIVE&quot;</span> <span class="ow">or</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;CREATE FAILED&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+        
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+    
+<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Completed on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Started on:  07:11:21 AM
+SolutionVersion Status: CREATE PENDING
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: CREATE IN_PROGRESS
+SolutionVersion Status: ACTIVE
+Completed on:  07:45:24 AM
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="evaluate-solution-metrics">
+<h2>Evaluate solution metrics<a class="headerlink" href="#evaluate-solution-metrics" title="Permalink to this headline">¶</a></h2>
+<p>In this section we will run the function to get the solution metrics. More information about the Personalize solution metrics can be found here: <a class="reference external" href="https://docs.aws.amazon.com/personalize/latest/dg/working-with-training-metrics.html">https://docs.aws.amazon.com/personalize/latest/dg/working-with-training-metrics.html</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">hrnn_solution_metrics_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">get_solution_metrics</span><span class="p">(</span>
+    <span class="n">solutionVersionArn</span> <span class="o">=</span> <span class="n">hrnn_solution_version_arn</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">hrnn_solution_metrics_response</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{
+  &quot;solutionVersionArn&quot;: &quot;arn:aws:personalize:us-east-2:931343413930:solution/personalize-devlab-hrnn/960341f6&quot;,
+  &quot;metrics&quot;: {
+    &quot;coverage&quot;: 0.0149,
+    &quot;mean_reciprocal_rank_at_25&quot;: 0.0241,
+    &quot;normalized_discounted_cumulative_gain_at_10&quot;: 0.0267,
+    &quot;normalized_discounted_cumulative_gain_at_25&quot;: 0.0544,
+    &quot;normalized_discounted_cumulative_gain_at_5&quot;: 0.0174,
+    &quot;precision_at_10&quot;: 0.0091,
+    &quot;precision_at_25&quot;: 0.0095,
+    &quot;precision_at_5&quot;: 0.0109
+  },
+  &quot;ResponseMetadata&quot;: {
+    &quot;RequestId&quot;: &quot;85884607-49b5-44a8-9459-83a61b954ade&quot;,
+    &quot;HTTPStatusCode&quot;: 200,
+    &quot;HTTPHeaders&quot;: {
+      &quot;content-type&quot;: &quot;application/x-amz-json-1.1&quot;,
+      &quot;date&quot;: &quot;Thu, 16 Apr 2020 07:45:56 GMT&quot;,
+      &quot;x-amzn-requestid&quot;: &quot;85884607-49b5-44a8-9459-83a61b954ade&quot;,
+      &quot;content-length&quot;: &quot;407&quot;,
+      &quot;connection&quot;: &quot;keep-alive&quot;
+    },
+    &quot;RetryAttempts&quot;: 0
+  }
+}
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="batch-recommendation">
+<h2>Batch Recommendation<a class="headerlink" href="#batch-recommendation" title="Permalink to this headline">¶</a></h2>
+<p>In the section, we will generate a random sample of users to generate batch recommendations for.</p>
+<p>First, we will load the movie database so that we can visualize the recommended movie.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a dataframe for the items by reading in the correct source CSV.</span>
+<span class="n">items_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">&#39;/ml-latest-small/movies.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Render some sample data</span>
+<span class="n">items_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>genres</th>
+    </tr>
+    <tr>
+      <th>movieId</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Toy Story (1995)</td>
+      <td>Adventure|Animation|Children|Comedy|Fantasy</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Jumanji (1995)</td>
+      <td>Adventure|Children|Fantasy</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Grumpier Old Men (1995)</td>
+      <td>Comedy|Romance</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Waiting to Exhale (1995)</td>
+      <td>Comedy|Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Father of the Bride Part II (1995)</td>
+      <td>Comedy</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a function to get movie by id</span>
+<span class="k">def</span> <span class="nf">get_movie_by_id</span><span class="p">(</span><span class="n">movie_id</span><span class="p">,</span> <span class="n">movie_df</span><span class="o">=</span><span class="n">items_df</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">movie_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">movie_id</span><span class="p">)][</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">movie_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">movie_id</span><span class="p">)][</span><span class="s1">&#39;genres&#39;</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Error obtaining movie&quot;</span> <span class="o">+</span> <span class="n">movie_id</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the user list</span>
+<span class="n">users_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">&#39;/ml-latest-small/ratings.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">batch_users</span> <span class="o">=</span> <span class="n">users_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># Write the file to disk</span>
+<span class="n">json_input_filename</span> <span class="o">=</span> <span class="s2">&quot;json_input.json&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">json_input_filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_input</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">batch_users</span><span class="p">:</span>
+        <span class="n">json_input</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;{&quot;userId&quot;: &quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># Showcase the input file:
+!cat $data_dir&quot;/&quot;$json_input_filename
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&quot;userId&quot;: &quot;302&quot;}
+{&quot;userId&quot;: &quot;393&quot;}
+{&quot;userId&quot;: &quot;57&quot;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Upload the users generate batch recommendations for to S3</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Upload files to S3</span>
+<span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Bucket</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">)</span><span class="o">.</span><span class="n">Object</span><span class="p">(</span><span class="n">json_input_filename</span><span class="p">)</span><span class="o">.</span><span class="n">upload_file</span><span class="p">(</span><span class="n">data_dir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">json_input_filename</span><span class="p">)</span>
+<span class="n">s3_input_path</span> <span class="o">=</span> <span class="s2">&quot;s3://&quot;</span> <span class="o">+</span> <span class="n">bucket_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">json_input_filename</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s3_input_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>s3://931343413930personalizedevlab/json_input.json
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the next cell, we define output bucket of where we will store the batch recommendation results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the output path</span>
+<span class="n">s3_output_path</span> <span class="o">=</span> <span class="s2">&quot;s3://&quot;</span> <span class="o">+</span> <span class="n">bucket_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">s3_output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>s3://931343413930personalizedevlab/
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run the batch inference process</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="n">batchInferenceJobArn</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">create_batch_inference_job</span> <span class="p">(</span>
+    <span class="n">solutionVersionArn</span> <span class="o">=</span> <span class="n">hrnn_solution_version_arn</span><span class="p">,</span>
+    <span class="n">jobName</span> <span class="o">=</span> <span class="s2">&quot;Personalize-devlab-Batch-Inference-Job-HRNN&quot;</span><span class="o">+</span><span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I%M%S&quot;</span><span class="p">),</span>
+    <span class="n">roleArn</span> <span class="o">=</span> <span class="n">role_arn</span><span class="p">,</span>
+    <span class="n">jobInput</span> <span class="o">=</span> 
+     <span class="p">{</span><span class="s2">&quot;s3DataSource&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">s3_input_path</span><span class="p">}},</span>
+    <span class="n">jobOutput</span> <span class="o">=</span> 
+     <span class="p">{</span><span class="s2">&quot;s3DataDestination&quot;</span><span class="p">:{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">s3_output_path</span><span class="p">}}</span>
+<span class="p">)</span>
+<span class="n">batchInferenceJobArn</span> <span class="o">=</span> <span class="n">batchInferenceJobArn</span><span class="p">[</span><span class="s1">&#39;batchInferenceJobArn&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="checkpoint-4-wait-for-batch-recommendation-job-to-complete">
+<h3>CHECKPOINT #4 - Wait for batch recommendation job to complete<a class="headerlink" href="#checkpoint-4-wait-for-batch-recommendation-job-to-complete" title="Permalink to this headline">¶</a></h3>
+<p>It can take a while before the batch recommendation job completes. <strong>Execute the following cell and wait for it to show “ACTIVE” before proceeding to the next step.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Import Started on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+
+<span class="n">max_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="c1"># 3 hours</span>
+<span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">max_time</span><span class="p">:</span>
+    <span class="n">describe_dataset_inference_job_response</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">describe_batch_inference_job</span><span class="p">(</span>
+        <span class="n">batchInferenceJobArn</span> <span class="o">=</span> <span class="n">batchInferenceJobArn</span>
+    <span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">describe_dataset_inference_job_response</span><span class="p">[</span><span class="s2">&quot;batchInferenceJob&quot;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DatasetInferenceJob: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ACTIVE&quot;</span> <span class="ow">or</span> <span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;CREATE FAILED&quot;</span><span class="p">:</span>
+        <span class="k">break</span>
+        
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+    
+<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Import Completed on: &quot;</span><span class="p">,</span> <span class="n">current_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I:%M:%S %p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Import Started on:  07:49:42 AM
+DatasetInferenceJob: CREATE PENDING
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: CREATE IN_PROGRESS
+DatasetInferenceJob: ACTIVE
+Import Completed on:  08:14:43 AM
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Download and Visualize batch recommendation</strong></p>
+<p>Once the batch recommendation job has been completed, we will now download and visualize the results from the batch job.</p>
+<p>The results of the batch job will be stored in the S3 output folder that was specified earlier. It will be returned in a json format similar to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:{</span><span class="s2">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;448&quot;</span><span class="p">},</span><span class="s2">&quot;output&quot;</span><span class="p">:{</span><span class="s2">&quot;recommendedItems&quot;</span><span class="p">:[</span><span class="s2">&quot;5810&quot;</span><span class="p">,</span><span class="s2">&quot;53322&quot;</span><span class="p">,</span><span class="s2">&quot;2003&quot;</span><span class="p">,</span><span class="s2">&quot;6957&quot;</span><span class="p">,</span><span class="s2">&quot;92535&quot;</span><span class="p">,</span><span class="s2">&quot;8917&quot;</span><span class="p">,</span><span class="s2">&quot;3105&quot;</span><span class="p">,</span><span class="s2">&quot;6873&quot;</span><span class="p">,</span><span class="s2">&quot;1249&quot;</span><span class="p">,</span><span class="s2">&quot;26133&quot;</span><span class="p">,</span><span class="s2">&quot;2657&quot;</span><span class="p">,</span><span class="s2">&quot;4865&quot;</span><span class="p">,</span><span class="s2">&quot;2420&quot;</span><span class="p">,</span><span class="s2">&quot;1345&quot;</span><span class="p">,</span><span class="s2">&quot;4621&quot;</span><span class="p">,</span><span class="s2">&quot;34437&quot;</span><span class="p">,</span><span class="s2">&quot;2010&quot;</span><span class="p">,</span><span class="s2">&quot;4128&quot;</span><span class="p">,</span><span class="s2">&quot;2076&quot;</span><span class="p">,</span><span class="s2">&quot;1203&quot;</span><span class="p">,</span><span class="s2">&quot;52973&quot;</span><span class="p">,</span><span class="s2">&quot;4246&quot;</span><span class="p">,</span><span class="s2">&quot;2871&quot;</span><span class="p">,</span><span class="s2">&quot;8641&quot;</span><span class="p">,</span><span class="s2">&quot;162&quot;</span><span class="p">],</span><span class="s2">&quot;scores&quot;</span><span class="p">:[</span><span class="mf">0.0031413</span><span class="p">,</span><span class="mf">0.0022093</span><span class="p">,</span><span class="mf">0.0021377</span><span class="p">,</span><span class="mf">0.0020497</span><span class="p">,</span><span class="mf">0.001922</span><span class="p">,</span><span class="mf">0.0018058</span><span class="p">,</span><span class="mf">0.0017834</span><span class="p">,</span><span class="mf">0.0017671</span><span class="p">,</span><span class="mf">0.0017457</span><span class="p">,</span><span class="mf">0.0016255</span><span class="p">,</span><span class="mf">0.0015854</span><span class="p">,</span><span class="mf">0.001539</span><span class="p">,</span><span class="mf">0.0014838</span><span class="p">,</span><span class="mf">0.0014573</span><span class="p">,</span><span class="mf">0.001374</span><span class="p">,</span><span class="mf">0.001372</span><span class="p">,</span><span class="mf">0.0013563</span><span class="p">,</span><span class="mf">0.0013385</span><span class="p">,</span><span class="mf">0.0013196</span><span class="p">,</span><span class="mf">0.0013065</span><span class="p">,</span><span class="mf">0.0012714</span><span class="p">,</span><span class="mf">0.0012507</span><span class="p">,</span><span class="mf">0.001228</span><span class="p">,</span><span class="mf">0.0012243</span><span class="p">,</span><span class="mf">0.0012083</span><span class="p">]},</span><span class="s2">&quot;error&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:{</span><span class="s2">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;409&quot;</span><span class="p">},</span><span class="s2">&quot;output&quot;</span><span class="p">:{</span><span class="s2">&quot;recommendedItems&quot;</span><span class="p">:[</span><span class="s2">&quot;2571&quot;</span><span class="p">,</span><span class="s2">&quot;50&quot;</span><span class="p">,</span><span class="s2">&quot;527&quot;</span><span class="p">,</span><span class="s2">&quot;296&quot;</span><span class="p">,</span><span class="s2">&quot;1196&quot;</span><span class="p">,</span><span class="s2">&quot;111&quot;</span><span class="p">,</span><span class="s2">&quot;110&quot;</span><span class="p">,</span><span class="s2">&quot;1258&quot;</span><span class="p">,</span><span class="s2">&quot;2858&quot;</span><span class="p">,</span><span class="s2">&quot;1214&quot;</span><span class="p">,</span><span class="s2">&quot;6874&quot;</span><span class="p">,</span><span class="s2">&quot;1265&quot;</span><span class="p">,</span><span class="s2">&quot;648&quot;</span><span class="p">,</span><span class="s2">&quot;750&quot;</span><span class="p">,</span><span class="s2">&quot;912&quot;</span><span class="p">,</span><span class="s2">&quot;588&quot;</span><span class="p">,</span><span class="s2">&quot;608&quot;</span><span class="p">,</span><span class="s2">&quot;2329&quot;</span><span class="p">,</span><span class="s2">&quot;858&quot;</span><span class="p">,</span><span class="s2">&quot;2762&quot;</span><span class="p">,</span><span class="s2">&quot;1291&quot;</span><span class="p">,</span><span class="s2">&quot;541&quot;</span><span class="p">,</span><span class="s2">&quot;1387&quot;</span><span class="p">,</span><span class="s2">&quot;260&quot;</span><span class="p">,</span><span class="s2">&quot;1200&quot;</span><span class="p">],</span><span class="s2">&quot;scores&quot;</span><span class="p">:[</span><span class="mf">0.0151337</span><span class="p">,</span><span class="mf">0.0129099</span><span class="p">,</span><span class="mf">0.0094722</span><span class="p">,</span><span class="mf">0.0081178</span><span class="p">,</span><span class="mf">0.0070135</span><span class="p">,</span><span class="mf">0.0061934</span><span class="p">,</span><span class="mf">0.0059672</span><span class="p">,</span><span class="mf">0.0049986</span><span class="p">,</span><span class="mf">0.0048773</span><span class="p">,</span><span class="mf">0.0048134</span><span class="p">,</span><span class="mf">0.0046837</span><span class="p">,</span><span class="mf">0.0044422</span><span class="p">,</span><span class="mf">0.0044251</span><span class="p">,</span><span class="mf">0.0042917</span><span class="p">,</span><span class="mf">0.0042376</span><span class="p">,</span><span class="mf">0.0042309</span><span class="p">,</span><span class="mf">0.0039795</span><span class="p">,</span><span class="mf">0.0038287</span><span class="p">,</span><span class="mf">0.0037793</span><span class="p">,</span><span class="mf">0.0036532</span><span class="p">,</span><span class="mf">0.0036527</span><span class="p">,</span><span class="mf">0.0035218</span><span class="p">,</span><span class="mf">0.0035178</span><span class="p">,</span><span class="mf">0.0034306</span><span class="p">,</span><span class="mf">0.0034158</span><span class="p">]},</span><span class="s2">&quot;error&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:{</span><span class="s2">&quot;userId&quot;</span><span class="p">:</span><span class="s2">&quot;288&quot;</span><span class="p">},</span><span class="s2">&quot;output&quot;</span><span class="p">:{</span><span class="s2">&quot;recommendedItems&quot;</span><span class="p">:[</span><span class="s2">&quot;5989&quot;</span><span class="p">,</span><span class="s2">&quot;49272&quot;</span><span class="p">,</span><span class="s2">&quot;6377&quot;</span><span class="p">,</span><span class="s2">&quot;4963&quot;</span><span class="p">,</span><span class="s2">&quot;4995&quot;</span><span class="p">,</span><span class="s2">&quot;68157&quot;</span><span class="p">,</span><span class="s2">&quot;4886&quot;</span><span class="p">,</span><span class="s2">&quot;48394&quot;</span><span class="p">,</span><span class="s2">&quot;8368&quot;</span><span class="p">,</span><span class="s2">&quot;80463&quot;</span><span class="p">,</span><span class="s2">&quot;54001&quot;</span><span class="p">,</span><span class="s2">&quot;8961&quot;</span><span class="p">,</span><span class="s2">&quot;91658&quot;</span><span class="p">,</span><span class="s2">&quot;8950&quot;</span><span class="p">,</span><span class="s2">&quot;5418&quot;</span><span class="p">,</span><span class="s2">&quot;5445&quot;</span><span class="p">,</span><span class="s2">&quot;109374&quot;</span><span class="p">,</span><span class="s2">&quot;8360&quot;</span><span class="p">,</span><span class="s2">&quot;1136&quot;</span><span class="p">,</span><span class="s2">&quot;81834&quot;</span><span class="p">,</span><span class="s2">&quot;5618&quot;</span><span class="p">,</span><span class="s2">&quot;1265&quot;</span><span class="p">,</span><span class="s2">&quot;48780&quot;</span><span class="p">,</span><span class="s2">&quot;8949&quot;</span><span class="p">,</span><span class="s2">&quot;4720&quot;</span><span class="p">],</span><span class="s2">&quot;scores&quot;</span><span class="p">:[</span><span class="mf">0.0177912</span><span class="p">,</span><span class="mf">0.0114374</span><span class="p">,</span><span class="mf">0.0107343</span><span class="p">,</span><span class="mf">0.0098669</span><span class="p">,</span><span class="mf">0.009329</span><span class="p">,</span><span class="mf">0.0067548</span><span class="p">,</span><span class="mf">0.0057784</span><span class="p">,</span><span class="mf">0.0057611</span><span class="p">,</span><span class="mf">0.0056522</span><span class="p">,</span><span class="mf">0.0053493</span><span class="p">,</span><span class="mf">0.0050671</span><span class="p">,</span><span class="mf">0.0050291</span><span class="p">,</span><span class="mf">0.0047089</span><span class="p">,</span><span class="mf">0.0046453</span><span class="p">,</span><span class="mf">0.0045933</span><span class="p">,</span><span class="mf">0.0045281</span><span class="p">,</span><span class="mf">0.0041894</span><span class="p">,</span><span class="mf">0.0040642</span><span class="p">,</span><span class="mf">0.0040296</span><span class="p">,</span><span class="mf">0.003935</span><span class="p">,</span><span class="mf">0.0037718</span><span class="p">,</span><span class="mf">0.0036896</span><span class="p">,</span><span class="mf">0.0036616</span><span class="p">,</span><span class="mf">0.0036362</span><span class="p">,</span><span class="mf">0.0036019</span><span class="p">]},</span><span class="s2">&quot;error&quot;</span><span class="p">:</span><span class="n">null</span><span class="p">}</span>
+
+</pre></div>
+</div>
+<p>An typical use case for this is to use the batch recommendation output to generate a personalized recommendation email that can be fed into a popular email marketing service such as <strong><a class="reference external" href="https://aws.amazon.com/pinpoint/">Amazon Pinpoint</a></strong> or your favourate email marketing service.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s3</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">)</span>
+<span class="n">export_name</span> <span class="o">=</span> <span class="n">json_input_filename</span> <span class="o">+</span> <span class="s2">&quot;.out&quot;</span>
+<span class="n">s3</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">export_name</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">export_name</span><span class="p">)</span>
+
+<span class="c1"># Update DF rendering</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_dir</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">export_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+    <span class="c1"># Get the first line and parse it</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_file</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+    <span class="c1"># Do the same for the other lines</span>
+    <span class="k">while</span> <span class="n">line</span><span class="p">:</span>
+        <span class="c1"># extract the user ID </span>
+        <span class="n">col_header</span> <span class="o">=</span> <span class="s2">&quot;User: &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">][</span><span class="s1">&#39;userId&#39;</span><span class="p">]</span>
+        <span class="c1"># Create a list for all the artists</span>
+        <span class="n">recommendation_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Add all the entries</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">line</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">][</span><span class="s1">&#39;recommendedItems&#39;</span><span class="p">]:</span>
+            <span class="n">movie</span> <span class="o">=</span> <span class="n">get_movie_by_id</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">recommendation_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">movie</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;bulk_recommendations_df&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+            <span class="n">new_rec_DF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">recommendation_list</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col_header</span><span class="p">])</span>
+            <span class="n">bulk_recommendations_df</span> <span class="o">=</span> <span class="n">bulk_recommendations_df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_rec_DF</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bulk_recommendations_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">recommendation_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">col_header</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_file</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">bulk_recommendations_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>User: 302</th>
+      <th>User: 393</th>
+      <th>User: 57</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Braveheart (1995) - Action|Drama|War</td>
+      <td>Star Trek: First Contact (1996) - Action|Adven...</td>
+      <td>Pulp Fiction (1994) - Comedy|Crime|Drama|Thriller</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Raiders of the Lost Ark (Indiana Jones and the...</td>
+      <td>Harry Potter and the Sorcerer's Stone (a.k.a. ...</td>
+      <td>Star Trek: First Contact (1996) - Action|Adven...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Lord of the Rings: The Fellowship of the Ring,...</td>
+      <td>Pulp Fiction (1994) - Comedy|Crime|Drama|Thriller</td>
+      <td>Harry Potter and the Sorcerer's Stone (a.k.a. ...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Seven (a.k.a. Se7en) (1995) - Mystery|Thriller</td>
+      <td>Heat (1995) - Action|Crime|Thriller</td>
+      <td>Heat (1995) - Action|Crime|Thriller</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Die Hard: With a Vengeance (1995) - Action|Cri...</td>
+      <td>2001: A Space Odyssey (1968) - Adventure|Drama...</td>
+      <td>X-Men (2000) - Action|Adventure|Sci-Fi</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Shawshank Redemption, The (1994) - Crime|Drama</td>
+      <td>Shrek (2001) - Adventure|Animation|Children|Co...</td>
+      <td>2001: A Space Odyssey (1968) - Adventure|Drama...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Terminator 2: Judgment Day (1991) - Action|Sci-Fi</td>
+      <td>Avatar (2009) - Action|Adventure|Sci-Fi|IMAX</td>
+      <td>Forrest Gump (1994) - Comedy|Drama|Romance|War</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Jurassic Park (1993) - Action|Adventure|Sci-Fi...</td>
+      <td>Fifth Element, The (1997) - Action|Adventure|C...</td>
+      <td>Avatar (2009) - Action|Adventure|Sci-Fi|IMAX</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Star Wars: Episode IV - A New Hope (1977) - Ac...</td>
+      <td>X-Men (2000) - Action|Adventure|Sci-Fi</td>
+      <td>Fifth Element, The (1997) - Action|Adventure|C...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Schindler's List (1993) - Drama|War</td>
+      <td>Dead Poets Society (1989) - Drama</td>
+      <td>Dead Poets Society (1989) - Drama</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Star Wars: Episode V - The Empire Strikes Back...</td>
+      <td>Harry Potter and the Chamber of Secrets (2002)...</td>
+      <td>Shrek (2001) - Adventure|Animation|Children|Co...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Indiana Jones and the Last Crusade (1989) - Ac...</td>
+      <td>Green Mile, The (1999) - Crime|Drama</td>
+      <td>Harry Potter and the Chamber of Secrets (2002)...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Gladiator (2000) - Action|Adventure|Drama</td>
+      <td>Rear Window (1954) - Mystery|Thriller</td>
+      <td>Rear Window (1954) - Mystery|Thriller</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Crimson Tide (1995) - Drama|Thriller|War</td>
+      <td>Ratatouille (2007) - Animation|Children|Drama</td>
+      <td>Bourne Identity, The (2002) - Action|Mystery|T...</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Star Wars: Episode VI - Return of the Jedi (19...</td>
+      <td>28 Days Later (2002) - Action|Horror|Sci-Fi</td>
+      <td>Willy Wonka &amp; the Chocolate Factory (1971) - C...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Usual Suspects, The (1995) - Crime|Mystery|Thr...</td>
+      <td>Spider-Man (2002) - Action|Adventure|Sci-Fi|Th...</td>
+      <td>Green Mile, The (1999) - Crime|Drama</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Fugitive, The (1993) - Thriller</td>
+      <td>Inside Out (2015) - Adventure|Animation|Childr...</td>
+      <td>Patriot, The (2000) - Action|Drama|War</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Saving Private Ryan (1998) - Action|Drama|War</td>
+      <td>Dark Knight Rises, The (2012) - Action|Adventu...</td>
+      <td>Spider-Man (2002) - Action|Adventure|Sci-Fi|Th...</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Aladdin (1992) - Adventure|Animation|Children|...</td>
+      <td>Patriot, The (2000) - Action|Drama|War</td>
+      <td>Indiana Jones and the Temple of Doom (1984) - ...</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Silence of the Lambs, The (1991) - Crime|Horro...</td>
+      <td>Scarface (1983) - Action|Crime|Drama</td>
+      <td>Ratatouille (2007) - Animation|Children|Drama</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>True Lies (1994) - Action|Adventure|Comedy|Rom...</td>
+      <td>Bourne Identity, The (2002) - Action|Mystery|T...</td>
+      <td>Breakfast Club, The (1985) - Comedy|Drama</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Lion King, The (1994) - Adventure|Animation|Ch...</td>
+      <td>Forrest Gump (1994) - Comedy|Drama|Romance|War</td>
+      <td>Die Hard (1988) - Action|Crime|Thriller</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Inception (2010) - Action|Crime|Drama|Mystery|...</td>
+      <td>Beautiful Mind, A (2001) - Drama|Romance</td>
+      <td>Beautiful Mind, A (2001) - Drama|Romance</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Dark Knight, The (2008) - Action|Crime|Drama|IMAX</td>
+      <td>Breakfast Club, The (1985) - Comedy|Drama</td>
+      <td>Dark Knight Rises, The (2012) - Action|Adventu...</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Die Hard (1988) - Action|Crime|Thriller</td>
+      <td>Willy Wonka &amp; the Chocolate Factory (1971) - C...</td>
+      <td>Spirited Away (Sen to Chihiro no kamikakushi) ...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Congratulations, you have now completed the lab. You can either continue to the challenge section to see if you can improve the model by using a larger dataset or proceed to the cleanup section to delete the resources from this lab.</p>
+</div>
+</div>
+<div class="section" id="challenge">
+<h2>Challenge<a class="headerlink" href="#challenge" title="Permalink to this headline">¶</a></h2>
+<p>Before wrapping up the lab, let’s see if you can try and improve the recommendation accuracy by usingn the large dataset from <a class="reference external" href="https://grouplens.org/datasets/movielens/">movielens</a>.</p>
+<p>You can use the same dataset group, however, please note that you don’t need to redefine the data set schema.</p>
+</div>
+<div class="section" id="cleanup">
+<h2>Cleanup<a class="headerlink" href="#cleanup" title="Permalink to this headline">¶</a></h2>
+<p><strong>IMPORTANT</strong>
+Once you’re done with the lab, the final step is to clean up your environment by decommissioning the resources we created for this devlab. Please run the following cells in the following order to clean up your environment.</p>
+<p><strong>1. Delete the solution</strong></p>
+<p>Delete the HRNN solution we created for the Personalize dataset group</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">personalize</span><span class="o">.</span><span class="n">delete_solution</span><span class="p">(</span>
+    <span class="n">solutionArn</span> <span class="o">=</span> <span class="n">hrnn_solution_arn</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>2. Delete the dataset</strong></p>
+<p>Delete the datasets created for the personalize dataset group.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">personalize</span><span class="o">.</span><span class="n">delete_dataset</span><span class="p">(</span>
+    <span class="n">datasetArn</span> <span class="o">=</span> <span class="n">dataset_arn</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run the following cell to verify that non-required dataset has been deleted and if required run the subsequent cell with the correct ARN.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">paginator</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">get_paginator</span><span class="p">(</span><span class="s1">&#39;list_datasets&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">paginate_result</span> <span class="ow">in</span> <span class="n">paginator</span><span class="o">.</span><span class="n">paginate</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">datasets</span> <span class="ow">in</span> <span class="n">paginate_result</span><span class="p">[</span><span class="s2">&quot;datasets&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">datasets</span><span class="p">[</span><span class="s2">&quot;datasetArn&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace the ARN and run the following cell to delete any additional datasets</span>
+<span class="n">personalize</span><span class="o">.</span><span class="n">delete_dataset</span><span class="p">(</span>
+    <span class="n">datasetArn</span> <span class="o">=</span> <span class="s2">&quot;INSERT ARN HERE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>3. Delete the schema</strong></p>
+<p>Delete the personalize schema used for the datasets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">personalize</span><span class="o">.</span><span class="n">delete_schema</span><span class="p">(</span>
+    <span class="n">schemaArn</span> <span class="o">=</span> <span class="n">schema_arn</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Run the following cell to verify that non-required schema has been deleted and if required run the subsequent cell with the correct ARN.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">paginator</span> <span class="o">=</span> <span class="n">personalize</span><span class="o">.</span><span class="n">get_paginator</span><span class="p">(</span><span class="s1">&#39;list_schemas&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">paginate_result</span> <span class="ow">in</span> <span class="n">paginator</span><span class="o">.</span><span class="n">paginate</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">paginate_result</span><span class="p">[</span><span class="s2">&quot;schemas&quot;</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;schemaArn&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace the ARN and run the following cell to delete any additional schema</span>
+<span class="n">personalize</span><span class="o">.</span><span class="n">delete_schema</span><span class="p">(</span>
+    <span class="n">schemaArn</span> <span class="o">=</span> <span class="s2">&quot;INSERT ARN HERE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>4. Delete the dataset group</strong></p>
+<p>Deletes the personalize dataset group</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">personalize</span><span class="o">.</span><span class="n">delete_dataset_group</span><span class="p">(</span>
+    <span class="n">datasetGroupArn</span> <span class="o">=</span> <span class="n">dataset_group_arn</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>5. Detach the policy from the personalize devlab role</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iam</span><span class="o">.</span><span class="n">detach_role_policy</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span><span class="p">,</span>
+    <span class="n">PolicyArn</span> <span class="o">=</span> <span class="s2">&quot;arn:aws:iam::aws:policy/AmazonS3FullAccess&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iam</span><span class="o">.</span><span class="n">detach_role_policy</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span><span class="p">,</span>
+    <span class="n">PolicyArn</span> <span class="o">=</span> <span class="s2">&quot;arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Check that all policies have been detached from the role, if not run the subsequent cell to detached the appropriate roles</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lists all policities attached to the personalize devlab role</span>
+<span class="n">iam</span><span class="o">.</span><span class="n">list_attached_role_policies</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Detach policy from rule</span>
+<span class="n">iam</span><span class="o">.</span><span class="n">detach_role_policy</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span><span class="p">,</span>
+    <span class="n">PolicyArn</span> <span class="o">=</span> <span class="s2">&quot;INSERT ARN HERE&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>6. Delete the IAM role</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iam</span><span class="o">.</span><span class="n">delete_role</span><span class="p">(</span>
+    <span class="n">RoleName</span> <span class="o">=</span> <span class="s2">&quot;PersonalizeRoleDevLab&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Recsys’20 Feature Engineering Tutorial</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T022961_Amazon_Personalize_Workshop.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Amazon Personalize Workshop</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

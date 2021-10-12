@@ -1,0 +1,74 @@
+%%writefile cardata.csv
+CarName,Size,Convenience,Economical,Speed,Price
+Toyota Agya,4,4,9,6,1.0
+Daihatsu Alya,4,3,9,6,1.1
+Toyota Avanza,6,5,6,6,2.0
+Daihatsu Xenia,6,4,6,6,1.75
+Xpander,7,7,6,7,2.25
+Livina,7,7,6,7,2.1
+Karimun,3,4,10,5,1.2
+Toyota Innova,8,8,5,7,4.0
+Alphard,9,10,4,8,10.0
+Toyota Vios,5,7,9,8,2.5
+Honda City,5,8,7,8,2.7
+Toyota Hiace,10,5,8,6,5.0
+Toyota Fortuner,9,8,5,8,5.0
+Toyota Foxy,9,9,5,7,5.5
+Toyota Corolla Altis,5,9,7,9,6.0
+Suzuki Ertiga,7,7,7,7,2.3
+Suzuki Carry,7,3,9,5,0.8
+
+import numpy as np
+import pandas as pd 
+
+from scipy.spatial import distance
+from sklearn.preprocessing import MinMaxScaler
+
+df = pd.read_csv('cardata.csv')
+df
+
+df.describe().round(2)
+
+scaler = MinMaxScaler()
+data = scaler.fit_transform(df[['Size','Convenience', 'Economical','Speed','Price']].values)
+pd.DataFrame(data).describe().round(2)
+
+def calc_distance(a,b, method='euclidean'):
+  if method=='euclidean':
+    return distance.euclidean(a,b)
+  elif method=='minkowski':
+    return distance.minkowski(a,b)
+  elif method=='cityblock':
+    return distance.cityblock(a,b)
+  elif method=='cosine':
+    return distance.cosine(a,b)
+  elif method=='hamming':
+    return distance.hamming(a,b)
+
+def _recommend(user_vector, method='euclidean', topk=3):
+  # convert to array
+  uvec = np.array(user_vector).reshape(1,-1)
+  # normalize
+  uvec = scaler.transform(uvec)
+  # distance
+  distances = [calc_distance(uvec, dfvec, method=method) for dfvec in data]
+  distances = np.array(distances).flatten()
+  # tok-k items
+  idx = np.argsort(distances)[:topk]
+  recs = df.iloc[idx,:].set_index('CarName')
+  # return the results
+  return recs
+
+def recommend_car():
+  uvec = []
+  uvec.append(int(input("Car size preference (3-10, default=5): ") or "5"))
+  uvec.append(int(input("Convenience level (3-10, default=6): ") or "6"))
+  uvec.append(int(input("Economical (4-10, default=7): ") or "7"))
+  uvec.append(int(input("Speed(5-9, default=7): ") or "7"))
+  uvec.append(int(input("Price (1-10, default=3): ") or "3"))
+  topk = int(input("How many recommendations you would like to get? (default=3): ") or "3")
+  method = input("Which distance algorithm you would like to use? (euclidean/ minkowski/ cityblock/ cosine/ hamming, default=euclidean): ") or "euclidean"
+  print(f"\n\n Your Top {topk} recommendations are:\n\n")
+  return _recommend(uvec, method=method, topk=topk)
+
+recommend_car()

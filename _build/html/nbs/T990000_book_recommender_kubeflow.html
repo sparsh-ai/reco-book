@@ -1,0 +1,1505 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Books recommendations with Kubeflow Pipelines on Scaleway Kapsule &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Build a Kubeflow Pipeline" href="T990000_build_a_kubeflow_pipeline.html" />
+    <link rel="prev" title="Book-Crossing Recommendation System" href="T990000_book_crossing_surprise_svd_nmf.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990000_book_recommender_kubeflow.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990000_book_recommender_kubeflow.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#additional-package-installation">
+   Additional Package Installation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#notebook-setup">
+   Notebook Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pipeline-component-download-the-dataset">
+   Pipeline Component : Download the dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pipeline-component-prepare-the-dataset">
+   Pipeline Component : Prepare the Dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pipeline-component-fit-a-model-with-scikit-learn-and-make-one-book-prediction">
+   Pipeline Component :  Fit a model with SciKit-Learn and make one book prediction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pipeline-component-fit-a-model-with-pytorch-gpu-and-make-one-book-prediction">
+   Pipeline Component : Fit a model with Pytorch (GPU) and make one book prediction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#build-the-pipeline">
+   Build the Pipeline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#execute-the-pipeline">
+   Execute the Pipeline
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compare-some-results">
+   Compare some results:
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="books-recommendations-with-kubeflow-pipelines-on-scaleway-kapsule">
+<h1>Books recommendations with Kubeflow Pipelines on Scaleway Kapsule<a class="headerlink" href="#books-recommendations-with-kubeflow-pipelines-on-scaleway-kapsule" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>A simple book recommender system using Kubeflow pipeline.</p>
+</div></blockquote>
+<p><strong>Code examples based on “<a class="reference external" href="https://blog.scaleway.com/2020/cpu-or-gpu-for-your-recommendation-engine/">CPU or GPU for your recommendation engine ?</a>” blogpost by Olga Petrova</strong></p>
+<p>Kubeflow Pipelines notebook, by Fabien Da Silva</p>
+<p><strong>Goal</strong>: In this example we are going to learn how to:</p>
+<ul class="simple">
+<li><p>Create a Pipeline with 6 tasks</p>
+<ul>
+<li><p>Download the Dataset</p></li>
+<li><p>Prepare the Dataset</p></li>
+<li><p>Train a model using Sci-kit Learn (NearestNeighbors)</p></li>
+<li><p>Train a model using Pytorch (GPU)</p></li>
+</ul>
+</li>
+<li><p>Use a Persistent Block Storage Volume with Kubeflow Pipelines via a NFS server (store/share datasets, models, ..)</p></li>
+<li><p>Use GPU efficiently thanks to the Kubeflow engine and Kapsule Auto Scaling</p></li>
+</ul>
+<p><strong>Prerequisites to run this notebook</strong>:</p>
+<ul class="simple">
+<li><p>Have a Kapsule cluster (At least, with one or more GP1-M instance. See Installation guide.</p></li>
+<li><p>Kubeflow is deployed on tke Kapsule cluster</p></li>
+<li><p>A GPU node pool is available (you can use Auto-Scaling from 0 to n nodes)</p></li>
+<li><p>A NFS server is deployed in the Kubeflow Namespace. This will provide a persistent storage on Block Storage, and that can be accessed simultaneously by several Kubernetes Pods (several pipelines)</p></li>
+</ul>
+<p>A Scaleway tutorial will be available shortly to describe the installation process (By the time, a preliminary document is provided with this code)</p>
+<p><strong>Usefull documentation</strong>:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://kubeflow.org">Kubeflow home page</a></p></li>
+<li><p><a class="reference external" href="https://github.com/kubeflow/examples">Kubeflow examples</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/kubernetes-kapsule">Scaleway Kapsule Product page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/docs/get-started-with-scaleway-kubernetes-kapsule/">Kapsule documentation</a></p></li>
+<li><p><a class="reference external" href="https://kubernetes.io/">Kubernetes home page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/gpu-instances/">Scaleway GPU Instances Product page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/container-registry/">Scaleway Container Registry Product Page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/object-storage/">Scaleway Object Storage Product page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/docs/object-storage-feature/">Scaleway Object Storage documentation</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/block-storage/">Scaleway Block Storage Product page</a></p></li>
+<li><p><a class="reference external" href="https://www.scaleway.com/en/docs/block-storage-overview/">Scaleway Block Storage documentation</a></p></li>
+<li><p><a class="reference external" href="https://console.scaleway.com/kapsule/">Access to the Scaleway Console</a></p></li>
+<li><p><a class="reference external" href="http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login">Access to the Kubernetes Console</a></p></li>
+<li><p><a class="reference external" href="http://localhost:8080/">Access to the Kubeflow Dashboard</a></p></li>
+</ul>
+<p><strong>Kubeflow Pipeline : Main concepts</strong></p>
+<ul class="simple">
+<li><p>A pipeline is defined in a Python function, which is then compiled in a DSL format for execution.</p></li>
+<li><p>A pipeline is composed of tasks (components), either defined in :</p>
+<ul>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">dsl.ContainerOp()</span></code> object, which execute a Docker Container containing the code to run for this task (Packaged in a docker image, this pipeline component is easily shareable and reusable)</p></li>
+<li><p>or in a python function that will be converted on the fly into a Docker Container, thanks to the  <code class="docutils literal notranslate"><span class="pre">kfp.components.func_to_container_op()</span></code> API function (Great to prototype pipelines)</p></li>
+</ul>
+</li>
+<li><p>Building a pipeline, is as simple as using some task’s output as input from other tasks</p></li>
+<li><p>In order to be able to link the tasks in the pipelines, Kubeflow Pipelines needs to know the type of the input and output parameters of the python functions implementing the tasks</p></li>
+<li><p>Tasks can be specified to access a volume storage, and/or to use GPU ressources</p></li>
+<li><p>In order to execute the Docker Container running the pipeline task/components, the Docker images must contain all the python libraries requied by the code</p>
+<ul>
+<li><p>When converting a python function into a ContainerOp via <code class="docutils literal notranslate"><span class="pre">kfp.components.func_to_container_op()</span></code>, the python imports must be included in the body of this Python function</p></li>
+</ul>
+</li>
+</ul>
+<div class="section" id="additional-package-installation">
+<h2>Additional Package Installation<a class="headerlink" href="#additional-package-installation" title="Permalink to this headline">¶</a></h2>
+<p>(You only need to execute the following 2 cells the first time you setup your Jupyter Server environment)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install kfp-server-api==&#39;0.5.0&#39; --user
+!pip install kfp --upgrade
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Need to restart the Jupyter Kernel</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">_exit</span><span class="p">(</span><span class="mi">00</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="notebook-setup">
+<h2>Notebook Setup<a class="headerlink" href="#notebook-setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># -------------------------------------</span>
+<span class="c1">#    Notebook configuration &#39;magic&#39;</span>
+<span class="c1"># -------------------------------------</span>
+<span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
+<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;retina&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># -------------------------------------</span>
+<span class="c1">#     Import Kubeflow Pipelines SDK </span>
+<span class="c1"># -------------------------------------</span>
+<span class="kn">import</span> <span class="nn">kfp</span>
+<span class="kn">import</span> <span class="nn">kfp.dsl</span> <span class="k">as</span> <span class="nn">dsl</span>
+<span class="kn">import</span> <span class="nn">kfp.notebook</span>
+<span class="kn">import</span> <span class="nn">kfp.components</span> <span class="k">as</span> <span class="nn">comp</span>
+<span class="kn">from</span> <span class="nn">kfp</span> <span class="kn">import</span> <span class="n">compiler</span>
+<span class="kn">from</span> <span class="nn">kfp.components</span> <span class="kn">import</span> <span class="n">func_to_container_op</span><span class="p">,</span> <span class="n">InputPath</span><span class="p">,</span> <span class="n">OutputPath</span>
+<span class="kn">from</span> <span class="nn">kubernetes</span> <span class="kn">import</span> <span class="n">client</span> <span class="k">as</span> <span class="n">k8s_client</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pipeline-component-download-the-dataset">
+<h2>Pipeline Component : Download the dataset<a class="headerlink" href="#pipeline-component-download-the-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this pipeline task, we will:</p>
+<ul class="simple">
+<li><p>Create a python function to download the dataset</p></li>
+<li><p>Have Kubeflow to convert the python function into a ContainerOp (basically this package the python function into a Docker Image, here based on the Tensorflow Docker image)</p></li>
+</ul>
+<p>In this example the dataset has been collected from <a class="reference external" href="http://BookCrossing.com">BookCrossing.com</a>, a website dedicated to the practice of “releasing books into the wild” - leaving them in public places to be picked up and read by other members of the community.</p>
+<p>The downloaded datasets will be stored on the NFS Server (stored on peristed Block Storage volume created during the Kubeflow cluster setup). The Data will be located in the directory <code class="docutils literal notranslate"><span class="pre">/mnt/nfs/data/datasets/</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">download_dataset</span><span class="p">(</span><span class="n">fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extract</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                     <span class="n">cachedir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span> <span class="n">cachesubdir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;datasets&#39;</span><span class="p">)</span><span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">import</span> <span class="nn">os</span>  
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Use Keras.utils to download the dataset archive</span>
+        <span class="n">data_path</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span>
+                          <span class="n">extract</span><span class="o">=</span><span class="n">extract</span><span class="p">,</span>
+                          <span class="n">archive_format</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
+                          <span class="n">cache_dir</span><span class="o">=</span><span class="n">cachedir</span><span class="p">,</span>
+                          <span class="n">cache_subdir</span><span class="o">=</span><span class="n">cachesubdir</span><span class="p">)</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Path location to the dataset is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> contains </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)))</span>
+        
+    <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Failed to download the dataset at url </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">origin</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="c1"># ------------------------------</span>
+    <span class="c1">#     Write the Output of the</span>
+    <span class="c1">#   Kubeflow Pipeline Component</span>
+    <span class="c1"># ------------------------------</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># This works only inside Docker containers</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/output.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    
+    <span class="k">return</span> <span class="n">output_dir</span>
+    
+<span class="c1"># -----------------------------------------</span>
+<span class="c1">#        Convert the Python Function</span>
+<span class="c1">#   into a Kubeflow Pipeline ContainerOp</span>
+<span class="c1"># -----------------------------------------     </span>
+<span class="n">download_op</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">func_to_container_op</span><span class="p">(</span><span class="n">download_dataset</span><span class="p">,</span>
+                                        <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;tensorflow/tensorflow:latest&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pipeline-component-prepare-the-dataset">
+<h2>Pipeline Component : Prepare the Dataset<a class="headerlink" href="#pipeline-component-prepare-the-dataset" title="Permalink to this headline">¶</a></h2>
+<p>In this pipeline task, we will: Clean and prepare the dataset. The output of this task will be store on the NFS server in <code class="docutils literal notranslate"><span class="pre">/mnt/nfs/data/datasets/matrix.pickle</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prepare_dataset</span><span class="p">(</span><span class="n">datadir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading data from&quot;</span><span class="p">,</span> <span class="n">datadir</span><span class="p">)</span>
+    
+    <span class="c1"># Load the books and rating Datasets into a Panda Dataframes</span>
+    <span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">datadir</span><span class="o">+</span><span class="s1">&#39;/BX-Books.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;latin-1&quot;</span><span class="p">)</span>
+    <span class="n">books</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ISBN&#39;</span><span class="p">,</span> <span class="s1">&#39;bookTitle&#39;</span><span class="p">,</span> <span class="s1">&#39;bookAuthor&#39;</span><span class="p">,</span> <span class="s1">&#39;yearOfPublication&#39;</span><span class="p">,</span> <span class="s1">&#39;publisher&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlS&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlM&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlL&#39;</span><span class="p">]</span>
+
+    <span class="n">ratings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">datadir</span><span class="o">+</span><span class="s1">&#39;/BX-Book-Ratings.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;latin-1&quot;</span><span class="p">)</span>
+    <span class="n">ratings</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;userID&#39;</span><span class="p">,</span> <span class="s1">&#39;ISBN&#39;</span><span class="p">,</span> <span class="s1">&#39;bookRating&#39;</span><span class="p">]</span>
+    
+    <span class="c1"># Keep only Ratings above 5:</span>
+    <span class="n">ratings</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">bookRating</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">]</span>
+
+    <span class="c1"># Drop the columns that we are not going to use</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;yearOfPublication&#39;</span><span class="p">,</span> <span class="s1">&#39;publisher&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlS&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlM&#39;</span><span class="p">,</span> <span class="s1">&#39;imageUrlL&#39;</span><span class="p">]</span>
+    <span class="n">books</span> <span class="o">=</span> <span class="n">books</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">books</span> <span class="o">=</span> <span class="n">books</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;ISBN&#39;</span><span class="p">,</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">)</span>
+    <span class="n">books</span> <span class="o">=</span> <span class="n">books</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;ISBN&#39;</span><span class="p">,</span> <span class="n">verify_integrity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    
+    <span class="c1"># Keep only those books, that have at least 2 ratings:</span>
+    <span class="n">ratings_count</span> <span class="o">=</span> <span class="n">ratings</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;ISBN&#39;</span><span class="p">)[</span><span class="s1">&#39;bookRating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bookRating&#39;</span><span class="p">:</span><span class="s1">&#39;ratingCount&#39;</span><span class="p">})</span>
+
+    <span class="n">ratings</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ratings</span><span class="p">,</span> <span class="n">ratings_count</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;ISBN&#39;</span><span class="p">)</span>
+    <span class="n">ratings</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">[</span><span class="n">ratings</span><span class="o">.</span><span class="n">ratingCount</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">ratings</span> <span class="o">=</span> <span class="n">ratings</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;ratingCount&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Rating shape&quot;</span><span class="p">,</span> <span class="n">ratings</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">ratings</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;ISBN&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;userID&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;bookRating&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time it took to pivot the ratings table: &#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+    
+    <span class="c1"># Save Pandas dataframe</span>
+    <span class="n">output</span><span class="o">=</span><span class="n">datadir</span><span class="o">+</span><span class="s1">&#39;/matrix.pickle&#39;</span>
+    <span class="n">matrix</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    
+    <span class="c1"># ------------------------------</span>
+    <span class="c1">#     Write the Output of the</span>
+    <span class="c1">#   Kubeflow Pipeline Component</span>
+    <span class="c1"># ------------------------------</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># This works only inside Docker containers</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/output.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    
+    <span class="k">return</span> <span class="n">output</span>
+    
+    
+<span class="c1"># -----------------------------------------</span>
+<span class="c1">#        Convert the Python Function</span>
+<span class="c1">#   into a Kubeflow Pipeline ContainerOp</span>
+<span class="c1"># -----------------------------------------    </span>
+<span class="n">prepare_op</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">func_to_container_op</span><span class="p">(</span><span class="n">prepare_dataset</span><span class="p">,</span>
+                                              <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;tensorflow/tensorflow:latest&#39;</span><span class="p">,</span>
+                                              <span class="n">packages_to_install</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pandas&#39;</span><span class="p">])</span>  
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pipeline-component-fit-a-model-with-scikit-learn-and-make-one-book-prediction">
+<h2>Pipeline Component :  Fit a model with SciKit-Learn and make one book prediction<a class="headerlink" href="#pipeline-component-fit-a-model-with-scikit-learn-and-make-one-book-prediction" title="Permalink to this headline">¶</a></h2>
+<p>In this pipeline task, we will fit a ScikitLearn NearestNeighbors model as described in Olga’s Petrova blogpost “<a class="reference external" href="https://blog.scaleway.com/2020/cpu-or-gpu-for-your-recommendation-engine/">CPU or GPU for your recommendation engine ?</a>”. We will also make a few predictions (using hardcoded input features), and monitor the execution time for inference, here on CPU (Scaleway GP1-M instance)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recommender_scikit</span><span class="p">(</span><span class="n">picklefile</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">dump</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading processed dataset dataframe pickle from&quot;</span><span class="p">,</span> <span class="n">picklefile</span><span class="p">)</span>
+    
+    <span class="c1"># Reload Processed dataset in a Pandas DataFrame</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">picklefile</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+    <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+
+    <span class="c1"># Fit the model</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">book_matrix</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">recommender</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">metric</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;brute&#39;</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">book_matrix</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to fit the NearestNeighbors model </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+    
+    <span class="c1"># Compute 3 Book Recommendations inference and monitor the execution time:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">recommender</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;059035342X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 059035342X using the CSR matrix: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">recommender</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;0439064872&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 0439064872 using the CSR matrix: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">recommender</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;0425189058&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 0425189058 using the CSR matrix: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+
+
+    <span class="c1"># Save the model</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">picklefile</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">=</span><span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;/scikit-nearestneighbors.joblib&#39;</span>
+    <span class="n">dump</span><span class="p">(</span><span class="n">recommender</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> 
+    
+    <span class="c1"># ------------------------------</span>
+    <span class="c1">#     Write the Output of the</span>
+    <span class="c1">#   Kubeflow Pipeline Component</span>
+    <span class="c1"># ------------------------------</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># This works only inside Docker containers</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/output.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="c1"># -----------------------------------------</span>
+<span class="c1">#        Convert the Python Function</span>
+<span class="c1">#   into a Kubeflow Pipeline ContainerOp</span>
+<span class="c1"># -----------------------------------------    </span>
+<span class="n">recommender_scikit_op</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">func_to_container_op</span><span class="p">(</span><span class="n">recommender_scikit</span><span class="p">,</span>
+                                              <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;tensorflow/tensorflow:latest&#39;</span><span class="p">,</span>
+                                              <span class="n">packages_to_install</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pandas&#39;</span><span class="p">,</span> <span class="s1">&#39;joblib&#39;</span><span class="p">,</span><span class="s1">&#39;scikit-learn&#39;</span><span class="p">])</span>  
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pipeline-component-fit-a-model-with-pytorch-gpu-and-make-one-book-prediction">
+<h2>Pipeline Component : Fit a model with Pytorch (GPU) and make one book prediction<a class="headerlink" href="#pipeline-component-fit-a-model-with-pytorch-gpu-and-make-one-book-prediction" title="Permalink to this headline">¶</a></h2>
+<p>In this pipeline task, we will fit a NearestNeighbors model, but this time using Pytorch which runs on GPU, as described in Olga’s Petrova blogpost “<a class="reference external" href="https://blog.scaleway.com/2020/cpu-or-gpu-for-your-recommendation-engine/">CPU or GPU for your recommendation engine ?</a>”. We will also make a few predictions (using hardcoded input features), and monitor the execution time for inference, here on GPU (Scaleway Render-S instance with P100)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recommender_pytorch</span><span class="p">(</span><span class="n">picklefile</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span><span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">torch</span>
+    
+    <span class="c1"># Reload Processed dataset in a Pandas DataFrame</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_pickle</span><span class="p">(</span><span class="n">picklefile</span><span class="p">)</span>
+
+    <span class="c1"># In PyTorch, you need to explicitely specify when you want an </span>
+    <span class="c1"># operation to be carried out on the GPU. </span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Running on device: &#39;</span><span class="p">,</span> <span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># Now we are going to simply append .to(device) to all of our torch </span>
+    <span class="c1"># tensors and modules, e.g.:</span>
+    <span class="n">cos_sim</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CosineSimilarity</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># We start by transferring our recommendation matrix to the GPU:</span>
+    <span class="n">torch_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># Compute 3 Book Recommendations inference and monitor the execution time:</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;059035342X&#39;</span><span class="p">)</span>
+    <span class="n">HPtensor</span> <span class="o">=</span> <span class="n">torch_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Now we can compute the cosine similarities:</span>
+    <span class="n">similarities</span> <span class="o">=</span> <span class="n">cos_sim</span><span class="p">(</span><span class="n">HPtensor</span><span class="p">,</span> <span class="n">torch_matrix</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>   
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 059035342X using PyTorch: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;0439064872&#39;</span><span class="p">)</span>
+    <span class="n">HPtensor</span> <span class="o">=</span> <span class="n">torch_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Now we can compute the cosine similarities:</span>
+    <span class="n">similarities</span> <span class="o">=</span> <span class="n">cos_sim</span><span class="p">(</span><span class="n">HPtensor</span><span class="p">,</span> <span class="n">torch_matrix</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 0439064872 using PyTorch: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;----------------------------------------&quot;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_loc</span><span class="p">(</span><span class="s1">&#39;0425189058&#39;</span><span class="p">)</span>
+    <span class="n">HPtensor</span> <span class="o">=</span> <span class="n">torch_matrix</span><span class="p">[</span><span class="n">ind</span><span class="p">,:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Now we can compute the cosine similarities:</span>
+    <span class="n">similarities</span> <span class="o">=</span> <span class="n">cos_sim</span><span class="p">(</span><span class="n">HPtensor</span><span class="p">,</span> <span class="n">torch_matrix</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">nearestBooks</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time to make a recommendation for ISBN 0425189058 using PyTorch: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+    
+    <span class="c1"># Save the model</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">picklefile</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">+</span> <span class="s1">&#39;/recommender.pt&#39;</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">cos_sim</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">output</span><span class="p">)</span>
+    
+    <span class="c1"># ------------------------------</span>
+    <span class="c1">#     Write the Output of the</span>
+    <span class="c1">#   Kubeflow Pipeline Component</span>
+    <span class="c1"># ------------------------------</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># This works only inside Docker containers</span>
+      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/output.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="c1"># -----------------------------------------</span>
+<span class="c1">#        Convert the Python Function</span>
+<span class="c1">#   into a Kubeflow Pipeline ContainerOp</span>
+<span class="c1"># -----------------------------------------    </span>
+<span class="n">recommender_pytorch_op</span> <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">func_to_container_op</span><span class="p">(</span><span class="n">recommender_pytorch</span><span class="p">,</span>
+                                             <span class="n">base_image</span><span class="o">=</span><span class="s1">&#39;pytorch/pytorch:latest&#39;</span><span class="p">,</span>
+                                             <span class="n">packages_to_install</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pandas&#39;</span><span class="p">,</span><span class="s1">&#39;scikit-learn&#39;</span><span class="p">])</span>  
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="build-the-pipeline">
+<h2>Build the Pipeline<a class="headerlink" href="#build-the-pipeline" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dsl</span><span class="o">.</span><span class="n">pipeline</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Book Recommendation Engine &quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A Basic example to build a recommendation engine using Kubeflow Pipelines&quot;</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">book_recommender</span><span class="p">():</span>
+    
+    <span class="k">def</span> <span class="nf">mount_nfs_helper</span><span class="p">(</span><span class="n">container_op</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Helper Function to mount a NFS Volume to the ContainerOp task&#39;&#39;&#39;</span>
+        <span class="c1"># NFS PVC details</span>
+        <span class="n">claim_name</span><span class="o">=</span><span class="s1">&#39;nfs&#39;</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;workdir&#39;</span>
+        <span class="n">mount_path</span><span class="o">=</span><span class="s1">&#39;/mnt/nfs&#39;</span>
+
+        <span class="c1"># Add andd Mount the NFS volume to the ContainerOp</span>
+        <span class="n">nfs_pvc</span> <span class="o">=</span> <span class="n">k8s_client</span><span class="o">.</span><span class="n">V1PersistentVolumeClaimVolumeSource</span><span class="p">(</span><span class="n">claim_name</span><span class="o">=</span><span class="n">claim_name</span><span class="p">)</span>
+        <span class="n">container_op</span><span class="o">.</span><span class="n">add_volume</span><span class="p">(</span><span class="n">k8s_client</span><span class="o">.</span><span class="n">V1Volume</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                                              <span class="n">persistent_volume_claim</span><span class="o">=</span><span class="n">nfs_pvc</span><span class="p">))</span>
+        <span class="n">container_op</span><span class="o">.</span><span class="n">add_volume_mount</span><span class="p">(</span><span class="n">k8s_client</span><span class="o">.</span><span class="n">V1VolumeMount</span><span class="p">(</span><span class="n">mount_path</span><span class="o">=</span><span class="n">mount_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">container_op</span>
+    
+    
+    
+    <span class="c1"># Pipeline&#39;s task 1 : Download dataset</span>
+    <span class="n">download_task</span> <span class="o">=</span> <span class="n">download_op</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s2">&quot;BX-CSV-Dump.zip&quot;</span><span class="p">,</span> 
+                                <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;http://www2.informatik.uni-freiburg.de/~cziegler/BX/BX-CSV-Dump.zip&quot;</span><span class="p">,</span>
+                                <span class="n">cachedir</span><span class="o">=</span><span class="s2">&quot;/mnt/nfs/data&quot;</span><span class="p">)</span>
+    <span class="n">download_task</span> <span class="o">=</span> <span class="n">mount_nfs_helper</span><span class="p">(</span><span class="n">download_task</span><span class="p">)</span>
+ 
+    <span class="c1"># Pipeline&#39;s task 2 : Prepare the Dataset</span>
+    <span class="n">prepare_task</span> <span class="o">=</span> <span class="n">prepare_op</span><span class="p">(</span><span class="n">datadir</span><span class="o">=</span><span class="n">download_task</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">prepare_task</span> <span class="o">=</span> <span class="n">mount_nfs_helper</span><span class="p">(</span><span class="n">prepare_task</span><span class="p">)</span>
+
+    <span class="c1"># Pipeline&#39;s task 3 : Train the Scikit-learn NearestNeighbors model</span>
+    <span class="n">recommender_scikit_task</span> <span class="o">=</span> <span class="n">recommender_scikit_op</span><span class="p">(</span><span class="n">picklefile</span><span class="o">=</span><span class="n">prepare_task</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">recommender_scikit_task</span> <span class="o">=</span> <span class="n">mount_nfs_helper</span><span class="p">(</span><span class="n">recommender_scikit_task</span><span class="p">)</span>
+ 
+    <span class="c1"># Pipeline&#39;s task 3 : Fit the model and Prediction for one isbn with Pytorch on GPU (NearestNeighbors)</span>
+    <span class="n">recommender_pytorch_task</span> <span class="o">=</span> <span class="n">recommender_pytorch_op</span><span class="p">(</span><span class="n">picklefile</span><span class="o">=</span><span class="n">prepare_task</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">recommender_pytorch_task</span> <span class="o">=</span> <span class="n">mount_nfs_helper</span><span class="p">(</span><span class="n">recommender_pytorch_task</span><span class="p">)</span>
+    <span class="n">recommender_pytorch_task</span><span class="o">.</span><span class="n">set_gpu_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Pipeline&#39;s task 4 : The goal of this task is to trigger a new GPU node to be spawned in the cluster</span>
+    <span class="c1"># It trains the Scikit-learn NearestNeighbors model on a Render-S </span>
+    <span class="c1"># (slightly better execution time than on GTM-1 because the CPU on the Render-S is a higher end model)</span>
+    <span class="n">recommender_scikit_task2</span> <span class="o">=</span> <span class="n">recommender_scikit_op</span><span class="p">(</span><span class="n">picklefile</span><span class="o">=</span><span class="n">prepare_task</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="n">recommender_scikit_task2</span> <span class="o">=</span> <span class="n">mount_nfs_helper</span><span class="p">(</span><span class="n">recommender_scikit_task2</span><span class="p">)</span>
+    <span class="n">recommender_scikit_task2</span><span class="o">.</span><span class="n">set_gpu_limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="execute-the-pipeline">
+<h2>Execute the Pipeline<a class="headerlink" href="#execute-the-pipeline" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#--------------------------------------------------</span>
+<span class="c1">#              Compile the pipeline </span>
+<span class="c1">#        (composed here of 3 tasks)</span>
+<span class="c1">#--------------------------------------------------</span>
+<span class="n">PACKAGE_NAME</span> <span class="o">=</span> <span class="n">book_recommender</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;.yaml&#39;</span>
+<span class="n">kfp</span><span class="o">.</span><span class="n">compiler</span><span class="o">.</span><span class="n">Compiler</span><span class="p">()</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pipeline_func</span><span class="o">=</span><span class="n">book_recommender</span><span class="p">,</span> 
+                                <span class="n">package_path</span><span class="o">=</span><span class="n">PACKAGE_NAME</span><span class="p">)</span>
+
+<span class="c1">#--------------------------------------------------</span>
+<span class="c1">#      Create/Reuse an Experiment in Kubeflow</span>
+<span class="c1">#--------------------------------------------------</span>
+<span class="n">EXPERIMENT_NAME</span> <span class="o">=</span> <span class="s2">&quot;Tests&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">kfp</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">experiment</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_experiment</span><span class="p">(</span><span class="n">experiment_name</span><span class="o">=</span><span class="n">EXPERIMENT_NAME</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">experiment</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_experiment</span><span class="p">(</span><span class="n">EXPERIMENT_NAME</span><span class="p">)</span>
+
+<span class="c1">#-------------------------------------------------- </span>
+<span class="c1">#             Submit a pipeline run</span>
+<span class="c1">#</span>
+<span class="c1">#    =&gt; This will create a PVC of 20Gi on </span>
+<span class="c1">#          a Block Storage Volume</span>
+<span class="c1">#--------------------------------------------------</span>
+<span class="n">RUN_NAME</span> <span class="o">=</span> <span class="n">book_recommender</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39; run&#39;</span>
+<span class="n">arguments</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">run_result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">run_pipeline</span><span class="p">(</span><span class="n">experiment_id</span> <span class="o">=</span> <span class="n">experiment</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                                 <span class="n">job_name</span> <span class="o">=</span> <span class="n">RUN_NAME</span><span class="p">,</span> 
+                                 <span class="n">pipeline_package_path</span> <span class="o">=</span> <span class="n">PACKAGE_NAME</span><span class="p">,</span>
+                                 <span class="n">params</span> <span class="o">=</span> <span class="n">arguments</span>
+                                <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="compare-some-results">
+<h2>Compare some results:<a class="headerlink" href="#compare-some-results" title="Permalink to this headline">¶</a></h2>
+<p><strong>Scikit-Learn</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">----------------------------------------</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">059035342</span><span class="n">X</span> <span class="n">using</span> <span class="n">the</span> <span class="n">CSR</span> <span class="n">matrix</span><span class="p">:</span> <span class="mf">0.023803234100341797</span>
+<span class="o">----------------------------------------</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">0439064872</span> <span class="n">using</span> <span class="n">the</span> <span class="n">CSR</span> <span class="n">matrix</span><span class="p">:</span> <span class="mf">0.016010761260986328</span>
+<span class="o">----------------------------------------</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">0425189058</span> <span class="n">using</span> <span class="n">the</span> <span class="n">CSR</span> <span class="n">matrix</span><span class="p">:</span> <span class="mf">0.008635520935058594</span>
+</pre></div>
+</div>
+<p><strong>Pytorch</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Running</span> <span class="n">on</span> <span class="n">device</span><span class="p">:</span>  <span class="n">cuda</span><span class="p">:</span><span class="mi">0</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">059035342</span><span class="n">X</span> <span class="n">using</span> <span class="n">PyTorch</span><span class="p">:</span> <span class="mf">0.023251771926879883</span>
+<span class="o">----------------------------------------</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">0439064872</span> <span class="n">using</span> <span class="n">PyTorch</span><span class="p">:</span> <span class="mf">0.00032520294189453125</span>
+<span class="o">----------------------------------------</span>
+<span class="n">Time</span> <span class="n">to</span> <span class="n">make</span> <span class="n">a</span> <span class="n">recommendation</span> <span class="k">for</span> <span class="n">ISBN</span> <span class="mi">0425189058</span> <span class="n">using</span> <span class="n">PyTorch</span><span class="p">:</span> <span class="mf">0.0002586841583251953</span>
+</pre></div>
+</div>
+<p><strong>Annex: How to access the data on the PVC ?</strong></p>
+<ul class="simple">
+<li><p>Create a <code class="docutils literal notranslate"><span class="pre">nfs_access.yaml</span></code> file (adjust the <code class="docutils literal notranslate"><span class="pre">claimName</span></code>)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-access
+spec:
+  containers:
+  - name: bash
+    image: bash:latest
+    command: [&quot;/bin/sh&quot;, &quot;-ec&quot;, &quot;while :; do echo &#39;.&#39;; sleep 5 ; done&quot;]
+    volumeMounts:
+    - mountPath: &quot;/mnt/nfs&quot;
+      name: workdir
+  volumes:
+  - name: workdir
+    persistentVolumeClaim:
+      claimName: nfs
+```
+- Create a Pod from this specifications 
+```
+kubectl apply -f nfs_access.yaml -n kubeflow
+```
+- Connect with a shell to this pods (note: there is no prompt on the command line:
+```
+kubectl exec -t -i -n kubeflow nfs-access -- /bin/sh
+# you can explore the /mnt/nfs/data directory from here
+```
+- In a similar manner, you can use the kubectl cp command to copy data from/to the PVC
+</pre></div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990000_book_crossing_surprise_svd_nmf.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Book-Crossing Recommendation System</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990000_build_a_kubeflow_pipeline.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Build a Kubeflow Pipeline</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

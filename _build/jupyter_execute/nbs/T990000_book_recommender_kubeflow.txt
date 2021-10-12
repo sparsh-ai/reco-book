@@ -1,0 +1,361 @@
+!pip install kfp-server-api=='0.5.0' --user
+!pip install kfp --upgrade
+
+# Need to restart the Jupyter Kernel
+import os
+os._exit(00)
+
+# -------------------------------------
+#    Notebook configuration 'magic'
+# -------------------------------------
+%load_ext autoreload
+%autoreload 2
+%matplotlib inline
+%config InlineBackend.figure_format = 'retina'
+
+# -------------------------------------
+#     Import Kubeflow Pipelines SDK 
+# -------------------------------------
+import kfp
+import kfp.dsl as dsl
+import kfp.notebook
+import kfp.components as comp
+from kfp import compiler
+from kfp.components import func_to_container_op, InputPath, OutputPath
+from kubernetes import client as k8s_client
+
+
+def download_dataset(fname: str, origin: str, extract: bool = True,
+                     cachedir: str = "./", cachesubdir: str = 'datasets')-> str:
+    import tensorflow as tf
+    import os  
+    
+    try:
+        # Use Keras.utils to download the dataset archive
+        data_path = tf.keras.utils.get_file(fname, origin,
+                          extract=extract,
+                          archive_format='auto',
+                          cache_dir=cachedir,
+                          cache_subdir=cachesubdir)
+
+        output_dir = os.path.dirname(data_path)
+        print("Path location to the dataset is {}".format(output_dir))
+        print("{} contains {}".format(output_dir, os.listdir(output_dir)))
+        
+    except ConnectionError:
+        print('Failed to download the dataset at url {}'.format(origin))
+        return None
+    
+    # ------------------------------
+    #     Write the Output of the
+    #   Kubeflow Pipeline Component
+    # ------------------------------
+    try:
+      # This works only inside Docker containers
+      with open('/output.txt', 'w') as f:
+        f.write(output_dir)
+
+    except PermissionError:
+        pass
+    
+    return output_dir
+    
+# -----------------------------------------
+#        Convert the Python Function
+#   into a Kubeflow Pipeline ContainerOp
+# -----------------------------------------     
+download_op = comp.func_to_container_op(download_dataset,
+                                        base_image='tensorflow/tensorflow:latest')
+
+
+def prepare_dataset(datadir: str)-> str:
+
+    import pandas as pd
+    import time
+    
+    print("Reading data from", datadir)
+    
+    # Load the books and rating Datasets into a Panda Dataframes
+    books = pd.read_csv(datadir+'/BX-Books.csv', sep=';', error_bad_lines=False, encoding="latin-1")
+    books.columns = ['ISBN', 'bookTitle', 'bookAuthor', 'yearOfPublication', 'publisher', 'imageUrlS', 'imageUrlM', 'imageUrlL']
+
+    ratings = pd.read_csv(datadir+'/BX-Book-Ratings.csv', sep=';', error_bad_lines=False, encoding="latin-1")
+    ratings.columns = ['userID', 'ISBN', 'bookRating']
+    
+    # Keep only Ratings above 5:
+    ratings = ratings[ratings.bookRating > 5]
+
+    # Drop the columns that we are not going to use
+    columns = ['yearOfPublication', 'publisher', 'imageUrlS', 'imageUrlM', 'imageUrlL']
+    books = books.drop(columns, axis=1)
+    books = books.drop_duplicates(subset='ISBN', keep="first")
+    books = books.set_index('ISBN', verify_integrity=True)
+    
+    
+    # Keep only those books, that have at least 2 ratings:
+    ratings_count = ratings.groupby(by='ISBN')['bookRating'].count().reset_index().rename(columns={'bookRating':'ratingCount'})
+
+    ratings = pd.merge(ratings, ratings_count, on='ISBN')
+    ratings = ratings[ratings.ratingCount > 2]
+    ratings = ratings.drop(['ratingCount'], axis=1)
+
+    print("Rating shape", ratings.shape[0])
+    start = time.time()
+    matrix = ratings.pivot(index='ISBN', columns='userID', values='bookRating').fillna(0)
+    end = time.time()
+    print('Time it took to pivot the ratings table: ', end - start)
+    
+    # Save Pandas dataframe
+    output=datadir+'/matrix.pickle'
+    matrix.to_pickle(output)
+    
+    # ------------------------------
+    #     Write the Output of the
+    #   Kubeflow Pipeline Component
+    # ------------------------------
+    try:
+      # This works only inside Docker containers
+      with open('/output.txt', 'w') as f:
+        f.write(output)
+
+    except PermissionError:
+        pass
+    
+    return output
+    
+    
+# -----------------------------------------
+#        Convert the Python Function
+#   into a Kubeflow Pipeline ContainerOp
+# -----------------------------------------    
+prepare_op = comp.func_to_container_op(prepare_dataset,
+                                              base_image='tensorflow/tensorflow:latest',
+                                              packages_to_install=['pandas'])  
+
+def recommender_scikit(picklefile: str)-> str:
+    import pandas as pd
+    import time
+    import os
+    from joblib import dump
+    
+    print("Reading processed dataset dataframe pickle from", picklefile)
+    
+    # Reload Processed dataset in a Pandas DataFrame
+    matrix = pd.read_pickle(picklefile)
+
+    from scipy.sparse import csr_matrix
+    from sklearn.neighbors import NearestNeighbors
+
+    # Fit the model
+    start = time.time()
+    book_matrix = csr_matrix(matrix.values)
+    recommender = NearestNeighbors(metric='cosine', algorithm='brute', n_neighbors=10).fit(book_matrix)
+    print('Time to fit the NearestNeighbors model {}'.format(time.time()-start))
+    
+    # Compute 3 Book Recommendations inference and monitor the execution time:
+    start = time.time()
+    _, nearestBooks = recommender.kneighbors(matrix.loc['059035342X'].values.reshape(1, -1))
+    print("----------------------------------------")
+    print('Time to make a recommendation for ISBN 059035342X using the CSR matrix: {}'.format(time.time()-start))
+
+    print("----------------------------------------")
+    start = time.time()
+    _, nearestBooks = recommender.kneighbors(matrix.loc['0439064872'].values.reshape(1, -1))
+    print('Time to make a recommendation for ISBN 0439064872 using the CSR matrix: {}'.format(time.time()-start))
+    
+    print("----------------------------------------")
+    start = time.time()
+    _, nearestBooks = recommender.kneighbors(matrix.loc['0425189058'].values.reshape(1, -1))
+    print('Time to make a recommendation for ISBN 0425189058 using the CSR matrix: {}'.format(time.time()-start))
+
+
+    # Save the model
+    output_dir = os.path.dirname(picklefile)
+    output=output_dir+'/scikit-nearestneighbors.joblib'
+    dump(recommender, output) 
+    
+    # ------------------------------
+    #     Write the Output of the
+    #   Kubeflow Pipeline Component
+    # ------------------------------
+    try:
+      # This works only inside Docker containers
+      with open('/output.txt', 'w') as f:
+        f.write(output)
+
+    except PermissionError:
+        pass
+
+    return output
+
+# -----------------------------------------
+#        Convert the Python Function
+#   into a Kubeflow Pipeline ContainerOp
+# -----------------------------------------    
+recommender_scikit_op = comp.func_to_container_op(recommender_scikit,
+                                              base_image='tensorflow/tensorflow:latest',
+                                              packages_to_install=['pandas', 'joblib','scikit-learn'])  
+
+def recommender_pytorch(picklefile: str)-> str:
+
+    import pandas as pd
+    import time
+    import os
+    import torch
+    
+    # Reload Processed dataset in a Pandas DataFrame
+    matrix = pd.read_pickle(picklefile)
+
+    # In PyTorch, you need to explicitely specify when you want an 
+    # operation to be carried out on the GPU. 
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print('Running on device: ', device)
+
+    # Now we are going to simply append .to(device) to all of our torch 
+    # tensors and modules, e.g.:
+    cos_sim = torch.nn.CosineSimilarity(dim=1, eps=1e-6).to(device)
+
+    # We start by transferring our recommendation matrix to the GPU:
+    torch_matrix = torch.from_numpy(matrix.values).float().to(device)
+
+    # Compute 3 Book Recommendations inference and monitor the execution time:
+    start = time.time()
+    
+    ind = matrix.index.get_loc('059035342X')
+    HPtensor = torch_matrix[ind,:].reshape(1, -1)
+
+    # Now we can compute the cosine similarities:
+    similarities = cos_sim(HPtensor, torch_matrix)
+    _, nearestBooks = torch.topk(similarities, k=10)   
+    print('Time to make a recommendation for ISBN 059035342X using PyTorch: {}'.format(time.time()-start))
+    
+    print("----------------------------------------")
+    start = time.time()
+    
+    ind = matrix.index.get_loc('0439064872')
+    HPtensor = torch_matrix[ind,:].reshape(1, -1)
+
+    # Now we can compute the cosine similarities:
+    similarities = cos_sim(HPtensor, torch_matrix)
+    _, nearestBooks = torch.topk(similarities, k=10)
+    print('Time to make a recommendation for ISBN 0439064872 using PyTorch: {}'.format(time.time()-start))
+    
+    print("----------------------------------------")
+    start = time.time()
+    
+    ind = matrix.index.get_loc('0425189058')
+    HPtensor = torch_matrix[ind,:].reshape(1, -1)
+
+    # Now we can compute the cosine similarities:
+    similarities = cos_sim(HPtensor, torch_matrix)
+    _, nearestBooks = torch.topk(similarities, k=10)
+    print('Time to make a recommendation for ISBN 0425189058 using PyTorch: {}'.format(time.time()-start))
+    
+    # Save the model
+    output_dir = os.path.dirname(picklefile)
+    output = output_dir + '/recommender.pt'
+    torch.save(cos_sim.state_dict(), output)
+    
+    # ------------------------------
+    #     Write the Output of the
+    #   Kubeflow Pipeline Component
+    # ------------------------------
+    try:
+      # This works only inside Docker containers
+      with open('/output.txt', 'w') as f:
+        f.write(output)
+
+    except PermissionError:
+        pass
+
+    return output
+
+# -----------------------------------------
+#        Convert the Python Function
+#   into a Kubeflow Pipeline ContainerOp
+# -----------------------------------------    
+recommender_pytorch_op = comp.func_to_container_op(recommender_pytorch,
+                                             base_image='pytorch/pytorch:latest',
+                                             packages_to_install=['pandas','scikit-learn'])  
+
+@dsl.pipeline(
+    name="Book Recommendation Engine ",
+    description="A Basic example to build a recommendation engine using Kubeflow Pipelines"
+)
+def book_recommender():
+    
+    def mount_nfs_helper(container_op):
+        ''' Helper Function to mount a NFS Volume to the ContainerOp task'''
+        # NFS PVC details
+        claim_name='nfs'
+        name='workdir'
+        mount_path='/mnt/nfs'
+
+        # Add andd Mount the NFS volume to the ContainerOp
+        nfs_pvc = k8s_client.V1PersistentVolumeClaimVolumeSource(claim_name=claim_name)
+        container_op.add_volume(k8s_client.V1Volume(name=name,
+                                              persistent_volume_claim=nfs_pvc))
+        container_op.add_volume_mount(k8s_client.V1VolumeMount(mount_path=mount_path, name=name))
+        return container_op
+    
+    
+    
+    # Pipeline's task 1 : Download dataset
+    download_task = download_op(fname="BX-CSV-Dump.zip", 
+                                origin="http://www2.informatik.uni-freiburg.de/~cziegler/BX/BX-CSV-Dump.zip",
+                                cachedir="/mnt/nfs/data")
+    download_task = mount_nfs_helper(download_task)
+ 
+    # Pipeline's task 2 : Prepare the Dataset
+    prepare_task = prepare_op(datadir=download_task.output)
+    prepare_task = mount_nfs_helper(prepare_task)
+
+    # Pipeline's task 3 : Train the Scikit-learn NearestNeighbors model
+    recommender_scikit_task = recommender_scikit_op(picklefile=prepare_task.output)
+    recommender_scikit_task = mount_nfs_helper(recommender_scikit_task)
+ 
+    # Pipeline's task 3 : Fit the model and Prediction for one isbn with Pytorch on GPU (NearestNeighbors)
+    recommender_pytorch_task = recommender_pytorch_op(picklefile=prepare_task.output)
+    recommender_pytorch_task = mount_nfs_helper(recommender_pytorch_task)
+    recommender_pytorch_task.set_gpu_limit(1)
+
+    # Pipeline's task 4 : The goal of this task is to trigger a new GPU node to be spawned in the cluster
+    # It trains the Scikit-learn NearestNeighbors model on a Render-S 
+    # (slightly better execution time than on GTM-1 because the CPU on the Render-S is a higher end model)
+    recommender_scikit_task2 = recommender_scikit_op(picklefile=prepare_task.output)
+    recommender_scikit_task2 = mount_nfs_helper(recommender_scikit_task2)
+    recommender_scikit_task2.set_gpu_limit(1)
+
+#--------------------------------------------------
+#              Compile the pipeline 
+#        (composed here of 3 tasks)
+#--------------------------------------------------
+PACKAGE_NAME = book_recommender.__name__ + '.yaml'
+kfp.compiler.Compiler().compile(pipeline_func=book_recommender, 
+                                package_path=PACKAGE_NAME)
+
+#--------------------------------------------------
+#      Create/Reuse an Experiment in Kubeflow
+#--------------------------------------------------
+EXPERIMENT_NAME = "Tests"
+client = kfp.Client()
+try:
+    experiment = client.get_experiment(experiment_name=EXPERIMENT_NAME)
+except:
+    experiment = client.create_experiment(EXPERIMENT_NAME)
+
+#-------------------------------------------------- 
+#             Submit a pipeline run
+#
+#    => This will create a PVC of 20Gi on 
+#          a Block Storage Volume
+#--------------------------------------------------
+RUN_NAME = book_recommender.__name__ + ' run'
+arguments = {}
+
+run_result = client.run_pipeline(experiment_id = experiment.id, 
+                                 job_name = RUN_NAME, 
+                                 pipeline_package_path = PACKAGE_NAME,
+                                 params = arguments
+                                )
+

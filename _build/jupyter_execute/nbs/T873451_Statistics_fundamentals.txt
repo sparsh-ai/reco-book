@@ -1,0 +1,173 @@
+!wget -q --show-progress https://github.com/PacktPublishing/Practical-Data-Science-with-Python/raw/main/Chapter8/data/solar_cell_efficiencies.csv
+
+import pandas as pd
+
+df = pd.read_csv('solar_cell_efficiencies.csv')
+df.describe()
+
+df.hist(bins=40);
+
+df['efficiency'].skew()
+
+df['efficiency'].kurt()
+
+import scipy.stats
+
+scipy.stats.norm.fit(df['efficiency'])
+
+!wget -q --show-progress https://github.com/PacktPublishing/Practical-Data-Science-with-Python/raw/main/Chapter8/test_your_knowledge/data/miso_wind_data.csv
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import weibull_min
+
+df = pd.read_csv('miso_wind_data.csv')
+df.head()
+
+df.describe()
+
+df.info()
+
+df['MWh'] = df['MWh'].astype('float')
+
+sns.histplot(df['MWh'], kde=True);
+
+# this gives us c, loc, and scale
+wb_fit = weibull_min.fit(df['MWh'])
+wb_fit
+
+wb = weibull_min(c=wb_fit[0], loc=wb_fit[1], scale=wb_fit[2])
+x = np.linspace(0, 20000, 1000)
+plt.plot(x, wb.pdf(x))
+plt.show()
+
+wb = weibull_min(c=5, loc=0, scale=10000)
+plt.plot(x, wb.pdf(x))
+plt.show()
+
+params = weibull_min.fit(df['MWh'].values, scale=20000)
+params
+
+wb = weibull_min(c=params[0], loc=params[1], scale=params[2])
+f, ax = plt.subplots()
+# the density=1 argument makes the integral of the histogram equal 1, so it's on the same scale as the PDF
+df['MWh'].hist(density=1, ax=ax, bins=50)
+ax.plot(x, wb.pdf(x))
+plt.show()
+
+means = []
+for i in range(10000):
+    sample = np.random.choice(df['MWh'], 1000, replace=True)
+    means.append(sample.mean())
+
+sns.histplot(means)
+plt.show()
+
+import pandas as pd
+
+solar_data = pd.read_csv('solar_cell_efficiencies.csv')
+
+from scipy.stats import ttest_1samp
+
+print(solar_data['efficiency'].mean())
+ttest_1samp(solar_data['efficiency'], 14, alternative='two-sided')
+
+sample = solar_data['efficiency'].sample(30, random_state=1)
+print(sample.mean())
+ttest_1samp(sample, 14)
+
+from statsmodels.stats.weightstats import ztest
+
+ztest(solar_data['efficiency'], value=14)
+
+ttest_1samp(solar_data['efficiency'], 14, alternative='greater')
+
+ttest_1samp(solar_data['efficiency'], 14, alternative='less')
+
+!wget -q --show-progress https://github.com/PacktPublishing/Practical-Data-Science-with-Python/raw/main/Chapter9/data/ab_sales_data.csv
+
+ab_df = pd.read_csv('ab_sales_data.csv')
+ab_df.head()
+
+ab_df.mean()
+
+ztest(ab_df['a_sale'], ab_df['b_sale'])
+
+ztest(ab_df['a_sale'], ab_df['b_sale'], alternative='smaller')
+
+ztest(ab_df['a_sale'], ab_df['b_sale'], value=-0.01, alternative='smaller')
+
+ztest(ab_df['b_sale'], ab_df['a_sale'], value=0.01, alternative='larger')
+
+!pip install -q bootstrapped
+
+import bootstrapped.bootstrap as bs
+import bootstrapped.compare_functions as bs_compare
+import bootstrapped.stats_functions as bs_stats
+
+bs.bootstrap_ab(test=ab_df['b_sale'].values,
+                ctrl=ab_df['a_sale'].values,
+                stat_func=bs_stats.mean,
+                compare_func=bs_compare.difference,
+                alpha=0.05)
+
+!wget -q --show-progress https://github.com/PacktPublishing/Practical-Data-Science-with-Python/raw/main/Chapter9/data/abc_sales_data.csv
+
+from scipy.stats import f_oneway
+
+abc_df = pd.read_csv('abc_sales_data.csv')
+abc_df.head()
+
+f_oneway(abc_df['a_sale'], abc_df['b_sale'], abc_df['c_sale'])
+
+abc_df.mean()
+
+!pip install -q scikit_posthocs
+
+from scikit_posthocs import posthoc_tukey
+
+melted_abc = abc_df.melt(var_name='groups', value_name='values')
+melted_abc.head()
+
+posthoc_tukey(melted_abc, group_col='groups', val_col='values')
+
+!wget -q --show-progress https://github.com/PacktPublishing/Practical-Data-Science-with-Python/raw/main/Chapter9/test_your_knowledge/data/miso_wind_data.csv
+
+import pandas as pd
+from scikit_posthocs import posthoc_tukey
+
+df = pd.read_csv('miso_wind_data.csv')
+df.head()
+
+df.info()
+
+df['MWh'] = df['MWh'].astype('float')
+df['Market Day'] = pd.to_datetime(df['Market Day'])
+df.set_index('Market Day', inplace=True)
+
+spring = df['3-1-2020': '5-31-2020'][['MWh']]
+summer = df['6-1-2020': '8-31-2020'][['MWh']]
+fall = df['9-1-2020': '11-30-2020'][['MWh']]
+winter = df['12-1-2020':][['MWh']]
+
+spring.columns = ['spring']
+summer.columns = ['summer']
+fall.columns = ['fall']
+winter.columns = ['winter']
+
+spring.reset_index(inplace=True, drop=True)
+summer.reset_index(inplace=True, drop=True)
+fall.reset_index(inplace=True, drop=True)
+winter.reset_index(inplace=True, drop=True)
+
+tukey_df = pd.concat([spring.iloc[:744], summer.iloc[:744], fall.iloc[:744], winter.iloc[:744]], axis=1)
+tukey_df.head()
+
+melted = tukey_df.melt(var_name='groups', value_name='values')
+melted.head()
+
+posthoc_tukey(melted, group_col='groups', val_col='values')
+
+tukey_df.mean()

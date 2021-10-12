@@ -1,0 +1,1185 @@
+import numpy as np
+import torch
+from matplotlib import pyplot as plt
+
+%matplotlib inline
+
+torch.set_printoptions(edgeitems=2, linewidth=75)
+
+t_c = [0.5,  14.0, 15.0, 28.0, 11.0,  8.0,  3.0, -4.0,  6.0, 13.0, 21.0]
+t_u = [35.7, 55.9, 58.2, 81.9, 56.3, 48.9, 33.9, 21.8, 48.4, 60.4, 68.4]
+t_c = torch.tensor(t_c)
+t_u = torch.tensor(t_u)
+
+fig = plt.figure(dpi=80)
+plt.xlabel("Measurement")
+plt.ylabel("Temperature (°Celsius)")
+plt.plot(t_u.numpy(), t_c.numpy(), 'o')
+plt.show()
+
+def model(t_u, w, b):
+    return w * t_u + b
+
+def loss_fn(t_p, t_c):
+    squared_diffs = (t_p - t_c)**2
+    return squared_diffs.mean()
+
+w = torch.ones(())
+b = torch.zeros(())
+
+t_p = model(t_u, w, b)
+t_p
+
+loss = loss_fn(t_p, t_c)
+loss
+
+delta = 0.1
+
+loss_rate_of_change_w = \
+    (loss_fn(model(t_u, w + delta, b), t_c) - 
+     loss_fn(model(t_u, w - delta, b), t_c)) / (2.0 * delta)
+
+learning_rate = 1e-2
+ 
+w = w - learning_rate * loss_rate_of_change_w
+
+loss_rate_of_change_b = \
+    (loss_fn(model(t_u, w, b + delta), t_c) -
+     loss_fn(model(t_u, w, b - delta), t_c)) / (2.0 * delta)
+ 
+b = b - learning_rate * loss_rate_of_change_b
+
+def dloss_fn(t_p, t_c):
+    dsq_diffs = 2 * (t_p - t_c) / t_p.size(0)
+    return dsq_diffs
+
+def dmodel_dw(t_u, w, b):
+    return t_u
+ 
+def dmodel_db(t_u, w, b):
+    return 1.0
+
+def grad_fn(t_u, t_c, t_p, w, b):
+    dloss_dtp = dloss_fn(t_p, t_c)
+    dloss_dw = dloss_dtp * dmodel_dw(t_u, w, b)
+    dloss_db = dloss_dtp * dmodel_db(t_u, w, b)
+    return torch.stack([dloss_dw.sum(), dloss_db.sum()])
+
+def training_loop(n_epochs, learning_rate, params, t_u, t_c,
+                  print_params=True):
+    for epoch in range(1, n_epochs + 1):
+        w, b = params
+
+        t_p = model(t_u, w, b)
+        loss = loss_fn(t_p, t_c)
+        grad = grad_fn(t_u, t_c, t_p, w, b)
+
+        params = params - learning_rate * grad
+
+        if epoch in {1, 2, 3, 10, 11, 99, 100, 4000, 5000}:
+            print('Epoch %d, Loss %f' % (epoch, float(loss)))
+            if print_params:
+                print('    Params:', params)
+                print('    Grad:  ', grad)
+        if epoch in {4, 12, 101}:
+            print('...')
+
+        if not torch.isfinite(loss).all():
+            break
+            
+    return params
+
+training_loop(
+    n_epochs = 100, 
+    learning_rate = 1e-2, 
+    params = torch.tensor([1.0, 0.0]), 
+    t_u = t_u, 
+    t_c = t_c)
+
+training_loop(
+    n_epochs = 100,
+    learning_rate = 1e-4,
+    params = torch.tensor([1.0, 0.0]),
+    t_u = t_u,
+    t_c = t_c)
+
+t_un = 0.1 * t_u
+
+training_loop(
+    n_epochs = 100,
+    learning_rate = 1e-2,
+    params = torch.tensor([1.0, 0.0]),
+    t_u = t_un,
+    t_c = t_c)
+
+params = training_loop(
+    n_epochs = 5000,
+    learning_rate = 1e-2,
+    params = torch.tensor([1.0, 0.0]),
+    t_u = t_un,
+    t_c = t_c,
+    print_params = False)
+
+print('W={} and b={}'.format(params[0].item(), params[1].item()))
+
+t_p = model(t_un, *params)
+
+fig = plt.figure(dpi=80)
+plt.xlabel("Temperature (°Fahrenheit)")
+plt.ylabel("Temperature (°Celsius)")
+plt.plot(t_u.numpy(), t_p.detach().numpy())
+plt.plot(t_u.numpy(), t_c.numpy(), 'o')
+plt.show()
+
+t_c = torch.tensor([0.5, 14.0, 15.0, 28.0, 11.0, 8.0,
+                    3.0, -4.0, 6.0, 13.0, 21.0])
+t_u = torch.tensor([35.7, 55.9, 58.2, 81.9, 56.3, 48.9,
+                    33.9, 21.8, 48.4, 60.4, 68.4])
+
+t_un = 0.1 * t_u
+
+def model(t_u, w, b):
+    return w * t_u + b
+    
+def loss_fn(t_p, t_c):
+    squared_diffs = (t_p - t_c)**2
+    return squared_diffs.mean()
+
+params = torch.tensor([1.0, 0.0], requires_grad=True)
+params.grad
+
+loss = loss_fn(model(t_u, *params), t_c)
+loss.backward()
+
+params.grad
+
+if params.grad is not None:
+    params.grad.zero_()
+
+params.grad
+
+def training_loop(n_epochs, learning_rate, params, t_u, t_c):
+    for epoch in range(1, n_epochs + 1):
+        if params.grad is not None:
+            params.grad.zero_()
+        
+        t_p = model(t_u, *params) 
+        loss = loss_fn(t_p, t_c)
+        loss.backward()
+        
+        with torch.no_grad():
+            params -= learning_rate * params.grad
+
+        if epoch % 500 == 0:
+            print('Epoch %d, Loss %f' % (epoch, float(loss)))
+            
+    return params
+
+training_loop(
+    n_epochs = 5000, 
+    learning_rate = 1e-2, 
+    params = torch.tensor([1.0, 0.0], requires_grad=True),
+    t_u = t_un,
+    t_c = t_c)
+
+import torch.optim as optim
+
+dir(optim)
+
+params = torch.tensor([1.0, 0.0], requires_grad=True)
+learning_rate = 1e-5
+optimizer = optim.SGD([params], lr=learning_rate)
+
+t_p = model(t_u, *params)
+loss = loss_fn(t_p, t_c)
+loss.backward()
+
+optimizer.step()
+
+params
+
+params = torch.tensor([1.0, 0.0], requires_grad=True)
+learning_rate = 1e-2
+optimizer = optim.SGD([params], lr=learning_rate)
+
+t_p = model(t_un, *params)
+loss = loss_fn(t_p, t_c)
+
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
+
+params
+
+def training_loop(n_epochs, optimizer, params, t_u, t_c):
+    for epoch in range(1, n_epochs + 1):
+        t_p = model(t_u, *params) 
+        loss = loss_fn(t_p, t_c)
+        
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 500 == 0:
+            print('Epoch %d, Loss %f' % (epoch, float(loss)))
+            
+    return params
+
+params = torch.tensor([1.0, 0.0], requires_grad=True)
+learning_rate = 1e-2
+optimizer = optim.SGD([params], lr=learning_rate)
+
+training_loop(
+    n_epochs = 5000, 
+    optimizer = optimizer,
+    params = params,
+    t_u = t_un,
+    t_c = t_c)
+
+params = torch.tensor([1.0, 0.0], requires_grad=True)
+learning_rate = 1e-1
+optimizer = optim.Adam([params], lr=learning_rate)
+
+training_loop(
+    n_epochs = 2000, 
+    optimizer = optimizer,
+    params = params,
+    t_u = t_u,
+    t_c = t_c)
+
+t_c = [0.5,  14.0, 15.0, 28.0, 11.0,  8.0,  3.0, -4.0,  6.0, 13.0, 21.0]
+t_u = [35.7, 55.9, 58.2, 81.9, 56.3, 48.9, 33.9, 21.8, 48.4, 60.4, 68.4]
+t_c = torch.tensor(t_c).unsqueeze(1)
+t_u = torch.tensor(t_u).unsqueeze(1)
+
+t_u.shape
+
+n_samples = t_u.shape[0]
+n_val = int(0.2 * n_samples)
+
+shuffled_indices = torch.randperm(n_samples)
+
+train_indices = shuffled_indices[:-n_val]
+val_indices = shuffled_indices[-n_val:]
+
+train_indices, val_indices
+
+t_u_train = t_u[train_indices]
+t_c_train = t_c[train_indices]
+
+t_u_val = t_u[val_indices]
+t_c_val = t_c[val_indices]
+
+t_un_train = 0.1 * t_u_train
+t_un_val = 0.1 * t_u_val
+
+import torch.nn as nn
+
+linear_model = nn.Linear(1, 1)
+linear_model(t_un_val)
+
+linear_model.weight
+
+linear_model.bias
+
+def training_loop(n_epochs, optimizer, model, loss_fn, t_u_train, t_u_val,
+                  t_c_train, t_c_val):
+    for epoch in range(1, n_epochs + 1):
+        t_p_train = model(t_u_train)
+        loss_train = loss_fn(t_p_train, t_c_train)
+
+        t_p_val = model(t_u_val)
+        loss_val = loss_fn(t_p_val, t_c_val)
+        
+        optimizer.zero_grad()
+        loss_train.backward()
+        optimizer.step()
+
+        if epoch == 1 or epoch % 1000 == 0:
+            print(f"Epoch {epoch}, Training loss {loss_train.item():.4f},"
+                  f" Validation loss {loss_val.item():.4f}")
+
+def loss_fn(t_p, t_c):
+    squared_diffs = (t_p - t_c)**2
+    return squared_diffs.mean()
+
+linear_model = nn.Linear(1, 1)
+optimizer = optim.SGD(linear_model.parameters(), lr=1e-2)
+
+training_loop(
+    n_epochs = 3000, 
+    optimizer = optimizer,
+    model = linear_model,
+    loss_fn = loss_fn,
+    t_u_train = t_un_train,
+    t_u_val = t_un_val, 
+    t_c_train = t_c_train,
+    t_c_val = t_c_val)
+
+print()
+print(linear_model.weight)
+print(linear_model.bias)
+
+linear_model = nn.Linear(1, 1)
+optimizer = optim.SGD(linear_model.parameters(), lr=1e-2)
+
+training_loop(
+    n_epochs = 3000, 
+    optimizer = optimizer,
+    model = linear_model,
+    loss_fn = nn.MSELoss(),
+    t_u_train = t_un_train,
+    t_u_val = t_un_val, 
+    t_c_train = t_c_train,
+    t_c_val = t_c_val)
+
+print()
+print(linear_model.weight)
+print(linear_model.bias)
+
+seq_model = nn.Sequential(
+            nn.Linear(1, 13),
+            nn.Tanh(),
+            nn.Linear(13, 1))
+seq_model
+
+[param.shape for param in seq_model.parameters()]
+
+for name, param in seq_model.named_parameters():
+    print(name, param.shape)
+
+from collections import OrderedDict
+ 
+seq_model = nn.Sequential(OrderedDict([
+    ('hidden_linear', nn.Linear(1, 8)),
+    ('hidden_activation', nn.Tanh()),
+    ('output_linear', nn.Linear(8, 1))
+]))
+ 
+seq_model
+
+for name, param in seq_model.named_parameters():
+    print(name, param.shape)
+
+optimizer = optim.SGD(seq_model.parameters(), lr=1e-3) # <1>
+
+training_loop(
+    n_epochs = 5000, 
+    optimizer = optimizer,
+    model = seq_model,
+    loss_fn = nn.MSELoss(),
+    t_u_train = t_un_train,
+    t_u_val = t_un_val, 
+    t_c_train = t_c_train,
+    t_c_val = t_c_val)
+    
+print('output', seq_model(t_un_val))
+print('answer', t_c_val)
+print('hidden', seq_model.hidden_linear.weight.grad)
+
+t_range = torch.arange(20., 90.).unsqueeze(1)
+
+fig = plt.figure(dpi=80)
+plt.xlabel("Fahrenheit")
+plt.ylabel("Celsius")
+plt.plot(t_u.numpy(), t_c.numpy(), 'o')
+plt.plot(t_range.numpy(), seq_model(0.1 * t_range).detach().numpy(), 'c-')
+plt.plot(t_u.numpy(), seq_model(0.1 * t_u).detach().numpy(), 'kx')
+plt.show()
+
+neuron_count = 20
+
+seq_model = nn.Sequential(OrderedDict([
+    ('hidden_linear', nn.Linear(1, neuron_count)),
+    ('hidden_activation', nn.Tanh()),
+    ('output_linear', nn.Linear(neuron_count, 1))
+]))
+
+optimizer = optim.SGD(seq_model.parameters(), lr=1e-4)
+
+training_loop(
+    n_epochs = 5000, 
+    optimizer = optimizer,
+    model = seq_model,
+    loss_fn = nn.MSELoss(),
+    t_u_train = t_un_train,
+    t_u_val = t_un_val, 
+    t_c_train = t_c_train,
+    t_c_val = t_c_val)
+
+t_range = torch.arange(20., 90.).unsqueeze(1)
+
+fig = plt.figure(dpi=80)
+plt.xlabel("Fahrenheit")
+plt.ylabel("Celsius")
+plt.plot(t_u.numpy(), t_c.numpy(), 'o')
+plt.plot(t_range.numpy(), seq_model(0.1 * t_range).detach().numpy(), 'c-')
+plt.plot(t_u.numpy(), seq_model(0.1 * t_u).detach().numpy(), 'kx')
+plt.show()
+
+import torch.nn as nn
+import torch.nn.functional as F
+
+class SimpleNet(nn.Module):
+
+    def __init__(self):
+        super(SimpleNet, self).__init__()
+        self.fc1 = nn.Linear(2048, 256)
+        self.fc2 = nn.Linear(256, 64)
+        self.fc3 = nn.Linear(64,2)
+
+    def forward(self, x):
+        x = x.view(-1, 2048)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = F.softmax(self.fc3(x),dim=1)
+        return x
+
+simplenet = SimpleNet()
+print(simplenet)
+
+input = torch.rand(2048)
+output = simplenet(input)
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+
+%matplotlib inline
+
+# Global Settings
+LEFT_CENTER = (3, 3)
+RIGHT_CENTER = (3, -2)
+
+seed = 1337
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+np.random.seed(seed)
+
+class Perceptron(nn.Module):
+    """ A Perceptron is one Linear layer """
+
+    def __init__(self, input_dim):
+        """
+        Args:
+            input_dim (int): size of the input features
+        """
+        super(Perceptron, self).__init__()
+        self.fc1 = nn.Linear(input_dim, 1)
+
+    def forward(self, x_in):
+        """The forward pass of the MLP
+
+        Args:
+            x_in (torch.Tensor): an input data tensor. 
+                x_in.shape should be (batch, input_dim)
+        Returns:
+            the resulting tensor. tensor.shape should be (batch, 1)
+        """
+        return torch.sigmoid(self.fc1(x_in))
+
+def get_toy_data(batch_size, left_center=LEFT_CENTER, right_center=RIGHT_CENTER):
+    x_data = []
+    y_targets = np.zeros(batch_size)
+    for batch_i in range(batch_size):
+        if np.random.random() > 0.5:
+            x_data.append(np.random.normal(loc=left_center))
+        else:
+            x_data.append(np.random.normal(loc=right_center))
+            y_targets[batch_i] = 1
+    return torch.tensor(x_data, dtype=torch.float32), torch.tensor(y_targets, dtype=torch.float32)
+
+x_data, y_truth = get_toy_data(batch_size=1000)
+
+x_data = x_data.data.numpy()
+y_truth = y_truth.data.numpy()
+
+left_x = []
+right_x = []
+left_colors = []
+right_colors =  []
+
+for x_i, y_true_i in zip(x_data, y_truth):
+    color = 'black'
+
+    if y_true_i == 0:
+        left_x.append(x_i)
+        left_colors.append(color)
+
+    else:
+        right_x.append(x_i)
+        right_colors.append(color)
+
+left_x = np.stack(left_x)
+right_x = np.stack(right_x)
+
+_, ax = plt.subplots(1, 1, figsize=(10,4))
+
+ax.scatter(left_x[:, 0], left_x[:, 1], color=left_colors, marker='*', s=100)
+ax.scatter(right_x[:, 0], right_x[:, 1], facecolor='white', edgecolor=right_colors, marker='o', s=100)
+
+plt.axis('off');
+
+def visualize_results(perceptron, x_data, y_truth, n_samples=1000, ax=None, epoch=None, 
+                      title='', levels=[0.3, 0.4, 0.5], linestyles=['--', '-', '--']):
+    y_pred = perceptron(x_data)
+    y_pred = (y_pred > 0.5).long().data.numpy().astype(np.int32)
+
+    x_data = x_data.data.numpy()
+    y_truth = y_truth.data.numpy().astype(np.int32)
+
+    n_classes = 2
+
+    all_x = [[] for _ in range(n_classes)]
+    all_colors = [[] for _ in range(n_classes)]
+    
+    colors = ['black', 'white']
+    markers = ['o', '*']
+    
+    for x_i, y_pred_i, y_true_i in zip(x_data, y_pred, y_truth):
+        all_x[y_true_i].append(x_i)
+        if y_pred_i == y_true_i:
+            all_colors[y_true_i].append("white")
+        else:
+            all_colors[y_true_i].append("black")
+        #all_colors[y_true_i].append(colors[y_pred_i])
+
+    all_x = [np.stack(x_list) for x_list in all_x]
+
+    if ax is None:
+        _, ax = plt.subplots(1, 1, figsize=(10,10))
+        
+    for x_list, color_list, marker in zip(all_x, all_colors, markers):
+        ax.scatter(x_list[:, 0], x_list[:, 1], edgecolor="black", marker=marker, facecolor=color_list, s=300)
+    
+        
+    xlim = (min([x_list[:,0].min() for x_list in all_x]), 
+            max([x_list[:,0].max() for x_list in all_x]))
+            
+    ylim = (min([x_list[:,1].min() for x_list in all_x]), 
+            max([x_list[:,1].max() for x_list in all_x]))
+            
+    # hyperplane
+    
+    xx = np.linspace(xlim[0], xlim[1], 30)
+    yy = np.linspace(ylim[0], ylim[1], 30)
+    YY, XX = np.meshgrid(yy, xx)
+    xy = np.vstack([XX.ravel(), YY.ravel()]).T
+    
+    Z = perceptron(torch.tensor(xy, dtype=torch.float32)).detach().numpy().reshape(XX.shape)
+    ax.contour(XX, YY, Z, colors='k', levels=levels, linestyles=linestyles)    
+    
+    plt.suptitle(title)
+    
+    if epoch is not None:
+        plt.text(xlim[0], ylim[1], "Epoch = {}".format(str(epoch)))
+
+lr = 0.01
+input_dim = 2
+
+batch_size = 1000
+n_epochs = 12
+n_batches = 5
+
+perceptron = Perceptron(input_dim=input_dim)
+optimizer = optim.Adam(params=perceptron.parameters(), lr=lr)
+bce_loss = nn.BCELoss()
+
+losses = []
+
+x_data_static, y_truth_static = get_toy_data(batch_size)
+fig, ax = plt.subplots(1, 1, figsize=(10,5))
+visualize_results(perceptron, x_data_static, y_truth_static, ax=ax, title='Initial Model State')
+plt.axis('off')
+#plt.savefig('initial.png')
+
+change = 1.0
+last = 10.0
+epsilon = 1e-3
+epoch = 0
+while change > epsilon or epoch < n_epochs or last > 0.3:
+#for epoch in range(n_epochs):
+    for _ in range(n_batches):
+
+        optimizer.zero_grad()
+        x_data, y_target = get_toy_data(batch_size)
+        y_pred = perceptron(x_data).squeeze()
+        loss = bce_loss(y_pred, y_target)
+        loss.backward()
+        optimizer.step()
+        
+        
+        loss_value = loss.item()
+        losses.append(loss_value)
+
+        change = abs(last - loss_value)
+        last = loss_value
+               
+    fig, ax = plt.subplots(1, 1, figsize=(10,5))
+    visualize_results(perceptron, x_data_static, y_truth_static, ax=ax, epoch=epoch, 
+                      title=f"{loss_value}; {change}")
+    plt.axis('off')
+    epoch += 1
+    #plt.savefig('epoch{}_toylearning.png'.format(epoch))
+
+_, axes = plt.subplots(1,2,figsize=(12,4))
+
+axes[0].scatter(left_x[:, 0], left_x[:, 1], facecolor='white',edgecolor='black', marker='o', s=300)
+axes[0].scatter(right_x[:, 0], right_x[:, 1], facecolor='white', edgecolor='black', marker='*', s=300)
+axes[0].axis('off');
+visualize_results(perceptron, x_data_static, y_truth_static, epoch=None, levels=[0.5], ax=axes[1])
+axes[1].axis('off');
+plt.savefig('perceptron_final.png')
+plt.savefig('perceptron_final.pdf')
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+seed = 1337
+
+torch.manual_seed(seed)
+torch.cuda.manual_seed_all(seed)
+
+class MultilayerPerceptron(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        """
+        Args:
+            input_dim (int): the size of the input vectors
+            hidden_dim (int): the output size of the first Linear layer
+            output_dim (int): the output size of the second Linear layer
+        """
+        super(MultilayerPerceptron, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x_in, apply_softmax=False):
+        """The forward pass of the MLP
+        
+        Args:
+            x_in (torch.Tensor): an input data tensor. 
+                x_in.shape should be (batch, input_dim)
+            apply_softmax (bool): a flag for the softmax activation
+                should be false if used with the Cross Entropy losses
+        Returns:
+            the resulting tensor. tensor.shape should be (batch, output_dim)
+        """
+        intermediate = F.relu(self.fc1(x_in))
+        output = self.fc2(intermediate)
+        
+        if apply_softmax:
+            output = F.softmax(output, dim=1)
+        return output
+
+batch_size = 2 # number of samples input at once
+input_dim = 3
+hidden_dim = 100
+output_dim = 4
+
+# Initialize model
+mlp = MultilayerPerceptron(input_dim, hidden_dim, output_dim)
+print(mlp)
+
+def describe(x):
+    print("Type: {}".format(x.type()))
+    print("Shape/size: {}".format(x.shape))
+    print("Values: \n{}".format(x))
+
+x_input = torch.rand(batch_size, input_dim)
+describe(x_input)
+
+y_output = mlp(x_input, apply_softmax=False)
+describe(y_output)
+
+y_output = mlp(x_input, apply_softmax=True)
+describe(y_output)
+
+import time
+
+import torch
+import torchvision
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+import torchvision.transforms as transforms
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+# Define transforms for data preprocessing
+transform = transforms.Compose([
+    transforms.ToTensor()
+])
+
+# Datasets
+trainset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
+testset = torchvision.datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
+
+# Dataloaders to feed the data in batches
+trainloader = torch.utils.data.DataLoader(trainset, batch_size=1000, shuffle=True, num_workers=2)
+testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
+
+print('No. of train images: {}'.format(len(trainset)))
+print('No. of test images: {}'.format(len(testset)))
+print('No. of train batches: {}'.format(len(trainloader)))
+print('No. of test batches: {}'.format(len(testloader)))
+
+class Network(nn.Module):
+    
+    def __init__(self):
+        super(Network, self).__init__()
+    
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5)
+        self.conv2 = nn.Conv2d(in_channels=6, out_channels=12, kernel_size=5)
+
+        self.pool = nn.MaxPool2d(kernel_size = 2, stride = 2)
+
+        self.fc1 = nn.Linear(12 * 4 * 4, 120)
+        self.fc2 = nn.Linear(120, 60)
+        self.fc3 = nn.Linear(60, 10)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.pool(x)
+        
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = self.pool(x)
+        
+        x = x.reshape(-1, 12 * 4 * 4)
+        
+        x = self.fc1(x)
+        x = F.relu(x)
+        
+        x = self.fc2(x)
+        x = F.relu(x)
+        
+        x = self.fc3(x)
+        return x
+
+def find_acc(pred, label):
+    """pixelwise accuracy"""
+    correct = pred.argmax(dim = 1).eq(label)
+    accuracy = correct.to(torch.float32).mean().item() * 100
+    return accuracy
+
+
+def train(network, epoch, criterion, optimizer, trainloader):
+    loss_train = 0
+    acc_train = 0
+    network.train()
+    
+    for step in range(len(trainloader)):
+
+        images , labels = next(iter(trainloader))
+        
+        # move the images and labels to GPU
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        pred = network(images)
+        
+        # clear all the gradients before calculating them
+        optimizer.zero_grad()
+        
+        # find the loss for the current step
+        loss_train_step = criterion(pred , labels)
+        
+        # find accuracy
+        acc_train_step = find_acc(pred, labels)
+        
+        # calculate the gradients
+        loss_train_step.backward()
+        
+        # update the parameters
+        optimizer.step()
+        
+        loss_train += loss_train_step.item()
+        acc_train += acc_train_step  
+            
+        loss_train /= len(trainloader)
+        acc_train /= len(testloader)
+
+        return loss_train, acc_train  
+        
+        
+def validate(network, epoch, criterion, testloader): 
+    loss_valid = 0
+    acc_valid = 0       
+    network.eval()  
+
+    for step in range(len(testloader)):
+
+        images , labels = next(iter(testloader))
+        
+        # move the images and labels to GPU
+        images = images.to(device)
+        labels = labels.to(device)
+        
+        pred = network(images)
+        
+        # clear all the gradients before calculating them
+        optimizer.zero_grad()
+        
+        # find the loss and acc for the current step
+        loss_valid_step = criterion(pred , labels)
+        acc_valid_step = find_acc(pred, labels)
+      
+        loss_valid += loss_valid_step.item()
+        acc_valid += acc_valid_step
+
+        loss_valid /= len(trainloader)
+        acc_valid /= len(testloader)
+
+        return loss_valid, acc_valid
+
+network = Network().to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(network.parameters(), lr=0.005)
+
+num_epochs = 10
+start_time = time.time()
+
+for epoch in range(1, num_epochs+1):
+    
+    loss_train, acc_train = train(network, epoch, criterion, optimizer, trainloader)
+    loss_valid, acc_valid = validate(network, epoch, criterion, testloader)
+    
+    print('Epoch: {}  Train Loss: {:.4f}  Train Acc: {:.4f}  Valid Loss: {:.4f}  Valid Acc: {:.4f}'.format(epoch, loss_train, acc_train, loss_valid, acc_valid))
+
+print("Time Elapsed : {:.4f}s".format(time.time() - start_time))
+
+torch.save(network.state_dict(), "model.h5")
+
+def test_model(model):
+
+    start_time = time.time()
+
+    num_correct = 0
+    accuracy = 0
+
+    with torch.no_grad():
+
+        for batch in testloader:
+
+            images, labels = batch
+            images = images.to(device)
+            labels = labels.to(device)
+
+            total_images = len(testset)
+
+            pred = model(images)
+
+            num_correct_batch = pred.argmax(dim = 1).eq(labels).sum().item()
+
+            accuracy_batch = pred.argmax(dim = 1).eq(labels).float().mean().item()
+
+            num_correct += num_correct_batch
+            accuracy += accuracy_batch
+
+        accuracy /= len(testloader)
+
+    print('Number of test images: {}'.format(total_images))
+    print('Number of correct predictions: {}'.format(num_correct))
+    print('Accuracy: {}'.format(accuracy * 100))
+
+    print("Time Elapsed : {:.4f}s".format(time.time() - start_time))
+    
+# test the trained network    
+test_model(network)    
+
+import numpy as np
+import torch
+import matplotlib.pyplot as plt
+from matplotlib import colors
+plt.rcParams.update({'font.size': 16})
+
+x = torch.rand(20, 5)
+x
+
+input_dim = 1
+output_dim = 1
+
+W = 2 * np.random.rand(output_dim, input_dim) - 1
+b = 2 * np.random.rand(output_dim) - 1
+
+true_model = lambda x: W @ x + b
+
+n_train = 1000
+noise_level = 0.04
+
+# Generate a random set of n_train samples
+X_train = np.random.rand(n_train, input_dim)
+y_train = np.array([true_model(x) for x in X_train])
+
+# Add some noise
+y_train += noise_level * np.random.standard_normal(size=y_train.shape)
+
+if input_dim == output_dim == 1:
+    fig = plt.figure()
+    fig.clf()
+    ax = fig.gca()
+    ax.plot(X_train, y_train, '.')
+    ax.grid(True)
+    ax.set_xlabel('X_train')
+    ax.set_ylabel('y_train')
+
+class VectorialDataset(torch.utils.data.Dataset):
+    def __init__(self, input_data, output_data):
+        super(VectorialDataset, self).__init__()
+        self.input_data = torch.tensor(input_data.astype('f'))
+        self.output_data = torch.tensor(output_data.astype('f'))
+        
+    def __len__(self):
+        return self.input_data.shape[0]
+    
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+        sample = (self.input_data[idx, :], 
+                  self.output_data[idx, :])  
+        return sample 
+
+training_set = VectorialDataset(input_data=X_train, output_data=y_train)
+training_set[10:12]
+
+train_loader = torch.utils.data.DataLoader(training_set, 
+                                           batch_size=120, 
+                                           shuffle=True)
+
+import torch.nn as nn
+import torch
+
+
+class LinearModel(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(LinearModel, self).__init__()
+
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+
+        self.linear = nn.Linear(self.input_dim, self.output_dim, bias=True)
+
+    def forward(self, x):
+        out = self.linear(x)
+        return out
+    
+    def reset(self):
+        self.linear.reset_parameters()
+
+model = LinearModel(input_dim, output_dim)
+model
+
+list(model.parameters())
+
+model.linear.weight
+
+model.linear.bias
+
+x = torch.randn(5, input_dim)
+model.forward(x)
+
+[model.linear.weight @ xx + model.linear.bias for xx in x]
+
+if input_dim == output_dim == 1:
+    fig = plt.figure()
+    fig.clf()
+    ax = fig.gca()
+    ax.plot(training_set.input_data, training_set.output_data, '.')
+    ax.plot(training_set.input_data, model.forward(training_set.input_data).detach().numpy(), '.')
+    ax.grid(True)
+    ax.set_xlabel('X_train')
+    ax.legend(['y_train', 'model(X_train)']) 
+
+import torch.nn as nn
+
+loss_fun = nn.MSELoss(reduction='mean')
+x = torch.tensor(np.array([1, 2, 1]).astype('f'))
+z = torch.tensor(np.array([0, 0, 0]).astype('f'))
+loss_fun(x, z)
+
+if input_dim == output_dim == 1:
+
+    state_dict = model.state_dict()
+
+    ww, bb = np.meshgrid(np.linspace(-2, 2, 30), np.linspace(-2, 2, 30))
+
+    loss_values = 0 * ww
+    for i in range(ww.shape[0]):
+        for j in range(ww.shape[1]):
+            state_dict['linear.weight'] = torch.tensor([[ww[i, j]]])
+            state_dict['linear.bias'] = torch.tensor([bb[i, j]])
+            model.load_state_dict(state_dict)
+            loss_values[i, j] = loss_fun(model.forward(training_set.input_data),  training_set.output_data)
+
+    fig = plt.figure(figsize=(10, 8))
+    fig.clf()
+    ax = fig.gca()
+    levels = np.logspace(np.log(np.min(loss_values)), np.log(np.max(loss_values)), 20)
+    c=ax.contourf(ww, bb, loss_values, levels=levels, norm=colors.LogNorm())
+    plt.colorbar(c)
+    ax.plot(W[0], b, 'r*', markersize=10)
+    ax.set_ylabel('bias')
+    ax.set_xlabel('weight')
+    ax.legend(['(W, b)'])
+    
+    ax.grid(True)  
+
+x = torch.randn(1, input_dim)
+y =  torch.randn(1, output_dim)
+
+model.zero_grad()
+loss = loss_fun(model.forward(x),  y)
+loss.backward()
+
+if input_dim == output_dim == 1:
+    print(model.linear.weight.grad)
+    print(2 * x * (model.linear.weight * x + model.linear.bias - y))
+    
+    print(model.linear.bias.grad)
+    print(2 * (model.linear.weight * x + model.linear.bias - y))
+
+if input_dim == output_dim == 1:
+
+    num_iter = 200
+    lr = 0.5 # 0.01
+
+    train_hist = {}
+    train_hist['weight'] = []
+    train_hist['bias'] = []
+
+    model.reset()
+    state_dict = model.state_dict()
+
+    for _ in range(num_iter):
+
+        model.zero_grad()
+        loss = loss_fun(model.forward(training_set.input_data), training_set.output_data)
+        loss.backward()
+
+        w = model.linear.weight.item()
+        b = model.linear.bias.item()
+
+        dw = model.linear.weight.grad.item()
+        db = model.linear.bias.grad.item()
+
+        state_dict['linear.weight'] += torch.tensor([-lr * dw])
+        state_dict['linear.bias'] += torch.tensor([-lr * db])
+        model.load_state_dict(state_dict)
+
+        train_hist['weight'].append(w)
+        train_hist['bias'].append(b)
+
+    for label in train_hist:
+        train_hist[label] = np.array(train_hist[label])
+
+if input_dim == output_dim == 1:
+    fig = plt.figure(figsize=(8, 8))
+    fig.clf()
+    ax = fig.gca()
+    levels = np.logspace(np.log(np.min(loss_values)), np.log(np.max(loss_values)), 20)
+    ax.contourf(ww, bb, loss_values, levels=levels, norm=colors.LogNorm())
+    ax.set_xlabel('weight')
+    ax.set_ylabel('bias')
+    ax.grid(True)
+    ax.set_xlim(-2, 2) 
+    ax.set_ylim(-2, 2) 
+    
+    ax.plot(train_hist['weight'], train_hist['bias'], '.-b')
+    ax.plot(W[0], b, 'r*', markersize=10)
+
+    ax.legend(['optim', '(W, b)'])
+
+lr = 0.1
+weight_decay = 5e-4
+optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+
+n_epochs = 100
+train_hist = {}
+train_hist['loss'] = []
+
+if input_dim == output_dim == 1:
+    train_hist['weight'] = []
+    train_hist['bias'] = []
+
+# Initialize training
+model.reset()
+model.train()
+
+for epoch in range(n_epochs):
+    for idx, batch in enumerate(train_loader):
+        optimizer.zero_grad()
+        loss = loss_fun(model.forward(batch[0]),  batch[1])
+        loss.backward()
+        optimizer.step()
+
+        train_hist['loss'].append(loss.item())
+        if input_dim == output_dim == 1:
+            train_hist['weight'].append(model.linear.weight.item())
+            train_hist['bias'].append(model.linear.bias.item())
+        
+        print('[Epoch %4d/%4d] [Batch %4d/%4d] Loss: % 2.2e' % (epoch + 1, n_epochs, 
+                                                                idx + 1, len(train_loader), 
+                                                                loss.item()))
+        
+model.eval()
+
+if input_dim == output_dim == 1:
+    n_test = 500
+    X_test = np.random.rand(n_test, input_dim)
+    y_pred = []
+
+    state_dict = model.state_dict()
+
+    for idx in range(len(train_hist['weight'])):
+        state_dict['linear.weight'] = torch.tensor([[train_hist['weight'][idx]]])
+        state_dict['linear.bias'] = torch.tensor([train_hist['bias'][idx]])
+        model.load_state_dict(state_dict)
+
+        y_pred.append(model.forward(torch.tensor(X_test.astype('f'))).detach().numpy())    
+
+if input_dim == output_dim == 1:
+    fig = plt.figure(figsize=(15, 5))
+    fig.clf()
+    
+    ax = fig.add_subplot(1, 3, 1)
+    levels = np.logspace(np.log(np.min(loss_values)), np.log(np.max(loss_values)), 20)
+    ax.contourf(ww, bb, loss_values, levels=levels, norm=colors.LogNorm())
+    ax.plot(train_hist['weight'], train_hist['bias'], '.-b')
+    ax.plot(W[0], b, 'r*', markersize=10)
+    ax.set_xlabel('weight')
+    ax.set_ylabel('bias')
+    ax.legend(['optim', '(W, b)'])
+    ax.grid(True)
+    ax.set_xlim(-2, 2) 
+    ax.set_ylim(-2, 2) 
+    
+    ax = fig.add_subplot(1, 3, 2)
+    ax.loglog(np.abs(train_hist['loss']))
+    ax.set_xlabel('Iter')
+    ax.set_ylabel('Loss')
+    ax.grid(True)
+    
+    ax = fig.add_subplot(1, 3, 3)
+    ax.plot(X_train, y_train, '.')
+    a=ax.plot(X_test, y_pred[0], '-', alpha=0.1)
+    for y in y_pred[1:]:
+        ax.plot(X_test, y, '-', alpha=0.1, color=a[0].get_color())
+    ax.plot(X_test, y_pred[-1], 'k')
+    ax.grid(True)   
+
+    fig.tight_layout()
+
+else:
+    fig = plt.figure()
+    fig.clf()
+    ax = fig.gca()
+    ax.loglog(np.abs(train_hist['loss']))
+    ax.set_xlabel('Iter')
+    ax.set_ylabel('Loss')
+    ax.grid(True)

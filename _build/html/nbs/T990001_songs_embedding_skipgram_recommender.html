@@ -1,0 +1,1605 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song Embeddings - Skipgram Recommender &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Toy example - Car Recommender using KNN method" href="T990001_toy_example_car_recommender_knn.html" />
+    <link rel="prev" title="Live Streamer Recommender with Implicit feedback" href="T990001_live_streamer_recommender.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T488549_Goodreads_Diversity_Aware_Book_Recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T990001_songs_embedding_skipgram_recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T990001_songs_embedding_skipgram_recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#downloading-data">
+   Downloading data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setup">
+   Setup
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#training-dataset">
+   Training dataset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#training-word2vec">
+   Training Word2vec
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prepare-songs-metadata">
+   Prepare songs metadata
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#title-and-artist">
+     Title and artist
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tags">
+     Tags
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recommend">
+   Recommend
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#paranoid-android-radiohead">
+     Paranoid Android - Radiohead
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#california-love-2pac">
+     California Love - 2Pac
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#billie-jean-michael-jackson">
+     Billie Jean - Michael Jackson
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="song-embeddings-skipgram-recommender">
+<h1>Song Embeddings - Skipgram Recommender<a class="headerlink" href="#song-embeddings-skipgram-recommender" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>In this notebook, we’ll use human-made music playlists to learn song embeddings. We’ll treat a playlist as if it’s a sentence and the songs it contains as words. We feed that to the word2vec algorithm which then learns embeddings for every song we have. These embeddings can then be used to recommend similar songs.</p>
+</div></blockquote>
+<p>This technique is used by Spotify, AirBnB, Alibaba, and others. It accounts for a vast portion of their user activity, user media consumption, and/or sales (in the case of Alibaba). The dataset we’ll use was collected by Shuo Chen from Cornell University. The <a class="reference external" href="https://www.cs.cornell.edu/~shuochen/lme/data_page.html">dataset</a> contains playlists from hundreds of radio stations from around the US.</p>
+<div class="section" id="downloading-data">
+<h2>Downloading data<a class="headerlink" href="#downloading-data" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!wget -q https://www.cs.cornell.edu/~shuochen/lme/dataset.tar.gz
+!tar -xf dataset.tar.gz
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">gensim</span> 
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">Word2Vec</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="training-dataset">
+<h2>Training dataset<a class="headerlink" href="#training-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/content/dataset/yes_complete/train.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="c1"># skipping first 2 lines as they contain only metadata</span>
+  <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>
+  <span class="c1"># select playlists with at least 2 songs, a minimum threshold for sequence learning </span>
+  <span class="n">playlists</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Playlist #1:</span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">playlists</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span> <span class="s1">&#39;Playlist #2:</span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="n">playlists</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Playlist #1:
+  [&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;10&#39;, &#39;11&#39;, &#39;12&#39;, &#39;13&#39;, &#39;14&#39;, &#39;15&#39;, &#39;16&#39;, &#39;17&#39;, &#39;18&#39;, &#39;19&#39;, &#39;20&#39;, &#39;21&#39;, &#39;22&#39;, &#39;23&#39;, &#39;24&#39;, &#39;25&#39;, &#39;26&#39;, &#39;27&#39;, &#39;28&#39;, &#39;29&#39;, &#39;30&#39;, &#39;31&#39;, &#39;32&#39;, &#39;33&#39;, &#39;34&#39;, &#39;35&#39;, &#39;36&#39;, &#39;37&#39;, &#39;38&#39;, &#39;39&#39;, &#39;40&#39;, &#39;41&#39;, &#39;2&#39;, &#39;42&#39;, &#39;43&#39;, &#39;44&#39;, &#39;45&#39;, &#39;46&#39;, &#39;47&#39;, &#39;48&#39;, &#39;20&#39;, &#39;49&#39;, &#39;8&#39;, &#39;50&#39;, &#39;51&#39;, &#39;52&#39;, &#39;53&#39;, &#39;54&#39;, &#39;55&#39;, &#39;56&#39;, &#39;57&#39;, &#39;25&#39;, &#39;58&#39;, &#39;59&#39;, &#39;60&#39;, &#39;61&#39;, &#39;62&#39;, &#39;3&#39;, &#39;63&#39;, &#39;64&#39;, &#39;65&#39;, &#39;66&#39;, &#39;46&#39;, &#39;47&#39;, &#39;67&#39;, &#39;2&#39;, &#39;48&#39;, &#39;68&#39;, &#39;69&#39;, &#39;70&#39;, &#39;57&#39;, &#39;50&#39;, &#39;71&#39;, &#39;72&#39;, &#39;53&#39;, &#39;73&#39;, &#39;25&#39;, &#39;74&#39;, &#39;59&#39;, &#39;20&#39;, &#39;46&#39;, &#39;75&#39;, &#39;76&#39;, &#39;77&#39;, &#39;59&#39;, &#39;20&#39;, &#39;43&#39;] 
+
+Playlist #2:
+  [&#39;78&#39;, &#39;79&#39;, &#39;80&#39;, &#39;3&#39;, &#39;62&#39;, &#39;81&#39;, &#39;14&#39;, &#39;82&#39;, &#39;48&#39;, &#39;83&#39;, &#39;84&#39;, &#39;17&#39;, &#39;85&#39;, &#39;86&#39;, &#39;87&#39;, &#39;88&#39;, &#39;74&#39;, &#39;89&#39;, &#39;90&#39;, &#39;91&#39;, &#39;4&#39;, &#39;73&#39;, &#39;62&#39;, &#39;92&#39;, &#39;17&#39;, &#39;53&#39;, &#39;59&#39;, &#39;93&#39;, &#39;94&#39;, &#39;51&#39;, &#39;50&#39;, &#39;27&#39;, &#39;95&#39;, &#39;48&#39;, &#39;96&#39;, &#39;97&#39;, &#39;98&#39;, &#39;99&#39;, &#39;100&#39;, &#39;57&#39;, &#39;101&#39;, &#39;102&#39;, &#39;25&#39;, &#39;103&#39;, &#39;3&#39;, &#39;104&#39;, &#39;105&#39;, &#39;106&#39;, &#39;107&#39;, &#39;47&#39;, &#39;108&#39;, &#39;109&#39;, &#39;110&#39;, &#39;111&#39;, &#39;112&#39;, &#39;113&#39;, &#39;25&#39;, &#39;63&#39;, &#39;62&#39;, &#39;114&#39;, &#39;115&#39;, &#39;84&#39;, &#39;116&#39;, &#39;117&#39;, &#39;118&#39;, &#39;119&#39;, &#39;120&#39;, &#39;121&#39;, &#39;122&#39;, &#39;123&#39;, &#39;50&#39;, &#39;70&#39;, &#39;71&#39;, &#39;124&#39;, &#39;17&#39;, &#39;85&#39;, &#39;14&#39;, &#39;82&#39;, &#39;48&#39;, &#39;125&#39;, &#39;47&#39;, &#39;46&#39;, &#39;72&#39;, &#39;53&#39;, &#39;25&#39;, &#39;73&#39;, &#39;4&#39;, &#39;126&#39;, &#39;59&#39;, &#39;74&#39;, &#39;20&#39;, &#39;43&#39;, &#39;127&#39;, &#39;128&#39;, &#39;129&#39;, &#39;13&#39;, &#39;82&#39;, &#39;48&#39;, &#39;130&#39;, &#39;131&#39;, &#39;132&#39;, &#39;133&#39;, &#39;134&#39;, &#39;135&#39;, &#39;136&#39;, &#39;137&#39;, &#39;59&#39;, &#39;46&#39;, &#39;138&#39;, &#39;43&#39;, &#39;20&#39;, &#39;139&#39;, &#39;140&#39;, &#39;73&#39;, &#39;57&#39;, &#39;70&#39;, &#39;141&#39;, &#39;3&#39;, &#39;1&#39;, &#39;74&#39;, &#39;142&#39;, &#39;143&#39;, &#39;144&#39;, &#39;145&#39;, &#39;48&#39;, &#39;13&#39;, &#39;25&#39;, &#39;146&#39;, &#39;50&#39;, &#39;147&#39;, &#39;126&#39;, &#39;59&#39;, &#39;20&#39;, &#39;148&#39;, &#39;149&#39;, &#39;150&#39;, &#39;151&#39;, &#39;152&#39;, &#39;56&#39;, &#39;153&#39;, &#39;154&#39;, &#39;155&#39;, &#39;156&#39;, &#39;157&#39;, &#39;158&#39;, &#39;159&#39;, &#39;160&#39;, &#39;161&#39;, &#39;162&#39;, &#39;163&#39;, &#39;164&#39;, &#39;165&#39;, &#39;166&#39;, &#39;167&#39;, &#39;168&#39;, &#39;169&#39;, &#39;170&#39;, &#39;171&#39;, &#39;172&#39;, &#39;173&#39;, &#39;174&#39;, &#39;175&#39;, &#39;60&#39;, &#39;176&#39;, &#39;51&#39;, &#39;177&#39;, &#39;178&#39;, &#39;179&#39;, &#39;180&#39;, &#39;181&#39;, &#39;182&#39;, &#39;183&#39;, &#39;184&#39;, &#39;185&#39;, &#39;57&#39;, &#39;186&#39;, &#39;187&#39;, &#39;188&#39;, &#39;189&#39;, &#39;190&#39;, &#39;191&#39;, &#39;46&#39;, &#39;192&#39;, &#39;193&#39;, &#39;194&#39;, &#39;195&#39;, &#39;196&#39;, &#39;197&#39;, &#39;198&#39;, &#39;25&#39;, &#39;199&#39;, &#39;200&#39;, &#39;49&#39;, &#39;201&#39;, &#39;100&#39;, &#39;202&#39;, &#39;203&#39;, &#39;204&#39;, &#39;205&#39;, &#39;206&#39;, &#39;207&#39;, &#39;32&#39;, &#39;208&#39;, &#39;209&#39;, &#39;210&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="training-word2vec">
+<h2>Training Word2vec<a class="headerlink" href="#training-word2vec" title="Permalink to this headline">¶</a></h2>
+<p>Our dataset is now in the shape the the Word2Vec model expects as input. We pass the dataset to the model, and set the following key parameters:</p>
+<ul class="simple">
+<li><p>size: Embedding size for the songs.</p></li>
+<li><p>window: word2vec algorithm parameter – maximum distance between the current and predicted word (song) within a sentence</p></li>
+<li><p>negative: word2vec algorithm parameter – Number of negative examples to use at each training step that the model needs to identify as noise</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Word2Vec</span><span class="p">(</span><span class="n">playlists</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">workers</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The model is now trained. Every song has an embedding. We only have song IDs, though, no titles or other info. Let’s grab the song information file.</p>
+</div>
+<div class="section" id="prepare-songs-metadata">
+<h2>Prepare songs metadata<a class="headerlink" href="#prepare-songs-metadata" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="title-and-artist">
+<h3>Title and artist<a class="headerlink" href="#title-and-artist" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!head /content/dataset/yes_complete/song_hash.txt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 	Gucci Time (w\/ Swizz Beatz)	Gucci Mane
+1 	Aston Martin Music (w\/ Drake &amp; Chrisette Michelle)	Rick Ross
+2 	Get Back Up (w\/ Chris Brown)	T.I.
+3 	Hot Toddy (w\/ Jay-Z &amp; Ester Dean)	Usher
+4 	Whip My Hair	Willow
+5 	Down On Me (w\/ 50 Cent)	Jeremih
+6 	Black And Yellow	Wiz Khalifa
+7 	Blowing Me Kisses	Soulja Boy
+8 	Lay It Down	Lloyd
+9 	Good For My Money (w\/ Lloyd)	Baby Bash
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/content/dataset/yes_complete/song_hash.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">songs_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">songs</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">songs_file</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">songs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">songs</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;artist&#39;</span><span class="p">])</span>
+<span class="n">songs_df</span> <span class="o">=</span> <span class="n">songs_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">songs_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>artist</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Gucci Time (w\/ Swizz Beatz)</td>
+      <td>Gucci Mane</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aston Martin Music (w\/ Drake &amp; Chrisette Mich...</td>
+      <td>Rick Ross</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Get Back Up (w\/ Chris Brown)</td>
+      <td>T.I.</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Hot Toddy (w\/ Jay-Z &amp; Ester Dean)</td>
+      <td>Usher</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Whip My Hair</td>
+      <td>Willow</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">songs_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>artist</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Aston Martin Music (w\/ Drake &amp; Chrisette Mich...</td>
+      <td>Rick Ross</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Shake It</td>
+      <td>Elephant Man</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>I'm Yours</td>
+      <td>Jason Mraz</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">songs_df</span><span class="p">[</span><span class="n">songs_df</span><span class="o">.</span><span class="n">artist</span> <span class="o">==</span> <span class="s1">&#39;Rush&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>title</th>
+      <th>artist</th>
+    </tr>
+    <tr>
+      <th>id</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1861</th>
+      <td>Tom Sawyer</td>
+      <td>Rush</td>
+    </tr>
+    <tr>
+      <th>2640</th>
+      <td>Red Barchetta</td>
+      <td>Rush</td>
+    </tr>
+    <tr>
+      <th>2655</th>
+      <td>Fly By Night</td>
+      <td>Rush</td>
+    </tr>
+    <tr>
+      <th>2691</th>
+      <td>Freewill</td>
+      <td>Rush</td>
+    </tr>
+    <tr>
+      <th>2748</th>
+      <td>Limelight</td>
+      <td>Rush</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="tags">
+<h3>Tags<a class="headerlink" href="#tags" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!head /content/dataset/yes_complete/tag_hash.txt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0, rock
+1, pop
+2, favorites
+3, alternative
+4, love
+5, male vocalists
+6, american
+7, indie
+8, classic rock
+9, awesome
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/content/dataset/yes_complete/tag_hash.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">tags_file</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">tags_file</span><span class="p">]</span>
+  <span class="n">tag_name</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">}</span>
+  <span class="n">tag_name</span><span class="p">[</span><span class="s1">&#39;#&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;no tag&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tag name for tag id </span><span class="si">{}</span><span class="s1"> is &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tag name for tag id </span><span class="si">{}</span><span class="s1"> is &quot;</span><span class="si">{}</span><span class="s1">&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;80&#39;</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">[</span><span class="s1">&#39;80&#39;</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;There are total </span><span class="si">{}</span><span class="s1"> tags&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tag_name</span><span class="o">.</span><span class="n">items</span><span class="p">())))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tag name for tag id 10 is &quot;jazz&quot;
+
+Tag name for tag id 80 is &quot;rhythm and blues&quot;
+
+There are total 251 tags
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!head /content/dataset/yes_complete/tags.txt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>154
+20 35 40 65 72 130 154 193
+154
+1 49
+1 6 21 35 49 65 78 80 141 154
+21 35 38 49 65 72 114 141 154
+1 5 6 21 33 49 63 65 72 87 98 110 141 147 154 197
+49 65 72 141 197
+11 35 154
+#
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/content/dataset/yes_complete/tags.txt&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+  <span class="n">song_tags</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">song_tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">song_tags</span><span class="p">]</span>
+  <span class="n">song_tags</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">song_tags</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tags_for_song</span><span class="p">(</span><span class="n">song_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+  <span class="n">tag_ids</span> <span class="o">=</span> <span class="n">song_tags</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">song_id</span><span class="p">)]</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">tag_name</span><span class="p">[</span><span class="n">tag_id</span><span class="p">]</span> <span class="k">for</span> <span class="n">tag_id</span> <span class="ow">in</span> <span class="n">tag_ids</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Tags for song &quot;</span><span class="si">{}</span><span class="s1">&quot; : </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">songs_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">tags_for_song</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tags for song &quot;Gucci Time (w\/ Swizz Beatz)&quot; : [&#39;wjlb-fm&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="recommend">
+<h2>Recommend<a class="headerlink" href="#recommend" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recommend</span><span class="p">(</span><span class="n">song_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+  <span class="c1"># song info</span>
+  <span class="n">song_info</span> <span class="o">=</span> <span class="n">songs_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">song_id</span><span class="p">]</span>
+  <span class="n">song_tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tags_for_song</span><span class="p">(</span><span class="n">song_id</span><span class="p">))]</span>
+  <span class="n">query_song</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;title&#39;</span><span class="p">:</span><span class="n">song_info</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
+                             <span class="s1">&#39;artist&#39;</span><span class="p">:</span><span class="n">song_info</span><span class="o">.</span><span class="n">artist</span><span class="p">,</span>
+                             <span class="s1">&#39;tags&#39;</span><span class="p">:</span><span class="n">song_tags</span><span class="p">})</span>
+
+  <span class="c1"># similar songs</span>
+  <span class="n">similar_songs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">song_id</span><span class="p">),</span> <span class="n">topn</span><span class="o">=</span><span class="n">topn</span><span class="p">))[:,</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">recommendations</span> <span class="o">=</span> <span class="n">songs_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">similar_songs</span><span class="p">]</span>
+  <span class="n">recommendations</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">tags_for_song</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">similar_songs</span><span class="p">]</span>
+
+  <span class="n">recommendations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">query_song</span><span class="p">,</span> <span class="n">recommendations</span><span class="p">])</span>
+
+  <span class="n">axis_name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Query&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Recommendation &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">topn</span><span class="p">)]</span>
+  <span class="c1"># recommendations.index = axis_name</span>
+  <span class="n">recommendations</span> <span class="o">=</span> <span class="n">recommendations</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_table_styles</span><span class="p">([{</span><span class="s1">&#39;selector&#39;</span><span class="p">:</span> <span class="s1">&#39;th&#39;</span><span class="p">,</span> <span class="s1">&#39;props&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;background-color&#39;</span><span class="p">,</span> <span class="s1">&#39;gray&#39;</span><span class="p">)]}])</span>
+  
+  <span class="k">return</span> <span class="n">recommendations</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recs</span> <span class="o">=</span> <span class="n">recommend</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">recs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style  type="text/css" >
+    #T_a92d05ec_e163_11eb_afea_0242ac1c0002 th {
+          background-color: gray;
+    }</style><table id="T_a92d05ec_e163_11eb_afea_0242ac1c0002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >title</th>        <th class="col_heading level0 col1" >artist</th>        <th class="col_heading level0 col2" >tags</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row0" class="row_heading level0 row0" >Query</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row0_col0" class="data row0 col0" >Shake It</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row0_col1" class="data row0 col1" >Elephant Man</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row0_col2" class="data row0 col2" >no tag</td>
+            </tr>
+            <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row1" class="row_heading level0 row1" >Recommendation 1</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row1_col0" class="data row1 col0" >Pudrete</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row1_col1" class="data row1 col1" >Banda MS</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row1_col2" class="data row1 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row2" class="row_heading level0 row2" >Recommendation 2</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row2_col0" class="data row2 col0" >Let Me Know</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row2_col1" class="data row2 col1" >Roisin Murphy</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row2_col2" class="data row2 col2" >['rock', 'pop', 'favorites', 'love', 'female vocalists', '00s', 'dance', 'favourites', 'cool', 'chillout', 'electronic', 'sexy', 'british', 'upbeat', 'sad', 'seen live', 'indie pop', 'love it', 'electronica', 'female', 'good stuff', 'uk', 'lovely', 'disco', 'electro', 'favorite artists', '2007']</td>
+            </tr>
+            <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row3" class="row_heading level0 row3" >Recommendation 3</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row3_col0" class="data row3 col0" >In This Lifetime</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row3_col1" class="data row3 col1" >The Psycho Realm</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row3_col2" class="data row3 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row4" class="row_heading level0 row4" >Recommendation 4</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row4_col0" class="data row4 col0" >Take A Bow</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row4_col1" class="data row4 col1" >Rihanna</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row4_col2" class="data row4 col2" >['pop', 'love', 'american', 'beautiful', 'soul', 'female vocalists', '00s', 'mellow', 'favorite', 'dance', 'favourites', 'cool', 'chillout', 'rnb', 'sexy', 'female vocalist', 'hip-hop', 'love songs', 'sad', 'hip hop', 'ballad', 'piano', 'memories', 'relaxing', 'love at first listen', 'female', 'r&b', 'slow', 'sweet', 'love song', 'soft', 'rb', 'r and b', 'emo', '<3', 'slow jams', 'major key tonality', 'guilty pleasures', 'emotional', '2008', 'a subtle use of vocal harmony', 'cute']</td>
+            </tr>
+            <tr>
+                        <th id="T_a92d05ec_e163_11eb_afea_0242ac1c0002level0_row5" class="row_heading level0 row5" >Recommendation 5</th>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row5_col0" class="data row5 col0" >Get Right</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row5_col1" class="data row5 col1" >Jennifer Lopez</td>
+                        <td id="T_a92d05ec_e163_11eb_afea_0242ac1c0002row5_col2" class="data row5 col2" >['pop', 'favorites', 'love', 'american', 'soul', 'female vocalists', '00s', 'dance', 'singer-songwriter', '90s', 'favourites', 'cool', 'catchy', 'rnb', 'sexy', 'fun', 'party', 'happy', 'female vocalist', 'hip-hop', 'funk', 'upbeat', 'hip hop', 'female', 'funky', 'r&b', '2000s', 'latin', 'energetic', 'top 40', 'vocal', 'female vocals', 'english', 'urban', 'uplifting', 'r and b', 'hardcore', 'guilty pleasures', 'guilty pleasure', 'hiphop', 'new york', 'sing along', 'feelgood']</td>
+            </tr>
+    </tbody></table></div></div>
+</div>
+<div class="section" id="paranoid-android-radiohead">
+<h3>Paranoid Android - Radiohead<a class="headerlink" href="#paranoid-android-radiohead" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recommend</span><span class="p">(</span><span class="n">song_id</span><span class="o">=</span><span class="mi">19563</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style  type="text/css" >
+    #T_e7dc063e_e164_11eb_afea_0242ac1c0002 th {
+          background-color: gray;
+    }</style><table id="T_e7dc063e_e164_11eb_afea_0242ac1c0002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >title</th>        <th class="col_heading level0 col1" >artist</th>        <th class="col_heading level0 col2" >tags</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row0" class="row_heading level0 row0" >0</th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row0_col0" class="data row0 col0" >Paranoid Android</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row0_col1" class="data row0 col1" >Radiohead</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row0_col2" class="data row0 col2" >rock, pop, favorites, alternative, love, male vocalists, indie, classic rock, awesome, beautiful, mellow, alternative rock, favorite, chill, 90s, classic, favourites, chillout, indie rock, guitar, favorite songs, male vocalist, electronic, loved, british, favourite, soundtrack, amazing, sad, favourite songs, great song, ballad, melancholy, epic, experimental, psychedelic, memories, electronica, love at first listen, fucking awesome, progressive rock, great, best, nostalgia, melancholic, fav, good stuff, uk, great lyrics, ambient, perfect, psychedelic rock, dark, britpop, brilliant, alternative  punk, progressive, emotional, masterpiece, best songs ever, rockin, genius, all time favourites, alt rock, 1990s</td>
+            </tr>
+            <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row1" class="row_heading level0 row1" >43036 </th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row1_col0" class="data row1 col0" >Que Te Quieran Mas Que Yo</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row1_col1" class="data row1 col1" >Marco Antonio Solis</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row1_col2" class="data row1 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row2" class="row_heading level0 row2" >64157 </th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row2_col0" class="data row2 col0" >Paryer And Meditation</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row2_col1" class="data row2 col1" >Jessica Williams</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row2_col2" class="data row2 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row3" class="row_heading level0 row3" >65275 </th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row3_col0" class="data row3 col0" >Hallelujah Goat</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row3_col1" class="data row3 col1" >Volbeat</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row3_col2" class="data row3 col2" >['rock', 'awesome', 'hard rock', 'metal', 'heavy metal', 'good', 'rock and roll']</td>
+            </tr>
+            <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row4" class="row_heading level0 row4" >66070 </th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row4_col0" class="data row4 col0" >You're My Christmas Present</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row4_col1" class="data row4 col1" >Jimmy Beaumont & The Skyliners</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row4_col2" class="data row4 col2" >['christmas']</td>
+            </tr>
+            <tr>
+                        <th id="T_e7dc063e_e164_11eb_afea_0242ac1c0002level0_row5" class="row_heading level0 row5" >16550 </th>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row5_col0" class="data row5 col0" >Jump Start</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row5_col1" class="data row5 col1" >Nils</td>
+                        <td id="T_e7dc063e_e164_11eb_afea_0242ac1c0002row5_col2" class="data row5 col2" >['no tag']</td>
+            </tr>
+    </tbody></table></div></div>
+</div>
+</div>
+<div class="section" id="california-love-2pac">
+<h3>California Love - 2Pac<a class="headerlink" href="#california-love-2pac" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recommend</span><span class="p">(</span><span class="n">song_id</span><span class="o">=</span><span class="mi">842</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style  type="text/css" >
+    #T_087be396_e165_11eb_afea_0242ac1c0002 th {
+          background-color: gray;
+    }</style><table id="T_087be396_e165_11eb_afea_0242ac1c0002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >title</th>        <th class="col_heading level0 col1" >artist</th>        <th class="col_heading level0 col2" >tags</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row0" class="row_heading level0 row0" >0</th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row0_col0" class="data row0 col0" >California Love (w\/ Dr. Dre & Roger Troutman)</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row0_col1" class="data row0 col1" >2Pac</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row0_col2" class="data row0 col2" >favorites, love, oldies, dance, 90s, classic, loved, party, hip-hop, hip hop, rap, fav, old school, songs i absolutely love, hiphop, acclaimed music top 3000, california, 1990s</td>
+            </tr>
+            <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row1" class="row_heading level0 row1" >20597 </th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row1_col0" class="data row1 col0" >Monk'n Around</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row1_col1" class="data row1 col1" >Ryan Cohan</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row1_col2" class="data row1 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row2" class="row_heading level0 row2" >41172 </th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row2_col0" class="data row2 col0" >Nadie Como Tu</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row2_col1" class="data row2 col1" >Ramon Ayala Y Sus Bravos Del Norte</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row2_col2" class="data row2 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row3" class="row_heading level0 row3" >44549 </th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row3_col0" class="data row3 col0" >Crash</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row3_col1" class="data row3 col1" >The Primitives</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row3_col2" class="data row3 col2" >['rock', 'pop', 'favorites', 'alternative', 'indie', 'female vocalists', '80s', '90s', 'cool', 'catchy', 'party', 'favourite', 'happy', 'female vocalist', 'upbeat', 'soundtrack', 'indie pop', 'memories', 'female', 'new wave', 'uplifting', 'britpop', 'major key tonality', "80's", '1980s', 'acclaimed music top 3000', 'rockin']</td>
+            </tr>
+            <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row4" class="row_heading level0 row4" >53636 </th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row4_col0" class="data row4 col0" >Always There For You</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row4_col1" class="data row4 col1" >Stryper</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row4_col2" class="data row4 col2" >['80s', 'hard rock', 'heavy metal', 'christian', 'christian rock']</td>
+            </tr>
+            <tr>
+                        <th id="T_087be396_e165_11eb_afea_0242ac1c0002level0_row5" class="row_heading level0 row5" >48409 </th>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row5_col0" class="data row5 col0" >-</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row5_col1" class="data row5 col1" >-</td>
+                        <td id="T_087be396_e165_11eb_afea_0242ac1c0002row5_col2" class="data row5 col2" >['no tag']</td>
+            </tr>
+    </tbody></table></div></div>
+</div>
+</div>
+<div class="section" id="billie-jean-michael-jackson">
+<h3>Billie Jean - Michael Jackson<a class="headerlink" href="#billie-jean-michael-jackson" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recommend</span><span class="p">(</span><span class="n">song_id</span><span class="o">=</span><span class="mi">3822</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style  type="text/css" >
+    #T_0e25e2c4_e165_11eb_afea_0242ac1c0002 th {
+          background-color: gray;
+    }</style><table id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >title</th>        <th class="col_heading level0 col1" >artist</th>        <th class="col_heading level0 col2" >tags</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row0" class="row_heading level0 row0" >0</th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row0_col0" class="data row0 col0" >Billie Jean</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row0_col1" class="data row0 col1" >Michael Jackson</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row0_col2" class="data row0 col2" >rock, pop, favorites, alternative, love, male vocalists, american, classic rock, awesome, beautiful, soul, oldies, favorite, 80s, dance, singer-songwriter, 90s, classic, favourites, cool, 70s, catchy, favorite songs, rnb, male vocalist, electronic, sexy, loved, fun, party, favourite, pop rock, funk, amazing, usa, rhythm and blues, memories, funky, r&b, best, nostalgia, energetic, top 40, old school, nice, english, rb, urban, groovy, disco, perfect, guilty pleasures, 80's, brilliant, my favorites, guilty pleasure, 1980s, retro, masterpiece, motown, classics, best songs ever, classic soul, legend</td>
+            </tr>
+            <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row1" class="row_heading level0 row1" >48164 </th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row1_col0" class="data row1 col0" >Heartbeat</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row1_col1" class="data row1 col1" >Could Nothings</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row1_col2" class="data row1 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row2" class="row_heading level0 row2" >30835 </th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row2_col0" class="data row2 col0" >Steve's Tune</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row2_col1" class="data row2 col1" >Steve Lambert</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row2_col2" class="data row2 col2" >['no tag']</td>
+            </tr>
+            <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row3" class="row_heading level0 row3" >11901 </th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row3_col0" class="data row3 col0" >So Much Trouble In The World</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row3_col1" class="data row3 col1" >Bob Marley & The Wailers</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row3_col2" class="data row3 col2" >['mellow', 'chill', 'classic', 'favourites', 'cool', '70s', 'favourite', 'sad', 'great song', 'summer', 'relax', 'best', 'drjazzmrfunkmusic', 'reggae', 'the best', 'legend']</td>
+            </tr>
+            <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row4" class="row_heading level0 row4" >70557 </th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row4_col0" class="data row4 col0" >Carmelita</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row4_col1" class="data row4 col1" >Warren Zevon</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row4_col2" class="data row4 col2" >['rock', 'classic rock', 'mellow', 'singer-songwriter', '70s', 'hard rock', 'guitar', 'male vocalist', 'folk', 'acoustic', 'progressive rock', 'vocal', 'folk rock', 'americana', 'radioparadise', 'covers', 'perfect', 'radio paradise', 'my pop music', 'southern rock']</td>
+            </tr>
+            <tr>
+                        <th id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002level0_row5" class="row_heading level0 row5" >14550 </th>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row5_col0" class="data row5 col0" >Heavy</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row5_col1" class="data row5 col1" >Collective Soul</td>
+                        <td id="T_0e25e2c4_e165_11eb_afea_0242ac1c0002row5_col2" class="data row5 col2" >['rock', 'pop', 'favorites', 'alternative', 'male vocalists', 'awesome', '00s', 'alternative rock', '90s', 'hard rock', 'loved', 'upbeat', 'great song', 'memories', 'progressive rock', 'grunge', 'faves', 'heavy', 'a subtle use of vocal harmony', 'favs']</td>
+            </tr>
+    </tbody></table></div></div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990001_live_streamer_recommender.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Live Streamer Recommender with Implicit feedback</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T990001_toy_example_car_recommender_knn.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Toy example - Car Recommender using KNN method</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

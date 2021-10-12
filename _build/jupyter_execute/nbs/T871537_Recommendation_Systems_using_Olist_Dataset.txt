@@ -1,0 +1,174 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+import re
+from textblob import TextBlob
+
+!pip install -q -U kaggle
+!pip install --upgrade --force-reinstall --no-deps kaggle
+!mkdir ~/.kaggle
+!cp /content/drive/MyDrive/kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+
+!kaggle datasets download -d olistbr/brazilian-ecommerce
+
+!unzip brazilian-ecommerce.zip
+
+products =  pd.read_csv('olist_products_dataset.csv', usecols=['product_id','product_category_name'])
+
+orders = pd.read_csv('olist_orders_dataset.csv',usecols = ['order_id','customer_id'])
+
+prod = pd.read_csv('olist_order_items_dataset.csv',usecols = ['product_id','order_id'])
+
+customers = pd.read_csv('olist_customers_dataset.csv',usecols = ['customer_id','customer_zip_code_prefix','customer_city'])
+
+location = pd.read_csv('olist_geolocation_dataset.csv', usecols = ['geolocation_zip_code_prefix'])
+
+reviews = pd.read_csv('olist_order_reviews_dataset.csv',usecols = ['order_id','review_score','review_comment_message'])
+
+def describe_data(df):
+  print("Data Types:")
+  print(df.dtypes)
+  print("\n\nRows and Columns:")
+  print(df.shape)
+  print("\n\nColumn Names:")
+  display(df.columns.tolist())
+  print("\n\nNull values")
+  print(df.isnull().sum())
+
+describe_data(products)
+
+describe_data(customers)
+
+describe_data(reviews)
+
+describe_data(orders)
+
+describe_data(location)
+
+describe_data(prod)
+
+plt.rc("font", size=15)
+reviews.review_score.value_counts(sort=False).plot(kind='bar')
+plt.title('Rating Distribution\n')
+plt.xlabel('Rating')
+plt.ylabel('Count')
+plt.savefig('system1.png', bbox_inches='tight')
+plt.show()
+
+comb_product = pd.merge(products, prod, on ='product_id')
+
+comb_product_review = pd.merge(comb_product,reviews, on = 'order_id')
+comb_product_review.head(5)
+
+review_count = pd.DataFrame(comb_product_review.groupby('product_category_name')['review_score'].count())
+review_count.sort_values('review_score', ascending=False).head()
+
+comb_product_review = comb_product_review[comb_product_review.review_score >= 3]
+
+prod_order_review = pd.merge(comb_product_review, orders , on = 'order_id')
+
+customers.head()
+
+cust_location = pd.merge(customers, location, left_on='customer_zip_code_prefix', right_on='geolocation_zip_code_prefix')
+
+cust_location.head(5)
+
+cust_prod_location = pd.merge (prod_order_review, cust_location, on = 'customer_id' )
+
+print(cust_prod_location['review_score'].quantile(np.arange(.9,1,.01)))
+
+from scipy.sparse import csr_matrix
+
+location_user_rating = cust_prod_location.drop_duplicates(['customer_zip_code_prefix', 'product_category_name'])
+
+location_user_rating_pivot = location_user_rating.pivot(index = 'product_category_name', columns = 'customer_zip_code_prefix', values = 'review_score').fillna(0)
+
+location_user_rating_matrix = csr_matrix(location_user_rating_pivot.values)
+
+location_user_rating_pivot.sample(10).iloc[:,:10]
+
+from sklearn.neighbors import NearestNeighbors
+
+model_knn = NearestNeighbors(metric = 'cosine', algorithm = 'brute')
+
+model_knn.fit(location_user_rating_matrix)
+
+query_index = np.random.choice(location_user_rating_pivot.shape[0])
+print(query_index)
+distances, indices = model_knn.kneighbors(location_user_rating_pivot.iloc[query_index,:].values.reshape(1, -1), n_neighbors = 6)
+
+location_user_rating_pivot.index[query_index]
+
+for i in range(0, len(distances.flatten())):
+    if i == 0:
+        print('Recommendations for {0}:\n'.format(location_user_rating_pivot.index[query_index]))
+    else:
+        print('{0}: {1}, with distance of {2}:'.format(i, location_user_rating_pivot.index[indices.flatten()[i]], distances.flatten()[i]))
+
+prod_order_review
+
+prod_order_review.dropna(subset = ["review_comment_message"], inplace=True)
+
+final = prod_order_review[['product_category_name','review_comment_message']]
+
+pd.set_option('mode.chained_assignment', None)
+
+# Convert to list
+final['data'] = final['review_comment_message'].to_list()
+
+# Pre-processing steps for data
+
+final['data'] = [re.sub('\s*@\s*\s?', ' ', str(sent)) for sent in final['data']]
+
+final['data'] = [re.sub('\?', ' ', str(sent)) for sent in final['data']]
+
+final['data'] = [re.sub('\_', ' ', str(sent)) for sent in final['data']]
+
+final['data'] = [re.sub('@"[\d-]"', ' ', str(sent)) for sent in final['data']]
+
+# Remove new line characters
+final['data'] = [re.sub('\s+', ' ', str(sent)) for sent in final['data']]
+
+# Remove distracting single quotes
+final['data'] = [re.sub("\'", " ", str(sent)) for sent in final['data']]
+
+#Converting into lowercase
+final['data']=final['data'].str.lower()
+
+
+bloblist_desc = list()
+
+df_comments= final['data'].astype(str)
+
+for row in df_comments:
+    blob = TextBlob(row)
+    bloblist_desc.append((row,blob.sentiment.polarity, blob.sentiment.subjectivity))
+    df_comments_polarity_desc = pd.DataFrame(bloblist_desc, columns = ['review_comment_message','sentiment','polarity'])
+ 
+def f(df_comments_polarity_desc):
+    if df_comments_polarity_desc['sentiment'] > 0:
+        val = "Positive"
+    elif df_comments_polarity_desc['sentiment'] == 0:
+        val = "Neutral"
+    else:
+        val = "Negative"
+    return val
+
+df_comments_polarity_desc['Sentiment_Type'] = df_comments_polarity_desc.apply(f, axis=1)
+
+plt.figure(figsize=(5,5))
+sns.set_style("whitegrid")
+ax = sns.countplot(x="Sentiment_Type", data = df_comments_polarity_desc)
+
+df_comments_polarity_desc
+
+review_analytics = pd.merge(final, df_comments_polarity_desc, on = 'review_comment_message')
+
+review_analytics = review_analytics[review_analytics.Sentiment_Type == 'Positive']
+
+review_analytics.product_category_name.unique()
+
+len(review_analytics.product_category_name.unique())

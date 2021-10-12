@@ -1,0 +1,332 @@
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+import os
+
+train = pd.read_parquet("https://raw.githubusercontent.com/ASOS/dsf2020/main/dsf_asos_train_with_alphanumeric_dummy_ids.parquet")
+valid = pd.read_parquet("https://raw.githubusercontent.com/ASOS/dsf2020/main/dsf_asos_valid_with_alphanumeric_dummy_ids.parquet")
+dummy_users = pd.read_csv("https://raw.githubusercontent.com/ASOS/dsf2020/main/dsf_asos_dummy_users_with_alphanumeric_dummy_ids.csv", header=None).values.flatten().astype(str)
+products = pd.read_csv("https://raw.githubusercontent.com/ASOS/dsf2020/main/dsf_asos_productIds.csv", header=None).values.flatten().astype(int)
+
+# we can think of this like we are representing 5 users with 8 features
+embed1 = tf.keras.layers.Embedding(5, 8)
+
+# these features values are initialized randomly
+embed1.get_weights()
+
+# what is the embedding for user 2
+embed1(1)
+
+dummy_users
+
+dummy_user_embedding = tf.keras.layers.Embedding(len(dummy_users), 6)
+
+# embedding for user 11
+dummy_user_embedding(10)
+
+products
+
+product_embedding = tf.keras.layers.Embedding(len(products), 6)
+
+# embedding for item 100
+product_embedding(99)
+
+# what is the dot product of user 11 and item 100
+tf.tensordot(dummy_user_embedding(10), product_embedding(99), axes=[[0],[0]])
+
+# let's select any 4 products which we want to rank for a given user
+example_product = tf.constant([1, 99, 150, 1893])
+
+# we can now lookup the embeddings for these products
+product_embedding(example_product)
+
+# we can now rank the products for user 11
+tf.tensordot(dummy_user_embedding(10), product_embedding(example_product), axes=[[0],[1]])
+
+# let's select any 5 users
+example_dummy_users = tf.constant([1, 15, 64, 143, 845])
+
+# we can now lookup the embeddings for these users
+dummy_user_embedding(example_dummy_users)
+
+# we can now rank the products for all 5 users in one go
+tf.tensordot(dummy_user_embedding(example_dummy_users), product_embedding(example_product), axes=[[1],[1]])
+
+products
+
+product_table = tf.lookup.StaticHashTable(
+    tf.lookup.KeyValueTensorInitializer(tf.constant(products, dtype=tf.int32), 
+                                        range(len(products))), -1)
+
+# We can now ask the product table for a id of a product
+product_table.lookup(tf.constant([9961521]))
+
+class SimpleRecommender(tf.keras.Model):
+    def __init__(self, dummy_users, products, len_embed):
+        super(SimpleRecommender, self).__init__()
+        self.products = tf.constant(products, dtype=tf.int32)
+        self.dummy_users = tf.constant(dummy_users, dtype=tf.string)
+        self.dummy_user_table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(self.dummy_users, range(len(dummy_users))), -1)
+        self.product_table = tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(self.products, range(len(products))), -1)
+        
+        self.user_embedding = tf.keras.layers.Embedding(len(dummy_users), len_embed)
+        self.product_embedding = tf.keras.layers.Embedding(len(products), len_embed)
+
+        self.dot = tf.keras.layers.Dot(axes=-1)
+        
+    # task idiom: "personalized ranking"
+    # business use case: "recommended for you, mainly served on the home page"
+    def call(self, inputs):
+        users = inputs[0]
+        products = inputs[1]
+
+        user_embedding_index = self.dummy_user_table.lookup(users)
+        product_embedding_index = self.product_table.lookup(products)
+
+        user_embedding_values = self.user_embedding(user_embedding_index)
+        product_embedding_values = self.product_embedding(product_embedding_index)
+
+        return tf.squeeze(self.dot([user_embedding_values, product_embedding_values]))
+
+    # task idiom: "item to item similarity"
+    # business use case: "similar items you might like, mainly served on the product page"
+    @tf.function
+    def call_item_item(self, product):
+        product_x = self.product_table.lookup(product)
+        pe = tf.expand_dims(self.product_embedding(product_x), 0)
+        
+        all_pe = tf.expand_dims(self.product_embedding.embeddings, 0)#note this only works if the layer has been built!
+        scores = tf.reshape(self.dot([pe, all_pe]), [-1])
+        
+        top_scores, top_indices = tf.math.top_k(scores, k=100)
+        top_ids = tf.gather(self.products, top_indices)
+        return top_ids, top_scores
+
+dummy_users
+
+products
+
+# let's sanity check the model
+srl = SimpleRecommender(dummy_users, products, 15)
+
+# let's check for 2 users and 3 products
+srl([tf.constant([['pmfkU4BNZhmtLgJQwJ7x'], ['UDRRwOlzlWVbu7H8YCCi']]),
+     tf.constant([[8650774,  9306139,  9961521], [12058614, 12058615, 11927550]])
+     ])
+
+train.head()
+
+dummy_user_tensor = tf.constant(train[["dummyUserId"]].values, dtype=tf.string)
+product_tensor = tf.constant(train[["productId"]].values, dtype=tf.int32)
+
+dataset = tf.data.Dataset.from_tensor_slices((dummy_user_tensor, product_tensor))
+for x, y in dataset:
+    print(x)
+    print(y)
+    break
+
+class Mapper():
+    
+    def __init__(self, possible_products, num_negative_products):
+        self.num_possible_products = len(possible_products)
+        self.possible_products_tensor = tf.constant(possible_products, dtype=tf.int32)
+        
+        self.num_negative_products = num_negative_products
+        self.y = tf.one_hot(0, num_negative_products+1)
+    
+    def __call__(self, user, product):
+        random_negative_indices = tf.random.uniform((self.num_negative_products, ), minval=0, maxval=self.num_possible_products, dtype=tf.int32)
+        negatives = tf.gather(self.possible_products_tensor, random_negative_indices)
+        candidates = tf.concat([product, negatives], axis=0)
+        return (user, candidates), self.y
+
+# let's sanity check the mapper fucntion
+dataset = tf.data.Dataset.from_tensor_slices((dummy_user_tensor, product_tensor)).map(Mapper(products, 10))
+for (u,c), y in dataset:
+  print(u)
+  print(c)
+  print(y)
+  break
+
+# let's wrap the dataset operations and check for a single user
+def get_dataset(df, products, num_negative_products):
+    dummy_user_tensor = tf.constant(df[["dummyUserId"]].values, dtype=tf.string)
+    product_tensor = tf.constant(df[["productId"]].values, dtype=tf.int32)
+    dataset = tf.data.Dataset.from_tensor_slices((dummy_user_tensor, product_tensor))
+    dataset = dataset.map(Mapper(products, num_negative_products))
+    return dataset
+
+for (u, c), y in get_dataset(train, products, 3):
+  print(u)
+  print(c)
+  print(y)
+  break
+
+# let's now make it for a whole batch of users at a time that we will pass to the model
+def get_dataset(df, products, num_negative_products):
+    dummy_user_tensor = tf.constant(df[["dummyUserId"]].values, dtype=tf.string)
+    product_tensor = tf.constant(df[["productId"]].values, dtype=tf.int32)
+    dataset = tf.data.Dataset.from_tensor_slices((dummy_user_tensor, product_tensor))
+    dataset = dataset.map(Mapper(products, num_negative_products))
+    dataset = dataset.batch(1024)
+    return dataset
+
+for (u, c), y in get_dataset(train, products, 3):
+  print(u)
+  print(c)
+  print(y)
+  break
+
+# we are using categorical cross entropy, which means we are formulating our task as a classification problem now
+loss = tf.keras.losses.CategoricalCrossentropy(from_logits=True)
+
+# 100 works well for this use case but we can make this as a hyperparameter to find a more optimal lr
+optimizer = tf.keras.optimizers.SGD(learning_rate=100.)
+
+metrics = [tf.keras.metrics.CategoricalAccuracy()]
+
+#hide-output
+model = SimpleRecommender(dummy_users, products, 15)
+model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+model.fit(get_dataset(train, products, num_negative_products=100),
+          validation_data=get_dataset(valid, products, 100),
+          epochs=5)
+
+products
+
+test_product = np.random.choice(products)
+test_product
+
+print("Go to https://www.asos.com/prd/{} to see the product description.".format(test_product))
+
+similar_recs = model.call_item_item(tf.constant(test_product, dtype=tf.int32))
+print("Recs for item {}: {}".format(test_product, similar_recs))
+
+print("The user also likes to purchase {}, and {}. Go to https://www.asos.com/prd/{}, https://www.asos.com/prd/{} to see the recommended product description."\
+      .format(similar_recs[0][0].numpy(), similar_recs[0][1].numpy(),
+              similar_recs[0][0].numpy(), similar_recs[0][1].numpy()))
+
+model_path = "models/recommender/1"
+
+inpute_signature = tf.TensorSpec(shape=(), dtype=tf.int32)
+
+signatures = { 'call_item_item': model.call_item_item.get_concrete_function(inpute_signature)}
+
+tf.saved_model.save(model, model_path, signatures=signatures)
+
+from zipfile import ZipFile
+import os
+# create a ZipFile object
+with ZipFile('models.zip', 'w') as zipObj:
+   # Iterate over all the files in directory
+    for folderName, subfolders, filenames in os.walk("models"):
+        for filename in filenames:
+           #create complete filepath of file in directory
+           filePath = os.path.join(folderName, filename)
+           # Add file to zip
+           zipObj.write(filePath)
+
+#hide-output
+# let's examine the saved model by using the command line utility saved_model_cli
+# to look at the MetaGraphDefs (the models) and SignatureDefs (the methods you
+# can call) in our SavedModel
+
+!saved_model_cli show --dir {model_path} --all
+
+imported_model = tf.saved_model.load(model_path)
+list(imported_model.signatures.keys())
+
+products
+
+result_tensor = imported_model.signatures['call_item_item'](tf.constant([8650774]))
+
+#hide-output
+from IPython.core.display import HTML
+
+def path_to_image_html(path):
+  return '<img src="https://images.asos-media.com/products/ugg-classic-mini-boots-in-black-suede/'+str(path)+'-2" width="60" >'
+
+result_df = pd.DataFrame(result_tensor['output_0'].numpy(), columns=['ProductUrl']).head()
+HTML(result_df.to_html(escape=False, formatters=dict(ProductUrl=path_to_image_html)))
+
+import sys
+# We need sudo prefix if not on a Google Colab.
+if 'google.colab' not in sys.modules:
+  SUDO_IF_NEEDED = 'sudo'
+else:
+  SUDO_IF_NEEDED = ''
+
+# This is the same as you would do from your command line, but without the [arch=amd64], and no sudo
+# You would instead do:
+# echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | sudo tee /etc/apt/sources.list.d/tensorflow-serving.list && \
+# curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | sudo apt-key add -
+
+!echo "deb http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | {SUDO_IF_NEEDED} tee /etc/apt/sources.list.d/tensorflow-serving.list && \
+curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | {SUDO_IF_NEEDED} apt-key add -
+!{SUDO_IF_NEEDED} apt update
+
+!{SUDO_IF_NEEDED} apt-get install tensorflow-model-server
+
+os.environ["MODEL_PATH"] = "/content/models/recommender"
+
+%%bash --bg 
+nohup tensorflow_model_server \
+  --rest_api_port=8508 \
+  --model_name=recommender \
+  --model_base_path="${MODEL_PATH}" >server.log 2>&1
+
+!tail server.log
+
+# # The recommended way of running Tensorflow serving is with Docker image.
+
+# # Environment setup
+# - docker engine installed and running to run a serve
+#     General installation instructions are on the [Docker site](https://docs.docker.com/get-docker/), but some quick links here:
+#     [Docker for macOS](https://docs.docker.com/docker-for-mac/install/)
+#     [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+# - http client installed to run a client 
+#     [Curl for mac](https://curl.haxx.se/dlwiz/?type=source&os=Mac+OS+X)  
+  
+
+# cd {recommender-model-folder}
+# docker pull tensorflow/serving
+
+# # Windows
+# docker run -d -p 8501:8501 -v "$PWD/:/models/recommender" -e MODEL_NAME=recommender tensorflow/serving
+
+# # Mac
+# docker run -d -p 8501:8501 --mount type=bind,source=${PWD}/,target='/models/recommender' -e MODEL_NAME=recommender tensorflow/serving
+
+# # Windows
+# $rec_request = @"
+# {
+# "signature_name" : "call_item_item",
+# "inputs" : {
+# "item": [123123]
+# }
+# }
+# "@
+# $rec_response = Invoke-RestMethod -Uri "http://localhost:8501/v1/models/recommender:predict" -Method Post -Body $rec_request -ContentType "application/json"
+# $rec_response | convertto-json
+
+# # Mac
+# curl --header "Content-Type: application/json" --request POST --data '{"signature_name":"call_item_item","inputs": {"item": [123123] } }' http://localhost:8501/v1/models/recommender:predict
+
+# # Windows
+# $output = Invoke-RestMethod http://localhost:8501/v1/models/recommender/metadata
+# $output | convertto-json
+
+# # Mac
+# curl http://localhost:8501/v1/models/recommender/metadata
+
+import json
+test_sample = json.dumps({"signature_name": "call_item_item", "inputs": {"product":[8650774]}})
+test_sample
+
+import requests
+headers = {"content-type": "application/json"}
+json_response = requests.post('http://localhost:8508/v1/models/recommender:predict', data=test_sample, headers=headers)
+# json_response = requests.post('http://localhost:8508/v1/models/recommender/versions/1:predict', data=data, headers=headers)
+predictions = json.loads(json_response.text)['outputs']
+
+predictions['output_0'][0:10]

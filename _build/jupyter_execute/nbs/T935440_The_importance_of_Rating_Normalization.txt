@@ -1,0 +1,16 @@
+import numpy as np
+import pandas as pd
+
+!wget http://static.preferred.ai/tutorials/recommender-systems/sample_data.csv
+
+df = pd.read_csv("sample_data.csv", sep=",", names=["UserID", "ItemID", "Rating"])
+df.head()
+
+df = pd.pivot_table(df, 'Rating', 'UserID', 'ItemID')
+df["Mean Rating"] = df.mean(axis=1)
+df
+
+ratings = df[df.columns.difference(["Mean Rating"])].values
+means = df["Mean Rating"].values[:, np.newaxis]
+df[df.columns.difference(["Mean Rating"])] = (ratings - means)
+df.drop(columns="Mean Rating")

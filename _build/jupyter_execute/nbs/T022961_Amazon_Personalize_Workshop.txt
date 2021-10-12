@@ -1,0 +1,787 @@
+# Imports
+import boto3
+import json
+import numpy as np
+import pandas as pd
+import time
+!conda install -y -c conda-forge unzip
+
+# Configure the SDK to Personalize:
+personalize = boto3.client('personalize')
+personalize_runtime = boto3.client('personalize-runtime')
+
+aws_account_number = boto3.client('sts').get_caller_identity().get('Account')
+aws_account_number
+
+bucket = "personalizedemobucket202106200728"       # replace with the name of your S3 bucket
+filename = "movie-lens-100k.csv"
+
+!wget -N http://files.grouplens.org/datasets/movielens/ml-100k.zip
+!unzip -o ml-100k.zip
+data = pd.read_csv('./ml-100k/u.data', sep='\t', names=['USER_ID', 'ITEM_ID', 'RATING', 'TIMESTAMP'])
+pd.set_option('display.max_rows', 5)
+data
+
+data = data[data['RATING'] > 3]                # Keep only movies rated higher than 3 out of 5.
+data = data[['USER_ID', 'ITEM_ID', 'TIMESTAMP']] # select columns that match the columns in the schema below
+data.to_csv(filename, index=False)
+boto3.Session().resource('s3').Bucket(bucket).Object(filename).upload_file(filename)
+
+schema = {
+    "type": "record",
+    "name": "Interactions",
+    "namespace": "com.amazonaws.personalize.schema",
+    "fields": [
+        {
+            "name": "USER_ID",
+            "type": "string"
+        },
+        {
+            "name": "ITEM_ID",
+            "type": "string"
+        },
+        {
+            "name": "TIMESTAMP",
+            "type": "long"
+        }
+    ],
+    "version": "1.0"
+}
+
+try:
+    create_schema_response = personalize.create_schema(
+        name = "personalize-demo-schema",
+        schema = json.dumps(schema)
+    )
+    schema_arn = create_schema_response['schemaArn']
+    print(json.dumps(create_schema_response, indent=2))
+except:
+    schema_arn = "arn:aws:personalize:us-east-1:{}:schema/personalize-demo-schema".format(aws_account_number)
+    print("Resource already exist with ARN :{}".format(schema_arn))
+
+try:
+    create_dataset_group_response = personalize.create_dataset_group(
+    name = "personalize-launch-demo")
+    dataset_group_arn = create_dataset_group_response['datasetGroupArn']
+    print(json.dumps(create_dataset_group_response, indent=2))
+except:
+    dataset_group_arn = "arn:aws:personalize:us-east-1:{}:dataset-group/personalize-launch-demo".format(aws_account_number)
+    print("Resource already exist with ARN :{}".format(dataset_group_arn))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_group_response = personalize.describe_dataset_group(
+        datasetGroupArn = dataset_group_arn
+    )
+    status = describe_dataset_group_response["datasetGroup"]["status"]
+    print("DatasetGroup: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+dataset_type = "INTERACTIONS"
+create_dataset_response = personalize.create_dataset(
+    name = "personalize-launch-interactions",
+    datasetType = dataset_type,
+    datasetGroupArn = dataset_group_arn,
+    schemaArn = schema_arn
+)
+
+dataset_arn = create_dataset_response['datasetArn']
+print(json.dumps(create_dataset_response, indent=2))
+
+s3 = boto3.client("s3")
+
+policy = {
+    "Version": "2012-10-17",
+    "Id": "PersonalizeS3BucketAccessPolicy",
+    "Statement": [
+        {
+            "Sid": "PersonalizeS3BucketAccessPolicy",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "personalize.amazonaws.com"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{}".format(bucket),
+                "arn:aws:s3:::{}/*".format(bucket)
+            ]
+        }
+    ]
+}
+
+s3.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
+
+iam = boto3.client("iam")
+
+role_name = "PersonalizeRoleDemo"
+assume_role_policy_document = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "personalize.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+create_role_response = iam.create_role(
+    RoleName = role_name,
+    AssumeRolePolicyDocument = json.dumps(assume_role_policy_document)
+)
+
+# AmazonPersonalizeFullAccess provides access to any S3 bucket with a name that includes "personalize" or "Personalize" 
+# if you would like to use a bucket with a different name, please consider creating and attaching a new policy
+# that provides read access to your bucket or attaching the AmazonS3ReadOnlyAccess policy to the role
+policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"
+iam.attach_role_policy(
+    RoleName = role_name,
+    PolicyArn = policy_arn
+)
+
+# Now add S3 support
+iam.attach_role_policy(
+    PolicyArn='arn:aws:iam::aws:policy/AmazonS3FullAccess',
+    RoleName=role_name
+)
+time.sleep(60) # wait for a minute to allow IAM role policy attachment to propagate
+
+role_arn = create_role_response["Role"]["Arn"]
+print(role_arn)
+
+create_dataset_import_job_response = personalize.create_dataset_import_job(
+    jobName = "personalize-demo-import1",
+    datasetArn = dataset_arn,
+    dataSource = {
+        "dataLocation": "s3://{}/{}".format(bucket, filename)
+    },
+    roleArn = role_arn
+)
+
+dataset_import_job_arn = create_dataset_import_job_response['datasetImportJobArn']
+print(json.dumps(create_dataset_import_job_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_import_job_response = personalize.describe_dataset_import_job(
+        datasetImportJobArn = dataset_import_job_arn
+    )
+    status = describe_dataset_import_job_response["datasetImportJob"]['status']
+    print("DatasetImportJob: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+list_recipes_response = personalize.list_recipes()
+list_recipes_response
+
+recipe_arn = "arn:aws:personalize:::recipe/aws-user-personalization" # aws-user-personalization selected for demo purposes
+
+create_solution_response = personalize.create_solution(
+    name = "personalize-demo-soln-user-personalization",
+    datasetGroupArn = dataset_group_arn,
+    recipeArn = recipe_arn
+)
+
+solution_arn = create_solution_response['solutionArn']
+print(json.dumps(create_solution_response, indent=2))
+
+create_solution_version_response = personalize.create_solution_version(
+    solutionArn = solution_arn
+)
+
+solution_version_arn = create_solution_version_response['solutionVersionArn']
+print(json.dumps(create_solution_version_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_solution_version_response = personalize.describe_solution_version(
+        solutionVersionArn = solution_version_arn
+    )
+    status = describe_solution_version_response["solutionVersion"]["status"]
+    print("SolutionVersion: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+get_solution_metrics_response = personalize.get_solution_metrics(
+    solutionVersionArn = solution_version_arn
+)
+
+print(json.dumps(get_solution_metrics_response, indent=2))
+
+create_campaign_response = personalize.create_campaign(
+    name = "personalize-demo-camp",
+    solutionVersionArn = solution_version_arn,
+    minProvisionedTPS = 1,
+    campaignConfig = {
+        "itemExplorationConfig": {
+            "explorationWeight": "0.5"
+        }
+    }
+)
+
+campaign_arn = create_campaign_response['campaignArn']
+print(json.dumps(create_campaign_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_campaign_response = personalize.describe_campaign(
+        campaignArn = campaign_arn
+    )
+    status = describe_campaign_response["campaign"]["status"]
+    print("Campaign: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+# data = pd.read_csv('./ml-100k/u.data', sep='\t', names=['USER_ID', 'ITEM_ID', 'RATING', 'TIMESTAMP'])
+# data.head()
+
+# Getting a random user:
+user_id, item_id, _, _ = data.sample().values[0]
+print("USER: {}".format(user_id))
+
+# First load items into memory
+items = pd.read_csv('./ml-100k/u.item', sep='|', usecols=[0,1], encoding='latin-1', names=['ITEM_ID', 'TITLE'], index_col='ITEM_ID')
+
+def get_movie_title(movie_id):
+    """
+    Takes in an ID, returns a title
+    """
+    movie_id = int(movie_id)-1
+    return items.iloc[movie_id]['TITLE']
+
+
+get_recommendations_response = personalize_runtime.get_recommendations(
+    campaignArn = campaign_arn,
+    userId = str(user_id),
+)
+# Update DF rendering
+pd.set_option('display.max_rows', 30)
+
+print("Recommendations for user: ", user_id)
+
+item_list = get_recommendations_response['itemList']
+
+recommendation_list = []
+
+for item in item_list:
+    title = get_movie_title(item['itemId'])
+    recommendation_list.append(title)
+    
+recommendations_df = pd.DataFrame(recommendation_list, columns = ['OriginalRecs'])
+recommendations_df
+
+%store campaign_arn
+
+%store dataset_group_arn
+
+%store solution_version_arn
+
+%store solution_arn
+
+%store dataset_arn
+
+%store campaign_arn
+
+%store schema_arn
+
+%store bucket
+
+%store filename
+
+%store role_name
+
+%store recommendations_df
+
+%store user_id
+
+# Imports
+import boto3
+import json
+import numpy as np
+import pandas as pd
+import time
+import uuid
+
+%store -r
+
+# Setup and Config
+# Recommendations from Event data
+personalize = boto3.client('personalize')
+personalize_runtime = boto3.client('personalize-runtime')
+
+# Establish a connection to Personalize's Event Streaming
+personalize_events = boto3.client(service_name='personalize-events')
+
+response = personalize.create_event_tracker(
+    name='MovieClickTracker',
+    datasetGroupArn=dataset_group_arn
+)
+print(response['eventTrackerArn'])
+print(response['trackingId'])
+TRACKING_ID = response['trackingId']
+
+event_tracker_arn = response['eventTrackerArn']
+
+# First load items into memory
+items = pd.read_csv('./ml-100k/u.item', sep='|', usecols=[0,1], encoding='latin-1', names=['ITEM_ID', 'TITLE'], index_col='ITEM_ID')
+
+def get_movie_title(movie_id):
+    """
+    Takes in an ID, returns a title
+    """
+    movie_id = int(movie_id)-1
+    return items.loc[movie_id]['TITLE']
+
+recommendations_df
+
+session_dict = {}
+
+def send_movie_click(USER_ID, ITEM_ID):
+    """
+    Simulates a click as an event
+    to send an event to Amazon Personalize's Event Tracker
+    """
+    # Configure Session
+    try:
+        session_ID = session_dict[USER_ID]
+    except:
+        session_dict[USER_ID] = str(uuid.uuid1())
+        session_ID = session_dict[USER_ID]
+        
+    # Configure Properties:
+    event = {
+    "itemId": str(ITEM_ID),
+    }
+    event_json = json.dumps(event)
+        
+    # Make Call
+    personalize_events.put_events(
+    trackingId = TRACKING_ID,
+    userId= USER_ID,
+    sessionId = session_ID,
+    eventList = [{
+        'sentAt': int(time.time()),
+        'eventType': 'EVENT_TYPE',
+        'properties': event_json
+        }]
+)
+
+# Pick a movie, we will use ID 270 or Gattaca
+movie_to_click = 270
+movie_title_clicked = get_movie_title(movie_to_click)
+send_movie_click(USER_ID=str(user_id), ITEM_ID=movie_to_click)
+
+get_recommendations_response = personalize_runtime.get_recommendations(
+    campaignArn = campaign_arn,
+    userId = str(user_id),
+)
+
+print("Recommendations for user: ", user_id)
+
+item_list = get_recommendations_response['itemList']
+
+recommendation_list = []
+
+for item in item_list:
+    title = get_movie_title(item['itemId'])
+    recommendation_list.append(title)
+    
+new_rec_DF = pd.DataFrame(recommendation_list, columns = [movie_title_clicked])
+
+recommendations_df = recommendations_df.join(new_rec_DF)
+recommendations_df
+
+%store event_tracker_arn
+
+# Imports
+import boto3
+import json
+import numpy as np
+import pandas as pd
+import time
+
+# Configure the SDK to Personalize:
+personalize = boto3.client('personalize')
+personalize_runtime = boto3.client('personalize-runtime')
+
+%store -r
+
+# Delete the campaign:
+personalize.delete_campaign(campaignArn=campaign_arn)
+time.sleep(60)
+
+# Delete the solution
+personalize.delete_solution(solutionArn=solution_arn)
+time.sleep(60)
+
+# Delete the event tracker
+personalize.delete_event_tracker(eventTrackerArn=event_tracker_arn)
+time.sleep(60)
+
+# Delete the interaction dataset
+personalize.delete_dataset(datasetArn=dataset_arn)
+time.sleep(60)
+
+# Delete the event dataset
+event_interactions_dataset_arn = dataset_arn
+event_interactions_dataset_arn = event_interactions_dataset_arn.replace("INTERACTIONS", "EVENT_INTERACTIONS")
+personalize.delete_dataset(datasetArn=event_interactions_dataset_arn)
+time.sleep(60)
+
+# Delete the schema
+personalize.delete_schema(schemaArn=schema_arn)
+
+boto3.Session().resource('s3').Bucket(bucket).Object(filename).delete()
+
+# IAM policies should also be removed
+iam = boto3.client("iam")
+iam.detach_role_policy(PolicyArn="arn:aws:iam::aws:policy/AmazonS3FullAccess", RoleName=role_name)
+iam.detach_role_policy(PolicyArn="arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess",RoleName=role_name)
+
+iam.delete_role(RoleName=role_name)
+
+import boto3
+
+import json
+import numpy as np
+import pandas as pd
+import time
+
+personalize = boto3.client('personalize')
+personalize_runtime = boto3.client('personalize-runtime')
+iam = boto3.client("iam")
+s3 = boto3.client("s3")
+
+bucket = "personalize-demo"       # replace with the name of your S3 bucket
+filename = "movie-lens-100k.csv"  # replace with a name that you want to save the dataset under
+
+!wget -N http://files.grouplens.org/datasets/movielens/ml-100k.zip
+!unzip -o ml-100k.zip
+data = pd.read_csv('./ml-100k/u.data', sep='\t', names=['USER_ID', 'ITEM_ID', 'RATING', 'TIMESTAMP'])
+pd.set_option('display.max_rows', 5)
+data
+
+requires_ssl_access_policy = {
+    "Version": "2012-10-17",
+    "Id": "RequireSSLAccess",
+    "Statement": [
+        {
+            "Sid": "RequireSSLAccess",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "*",
+            "Resource": [
+                "arn:aws:s3:::{}".format(bucket),
+                "arn:aws:s3:::{}/*".format(bucket)
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "false"
+                }
+            }
+        }
+    ]
+}
+
+s3.put_bucket_policy(Bucket=bucket, Policy=json.dumps(requires_ssl_access_policy))
+
+bucket_owner_id = boto3.client('s3').get_bucket_acl(Bucket=bucket)['Owner']['ID']
+print("This bucket belongs to: {} ".format(bucket_owner_id))
+
+s3_resource = boto3.resource('s3')
+bucket_versioning = s3_resource.BucketVersioning(bucket)
+bucket_versioning.enable()
+
+data = data[data['RATING'] > 3.6]                # keep only movies rated 3.6 and above
+data = data[['USER_ID', 'ITEM_ID', 'TIMESTAMP']] # select columns that match the columns in the schema below
+data.to_csv(filename, index=False)
+
+boto3.Session().resource('s3').Bucket(bucket).Object(filename).upload_file(filename)
+
+schema = {
+    "type": "record",
+    "name": "Interactions",
+    "namespace": "com.amazonaws.personalize.schema",
+    "fields": [
+        {
+            "name": "USER_ID",
+            "type": "string"
+        },
+        {
+            "name": "ITEM_ID",
+            "type": "string"
+        },
+        {
+            "name": "TIMESTAMP",
+            "type": "long"
+        }
+    ],
+    "version": "1.0"
+}
+
+create_schema_response = personalize.create_schema(
+    name = "DEMO-schema",
+    schema = json.dumps(schema)
+)
+
+schema_arn = create_schema_response['schemaArn']
+print(json.dumps(create_schema_response, indent=2))
+
+kmsKeyArn = boto3.client('kms').create_key(Description="personalize-data")['KeyMetadata']['Arn']
+print(kmsKeyArn)
+key_accessor_policy_name = "AccessPersonalizeDatasetPolicy"
+key_accessor_policy = {
+  "Version": "2012-10-17",
+  "Statement": {
+    "Effect": "Allow",
+    "Action": [
+      "kms:*"
+    ],
+    "Resource": [ kmsKeyArn ]
+  }
+}
+key_access_policy = iam.create_policy(
+    PolicyName = key_accessor_policy_name,
+    PolicyDocument = json.dumps(key_accessor_policy)
+)
+
+key_access_role_name = "AccessPersonalizeDatasetRole"
+assume_role_policy_document = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "personalize.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+create_role_response = iam.create_role(
+    RoleName = key_access_role_name,
+    AssumeRolePolicyDocument = json.dumps(assume_role_policy_document)
+)
+iam.attach_role_policy(
+    RoleName = create_role_response["Role"]["RoleName"],
+    PolicyArn = key_access_policy["Policy"]["Arn"]
+)
+
+keyAccessRoleArn = create_role_response["Role"]["Arn"]
+print(keyAccessRoleArn)
+
+create_dataset_group_response = personalize.create_dataset_group(
+    name = "DEMO-dataset-group",
+    roleArn = keyAccessRoleArn,
+    kmsKeyArn = kmsKeyArn
+)
+
+dataset_group_arn = create_dataset_group_response['datasetGroupArn']
+print(json.dumps(create_dataset_group_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_group_response = personalize.describe_dataset_group(
+        datasetGroupArn = dataset_group_arn
+    )
+    status = describe_dataset_group_response["datasetGroup"]["status"]
+    print("DatasetGroup: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+dataset_type = "INTERACTIONS"
+create_dataset_response = personalize.create_dataset(
+    name = "DEMO-dataset",
+    datasetType = dataset_type,
+    datasetGroupArn = dataset_group_arn,
+    schemaArn = schema_arn
+)
+
+dataset_arn = create_dataset_response['datasetArn']
+print(json.dumps(create_dataset_response, indent=2))
+
+policy = {
+    "Version": "2012-10-17",
+    "Id": "PersonalizeS3BucketAccessPolicy",
+    "Statement": [
+        {
+            "Sid": "PersonalizeS3BucketAccessPolicy",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "personalize.amazonaws.com"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::{}".format(bucket),
+                "arn:aws:s3:::{}/*".format(bucket)
+            ]
+        }
+    ]
+}
+
+s3.put_bucket_policy(Bucket=bucket, Policy=json.dumps(policy))
+
+role_name = "PersonalizeRole"
+assume_role_policy_document = {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Service": "personalize.amazonaws.com"
+          },
+          "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+create_role_response = iam.create_role(
+    RoleName = role_name,
+    AssumeRolePolicyDocument = json.dumps(assume_role_policy_document)
+)
+
+# AmazonPersonalizeFullAccess provides access to any S3 bucket with a name that includes "personalize" or "Personalize" 
+# if you would like to use a bucket with a different name, please consider creating and attaching a new policy
+# that provides read access to your bucket or attaching the AmazonS3ReadOnlyAccess policy to the role
+policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonPersonalizeFullAccess"
+iam.attach_role_policy(
+    RoleName = role_name,
+    PolicyArn = policy_arn
+)
+
+time.sleep(60) # wait for a minute to allow IAM role policy attachment to propagate
+
+role_arn = create_role_response["Role"]["Arn"]
+print(role_arn)
+
+create_dataset_import_job_response = personalize.create_dataset_import_job(
+    jobName = "DEMO-dataset-import-job",
+    datasetArn = dataset_arn,
+    dataSource = {
+        "dataLocation": "s3://{}/{}".format(bucket, filename)
+    },
+    roleArn = role_arn
+)
+
+dataset_import_job_arn = create_dataset_import_job_response['datasetImportJobArn']
+print(json.dumps(create_dataset_import_job_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_dataset_import_job_response = personalize.describe_dataset_import_job(
+        datasetImportJobArn = dataset_import_job_arn
+    )
+    status = describe_dataset_import_job_response["datasetImportJob"]['status']
+    print("DatasetImportJob: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+list_recipes_response = personalize.list_recipes()
+recipe_arn = "arn:aws:personalize:::recipe/aws-hrnn" # aws-hrnn selected for demo purposes
+list_recipes_response
+
+create_solution_response = personalize.create_solution(
+    name = "DEMO-solution",
+    datasetGroupArn = dataset_group_arn,
+    recipeArn = recipe_arn
+)
+
+solution_arn = create_solution_response['solutionArn']
+print(json.dumps(create_solution_response, indent=2))
+
+create_solution_version_response = personalize.create_solution_version(
+    solutionArn = solution_arn
+)
+
+solution_version_arn = create_solution_version_response['solutionVersionArn']
+print(json.dumps(create_solution_version_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_solution_version_response = personalize.describe_solution_version(
+        solutionVersionArn = solution_version_arn
+    )
+    status = describe_solution_version_response["solutionVersion"]["status"]
+    print("SolutionVersion: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+get_solution_metrics_response = personalize.get_solution_metrics(
+    solutionVersionArn = solution_version_arn
+)
+
+print(json.dumps(get_solution_metrics_response, indent=2))
+
+create_campaign_response = personalize.create_campaign(
+    name = "DEMO-campaign",
+    solutionVersionArn = solution_version_arn,
+    minProvisionedTPS = 1
+)
+
+campaign_arn = create_campaign_response['campaignArn']
+print(json.dumps(create_campaign_response, indent=2))
+
+max_time = time.time() + 3*60*60 # 3 hours
+while time.time() < max_time:
+    describe_campaign_response = personalize.describe_campaign(
+        campaignArn = campaign_arn
+    )
+    status = describe_campaign_response["campaign"]["status"]
+    print("Campaign: {}".format(status))
+    
+    if status == "ACTIVE" or status == "CREATE FAILED":
+        break
+        
+    time.sleep(60)
+
+items = pd.read_csv('./ml-100k/u.item', sep='|', usecols=[0,1], encoding='latin-1')
+items.columns = ['ITEM_ID', 'TITLE']
+
+user_id, item_id, _ = data.sample().values[0]
+item_title = items.loc[items['ITEM_ID'] == item_id].values[0][-1]
+print("USER: {}".format(user_id))
+print("ITEM: {}".format(item_title))
+
+items
+
+get_recommendations_response = personalize_runtime.get_recommendations(
+    campaignArn = campaign_arn,
+    userId = str(user_id),
+    itemId = str(item_id)
+)
+
+item_list = get_recommendations_response['itemList']
+title_list = [items.loc[items['ITEM_ID'] == np.int(item['itemId'])].values[0][-1] for item in item_list]
+
+print("Recommendations: {}".format(json.dumps(title_list, indent=2)))

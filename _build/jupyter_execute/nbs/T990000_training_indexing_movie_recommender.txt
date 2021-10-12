@@ -1,0 +1,256 @@
+!pip install -q nmslib
+
+import re
+import pandas as pd
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+import pickle
+from pathlib import Path
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+
+from keras.models import load_model, model_from_json
+from keras.models import Model as KerasModel
+from keras.layers import Input, Dense, Activation, Reshape, Dropout
+from keras.layers import Concatenate
+from keras.layers.embeddings import Embedding
+from keras.callbacks import ModelCheckpoint
+from keras import backend as K
+from keras import optimizers
+from pathlib import Path
+from sklearn.metrics import mean_squared_error
+
+import nmslib
+
+import warnings
+warnings.filterwarnings('ignore')
+
+!wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!unzip ml-latest-small.zip
+
+PATH = "ml-latest-small"
+ratings_raw = pd.read_csv(PATH+"/ratings.csv")
+ratings_raw.head()
+
+movies_raw = pd.read_csv(PATH+"/movies.csv")
+movies_raw.head()
+
+ratings_train = ratings_raw.copy()
+
+users_uniq = ratings_train.userId.unique()
+user2idx = {o:i for i,o in enumerate(users_uniq)}
+idx2user = {i:o for i,o in enumerate(users_uniq)}
+ratings_train.userId = ratings_train.userId.apply(lambda x: user2idx[x])
+
+movies_uniq = ratings_train.movieId.unique()
+movie2idx = {o:i for i,o in enumerate(movies_uniq)}
+idx2movie = {i:o for i,o in enumerate(movies_uniq)}
+ratings_train.movieId = ratings_train.movieId.apply(lambda x: movie2idx[x])
+
+n_users = int(ratings_train.userId.nunique())
+n_movies = int(ratings_train.movieId.nunique())
+
+n_users, n_movies
+
+def save_obj(obj, name):  
+    with open(Path(f"{name}.pkl"), 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
+save_obj(user2idx, "user2idx")
+save_obj(idx2user, "idx2user")
+save_obj(movie2idx, "movie2idx")
+save_obj(idx2movie, "idx2movie")
+
+class MovieNet: 
+    def rmse(self, y, y_pred):
+        return K.sqrt(K.mean(K.square(y_pred - y)))
+
+    def custom_activation(self, x):
+        return K.sigmoid(x) * (self.max_rating+1)
+
+    def __init__(self, n_users, n_movies, min_rating=0.5, max_rating=5):
+        self.min_rating = min_rating
+        self.max_rating = max_rating
+        self.n_users = n_users
+        self.n_movies = n_movies
+        
+    def build_model(self, emb_size=[50, 50], hl=[10], drop=[0.25], emb_trainable=True):
+        inputs = [Input(shape=(1,)), Input(shape=(1,))] #, Input(shape=(1,))]
+        users_emb = Embedding(self.n_users, emb_size[0], name='users', trainable=emb_trainable)(inputs[0])
+        movies_emb = Embedding(self.n_movies, emb_size[1], name='movies', trainable=emb_trainable)(inputs[1])
+        outputs_emb = [Reshape(target_shape=(emb_size[0],))(users_emb), Reshape(target_shape=(emb_size[1],))(movies_emb)]
+        
+        output_model = Concatenate()(outputs_emb)
+        for i in range(0, len(hl)):
+            output_model = Dense(hl[i], kernel_initializer='uniform')(output_model)
+            output_model = Activation('relu')(output_model)
+            output_model = Dropout(drop[i])(output_model)
+
+        output_model = Dense(1)(output_model)
+
+        output_model = Activation(self.custom_activation)(output_model)
+        
+        self.model = KerasModel(inputs=inputs, outputs=output_model)
+        
+        opt = optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999)
+        
+        self.model.compile(loss='mse', optimizer=opt, metrics=[self.rmse])
+        
+          
+    def prepare_input(self, _X):
+        X = [_X.userId.values, _X.movieId.values]#, _X.ratingWeight]
+        return X            
+            
+    def evaluate(self, X, y):
+        y_pred = self.predict(X)
+        return mean_squared_error(y, y_pred)
+    
+    def fit(self, X_train, y_train, X_valid, y_valid, epochs=50, batch_size=32, verbose=1):
+        self.model.fit(self.prepare_input(X_train), y_train,
+                       validation_data=(self.prepare_input(X_valid), y_valid),
+                      epochs=epochs, batch_size=batch_size, verbose=verbose)
+        # print("Result on validation data: ", self.evaluate(X_valid, y_valid))
+        
+    def predict(self, X):
+        y_pred = self.model.predict(self.prepare_input(X))
+        return y_pred.flatten()
+
+    def save_model(self, path=Path(""), name="MovieModel"):
+        self.model.save_weights(f"{path}/{name}_weights.h5")
+        with open(f"{path}/{name}_arch.json", 'w') as f:
+            f.write(self.model.to_json())
+    
+    def load_model(self, path=Path(""), name="MovieModel"):
+        with open(f"{path}/{name}_arch.json", 'r') as f:
+            self.model = model_from_json(f.read(), custom_objects={"custom_activation": self.custom_activation})
+        self.model.load_weights(f"{path}/{name}_weights.h5") 
+
+movie_model = MovieNet(n_users, n_movies)
+movie_model.build_model(emb_size=[50, 50], hl=[70, 10], drop=[0.4, 0.3])
+
+X = ratings_train.drop(['timestamp', 'rating'], axis=1)
+y = ratings_train['rating']
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2)
+len(X_train), len(X_valid), len(y_train), len(y_valid)
+
+len(X_train["movieId"].unique()), n_movies, n_movies - len(X_train["movieId"].unique())
+
+miss_movies = ratings_train[~ratings_train.movieId.isin(X_train["movieId"].unique())]["movieId"].unique()
+
+concat = pd.DataFrame()
+for i in miss_movies:
+    concat = concat.append(ratings_train[ratings_train.movieId == i].sample(1))
+    
+concat.head()
+
+X_valid.drop(concat.index, axis=0, inplace=True)
+y_valid.drop(concat.index, axis=0, inplace=True)
+
+X_train = pd.concat([X_train, concat.drop(["rating", "timestamp"], axis=1)])
+y_train = pd.concat([y_train, concat["rating"]])
+
+len(X_train["movieId"].unique()), n_movies
+
+movie_model.fit(X_train, y_train, X_valid, y_valid, epochs=5, batch_size=512)
+
+movie_model.save_model(name="movie_model")
+
+PATH = 'ml-latest-small'
+ratings_raw = pd.read_csv(PATH+"/ratings.csv")
+movies_raw = pd.read_csv(PATH+"/movies.csv")
+
+def load_obj(name):  
+    with open(Path(f"{name}.pkl"), 'rb') as f:
+        return pickle.load(f)
+
+user2idx = load_obj("user2idx")
+idx2user = load_obj("idx2user")
+movie2idx = load_obj("movie2idx")
+idx2movie = load_obj("idx2movie")
+
+ratings = ratings_raw.copy()
+ratings["userId"] = ratings["userId"].apply(lambda x: user2idx[x])
+ratings["movieId"] = ratings["movieId"].apply(lambda x: movie2idx[x])
+ratings.head()
+
+movie_model = MovieNet(n_users, n_movies)
+movie_model.load_model(name="movie_model")
+
+X_pred = pd.DataFrame({"userId": [0 for _ in range(n_movies)], "movieId": [i for i in range(n_movies)]})
+
+def predict_user(user_id):
+    X_pred["userId"] = X_pred.userId.apply(lambda x: user_id)
+    preds = movie_model.predict(X_pred)
+    df_preds = pd.DataFrame({"pred": preds, "movieId": [i for i in range(n_movies)],
+                             "title": [movies_raw.loc[movies_raw.movieId == idx2movie[i]]["title"].values[0] for i in range(n_movies)]})
+    return df_preds
+
+def suggest_user(user_id, m=10):
+    preds = predict_user(user_id)
+    preds.sort_values("pred", ascending=False, inplace=True)
+    r = ratings[ratings.userId == 0]["movieId"].values
+    preds.drop(r, axis=0, inplace=True)
+    return preds.drop("movieId", axis=1)[:m]
+
+def user_rating(user_id):
+    preds = predict_user(user_id)
+    return pd.merge(ratings[ratings.userId == user_id][["rating", "movieId"]], preds, on="movieId")
+
+user_id = np.random.randint(0, n_users)
+user_id
+
+preds = user_rating(user_id).sort_values("rating", ascending=False)[:]
+preds.head(10)
+
+sns.boxplot(preds["rating"], preds["pred"])
+
+suggest_user(user_id)
+
+movies_index = nmslib.init(space='angulardist', method='hnsw')
+movies_index.addDataPointBatch(movie_model.model.get_layer("movies").get_weights()[0])
+
+M = 100
+efC = 1000
+efS = 1000
+num_threads = 6
+index_time_params = {'M': M, 'indexThreadQty': num_threads, 'efConstruction': efC, 'post' : 0}
+query_time_params = {'efSearch': efS}
+
+movies_index.createIndex(index_time_params)
+movies_index.setQueryTimeParams(query_time_params)
+
+def get_knns(index, vecs, n_neighbour):
+     return zip(*index.knnQueryBatch(vecs, k=n_neighbour, num_threads=6))
+
+def get_knn(index, vec, n_neighbour):
+    return index.knnQuery(vec, k=n_neighbour)
+
+def suggest_movies_knn(movieId, n_suggest = 5):
+    res = get_knn(movies_index, movie_model.model.get_layer("movies").get_weights()[0][movieId], n_suggest)[0]
+    return movies_raw[movies_raw.movieId.isin([idx2movie[i] for i in res])]
+
+movie_id = 763
+suggest_movies_knn(movie_id, 10)
+
+users_index = nmslib.init(space='angulardist', method='hnsw')
+users_index.addDataPointBatch(movie_model.model.get_layer("users").get_weights()[0])
+
+M = 100
+efC = 1000
+efS = 1000
+num_threads = 6
+index_time_params = {'M': M, 'indexThreadQty': num_threads, 'efConstruction': efC, 'post' : 0}
+query_time_params = {'efSearch': efS}
+
+users_index.createIndex(index_time_params)
+users_index.setQueryTimeParams(query_time_params)
+
+def suggest_users_knn(user_id, n_suggest = 5):
+    res = get_knn(users_index, movie_model.model.get_layer("users").get_weights()[0][user_id], n_suggest)[0]
+    for uid in res[1:]:
+        moviesId = ratings[ratings.userId == uid].sort_values("rating", ascending=False)[:10]["movieId"].values
+        print("From user", uid, ": ")
+        display(movies_raw[movies_raw.movieId.isin([idx2movie[i] for i in moviesId])])
+
+suggest_users_knn(user_id)

@@ -1,0 +1,370 @@
+!pip install confluent_kafka -q
+
+import json
+import sys
+import os
+import pandas as pd
+
+from confluent_kafka import Producer
+from confluent_kafka import Consumer, KafkaException, KafkaError
+
+!wget http://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+!unzip ml-latest-small.zip
+
+df = pd.read_csv('./ml-latest-small/movies.csv')
+df.to_json('df.json')
+df_json = pd.read_json('df.json')
+movie_list= df_json.to_dict(orient="records")
+print(movie_list[0])
+
+CLOUDKARAFKA_TOPIC = 'yx03wajr-demo'
+CLOUDKARAFKA_BROKERS = 'dory-01.srvs.cloudkafka.com:9094, \
+dory-02.srvs.cloudkafka.com:9094, \
+dory-03.srvs.cloudkafka.com:9094'
+CLOUDKARAFKA_USERNAME = 'yx03wajr'
+CLOUDKARAFKA_PASSWORD = 'pHva0afDUXPya6JfKrbM1******'
+
+topic = CLOUDKARAFKA_TOPIC.split(",")[0]
+
+conf = {
+    'bootstrap.servers': CLOUDKARAFKA_BROKERS,
+    'session.timeout.ms': 6000,
+    'default.topic.config': {'auto.offset.reset': 'smallest'},
+    'security.protocol': 'SASL_SSL',
+    'sasl.mechanisms': 'SCRAM-SHA-256',
+    'sasl.username': CLOUDKARAFKA_USERNAME,
+    'sasl.password': CLOUDKARAFKA_PASSWORD
+    }
+
+p = Producer(**conf)
+
+def delivery_callback(err, msg):
+  if err:
+      sys.stderr.write('%% Message failed delivery: %s\n' % err)
+  else:
+      sys.stderr.write('%% Message delivered to %s [%d]\n' %
+                        (msg.topic(), msg.partition()))
+
+for movie in movie_list[0:5]:
+    try:
+        print("Message to be send : ", movie)
+        p.produce(topic, str(movie), callback=delivery_callback)
+    except BufferError as e:
+        sys.stderr.write('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
+                          len(p))
+    p.poll(0)
+
+sys.stderr.write('%% Waiting for %d deliveries\n' % len(p))
+p.flush()
+
+%%writefile producer.py
+
+import sys
+import os
+
+from confluent_kafka import Producer
+
+CLOUDKARAFKA_TOPIC = 'yx03wajr-demo'
+CLOUDKARAFKA_BROKERS = 'dory-01.srvs.cloudkafka.com:9094, \
+dory-02.srvs.cloudkafka.com:9094, \
+dory-03.srvs.cloudkafka.com:9094'
+CLOUDKARAFKA_USERNAME = 'yx03wajr'
+CLOUDKARAFKA_PASSWORD = 'pHva0afDUXPya6JfKrbM1******'
+
+if __name__ == '__main__':
+    topic = CLOUDKARAFKA_TOPIC.split(",")[0]
+
+    # Consumer configuration
+    # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+    conf = {
+      'bootstrap.servers': CLOUDKARAFKA_BROKERS,
+      'session.timeout.ms': 6000,
+      'default.topic.config': {'auto.offset.reset': 'smallest'},
+      'security.protocol': 'SASL_SSL',
+      'sasl.mechanisms': 'SCRAM-SHA-256',
+      'sasl.username': CLOUDKARAFKA_USERNAME,
+      'sasl.password': CLOUDKARAFKA_PASSWORD
+      }
+
+    p = Producer(**conf)
+
+    def delivery_callback(err, msg):
+        if err:
+            sys.stderr.write('%% Message failed delivery: %s\n' % err)
+        else:
+            sys.stderr.write('%% Message delivered to %s [%d]\n' %
+                             (msg.topic(), msg.partition()))
+
+    for line in sys.stdin:
+        try:
+            p.produce(topic, line.rstrip(), callback=delivery_callback)
+        except BufferError as e:
+            sys.stderr.write('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
+                             len(p))
+        p.poll(0)
+
+    sys.stderr.write('%% Waiting for %d deliveries\n' % len(p))
+    p.flush()
+
+!python producer.py
+
+!pip install confluent_kafka -q
+
+import json
+import sys
+import os
+import pandas as pd
+
+from confluent_kafka import Producer
+from confluent_kafka import Consumer, KafkaException, KafkaError
+
+CLOUDKARAFKA_TOPIC = 'yx03wajr-demo'
+CLOUDKARAFKA_BROKERS = 'dory-01.srvs.cloudkafka.com:9094, \
+dory-02.srvs.cloudkafka.com:9094, \
+dory-03.srvs.cloudkafka.com:9094'
+CLOUDKARAFKA_USERNAME = 'yx03wajr'
+CLOUDKARAFKA_PASSWORD = 'pHva0afDUXPya6JfKrbM1j549G*****'
+
+topics = CLOUDKARAFKA_TOPIC.split(",")
+
+# Consumer configuration
+conf = {
+    'bootstrap.servers': CLOUDKARAFKA_BROKERS,
+    'group.id': "%s-consumer" % CLOUDKARAFKA_USERNAME,
+    'session.timeout.ms': 6000,
+    'default.topic.config': {'auto.offset.reset': 'smallest'},
+    'security.protocol': 'SASL_SSL',
+    'sasl.mechanisms': 'SCRAM-SHA-256',
+    'sasl.username': CLOUDKARAFKA_USERNAME,
+    'sasl.password': CLOUDKARAFKA_PASSWORD
+}
+
+c = Consumer(**conf)
+c.subscribe(topics)
+
+# while True:
+for i in range(10):
+  i+=1
+  print(i)
+  msg = c.poll(timeout=1.0)
+  if msg is None:
+      continue
+  if msg.error():
+      # Error or event
+      if msg.error().code() == KafkaError._PARTITION_EOF:
+          # End of partition event
+          sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
+                            (msg.topic(), msg.partition(), msg.offset()))
+      elif msg.error():
+          # Error
+          raise KafkaException(msg.error())
+  else:
+      # Proper message
+      sys.stderr.write('%% %s [%d] at offset %d with key %s:\n' %
+                        (msg.topic(), msg.partition(), msg.offset(),
+                        str(msg.key())))
+      print(msg.value())
+
+c.close()
+
+%%writefile consumer.py
+
+import sys
+import os
+
+from confluent_kafka import Consumer, KafkaException, KafkaError
+
+
+CLOUDKARAFKA_TOPIC = 'yx03wajr-demo'
+CLOUDKARAFKA_BROKERS = 'dory-01.srvs.cloudkafka.com:9094, \
+dory-02.srvs.cloudkafka.com:9094, \
+dory-03.srvs.cloudkafka.com:9094'
+CLOUDKARAFKA_USERNAME = 'yx03wajr'
+CLOUDKARAFKA_PASSWORD = 'pHva0afDUXPya6JfKrbM1j549G*****'
+
+if __name__ == '__main__':
+    topics = CLOUDKARAFKA_TOPIC.split(",")
+
+    # Consumer configuration
+    # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+    conf = {
+        'bootstrap.servers': CLOUDKARAFKA_BROKERS,
+        'group.id': "%s-consumer" % CLOUDKARAFKA_USERNAME,
+        'session.timeout.ms': 6000,
+        'default.topic.config': {'auto.offset.reset': 'smallest'},
+        'security.protocol': 'SASL_SSL',
+        'sasl.mechanisms': 'SCRAM-SHA-256',
+        'sasl.username': CLOUDKARAFKA_USERNAME,
+        'sasl.password': CLOUDKARAFKA_PASSWORD
+    }
+
+    c = Consumer(**conf)
+    c.subscribe(topics)
+    try:
+        while True:
+            msg = c.poll(timeout=1.0)
+            if msg is None:
+                continue
+            if msg.error():
+                # Error or event
+                if msg.error().code() == KafkaError._PARTITION_EOF:
+                    # End of partition event
+                    sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
+                                     (msg.topic(), msg.partition(), msg.offset()))
+                elif msg.error():
+                    # Error
+                    raise KafkaException(msg.error())
+            else:
+                # Proper message
+                sys.stderr.write('%% %s [%d] at offset %d with key %s:\n' %
+                                 (msg.topic(), msg.partition(), msg.offset(),
+                                  str(msg.key())))
+                print(msg.value())
+
+    except KeyboardInterrupt:
+        sys.stderr.write('%% Aborted by user\n')
+
+    # Close down consumer to commit final offsets.
+    c.close()
+
+!python consumer.py
+
+!pip uninstall pymongo
+!pip install pymongo[srv]
+
+MONGODB_USER = 'kafka-demo'
+MONGODB_PASSWORD = '<your-pass>'
+MONGODB_CLUSTER = 'cluster0.ca4wh.mongodb.net'
+MONGODB_DATABASE = 'movielens'
+
+import pymongo
+import urllib 
+
+mongo_uri = f"mongodb+srv://{MONGODB_USER}:{MONGODB_PASSWORD}@{MONGODB_CLUSTER}/{MONGODB_DATABASE}?retryWrites=true&w=majority"
+client = pymongo.MongoClient(mongo_uri)
+
+mydb = client["movielens"]
+mydb.list_collection_names()
+
+client.list_database_names()
+
+movies = mydb.movies
+
+result = movies.insert_one({'movieId': 3, 'title': 'Grumpier Old Men (1995)', 'genres': 'Comedy|Romance'})
+result
+
+print(f"One movie: {result.inserted_id}")
+
+# single-line command to insert record
+print(client.movielens.movies.insert_one({'movieId':5, 'title':'Bride', 'genres':'Comedy'}).inserted_id)
+
+movie2 = {'movieId': 2, 'title': 'Jumanji (1995)', 'genres': 'Adventure|Children|Fantasy'}
+movie3 = {'movieId': 3, 'title': 'Grumpier Old Men (1995)', 'genres': 'Comedy|Romance'}
+
+new_result = movies.insert_many([movie2, movie3])
+print(f"Multiple movies: {new_result.inserted_ids}")
+
+import pprint
+
+for doc in movies.find():
+  pprint.pprint(doc)
+
+%%writefile consumer.py
+
+import sys
+import os
+
+from confluent_kafka import Consumer, KafkaException, KafkaError
+import pymongo
+
+CLOUDKARAFKA_TOPIC = 'yx03wajr-demo'
+CLOUDKARAFKA_BROKERS = 'dory-01.srvs.cloudkafka.com:9094, \
+dory-02.srvs.cloudkafka.com:9094, \
+dory-03.srvs.cloudkafka.com:9094'
+CLOUDKARAFKA_USERNAME = 'yx03wajr'
+CLOUDKARAFKA_PASSWORD = 'pHva0afDUXPya6JfKrbM1j549G*****'
+
+MONGODB_USER = 'kafka-demo'
+MONGODB_PASSWORD = '<your-pass>'
+MONGODB_CLUSTER = 'cluster0.ca4wh.mongodb.net'
+MONGODB_DATABASE = 'movielens'
+
+mongo_uri = f"mongodb+srv://{MONGODB_USER}:{MONGODB_PASSWORD}@{MONGODB_CLUSTER}/{MONGODB_DATABASE}?retryWrites=true&w=majority"
+client = pymongo.MongoClient(mongo_uri)
+mydb = client[MONGODB_DATABASE]
+movies = mydb.movies
+
+if __name__ == '__main__':
+    topics = CLOUDKARAFKA_TOPIC.split(",")
+
+    # Consumer configuration
+    # See https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+    conf = {
+        'bootstrap.servers': CLOUDKARAFKA_BROKERS,
+        'group.id': "%s-consumer" % CLOUDKARAFKA_USERNAME,
+        'session.timeout.ms': 6000,
+        'default.topic.config': {'auto.offset.reset': 'smallest'},
+        'security.protocol': 'SASL_SSL',
+        'sasl.mechanisms': 'SCRAM-SHA-256',
+        'sasl.username': CLOUDKARAFKA_USERNAME,
+        'sasl.password': CLOUDKARAFKA_PASSWORD
+    }
+
+    c = Consumer(**conf)
+    c.subscribe(topics)
+    try:
+        while True:
+            msg = c.poll(timeout=1.0)
+            if msg is None:
+                continue
+            if msg.error():
+                # Error or event
+                if msg.error().code() == KafkaError._PARTITION_EOF:
+                    # End of partition event
+                    sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
+                                     (msg.topic(), msg.partition(), msg.offset()))
+                elif msg.error():
+                    # Error
+                    raise KafkaException(msg.error())
+            else:
+                # Proper message
+                sys.stderr.write('%% %s [%d] at offset %d with key %s:\n' %
+                                 (msg.topic(), msg.partition(), msg.offset(),
+                                  str(msg.key())))
+                print(msg.value())
+                try:
+                  movies.insert_one(eval(msg.value().decode('utf-8')))
+                except:
+                  movies.insert_one({"err_flag":True, "msg":str(msg.value())})
+
+    except KeyboardInterrupt:
+        sys.stderr.write('%% Aborted by user\n')
+
+    # Close down consumer to commit final offsets.
+    c.close()
+
+!python consumer.py
+
+!pip uninstall pymongo
+!pip install pymongo[srv]
+
+import os
+import pymongo
+from bson.json_util import dumps
+
+MONGODB_USER = 'kafka-demo'
+MONGODB_PASSWORD = '<your-pass>'
+MONGODB_CLUSTER = 'cluster0.ca4wh.mongodb.net'
+MONGODB_DATABASE = 'movielens'
+
+mongo_uri = f"mongodb+srv://{MONGODB_USER}:{MONGODB_PASSWORD}@{MONGODB_CLUSTER}/{MONGODB_DATABASE}?retryWrites=true&w=majority"
+client = pymongo.MongoClient(mongo_uri)
+
+import pandas as pd
+movies = pd.DataFrame(columns=['_id','movieId','title','genres'])
+
+change_stream = client.movielens.movies.watch()
+for change in change_stream:
+  _temp = change['fullDocument']
+  movies = movies.append(pd.DataFrame(_temp, columns=_temp.keys(), index=[0]), ignore_index=True)
+  display(movies)

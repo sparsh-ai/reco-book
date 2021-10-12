@@ -1,0 +1,91 @@
+!wget -q https://www.cs.cornell.edu/~shuochen/lme/dataset.tar.gz
+!tar -xf dataset.tar.gz
+
+import numpy as np
+import pandas as pd
+import gensim 
+from gensim.models import Word2Vec
+from urllib import request
+
+import warnings
+warnings.filterwarnings('ignore')
+
+with open("/content/dataset/yes_complete/train.txt", 'r') as f:
+  # skipping first 2 lines as they contain only metadata
+  lines = f.read().split('\n')[2:]
+  # select playlists with at least 2 songs, a minimum threshold for sequence learning 
+  playlists = [s.rstrip().split() for s in lines if len(s.split()) > 1]
+
+print( 'Playlist #1:\n ', playlists[0], '\n')
+print( 'Playlist #2:\n ', playlists[1])
+
+model = Word2Vec(playlists, size=32, window=20, negative=50, min_count=1, workers=-1)
+
+!head /content/dataset/yes_complete/song_hash.txt
+
+with open("/content/dataset/yes_complete/song_hash.txt", 'r') as f:
+  songs_file = f.read().split('\n')
+  songs = [s.rstrip().split('\t') for s in songs_file]
+
+songs_df = pd.DataFrame(data=songs, columns = ['id', 'title', 'artist'])
+songs_df = songs_df.set_index('id')
+songs_df.head()
+
+songs_df.iloc[[1,10,100]]
+
+songs_df[songs_df.artist == 'Rush'].head()
+
+!head /content/dataset/yes_complete/tag_hash.txt
+
+with open("/content/dataset/yes_complete/tag_hash.txt", 'r') as f:
+  tags_file = f.read().split('\n')
+  tags = [s.rstrip().split(',') for s in tags_file]
+  tag_name = {a:b.strip() for a,b in tags}
+  tag_name['#'] = 'no tag'
+
+print('Tag name for tag id {} is "{}"\n'.format('10', tag_name['10']))
+print('Tag name for tag id {} is "{}"\n'.format('80', tag_name['80']))
+print('There are total {} tags'.format(len(tag_name.items())))
+
+!head /content/dataset/yes_complete/tags.txt
+
+with open("/content/dataset/yes_complete/tags.txt", 'r') as f:
+  song_tags = f.read().split('\n')
+  song_tags = [s.split(' ') for s in song_tags]
+  song_tags = {a:b for a,b in enumerate(song_tags)}
+
+def tags_for_song(song_id=0):
+  tag_ids = song_tags[int(song_id)]
+  return [tag_name[tag_id] for tag_id in tag_ids]
+
+print('Tags for song "{}" : {}\n'.format(songs_df.iloc[0].title, tags_for_song(0)))
+
+def recommend(song_id=0, topn=5):
+  # song info
+  song_info = songs_df.iloc[song_id]
+  song_tags = [', '.join(tags_for_song(song_id))]
+  query_song = pd.DataFrame({'title':song_info.title,
+                             'artist':song_info.artist,
+                             'tags':song_tags})
+
+  # similar songs
+  similar_songs = np.array(model.wv.most_similar(positive=str(song_id), topn=topn))[:,0]
+  recommendations = songs_df.iloc[similar_songs]
+  recommendations['tags'] = [tags_for_song(i) for i in similar_songs]
+
+  recommendations = pd.concat([query_song, recommendations])
+
+  axis_name = ['Query'] + ['Recommendation '+str((i+1)) for i in range(topn)]
+  # recommendations.index = axis_name
+  recommendations = recommendations.style.set_table_styles([{'selector': 'th', 'props': [('background-color', 'gray')]}])
+  
+  return recommendations
+
+recs = recommend(10)
+recs
+
+recommend(song_id=19563)
+
+recommend(song_id=842)
+
+recommend(song_id=3822)

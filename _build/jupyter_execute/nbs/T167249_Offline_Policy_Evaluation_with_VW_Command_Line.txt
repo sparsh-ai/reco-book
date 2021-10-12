@@ -1,0 +1,70 @@
+%%writefile train.dat
+1:1:0.5 | user_age:25
+2:0:0.5 | user_age:25
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+1:1:0.5 | user_age:27
+2:0:0.5 | user_age:21
+2:0:0.5 | user_age:23
+2:0:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:36
+1:1:0.5 | user_age:25
+2:0:0.5 | user_age:25
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+
+%%writefile test.dat
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+1:1:0.5 | user_age:27
+2:0:0.5 | user_age:21
+2:0:0.5 | user_age:23
+2:0:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:36
+
+!sudo apt-get install vowpal-wabbit
+
+!vw --cb 2 --cb_type ips -d train.dat -f candidate-model.vw
+
+!vw -i candidate-model.vw --cb_type ips -t -d test.dat
+
+%%writefile data.dat
+1:1:0.5 | user_age:25
+2:0:0.5 | user_age:25
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+1:1:0.5 | user_age:27
+2:0:0.5 | user_age:21
+2:0:0.5 | user_age:23
+2:0:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:36
+1:1:0.5 | user_age:25
+2:0:0.5 | user_age:25
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:56
+1:1:0.5 | user_age:27
+2:0:0.5 | user_age:21
+2:0:0.5 | user_age:23
+2:0:0.5 | user_age:56
+2:1:0.5 | user_age:55
+2:1:0.5 | user_age:36
+
+!vw --cb 2 --cb_type ips -d data.dat 
+
+%%writefile eval.dat
+2 1:2:0.5 | feature_a feature_b
+2 2:2:0.4 | feature_a feature_c
+1 1:2:0.1 | feature_b feature_c
+
+!vw --cb 2 --eval -d eval.dat
+
+!vw --cb 2 --eval -d eval.dat --cb_type dm

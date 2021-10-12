@@ -1,0 +1,444 @@
+# Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+# Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+
+from zoo.common.nncontext import*
+
+sc = init_nncontext()
+
+from zoo.pipeline.api.keras.layers import *
+from zoo.models.recommendation import UserItemFeature
+from zoo.models.recommendation import NeuralCF
+from zoo.common.nncontext import init_nncontext
+import matplotlib
+from sklearn import metrics
+from operator import itemgetter
+from bigdl.util.common import *
+
+import os
+import numpy as np
+
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+%pylab inline
+
+!wget http://files.grouplens.org/datasets/movielens/ml-1m.zip
+!unzip ml-1m.zip
+
+def read_data_sets(data_dir):
+  rating_files = os.path.join(data_dir,"ratings.dat")
+  rating_list = [i.strip().split("::") for i in open(rating_files,"r").readlines()]    
+  movielens_data = np.array(rating_list).astype(int)
+  return movielens_data 
+
+def get_id_pairs(data_dir):
+	movielens_data = read_data_sets(data_dir)
+	return movielens_data[:, 0:2]
+
+def get_id_ratings(data_dir):
+	movielens_data = read_data_sets(data_dir)
+	return movielens_data[:, 0:3]
+
+movielens_data = get_id_ratings("/content/ml-1m")
+
+min_user_id = np.min(movielens_data[:,0])
+max_user_id = np.max(movielens_data[:,0])
+min_movie_id = np.min(movielens_data[:,1])
+max_movie_id = np.max(movielens_data[:,1])
+rating_labels= np.unique(movielens_data[:,2])
+
+print(movielens_data.shape)
+print(min_user_id, max_user_id, min_movie_id, max_movie_id, rating_labels)
+
+def build_sample(user_id, item_id, rating):
+    sample = Sample.from_ndarray(np.array([user_id, item_id]), np.array([rating]))
+    return UserItemFeature(user_id, item_id, sample)
+
+pairFeatureRdds = sc.parallelize(movielens_data).map(lambda x: build_sample(x[0], x[1], x[2]-1))
+pairFeatureRdds.take(3)
+
+trainPairFeatureRdds, valPairFeatureRdds = pairFeatureRdds.randomSplit([0.8, 0.2], seed= 1)
+valPairFeatureRdds.cache()
+
+train_rdd= trainPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+val_rdd= valPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+val_rdd.persist()
+
+train_rdd.count()
+
+train_rdd.take(3)
+
+ncf = NeuralCF(user_count=max_user_id, 
+               item_count=max_movie_id, 
+               class_num=5, 
+               hidden_layers=[20, 10], 
+               include_mf = False)
+
+ncf.compile(optimizer= "adam",
+            loss= "sparse_categorical_crossentropy",
+            metrics=['accuracy'])
+
+tmp_log_dir = create_tmp_path()
+ncf.set_tensorboard(tmp_log_dir, "training_ncf")
+
+ncf.fit(train_rdd, 
+        nb_epoch= 10, 
+        batch_size= 8000, 
+        validation_data=val_rdd)
+
+results = ncf.predict(val_rdd)
+results.take(5)
+
+results_class = ncf.predict_class(val_rdd)
+results_class.take(5)
+
+userItemPairPrediction = ncf.predict_user_item_pair(valPairFeatureRdds)
+for result in userItemPairPrediction.take(5): print(result)
+
+userRecs = ncf.recommend_for_user(valPairFeatureRdds, 3)
+for result in userRecs.take(5): print(result)
+
+itemRecs = ncf.recommend_for_item(valPairFeatureRdds, 3)
+for result in itemRecs.take(5): print(result)
+
+#retrieve train and validation summary object and read the loss data into ndarray's. 
+train_loss = np.array(ncf.get_train_summary("Loss"))
+val_loss = np.array(ncf.get_validation_summary("Loss"))
+#plot the train and validation curves
+# each event data is a tuple in form of (iteration_count, value, timestamp)
+plt.figure(figsize = (12,6))
+plt.plot(train_loss[:,0],train_loss[:,1],label='train loss')
+plt.plot(val_loss[:,0],val_loss[:,1],label='val loss',color='green')
+plt.scatter(val_loss[:,0],val_loss[:,1],color='green')
+plt.legend();
+plt.xlim(0,train_loss.shape[0]+10)
+plt.grid(True)
+plt.title("loss")
+
+plt.figure(figsize = (12,6))
+top1 = np.array(ncf.get_validation_summary("Top1Accuracy"))
+plt.plot(top1[:,0],top1[:,1],label='top1')
+plt.title("top1 accuracy")
+plt.grid(True)
+plt.legend();
+
+# Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+# Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+
+from zoo.common.nncontext import*
+
+sc = init_nncontext()
+
+from zoo.pipeline.api.keras.layers import *
+from zoo.models.recommendation import UserItemFeature
+from zoo.models.recommendation import NeuralCF
+from zoo.common.nncontext import init_nncontext
+import matplotlib
+from sklearn import metrics
+from operator import itemgetter
+from bigdl.util.common import *
+
+import os
+import numpy as np
+from sklearn import preprocessing
+
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+%pylab inline
+
+!wget https://github.com/sparsh-ai/reco-data/raw/master/goodreads/ratings.csv
+
+def read_data_sets(data_dir):
+  rating_files = os.path.join(data_dir,"ratings.csv")
+  rating_list = [i.strip().split(",") for i in open(rating_files,"r").readlines()]    
+  goodreads_data = np.array(rating_list[1:]).astype(int)
+  return goodreads_data 
+
+def get_id_pairs(data_dir):
+	goodreads_data = read_data_sets(data_dir)
+	return goodreads_data[:, 0:2]
+
+def get_id_ratings(data_dir):
+  goodreads_data = read_data_sets(data_dir)
+  le_user = preprocessing.LabelEncoder()
+  goodreads_data[:, 0] = le_user.fit_transform(goodreads_data[:, 0])
+  le_item = preprocessing.LabelEncoder()
+  goodreads_data[:, 1] = le_item.fit_transform(goodreads_data[:, 1])
+  return goodreads_data[:, 0:3]
+
+goodreads_data = get_id_ratings("/content")
+
+min_user_id = np.min(goodreads_data[:,0])
+max_user_id = np.max(goodreads_data[:,0])
+min_book_id = np.min(goodreads_data[:,1])
+max_book_id = np.max(goodreads_data[:,1])
+rating_labels= np.unique(goodreads_data[:,2])
+
+print(goodreads_data.shape)
+print(min_user_id, max_user_id, min_book_id, max_book_id, rating_labels)
+
+def build_sample(user_id, item_id, rating):
+    sample = Sample.from_ndarray(np.array([user_id, item_id]), np.array([rating]))
+    return UserItemFeature(user_id, item_id, sample)
+
+pairFeatureRdds = sc.parallelize(goodreads_data).map(lambda x: build_sample(x[0], x[1], x[2]-1))
+pairFeatureRdds.take(3)
+
+trainPairFeatureRdds, valPairFeatureRdds = pairFeatureRdds.randomSplit([0.8, 0.2], seed= 1)
+valPairFeatureRdds.cache()
+
+train_rdd= trainPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+val_rdd= valPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+val_rdd.persist()
+
+train_rdd.count()
+
+train_rdd.take(3)
+
+ncf = NeuralCF(user_count=max_user_id, 
+               item_count=max_book_id, 
+               class_num=5, 
+               hidden_layers=[20, 10], 
+               include_mf = False)
+
+ncf.compile(optimizer= "adam",
+            loss= "sparse_categorical_crossentropy",
+            metrics=['accuracy'])
+
+tmp_log_dir = create_tmp_path()
+ncf.set_tensorboard(tmp_log_dir, "training_ncf")
+
+ncf.fit(train_rdd, 
+        nb_epoch= 10, 
+        batch_size= 5000,
+        validation_data=val_rdd)
+
+results = ncf.predict(val_rdd)
+results.take(5)
+
+results_class = ncf.predict_class(val_rdd)
+results_class.take(5)
+
+userItemPairPrediction = ncf.predict_user_item_pair(valPairFeatureRdds)
+for result in userItemPairPrediction.take(5): print(result)
+
+userRecs = ncf.recommend_for_user(valPairFeatureRdds, 3)
+for result in userRecs.take(5): print(result)
+
+itemRecs = ncf.recommend_for_item(valPairFeatureRdds, 3)
+for result in itemRecs.take(5): print(result)
+
+#retrieve train and validation summary object and read the loss data into ndarray's. 
+train_loss = np.array(ncf.get_train_summary("Loss"))
+val_loss = np.array(ncf.get_validation_summary("Loss"))
+#plot the train and validation curves
+# each event data is a tuple in form of (iteration_count, value, timestamp)
+plt.figure(figsize = (12,6))
+plt.plot(train_loss[:,0],train_loss[:,1],label='train loss')
+plt.plot(val_loss[:,0],val_loss[:,1],label='val loss',color='green')
+plt.scatter(val_loss[:,0],val_loss[:,1],color='green')
+plt.legend();
+plt.xlim(0,train_loss.shape[0]+10)
+plt.grid(True)
+plt.title("loss")
+
+plt.figure(figsize = (12,6))
+top1 = np.array(ncf.get_validation_summary("Top1Accuracy"))
+plt.plot(top1[:,0],top1[:,1],label='top1')
+plt.title("top1 accuracy")
+plt.grid(True)
+plt.legend();
+
+# Install jdk8
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+# Set jdk environment path which enables you to run Pyspark in your Colab environment.
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+!update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+# Install latest release version of analytics-zoo 
+# Installing analytics-zoo from pip will automatically install pyspark, bigdl, and their dependencies.
+!pip install analytics-zoo
+
+from zoo.common.nncontext import*
+
+sc = init_nncontext()
+
+from zoo.models.recommendation import *
+from zoo.models.recommendation.utils import *
+from zoo.common.nncontext import init_nncontext
+
+sqlContext = SQLContext(sc)
+from pyspark.sql.types import *
+from pyspark.sql import Row
+
+import os
+import sys
+import datetime as dt
+import numpy as np
+from sklearn import preprocessing
+
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+%pylab inline
+
+!wget http://files.grouplens.org/datasets/movielens/ml-1m.zip
+!unzip ml-1m.zip
+
+def read_data_sets(data_dir):
+  rating_files = os.path.join(data_dir,"ratings.dat")
+  rating_list = [i.strip().split("::") for i in open(rating_files,"r").readlines()]    
+  movielens_data = np.array(rating_list).astype(int)
+  return movielens_data 
+
+def get_id_pairs(data_dir):
+	movielens_data = read_data_sets(data_dir)
+	return movielens_data[:, 0:2]
+
+def get_id_ratings(data_dir):
+	movielens_data = read_data_sets(data_dir)
+	return movielens_data[:100000, 0:3]
+
+movielens_data = get_id_ratings("/content/ml-1m")
+
+min_user_id = np.min(movielens_data[:,0])
+max_user_id = np.max(movielens_data[:,0])
+min_movie_id = np.min(movielens_data[:,1])
+max_movie_id = np.max(movielens_data[:,1])
+rating_labels= np.unique(movielens_data[:,2])
+
+print(movielens_data.shape)
+print(min_user_id, max_user_id, min_movie_id, max_movie_id, rating_labels)
+
+Rating = Row("userId", "itemId", "label")
+User = Row("userId", "gender", "age" ,"occupation")
+Item = Row("itemId", "title" ,"genres")
+
+ratings = sc.parallelize(movielens_data)\
+    .map(lambda l: (int(l[0]), int(l[1]), int(l[2])-1))\
+    .map(lambda r: Rating(*r))
+ratingDF = sqlContext.createDataFrame(ratings)
+
+users= sc.textFile("/content/ml-1m/users.dat")\
+    .map(lambda l: l.split("::")[0:4])\
+    .map(lambda l: (int(l[0]), l[1], int(l[2]), int(l[3])))\
+    .map(lambda r: User(*r))
+userDF = sqlContext.createDataFrame(users)
+
+items = sc.textFile("/content/ml-1m/movies.dat")\
+    .map(lambda l: l.split("::")[0:3])\
+    .map(lambda l: (int(l[0]), l[1], l[2].split('|')[0]))\
+    .map(lambda r: Item(*r))
+itemDF = sqlContext.createDataFrame(items)
+
+from pyspark.sql.functions import col, udf
+
+gender_udf = udf(lambda gender: categorical_from_vocab_list(gender, ["F", "M"], start=1))
+bucket_cross_udf = udf(lambda feature1, feature2: hash_bucket(str(feature1) + "_" + str(feature2), bucket_size=100))
+genres_list = ["Crime", "Romance", "Thriller", "Adventure", "Drama", "Children's",
+      "War", "Documentary", "Fantasy", "Mystery", "Musical", "Animation", "Film-Noir", "Horror",
+      "Western", "Comedy", "Action", "Sci-Fi"]
+genres_udf = udf(lambda genres: categorical_from_vocab_list(genres, genres_list, start=1))
+     
+allDF = ratingDF.join(userDF, ["userId"]).join(itemDF, ["itemId"]) \
+        .withColumn("gender", gender_udf(col("gender")).cast("int")) \
+        .withColumn("age-gender", bucket_cross_udf(col("age"), col("gender")).cast("int")) \
+        .withColumn("genres", genres_udf(col("genres")).cast("int"))
+allDF.show(5)
+
+bucket_size = 100
+column_info = ColumnFeatureInfo(
+            wide_base_cols=["occupation", "gender"],
+            wide_base_dims=[21, 3],
+            wide_cross_cols=["age-gender"],
+            wide_cross_dims=[bucket_size],
+            indicator_cols=["genres", "gender"],
+            indicator_dims=[19, 3],
+            embed_cols=["userId", "itemId"],
+            embed_in_dims=[max_user_id, max_movie_id],
+            embed_out_dims=[64, 64],
+            continuous_cols=["age"])
+
+rdds = allDF.rdd.map(lambda row: to_user_item_feature(row, column_info))
+trainPairFeatureRdds, valPairFeatureRdds = rdds.randomSplit([0.8, 0.2], seed= 1)
+valPairFeatureRdds.persist()
+
+train_data= trainPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+test_data= valPairFeatureRdds.map(lambda pair_feature: pair_feature.sample)
+
+train_data.count()
+
+train_data.take(3)
+
+wide_n_deep = WideAndDeep(5, column_info, "wide_n_deep")
+
+wide_n_deep.compile(optimizer = "adam",
+                    loss= "sparse_categorical_crossentropy",
+                    metrics=['accuracy'])
+
+tmp_log_dir = create_tmp_path()
+wide_n_deep.set_tensorboard(tmp_log_dir, "training_wideanddeep")
+
+%%time
+# Boot training process
+wide_n_deep.fit(train_data,
+                batch_size = 20000,
+                nb_epoch = 10,
+                validation_data = test_data)
+print("Optimization Done.")
+
+results = wide_n_deep.predict(test_data)
+results.take(5)
+
+results_class = wide_n_deep.predict_class(test_data)
+results_class.take(5)
+
+userItemPairPrediction = wide_n_deep.predict_user_item_pair(valPairFeatureRdds)
+for result in userItemPairPrediction.take(5): print(result)
+
+userRecs = wide_n_deep.recommend_for_user(valPairFeatureRdds, 3)
+for result in userRecs.take(5): print(result)
+
+itemRecs = wide_n_deep.recommend_for_item(valPairFeatureRdds, 3)
+for result in itemRecs.take(5): print(result)
+
+#retrieve train and validation summary object and read the loss data into ndarray's. 
+train_loss = np.array(wide_n_deep.get_train_summary("Loss"))
+val_loss = np.array(wide_n_deep.get_validation_summary("Loss"))
+#plot the train and validation curves
+# each event data is a tuple in form of (iteration_count, value, timestamp)
+plt.figure(figsize = (12,6))
+plt.plot(train_loss[:,0],train_loss[:,1],label='train loss')
+plt.plot(val_loss[:,0],val_loss[:,1],label='val loss',color='green')
+plt.scatter(val_loss[:,0],val_loss[:,1],color='green')
+plt.legend();
+plt.xlim(0,train_loss.shape[0]+10)
+plt.grid(True)
+plt.title("loss")
+
+plt.figure(figsize = (12,6))
+top1 = np.array(wide_n_deep.get_validation_summary("Top1Accuracy"))
+plt.plot(top1[:,0],top1[:,1],label='top1')
+plt.title("top1 accuracy")
+plt.grid(True)
+plt.legend();
+plt.xlim(0,train_loss.shape[0]+10)
+
+# %reload_ext tensorboard
+# %tensorboard --logdir $tmp_log_dir/training_wideanddeep/

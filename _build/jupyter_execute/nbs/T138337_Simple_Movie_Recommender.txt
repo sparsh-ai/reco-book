@@ -1,0 +1,387 @@
+!pip install -q fuzzywuzzy python-Levenshtein implicit
+
+import numpy as np
+import pandas as pd
+import sklearn
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from collections import Counter
+import re 
+from scipy.sparse import csr_matrix
+from scipy.sparse import save_npz
+from sklearn.metrics.pairwise import cosine_similarity
+from fuzzywuzzy import process
+from scipy.sparse import csr_matrix
+import implicit
+
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+ratings = pd.read_csv("https://s3-us-west-2.amazonaws.com/recommender-tutorial/ratings.csv")
+ratings.head()
+
+movies = pd.read_csv("https://s3-us-west-2.amazonaws.com/recommender-tutorial/movies.csv")
+movies.head()
+
+movies['genres'] = movies['genres'].apply(lambda x: x.split("|"))
+movies.head()
+
+genres_counts = Counter(g for genres in movies['genres'] for g in genres)
+print(f"There are {len(genres_counts)} genre labels.")
+genres_counts
+
+movies = movies[movies['genres']!='(no genres listed)']
+
+del genres_counts['(no genres listed)']
+
+print("The 5 most common genres: \n", genres_counts.most_common(5))
+
+genres_counts_df = pd.DataFrame([genres_counts]).T.reset_index()
+genres_counts_df.columns = ['genres', 'count']
+genres_counts_df = genres_counts_df.sort_values(by='count', ascending=False)
+
+plt.figure(figsize=(10,5))
+sns.barplot(x='genres', y='count', data=genres_counts_df, palette='viridis')
+plt.xticks(rotation=90)
+plt.show()
+
+def extract_year_from_title(title):
+    t = title.split(' ')
+    year = None
+    if re.search(r'\(\d+\)', t[-1]):
+        year = t[-1].strip('()')
+        year = int(year)
+    return year
+
+title = "Toy Story (1995)"
+year = extract_year_from_title(title)
+print(f"Year of release: {year}")
+print(type(year))
+
+movies['year'] = movies['title'].apply(extract_year_from_title)
+movies.head()
+
+movies['year'].nunique()
+
+print(f"Original number of movies: {movies['movieId'].nunique()}")
+
+movies = movies[~movies['year'].isnull()]
+print(f"Number of movies after removing null years: {movies['movieId'].nunique()}")
+
+x = 1995
+
+def get_decade(year):
+    year = str(year)
+    decade_prefix = year[0:3] # get first 3 digits of year
+    decade = f'{decade_prefix}0' # append 0 at the end
+    return int(decade)
+
+get_decade(x)
+
+def round_down(year):
+    return year - (year%10)
+
+round_down(x)
+
+movies['decade'] = movies['year'].apply(round_down)
+
+plt.figure(figsize=(10,6))
+sns.countplot(movies['decade'], palette='Blues')
+plt.xticks(rotation=90)
+
+n_ratings = len(ratings)
+n_movies = ratings['movieId'].nunique()
+n_users = ratings['userId'].nunique()
+
+print(f"Number of ratings: {n_ratings}")
+print(f"Number of unique movieId's: {n_movies}")
+print(f"Number of unique users: {n_users}")
+print(f"Average number of ratings per user: {round(n_ratings/n_users, 2)}")
+print(f"Average number of ratings per movie: {round(n_ratings/n_movies, 2)}")
+
+user_freq = ratings[['userId', 'movieId']].groupby('userId').count().reset_index()
+user_freq.columns = ['userId', 'n_ratings']
+user_freq.head()
+
+print(f"Mean number of ratings for a given user: {user_freq['n_ratings'].mean():.2f}.")
+
+sns.set_style("whitegrid")
+plt.figure(figsize=(14,5))
+plt.subplot(1,2,1)
+ax = sns.countplot(x="rating", data=ratings, palette="viridis")
+plt.title("Distribution of movie ratings")
+
+plt.subplot(1,2,2)
+ax = sns.kdeplot(user_freq['n_ratings'], shade=True, legend=False)
+plt.axvline(user_freq['n_ratings'].mean(), color="k", linestyle="--")
+plt.xlabel("# ratings per user")
+plt.ylabel("density")
+plt.title("Number of movies rated per user")
+plt.show()
+
+mean_rating = ratings.groupby('movieId')[['rating']].mean()
+
+lowest_rated = mean_rating['rating'].idxmin()
+movies.loc[movies['movieId'] == lowest_rated]
+
+highest_rated = mean_rating['rating'].idxmax()
+movies.loc[movies['movieId'] == highest_rated]
+
+ratings[ratings['movieId']==highest_rated]
+
+movie_stats = ratings.groupby('movieId')[['rating']].agg(['count', 'mean'])
+movie_stats.columns = movie_stats.columns.droplevel()
+
+C = movie_stats['count'].mean()
+m = movie_stats['mean'].mean()
+
+def bayesian_avg(ratings):
+    bayesian_avg = (C*m+ratings.sum())/(C+ratings.count())
+    return bayesian_avg
+
+bayesian_avg_ratings = ratings.groupby('movieId')['rating'].agg(bayesian_avg).reset_index()
+bayesian_avg_ratings.columns = ['movieId', 'bayesian_avg']
+movie_stats = movie_stats.merge(bayesian_avg_ratings, on='movieId')
+
+movie_stats = movie_stats.merge(movies[['movieId', 'title']])
+movie_stats.sort_values('bayesian_avg', ascending=False).head()
+
+movie_stats.sort_values('bayesian_avg', ascending=True).head()
+
+def create_X(df):
+    """
+    Generates a sparse matrix from ratings dataframe.
+    
+    Args:
+        df: pandas dataframe
+    
+    Returns:
+        X: sparse matrix
+        user_mapper: dict that maps user id's to user indices
+        user_inv_mapper: dict that maps user indices to user id's
+        movie_mapper: dict that maps movie id's to movie indices
+        movie_inv_mapper: dict that maps movie indices to movie id's
+    """
+    N = df['userId'].nunique()
+    M = df['movieId'].nunique()
+
+    user_mapper = dict(zip(np.unique(df["userId"]), list(range(N))))
+    movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(M))))
+    
+    user_inv_mapper = dict(zip(list(range(N)), np.unique(df["userId"])))
+    movie_inv_mapper = dict(zip(list(range(M)), np.unique(df["movieId"])))
+    
+    user_index = [user_mapper[i] for i in df['userId']]
+    movie_index = [movie_mapper[i] for i in df['movieId']]
+
+    X = csr_matrix((df["rating"], (movie_index, user_index)), shape=(M, N))
+    
+    return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
+
+X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
+
+sparsity = X.count_nonzero()/(X.shape[0]*X.shape[1])
+
+print(f"Matrix sparsity: {round(sparsity*100,2)}%")
+
+save_npz('user_item_matrix.npz', X)
+
+from sklearn.neighbors import NearestNeighbors
+
+def find_similar_movies(movie_id, X, k, metric='cosine', show_distance=False):
+    """
+    Finds k-nearest neighbours for a given movie id.
+    
+    Args:
+        movie_id: id of the movie of interest
+        X: user-item utility matrix
+        k: number of similar movies to retrieve
+        metric: distance metric for kNN calculations
+    
+    Returns:
+        list of k similar movie ID's
+    """
+    neighbour_ids = []
+    
+    movie_ind = movie_mapper[movie_id]
+    movie_vec = X[movie_ind]
+    k+=1
+    kNN = NearestNeighbors(n_neighbors=k, algorithm="brute", metric=metric)
+    kNN.fit(X)
+    if isinstance(movie_vec, (np.ndarray)):
+        movie_vec = movie_vec.reshape(1,-1)
+    neighbour = kNN.kneighbors(movie_vec, return_distance=show_distance)
+    for i in range(0,k):
+        n = neighbour.item(i)
+        neighbour_ids.append(movie_inv_mapper[n])
+    neighbour_ids.pop(0)
+    return neighbour_ids
+
+movie_titles = dict(zip(movies['movieId'], movies['title']))
+
+movie_id = 1
+
+similar_ids = find_similar_movies(movie_id, X, k=10)
+movie_title = movie_titles[movie_id]
+
+print(f"Because you watched {movie_title}")
+for i in similar_ids:
+    print(movie_titles[i])
+
+movie_titles = dict(zip(movies['movieId'], movies['title']))
+
+movie_id = 1
+similar_ids = find_similar_movies(movie_id, X, k=10, metric="euclidean")
+
+movie_title = movie_titles[movie_id]
+print(f"Because you watched {movie_title}:")
+for i in similar_ids:
+    print(movie_titles[i])
+
+genres = list(genres_counts.keys())
+
+for g in genres:
+    movies[g] = movies['genres'].transform(lambda x: int(g in x))
+
+movies[genres].head()
+
+movie_decades = pd.get_dummies(movies['decade'])
+movie_decades.head()
+
+movie_features = pd.concat([movies[genres], movie_decades], axis=1)
+movie_features.head()
+
+cosine_sim = cosine_similarity(movie_features, movie_features)
+print(f"Dimensions of our movie features cosine similarity matrix: {cosine_sim.shape}")
+
+def movie_finder(title):
+    all_titles = movies['title'].tolist()
+    closest_match = process.extractOne(title,all_titles)
+    return closest_match[0]
+
+title = movie_finder('juminji')
+title
+
+movie_idx = dict(zip(movies['title'], list(movies.index)))
+idx = movie_idx[title]
+idx
+
+n_recommendations=10
+sim_scores = list(enumerate(cosine_sim[idx]))
+sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+sim_scores = sim_scores[1:(n_recommendations+1)]
+similar_movies = [i[0] for i in sim_scores]
+
+print(f"Because you watched {title}:")
+movies['title'].iloc[similar_movies]
+
+def get_content_based_recommendations(title_string, n_recommendations=10):
+    title = movie_finder(title_string)
+    idx = movie_idx[title]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:(n_recommendations+1)]
+    similar_movies = [i[0] for i in sim_scores]
+    print(f"Recommendations for {title}:")
+    print(movies['title'].iloc[similar_movies])
+
+get_content_based_recommendations('aladin', 5)
+
+ratings = pd.read_csv("https://s3-us-west-2.amazonaws.com/recommender-tutorial/ratings.csv")
+movies = pd.read_csv("https://s3-us-west-2.amazonaws.com/recommender-tutorial/movies.csv")
+
+def create_X(df):
+    """
+    Generates a sparse matrix from ratings dataframe.
+    
+    Args:
+        df: pandas dataframe
+    
+    Returns:
+        X: sparse matrix
+        user_mapper: dict that maps user id's to user indices
+        user_inv_mapper: dict that maps user indices to user id's
+        movie_mapper: dict that maps movie id's to movie indices
+        movie_inv_mapper: dict that maps movie indices to movie id's
+    """
+    N = df['userId'].nunique()
+    M = df['movieId'].nunique()
+
+    user_mapper = dict(zip(np.unique(df["userId"]), list(range(N))))
+    movie_mapper = dict(zip(np.unique(df["movieId"]), list(range(M))))
+    
+    user_inv_mapper = dict(zip(list(range(N)), np.unique(df["userId"])))
+    movie_inv_mapper = dict(zip(list(range(M)), np.unique(df["movieId"])))
+    
+    user_index = [user_mapper[i] for i in df['userId']]
+    movie_index = [movie_mapper[i] for i in df['movieId']]
+
+    X = csr_matrix((df["rating"], (movie_index, user_index)), shape=(M, N))
+    
+    return X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper
+
+X, user_mapper, movie_mapper, user_inv_mapper, movie_inv_mapper = create_X(ratings)
+
+def movie_finder(title):
+    all_titles = movies['title'].tolist()
+    closest_match = process.extractOne(title,all_titles)
+    return closest_match[0]
+
+movie_title_mapper = dict(zip(movies['title'], movies['movieId']))
+movie_title_inv_mapper = dict(zip(movies['movieId'], movies['title']))
+
+def get_movie_index(title):
+    fuzzy_title = movie_finder(title)
+    movie_id = movie_title_mapper[fuzzy_title]
+    movie_idx = movie_mapper[movie_id]
+    return movie_idx
+
+def get_movie_title(movie_idx): 
+    movie_id = movie_inv_mapper[movie_idx]
+    title = movie_title_inv_mapper[movie_id]
+    return title 
+
+get_movie_index('Legally Blonde')
+
+get_movie_title(3282)
+
+model = implicit.als.AlternatingLeastSquares(factors=50, use_gpu=False)
+
+model.fit(X)
+
+movie_of_interest = 'forrest gump'
+
+movie_index = get_movie_index(movie_of_interest)
+related = model.similar_items(movie_index)
+related
+
+print(f"Because you watched {movie_finder(movie_of_interest)}...")
+for r in related:
+    recommended_title = get_movie_title(r[0])
+    if recommended_title != movie_finder(movie_of_interest):
+        print(recommended_title)
+
+user_id = 95
+
+user_ratings = ratings[ratings['userId']==user_id].merge(movies[['movieId', 'title']])
+user_ratings = user_ratings.sort_values('rating', ascending=False)
+print(f"Number of movies rated by user {user_id}: {user_ratings['movieId'].nunique()}")
+
+user_ratings = ratings[ratings['userId']==user_id].merge(movies[['movieId', 'title']])
+user_ratings = user_ratings.sort_values('rating', ascending=False)
+top_5 = user_ratings.head()
+top_5
+
+bottom_5 = user_ratings[user_ratings['rating']<3].tail()
+bottom_5
+
+X_t = X.T.tocsr()
+
+user_idx = user_mapper[user_id]
+recommendations = model.recommend(user_idx, X_t)
+recommendations
+
+for r in recommendations:
+    recommended_title = get_movie_title(r[0])
+    print(recommended_title)

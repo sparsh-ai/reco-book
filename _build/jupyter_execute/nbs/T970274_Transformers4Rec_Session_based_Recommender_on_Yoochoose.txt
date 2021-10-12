@@ -1,0 +1,269 @@
+import os
+import glob
+import numpy as np
+import gc
+
+import cudf
+import cupy
+import nvtabular as nvt
+
+DATA_FOLDER = "/workspace/data/"
+FILENAME_PATTERN = 'yoochoose-clicks.dat'
+DATA_PATH = os.path.join(DATA_FOLDER, FILENAME_PATTERN)
+
+OUTPUT_FOLDER = "./yoochoose_transformed"
+OVERWRITE = False
+
+interactions_df = cudf.read_csv(DATA_PATH, sep=',', 
+                                names=['session_id','timestamp', 'item_id', 'category'], 
+                                dtype=['int', 'datetime64[s]', 'int', 'int'])
+
+print("Count with in-session repeated interactions: {}".format(len(interactions_df)))
+# Sorts the dataframe by session and timestamp, to remove consecutive repetitions
+interactions_df.timestamp = interactions_df.timestamp.astype(int)
+interactions_df = interactions_df.sort_values(['session_id', 'timestamp'])
+past_ids = interactions_df['item_id'].shift(1).fillna()
+session_past_ids = interactions_df['session_id'].shift(1).fillna()
+# Keeping only no consectutive repeated in session interactions
+interactions_df = interactions_df[~((interactions_df['session_id'] == session_past_ids) & (interactions_df['item_id'] == past_ids))]
+print("Count after removed in-session repeated interactions: {}".format(len(interactions_df)))
+
+items_first_ts_df = interactions_df.groupby('item_id').agg({'timestamp': 'min'}).reset_index().rename(columns={'timestamp': 'itemid_ts_first'})
+interactions_merged_df = interactions_df.merge(items_first_ts_df, on=['item_id'], how='left')
+interactions_merged_df.head()
+
+# free gpu memory
+del interactions_df, session_past_ids, items_first_ts_df
+gc.collect()
+
+# Encodes categorical features as contiguous integers
+cat_feats = nvt.ColumnSelector(['session_id', 'category', 'item_id']) >> nvt.ops.Categorify(start_index=1)
+
+# create time features
+session_ts = nvt.ColumnSelector(['timestamp'])
+session_time = (
+    session_ts >> 
+    nvt.ops.LambdaOp(lambda col: cudf.to_datetime(col, unit='s')) >> 
+    nvt.ops.Rename(name = 'event_time_dt')
+)
+sessiontime_weekday = (
+    session_time >> 
+    nvt.ops.LambdaOp(lambda col: col.dt.weekday) >> 
+    nvt.ops.Rename(name ='et_dayofweek')
+)
+
+# Derive cyclical features: Defines a custom lambda function 
+def get_cycled_feature_value_sin(col, max_value):
+    value_scaled = (col + 0.000001) / max_value
+    value_sin = np.sin(2*np.pi*value_scaled)
+    return value_sin
+
+weekday_sin = sessiontime_weekday >> (lambda col: get_cycled_feature_value_sin(col+1, 7)) >> nvt.ops.Rename(name = 'et_dayofweek_sin')
+
+# Compute Item recency: Define a custom Op 
+class ItemRecency(nvt.ops.Operator):
+    def transform(self, columns, gdf):
+        for column in columns.names:
+            col = gdf[column]
+            item_first_timestamp = gdf['itemid_ts_first']
+            delta_days = (col - item_first_timestamp) / (60*60*24)
+            gdf[column + "_age_days"] = delta_days * (delta_days >=0)
+        return gdf
+           
+    def output_column_names(self, columns):
+        return nvt.ColumnSelector([column + "_age_days" for column in columns.names])
+
+    def dependencies(self):
+        return ["itemid_ts_first"]
+    
+recency_features = session_ts >> ItemRecency() 
+# Apply standardization to this continuous feature
+recency_features_norm = recency_features >> nvt.ops.LogOp() >> nvt.ops.Normalize() >> nvt.ops.Rename(name='product_recency_days_log_norm')
+
+time_features = (
+    session_time +
+    sessiontime_weekday +
+    weekday_sin + 
+    recency_features_norm
+)
+
+features = nvt.ColumnSelector(['timestamp', 'session_id']) + cat_feats + time_features 
+
+# Define Groupby Operator
+groupby_features = features >> nvt.ops.Groupby(
+    groupby_cols=["session_id"], 
+    sort_cols=["timestamp"],
+    aggs={
+        'item_id': ["list", "count"],
+        'category': ["list"],  
+        'timestamp': ["first"],
+        'event_time_dt': ["first"],
+        'et_dayofweek_sin': ["list"],
+        'product_recency_days_log_norm': ["list"]
+        },
+    name_sep="-")
+
+
+# Truncate sequence features to first interacted 20 items 
+SESSIONS_MAX_LENGTH = 20 
+
+groupby_features_list = groupby_features['item_id-list', 'category-list', 'et_dayofweek_sin-list', 'product_recency_days_log_norm-list']
+groupby_features_truncated = groupby_features_list >> nvt.ops.ListSlice(0, SESSIONS_MAX_LENGTH) >> nvt.ops.Rename(postfix = '_seq')
+
+# Calculate session day index based on 'event_time_dt-first' column
+day_index = ((groupby_features['event_time_dt-first'])  >> 
+    nvt.ops.LambdaOp(lambda col: (col - col.min()).dt.days +1) >> 
+    nvt.ops.Rename(f = lambda col: "day_index")
+)
+
+# Select features for training 
+selected_features = groupby_features['session_id', 'item_id-count'] + groupby_features_truncated + day_index
+
+# Filter out sessions with less than 2 interactions 
+MINIMUM_SESSION_LENGTH = 2
+filtered_sessions = selected_features >> nvt.ops.Filter(f=lambda df: df["item_id-count"] >= MINIMUM_SESSION_LENGTH) 
+
+from numba import config
+config.CUDA_LOW_OCCUPANCY_WARNINGS = 0
+
+dataset = nvt.Dataset(interactions_merged_df)
+workflow = nvt.Workflow(filtered_sessions)
+# Learns features statistics necessary of the preprocessing workflow
+workflow.fit(dataset)
+# Apply the preprocessing workflow in the dataset and converts the resulting Dask cudf dataframe to a cudf dataframe
+sessions_gdf = workflow.transform(dataset).compute()
+
+sessions_gdf.head()
+
+workflow.save('workflow_etl')
+
+sessions_gdf = sessions_gdf[sessions_gdf.day_index>=178]
+
+from transformers4rec.data.preprocessing import save_time_based_splits
+save_time_based_splits(data=nvt.Dataset(sessions_gdf),
+                       output_dir= "./preproc_sessions_by_day",
+                       partition_col='day_index',
+                       timestamp_col='session_id', 
+                      )
+
+from transformers4rec.torch.utils.examples_utils import list_files
+list_files('./preproc_sessions_by_day')
+
+# free gpu memory
+del  sessions_gdf
+gc.collect()
+
+from merlin_standard_lib import Schema
+SCHEMA_PATH = "schema_demo.pb"
+schema = Schema().from_proto_text(SCHEMA_PATH)
+!cat $SCHEMA_PATH
+
+schema = schema.select_by_name(
+   ['item_id-list_seq', 'category-list_seq', 'product_recency_days_log_norm-list_seq', 'et_dayofweek_sin-list_seq']
+)
+
+from transformers4rec import torch as tr
+
+max_sequence_length, d_model = 20, 320
+# Define input module to process tabular input-features and to prepare masked inputs
+input_module = tr.TabularSequenceFeatures.from_schema(
+    schema,
+    max_sequence_length=max_sequence_length,
+    continuous_projection=64,
+    aggregation="concat",
+    d_output=d_model,
+    masking="mlm",
+)
+
+# Define Next item prediction-task 
+prediction_task = tr.NextItemPredictionTask(hf_format=True, weight_tying=True)
+
+# Define the config of the XLNet Transformer architecture
+transformer_config = tr.XLNetConfig.build(
+    d_model=d_model, n_head=8, n_layer=2, total_seq_length=max_sequence_length
+)
+
+#Get the end-to-end model 
+model = transformer_config.to_torch_model(input_module, prediction_task)
+
+model
+
+training_args = tr.trainer.T4RecTrainingArguments(
+            output_dir="./tmp",
+            max_sequence_length=20,
+            data_loader_engine='nvtabular',
+            num_train_epochs=10, 
+            dataloader_drop_last=False,
+            per_device_train_batch_size = 384,
+            per_device_eval_batch_size = 512,
+            learning_rate=0.0005,
+            fp16=True,
+            report_to = [],
+            logging_steps=200
+        )
+
+recsys_trainer = tr.Trainer(
+    model=model,
+    args=training_args,
+    schema=schema,
+    compute_metrics=True)
+
+from transformers4rec.torch.utils.examples_utils import fit_and_evaluate
+aot_results = fit_and_evaluate(recsys_trainer, start_time_index=178, end_time_index=178, input_dir='./preproc_sessions_by_day')
+
+mean_results = {k: np.mean(v) for k,v in aot_results.items()}
+for key in sorted(mean_results.keys()): 
+    print(" %s = %s" % (key, str(mean_results[key]))) 
+
+recsys_trainer._save_model_and_checkpoint(save_model_class=True)
+
+from nvtabular.inference.triton import export_pytorch_ensemble
+export_pytorch_ensemble(
+    model,
+    workflow,
+    sparse_max=recsys_trainer.get_train_dataloader().dataset.sparse_max,
+    name= "t4r_pytorch",
+    model_path= "/workspace/TF4Rec/models/",
+    label_columns =[],
+)
+
+import tritonhttpclient
+try:
+    triton_client = tritonhttpclient.InferenceServerClient(url="localhost:8000", verbose=True)
+    print("client created.")
+except Exception as e:
+    print("channel creation failed: " + str(e))
+triton_client.is_server_live()
+
+interactions_merged_df=interactions_merged_df.sort_values('timestamp')
+batch = interactions_merged_df[-50:]
+sessions_to_use = batch.session_id.value_counts()
+filtered_batch = batch[batch.session_id.isin(sessions_to_use[sessions_to_use.values>1].index.values)]
+
+triton_client.get_model_repository_index()
+
+triton_client.load_model(model_name="t4r_pytorch")
+
+import nvtabular.inference.triton as nvt_triton
+import tritonclient.grpc as grpcclient
+
+inputs = nvt_triton.convert_df_to_triton_input(filtered_batch.columns, filtered_batch, grpcclient.InferInput)
+
+output_names = ["output"]
+
+outputs = []
+for col in output_names:
+    outputs.append(grpcclient.InferRequestedOutput(col))
+    
+MODEL_NAME_NVT = "t4r_pytorch"
+
+with grpcclient.InferenceServerClient("localhost:8001") as client:
+    response = client.infer(MODEL_NAME_NVT, inputs)
+    print(col, ':\n', response.as_numpy(col))
+
+from transformers4rec.torch.utils.examples_utils import visualize_response
+visualize_response(filtered_batch, response, top_k=5, session_col='session_id')
+
+triton_client.unload_model(model_name="t4r_pytorch")
+triton_client.unload_model(model_name="t4r_pytorch_nvt")
+triton_client.unload_model(model_name="t4r_pytorch_pt")

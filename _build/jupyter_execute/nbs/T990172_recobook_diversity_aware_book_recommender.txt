@@ -1,0 +1,149 @@
+# Import libraries
+import numpy as np 
+import pandas as pd 
+import matplotlib
+import os
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel
+
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+
+# Displays all rows without truncating
+pd.set_option('display.max_rows', None)
+
+# Display all columns with/without truncating (use "set" or "reset")
+pd.reset_option('display.max_colwidth')
+
+# Load book data from csv
+books = pd.read_csv("https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads_v2/books.csv", encoding="ISO-8859-1")
+books.info()
+
+books.sample(20)
+
+# Load tags book_tags data from csv
+book_tags = pd.read_csv("https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads_v2/book_tags.csv", encoding="ISO-8859-1")
+tags = pd.read_csv("https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads_v2/tags.csv", encoding="ISO-8859-1")
+# Merge book_tags and tags 
+tags_join = pd.merge(book_tags, tags, left_on='tag_id', right_on='tag_id', how='inner')
+# Merge tags_join and books
+books_with_tags = pd.merge(books, tags_join, left_on='book_id', right_on='goodreads_book_id', how='inner')
+# Store tags into the same book id row
+temp_df = books_with_tags.groupby('book_id')['tag_name'].apply(' '.join).reset_index()
+temp_df.head(5)
+# Merge tag_names back into books
+books = pd.merge(books, temp_df, left_on='book_id', right_on='book_id', how='inner')
+books.sample(20)
+
+# Explore book tags
+books['tag_name'][0]
+
+books['tag_name'][1]
+
+# Transform text to feature vectors
+tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=50, stop_words='english')
+tfidf_matrix = tf.fit_transform(books['tag_name'])
+tfidf_matrix.todense()
+
+tfidf_matrix
+
+# Use numeric values to find similarities
+cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+cosine_sim
+
+# Get book recommendations based on the cosine similarity score of book tags
+# Build a 1-dimensional array with book titles
+titles = books['title']
+tag_name = books['tag_name']
+indices = pd.Series(books.index, index=books['title'])
+# Function that gets similarity scores
+def tags_recommendations(title):
+    idx = indices[title]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    # sim_scores = sim_scores[1:11] # How many results to display
+    book_indices = [i[0] for i in sim_scores]
+    title_df = pd.DataFrame({'title': titles.iloc[book_indices].tolist(),
+                           'similarity': [i[1] for i in sim_scores],
+                            'tag_name': tag_name.iloc[book_indices].tolist()}, 
+                           index=book_indices)
+    return title_df
+
+# Function that gets book tags and stats
+def recommend_stats(target_book_title):
+    
+    # Get recommended books
+    rec_df = tags_recommendations(target_book_title)
+    
+    # Get tags of the target book
+    rec_book_tags = books_with_tags[books_with_tags['title'] == target_book_title]['tag_name'].to_list()
+    
+    # Create dictionary of tag lists by book title
+    book_tag_dict = {}
+    for title in rec_df['title'].tolist():
+        book_tag_dict[title] = books_with_tags[books_with_tags['title'] == title]['tag_name'].to_list()
+    
+    # Create dictionary of tag statistics by book title
+    tags_stats = {}
+    for book, tags in book_tag_dict.items():
+        tags_stats[book] = {}
+        tags_stats[book]['total_tags'] = len(tags)
+        same_tags = set(rec_book_tags).intersection(set(tags)) # Get tags in recommended book that are also in target book
+        tags_stats[book]['%_common_tags'] = (len(same_tags) / len(tags)) * 100
+    
+    # Convert dictionary to dataframe
+    tags_stats_df = pd.DataFrame.from_dict(tags_stats, orient='index').reset_index().rename(columns={'index': 'title'})
+    
+    # Merge tag statistics dataframe to recommended books dataframe
+    all_stats_df = pd.merge(rec_df, tags_stats_df, on='title')
+    return all_stats_df
+
+# Find book recommendations
+lor_recs = recommend_stats('The Fellowship of the Ring (The Lord of the Rings, #1)')
+lor_recs
+
+# Find Zero to One book
+lor_recs[lor_recs.title == 'Zero to One: Notes on Startups, or How to Build the Future']
+
+# Calculate statistical data
+lor_recs.describe()
+
+# Boxplot of similarity score
+import matplotlib.pyplot as plt
+lor_recs.boxplot(column=['similarity'])
+plt.show()
+# Boxplot of percentage of common tags
+lor_recs.boxplot(column=['%_common_tags'])
+plt.show()
+
+# Store book tags into new dataframe
+lor_tags = pd.DataFrame(books_with_tags[books_with_tags['title']=='The Fellowship of the Ring (The Lord of the Rings, #1)']['tag_name'])
+# Find most frequent word used in book tags
+top_N = 10
+txt = lor_tags.tag_name.str.lower().str.replace(r'-', ' ').str.cat(sep=' ') # Remove hyphens
+words = nltk.tokenize.word_tokenize(txt)
+word_dist = nltk.FreqDist(words)
+stopwords = nltk.corpus.stopwords.words('english')
+words_except_stop_dist = nltk.FreqDist(w for w in words if w not in stopwords) 
+print('All frequencies, including STOPWORDS:')
+print('=' * 60)
+lor_rslt = pd.DataFrame(word_dist.most_common(top_N),
+                    columns=['Word', 'Frequency'])
+print(lor_rslt)
+print('=' * 60)
+lor_rslt = pd.DataFrame(words_except_stop_dist.most_common(top_N),
+                    columns=['Word', 'Frequency']).set_index('Word')
+matplotlib.style.use('ggplot')
+lor_rslt.plot.bar(rot=0)
+plt.show()
+
+# Filter by unlike words
+lor_recs_filter = lor_recs[(lor_recs['tag_name'].str.contains('non-fiction')) & (lor_recs['tag_name'].str.contains('economics')) & (lor_recs['tag_name'].str.contains('entrepreneurial'))]
+lor_recs_filter
+
+# Merge recommendations with ratings
+lor_recs_filter_merge = pd.merge(books[['title', 'average_rating']], lor_recs_filter, left_on='title', right_on='title', how='inner')
+# Sort by highest average rating
+lor_recs_filter_merge = lor_recs_filter_merge.sort_values(by=['average_rating'], ascending=False)
+lor_recs_filter_merge

@@ -1,0 +1,530 @@
+!wget https://raw.githubusercontent.com/sparsh-ai/rec-data-public/master/ml-other/ml100k_ratings.csv
+!wget https://raw.githubusercontent.com/sparsh-ai/rec-data-public/master/ml-other/ml100k_movies.csv
+
+import pandas as pd
+import numpy as np
+from scipy.sparse import coo_matrix, csr_matrix
+from scipy.sparse.linalg import svds, norm
+from scipy.spatial.distance import cosine
+from sklearn.metrics.pairwise import cosine_similarity
+import operator
+from collections import defaultdict
+from sklearn.preprocessing import LabelEncoder
+
+def print_stats(df, uid=1):
+  print(df.shape)
+  print(df.movieId.nunique())
+  print(max(df.movieId))
+  if uid:
+    print(df.userId.nunique())
+    print(max(df.userId))
+
+rating_df = pd.read_csv('ml100k_ratings.csv', sep=',', header=0)
+rating_df.head()
+
+print_stats(rating_df)
+
+movie_df = pd.read_csv('ml100k_movies.csv', sep=',', header=0)
+movie_df.head()
+
+print_stats(movie_df, uid=0)
+
+movie_sets = dict((movie, set(users)) for movie, users in rating_df.groupby('movieId')['userId'])
+
+def jaccard(movie1, movie2, movie_sets):
+    a = movie_sets[movie1]
+    b = movie_sets[movie2]
+    intersection = float(len(a.intersection(b)))
+    return intersection / (len(a) + len(b) - intersection)
+
+movie_df[movie_df.movieId == 260].title.values[0]
+
+title = movie_df[movie_df.movieId == 260].title.values[0]
+title = ''.join(title.split())
+
+print("Jaccard distance between '%s' and '%s' is %.2f"%(
+    title, 
+     ''.join(movie_df[movie_df.movieId == 1196].title.values[0].split()), 
+    jaccard(260, 1196, movie_sets)))
+
+print("Jaccard distance between '%s' and '%s' is %.2f"%(
+    title, 
+    ''.join(movie_df[movie_df.movieId == 1210].title.values[0].split()),
+    jaccard(260, 1210, movie_sets)))
+
+print("Jaccard distance between '%s' and '%s' is %.2f"%(
+    title, 
+    ''.join(movie_df[movie_df.movieId == 1].title.values[0].split()),
+    jaccard(260, 1, movie_sets)))
+
+import operator 
+
+def get_similar_movies_jaccard(movieid, movie_sets, top_n=5):
+    movie = movie_df[movie_df.movieId == movieid].title.values[0]
+    jaccard_dict = {x: jaccard(x, movieid, movie_sets) for x in movie_sets}
+    ranked_movies = sorted(jaccard_dict.items(), key=operator.itemgetter(1), reverse=True)[:top_n]
+    sim_movies = [movie_df[movie_df.movieId == id[0]].title.values[0] for id in ranked_movies]
+    return {'movie': movie, 'sim_movies': sim_movies}
+
+get_similar_movies_jaccard(260, movie_sets)
+
+get_similar_movies_jaccard(1, movie_sets)
+
+from scipy.spatial.distance import cosine
+from sklearn.metrics.pairwise import cosine_similarity
+
+num_users = rating_df.userId.nunique()
+num_users
+
+movie_sparse_vecs = []
+movies = []
+for movie, group in rating_df.groupby('movieId'):
+    vec = [0] * num_users
+    for x in group[['userId', 'rating']].values:
+        vec[int(x[0]) - 1] = x[1]
+    movie_sparse_vecs.append(vec)
+    movies.append(movie)
+
+movie_sparse_vecs = np.array(movie_sparse_vecs)
+print(movie_sparse_vecs.shape)
+
+print(1.0 - cosine(movie_sparse_vecs[224], movie_sparse_vecs[897]))
+
+movie2id = {x:i for i,x in enumerate(movies)}
+movie2id[260]
+
+def get_similar_movies_nbd_cosine(movieid, movie_vecs, top_n=5):
+    movie = movie_df[movie_df.movieId == movieid].title.values[0]
+    movie_idx = movie2id[movieid]
+    query = movie_vecs[movie_idx].reshape(1,-1)
+    ranking = cosine_similarity(movie_vecs,query)
+    top_ids = np.argsort(ranking, axis=0)
+    top_ids = top_ids[::-1][:top_n]
+    top_movie_ids = [movies[j[0]] for j in top_ids]
+    sim_movies = [movie_df[movie_df.movieId == id].title.values[0] for id in top_movie_ids]
+    return {'movie': movie, 'sim_movies': sim_movies}
+
+movieid = 1
+movie_data = movie_sparse_vecs
+get_similar_movies_nbd_cosine(movieid, movie_data, top_n=5)
+
+movieid = 260
+movie_data = movie_sparse_vecs
+get_similar_movies_nbd_cosine(movieid, movie_data, top_n=5)
+
+le_movie = LabelEncoder()
+movie_df = movie_df[movie_df.movieId.isin(rating_df.movieId.unique())]
+rating_df.loc[:, 'movieId'] = le_movie.fit_transform(rating_df.loc[:, 'movieId'])
+rating_df.loc[:, 'movieId']+=1
+movie_df.loc[:, 'movieId'] = le_movie.transform(movie_df.loc[:, 'movieId'])
+movie_df.loc[:, 'movieId']+=1
+
+ratings_mat = np.ndarray(
+    shape=(np.max(rating_df.movieId.values), np.max(rating_df.userId.values)),
+    dtype=np.uint8)
+ratings_mat[rating_df.movieId.values-1, rating_df.userId.values-1] = rating_df.rating.values
+ratings_mat.shape
+
+normalised_mat = ratings_mat - np.asarray([(np.mean(ratings_mat, 1))]).T
+
+n_factors = 50
+
+A = normalised_mat.T / np.sqrt(ratings_mat.shape[0] - 1)
+U, S, V = svds(A, n_factors)
+
+print(U.shape, V.shape)
+
+movie_factors = V.T
+user_factors = U
+
+def get_similar_movies_matrix_factorization(data, movieid, top_n=10):
+    index = movieid - 1 # Movie id starts from 1
+    movie = movie_df[movie_df.movieId == movieid].title.values[0]
+    movie_row = data[index].reshape(1,-1)
+    similarity = cosine_similarity(movie_row, data)
+    sort_indexes = np.argsort(-similarity)[0]
+    return {'movie': movie, 'sim_movies': [movie_df[movie_df.movieId == id].title.values[0] for id in sort_indexes[:top_n] + 1]}
+
+movie_id = 260
+get_similar_movies_matrix_factorization(movie_factors, movie_id)
+
+movie_id = 1
+get_similar_movies_matrix_factorization(movie_factors, movie_id)
+
+def get_recommendations_matrix_factorization(userid, user_factors, movie_factors, top_n=10):
+    user_vec = user_factors[userid - 1].reshape(1,-1)
+    similarity = cosine_similarity(user_vec, movie_factors)
+    sort_indexes = np.argsort(-similarity)[0]
+    return [movie_df[movie_df.movieId == id].title.values[0] for id in sort_indexes[:top_n] + 1]  
+
+top_recos = get_recommendations_matrix_factorization(1, user_factors, movie_factors)
+top_recos
+
+import networkx as nx
+
+user_item_edgelist = rating_df[['userId', 'movieId', 'rating']]
+user_item_edgelist.head()
+
+user2dict = dict()
+movie2dict = dict()
+cnt = 0
+for x in user_item_edgelist.values:
+    usr = (x[0], 'user')
+    movie = (x[1], 'movie')
+    if usr in user2dict:
+        pass
+    else:
+        user2dict[usr] = cnt
+        cnt += 1
+    if movie in movie2dict:
+        pass
+    else:
+        movie2dict[movie] = cnt
+        cnt += 1
+
+user_movie_graph = nx.Graph()
+
+for x in user_item_edgelist.values:
+    usr = (x[0], 'user')
+    movie = (x[1], 'movie')
+    user_movie_graph.add_node(user2dict[usr])
+    user_movie_graph.add_node(movie2dict[movie])
+    user_movie_graph.add_edge(user2dict[usr], movie2dict[movie], weight=float(x[2]))
+
+user_movie_graph.number_of_edges()
+
+user_movie_graph.number_of_nodes()
+
+import numpy as np
+import networkx as nx
+import random
+
+
+class Graph():
+	def __init__(self, nx_G, is_directed, p, q):
+		self.G = nx_G
+		self.is_directed = is_directed
+		self.p = p
+		self.q = q
+
+	def node2vec_walk(self, walk_length, start_node):
+		'''
+		Simulate a random walk starting from start node.
+		'''
+		G = self.G
+		alias_nodes = self.alias_nodes
+		alias_edges = self.alias_edges
+
+		walk = [start_node]
+
+		while len(walk) < walk_length:
+			cur = walk[-1]
+			cur_nbrs = sorted(G.neighbors(cur))
+			if len(cur_nbrs) > 0:
+				if len(walk) == 1:
+					walk.append(cur_nbrs[alias_draw(alias_nodes[cur][0], alias_nodes[cur][1])])
+				else:
+					prev = walk[-2]
+					next = cur_nbrs[alias_draw(alias_edges[(prev, cur)][0], 
+						alias_edges[(prev, cur)][1])]
+					walk.append(next)
+			else:
+				break
+
+		return walk
+
+	def simulate_walks(self, num_walks, walk_length):
+		'''
+		Repeatedly simulate random walks from each node.
+		'''
+		G = self.G
+		walks = []
+		nodes = list(G.nodes())
+		print('Walk iteration:')
+		for walk_iter in range(num_walks):
+			print(str(walk_iter+1), '/', str(num_walks))
+			random.shuffle(nodes)
+			for node in nodes:
+				walks.append(self.node2vec_walk(walk_length=walk_length, start_node=node))
+
+		return walks
+
+	def get_alias_edge(self, src, dst):
+		'''
+		Get the alias edge setup lists for a given edge.
+		'''
+		G = self.G
+		p = self.p
+		q = self.q
+
+		unnormalized_probs = []
+		for dst_nbr in sorted(G.neighbors(dst)):
+			if dst_nbr == src:
+				unnormalized_probs.append(G[dst][dst_nbr]['weight']/p)
+			elif G.has_edge(dst_nbr, src):
+				unnormalized_probs.append(G[dst][dst_nbr]['weight'])
+			else:
+				unnormalized_probs.append(G[dst][dst_nbr]['weight']/q)
+		norm_const = sum(unnormalized_probs)
+		try:
+			normalized_probs =  [float(u_prob)/norm_const for u_prob in unnormalized_probs]
+		except:
+			normalized_probs =  [0.0 for u_prob in unnormalized_probs]
+
+		return alias_setup(normalized_probs)
+
+	def preprocess_transition_probs(self):
+		'''
+		Preprocessing of transition probabilities for guiding the random walks.
+		'''
+		G = self.G
+		is_directed = self.is_directed
+
+		alias_nodes = {}
+		for node in G.nodes():
+			unnormalized_probs = [G[node][nbr]['weight'] for nbr in sorted(G.neighbors(node))]
+			norm_const = sum(unnormalized_probs)
+			try:
+				normalized_probs =  [float(u_prob)/norm_const for u_prob in unnormalized_probs]
+			except:
+				print(node)
+				normalized_probs =  [0.0 for u_prob in unnormalized_probs]
+			alias_nodes[node] = alias_setup(normalized_probs)
+
+		alias_edges = {}
+		triads = {}
+
+		if is_directed:
+			for edge in G.edges():
+				alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
+		else:
+			for edge in G.edges():
+				alias_edges[edge] = self.get_alias_edge(edge[0], edge[1])
+				alias_edges[(edge[1], edge[0])] = self.get_alias_edge(edge[1], edge[0])
+
+		self.alias_nodes = alias_nodes
+		self.alias_edges = alias_edges
+
+		return
+
+
+def alias_setup(probs):
+	'''
+	Compute utility lists for non-uniform sampling from discrete distributions.
+	Refer to https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
+	for details
+	'''
+	K = len(probs)
+	q = np.zeros(K)
+	J = np.zeros(K, dtype=np.int)
+
+	smaller = []
+	larger = []
+	for kk, prob in enumerate(probs):
+	    q[kk] = K*prob
+	    if q[kk] < 1.0:
+	        smaller.append(kk)
+	    else:
+	        larger.append(kk)
+
+	while len(smaller) > 0 and len(larger) > 0:
+	    small = smaller.pop()
+	    large = larger.pop()
+
+	    J[small] = large
+	    q[large] = q[large] + q[small] - 1.0
+	    if q[large] < 1.0:
+	        smaller.append(large)
+	    else:
+	        larger.append(large)
+
+	return J, q
+
+def alias_draw(J, q):
+	'''
+	Draw sample from a non-uniform discrete distribution using alias sampling.
+	'''
+	K = len(J)
+
+	kk = int(np.floor(np.random.rand()*K))
+	if np.random.rand() < q[kk]:
+	    return kk
+	else:
+	    return J[kk]
+
+from gensim.models import Word2Vec
+
+G = Graph(user_movie_graph, is_directed=False, p=1, q=1)
+
+# Compute the transition probabilities based on the edge weights. 
+G.preprocess_transition_probs()
+
+walks = G.simulate_walks(num_walks=10, walk_length=80)
+
+len(walks)
+
+walks[0]
+
+def learn_embeddings(walks):
+    '''
+    Learn embeddings by optimizing the Skipgram objective using SGD.
+    Uses Gensim Word2Vec.
+    '''
+    walks = [list(map(str, walk)) for walk in walks]
+    model = Word2Vec(walks, size=50, window=10, min_count=0, sg=1, workers=8, iter=1)
+    return model.wv
+
+node_embeddings = learn_embeddings(walks)
+
+node_embeddings['0']
+
+movie1 = str(movie2dict[(260, 'movie')])
+movie2 = str(movie2dict[(1196, 'movie')])
+1.0 - cosine(node_embeddings[movie1], node_embeddings[movie2])
+
+movie3 = str(movie2dict[(1210, 'movie')])
+1.0 - cosine(node_embeddings[movie1], node_embeddings[movie3])
+
+movie4 = str(movie2dict[(1, 'movie')])
+1.0 - cosine(node_embeddings[movie1], node_embeddings[movie4])
+
+reverse_movie2dict = {k:v for v,k in movie2dict.items()}
+reverse_user2dict = {k:v for v,k in user2dict.items()}
+
+node_vecs = [node_embeddings[str(i)] for i in range(cnt)]
+node_vecs = np.array(node_vecs)
+node_vecs.shape
+
+def get_similar_movies_graph_embeddings(movieid, movie_embed, top_n=10):
+    movie_idx = movie2dict[movieid]
+    query = movie_embed[movie_idx].reshape(1,-1)
+    ranking = cosine_similarity(query, movie_embed)
+    top_ids = np.argsort(-ranking)[0]
+    top_movie_ids = [reverse_movie2dict[j] for j in top_ids if j in reverse_movie2dict][:top_n]
+    sim_movies = [movie_df[movie_df.movieId == id[0]].title.values[0] for id in top_movie_ids]
+    return sim_movies
+
+get_similar_movies_graph_embeddings((260, 'movie'), node_vecs)[:10]
+
+get_similar_movies_graph_embeddings((122, 'movie'), node_vecs)[:10]
+
+def get_recommended_movies_graph_embeddings(userid, node_embed, top_n=10):
+    user_idx = user2dict[userid]
+    query = node_embed[user_idx].reshape(1,-1)
+    ranking = cosine_similarity(query, node_embed)
+    top_ids = np.argsort(-ranking)[0]
+    top_movie_ids = [reverse_movie2dict[j] for j in top_ids if j in reverse_movie2dict][:top_n]
+    reco_movies = [movie_df[movie_df.movieId == id[0]].title.values[0] for id in top_movie_ids]
+    return reco_movies
+
+get_recommended_movies_graph_embeddings((1, 'user'), node_vecs, top_n=10)
+
+idx = 1
+recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+recos.intersection(true_pos)
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+mf_recos.intersection(true_pos)
+
+idx = 2
+recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+recos.intersection(true_pos)
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+mf_recos.intersection(true_pos)
+
+idx = 3
+recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+recos.intersection(true_pos)
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+mf_recos.intersection(true_pos)
+
+movie_genre_edgelist = movie_df[['movieId', 'genres']]
+movie_genre_edgelist.head()
+
+genre2int = dict()
+for x in movie_genre_edgelist.values:
+    genres = x[1].split('|')
+    for genre in genres:
+        if genre in genre2int:
+            pass
+        else:
+            genre2int[genre] = cnt
+            cnt += 1
+
+genre2int
+
+#hide
+movie_genre_graph = nx.Graph()
+for x in movie_genre_edgelist.values:
+    movie = (x[0], 'movie')
+    genres = x[1].split('|')
+    if movie in movie2dict:
+        for genre in genres:
+            if genre in genre2int:
+                movie_genre_graph.add_node(movie2dict[movie])
+                movie_genre_graph.add_node(genre2int[genre])
+                movie_genre_graph.add_edge(movie2dict[movie], genre2int[genre], weight=1.0)
+            else:
+                pass
+
+user_movie_genre_graph =  nx.Graph()
+user_movie_genre_graph.add_weighted_edges_from([(x,y,user_movie_graph[x][y]['weight']) for x,y in user_movie_graph.edges()])
+user_movie_genre_graph.add_weighted_edges_from([(x,y,movie_genre_graph[x][y]['weight']) for x,y in movie_genre_graph.edges()])
+
+user_movie_genre_graph.number_of_edges()
+
+G_enriched = Graph(user_movie_genre_graph, is_directed=False, p=1, q=1)
+G_enriched.preprocess_transition_probs()
+
+walks_enriched = G_enriched.simulate_walks(num_walks=10, walk_length=80)
+
+node_embeddings_enriched = learn_embeddings(walks_enriched)
+
+node_vecs_enriched = [node_embeddings_enriched[str(i)] for i in range(cnt)]
+node_vecs_enriched = np.array(node_vecs_enriched)
+node_vecs_enriched.shape
+
+get_similar_movies_graph_embeddings((260, 'movie'), node_vecs_enriched)[:10]
+
+get_similar_movies_graph_embeddings((260, 'movie'), node_vecs)[:10]
+
+idx = 1
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+print(len(mf_recos.intersection(true_pos)))
+
+ge_recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+print(len(ge_recos.intersection(true_pos)))
+
+ge_enriched_reso = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs_enriched, top_n=10))
+print(len(ge_enriched_reso.intersection(true_pos)))
+
+idx = 8
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+print(len(mf_recos.intersection(true_pos)))
+
+ge_recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+print(len(ge_recos.intersection(true_pos)))
+
+ge_enriched_reso = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs_enriched, top_n=10))
+print(len(ge_enriched_reso.intersection(true_pos)))
+
+idx = 20
+true_pos = set([movie_df[movie_df.movieId == id].title.values[0] for id in rating_df[(rating_df['userId'] == idx) & (rating_df['rating'] >= 4.5)].movieId.values])
+
+mf_recos = set(get_recommendations_matrix_factorization(idx, user_factors, movie_factors))
+print(len(mf_recos.intersection(true_pos)))
+
+ge_recos = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs, top_n=10))
+print(len(ge_recos.intersection(true_pos)))
+
+ge_enriched_reso = set(get_recommended_movies_graph_embeddings((idx, 'user'), node_vecs_enriched, top_n=10))
+print(len(ge_enriched_reso.intersection(true_pos)))

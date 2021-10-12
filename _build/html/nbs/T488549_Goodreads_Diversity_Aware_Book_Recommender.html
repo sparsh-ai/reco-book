@@ -1,0 +1,2339 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diversity Aware Book Recommender &#8212; Reco Book</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <script async="async" src="https://unpkg.com/thebe@0.5.1/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kafka MongoDB Real-time Streaming" href="T023535_Kafka_MongoDB_Real_time_Streaming.html" />
+    <link rel="prev" title="Diversity Aware Book Recommender" href="T990172_recobook_diversity_aware_book_recommender.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Reco Book</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../index.html">
+   Tutorials in Jupyter notebook format
+  </a>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  User Stories
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="US780867_Transformer_based_Recommenders.html">
+   Transformer-based Recommenders
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T034923_BERT4Rec_on_ML1M_in_PyTorch.html">
+     BERT4Rec on ML-1M in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T595874_BERT4Rec_on_ML25M_in_PyTorch_Lightning.html">
+     BERT4Rec on ML-25M
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T088416_BST_Implementation_in_MXNet.html">
+     BST Implementation in MXNet
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T602245_BST_implementation_in_PyTorch.html">
+     BST implementation in PyTorch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T007665_BST_on_ML1M_in_Keras.html">
+     A Transformer-based recommendation system
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T881207_BST_PTLightning_ML1M.html">
+     Rating prediction using the Behavior Sequence Transformer (BST) model on ML-1M dataset in PyTorch Lightning
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T025247_BST_using_Deepctr_library.html">
+     BST using Deepctr library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T757997_SASRec_PyTorch.html">
+     SASRec implementation with PyTorch Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T225287_SASRec_PaddlePaddle.html">
+     SASRec implementation with Paddle Library
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T701627_SR_SAN_Session_based_Model.html">
+     SR-SAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T975104_SSEPT_ML1M_Tensorflow1x.html">
+     SSE-PT Personalized Transformer Recommender on ML-1M in Tensorflow 1.x
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T472955_GCSAN_Session_based_Model.html">
+     GCSAN Session-based Recommender
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T970274_Transformers4Rec_Session_based_Recommender_on_Yoochoose.html">
+     End-to-end session-based recommendation with Transformers4Rec
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T382183_Transformers4Rec_XLNet_on_Synthetic_data.html">
+     Transformers4Rec XLNet on Synthetic data
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="T793395_Session_based_recommendation_on_REES46_Dataset.html">
+     End-to-end Session-based recommendation on REES46 Dataset
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p class="caption">
+ <span class="caption-text">
+  Prototypes
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="T382881_DeepWalk_Karateclub.html">
+   DeepWalk from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T384270_DeepWalk_pure_python.html">
+   DeepWalk in pure python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T677598_Jaccard_Cosine_SVD_DeepWalk_ML100K.html">
+   Recommender System with DeepWalk Graph Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T815556_Node2vec_Karateclub.html">
+   Node2vec from scratch referencing Karateclub library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T894941_Node2vec_MovieLens_Keras.html">
+   Graph representation learning with node2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611050_Node2vec_PyG.html">
+   Node2vec from scratch in PyTorch Geometric
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T186367_Node2vec_library.html">
+   Node2vec from scratch referencing node2vec library
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T331379_bayesian_personalized_ranking.html">
+   BPR from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T081831_Data_Poisoning_Attacks_on_Factorization_Based_Collaborative_Filtering.html">
+   Data Poisoning Attacks on Factorization-Based Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T102448_Adversarial_Learning_for_Recommendation.html">
+   Adversarial Training (Regularization) on a Recommender System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T865035_Simulating_Data_Poisoning_Attacks_against_Twitter_Recommender.html">
+   Load and process dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T711285_Data_Poisoning_Attack_using_LFM_and_ItemAE_on_Synthetic_Dataset.html">
+   Injection attack using LFM and ItemAE model trained on Toy dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T355514_Black_box_Attack_on_Sequential_Recs.html">
+   Black-box Attack on Sequential Recs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T873451_Statistics_fundamentals.html">
+   Statictics Fundamentals
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T890478_Batch_Learning_from_Bandit_Feedback_%28BLBF%29.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T257798_Off_Policy_Learning_in_Two_stage_Recommender_Systems.html">
+   Off-Policy Learning in Two-stage Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T471827_Adaptive_Estimator_Selection_for_Off_Policy_Evaluation.html">
+   Adaptive Estimator Selection for Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T902666_Evaluating_the_Robustness_of_Off_Policy_Evaluation.html">
+   Evaluating the Robustness of Off-Policy Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T705904_Evaluation_of_Multiple_Off_Policy_Estimators_on_Synthetic_Dataset.html">
+   Evaluation of Multiple Off-Policy Estimators on Synthetic Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T874693_Evaluating_Standard_Off_Policy_Estimators_with_Small_Sample_Open_Bandit_Dataset.html">
+   Evaluating Standard Off-Policy Estimators with Small Sample Open-Bandit Dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T792262_Optimal_Off_Policy_Evaluation_from_Multiple_Logging_Policies.html">
+   Optimal Off-Policy Evaluation from Multiple Logging Policies
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T167249_Offline_Policy_Evaluation_with_VW_Command_Line.html">
+   Offline Policy Evaluation with VW Command Line
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T966055_OBP_Library_Workshop_Tutorials.html">
+   OBP Library Workshop Tutorials
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T632722_PyTorch_Fundamentals_Part_1.html">
+   PyTorch Fundamentals Part 1
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T472467_PyTorch_Fundamentals_Part_2.html">
+   PyTorch Fundamentals Part 2
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T206654_PyTorch_Fundamentals_Part_3.html">
+   PyTorch Fundamentals Part 3
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T536348_Attention_Mechanisms.html">
+   Imports
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T500796_Agricultural_Satellite_Image_Segmentation.html">
+   Agricultural Satellite Image Segmentation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T611432_Image_Analysis_with_Tensorflow.html">
+   Image Analysis with Tensorflow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T925716_MongoDB_to_CSV_Conversion.html">
+   MongoDB to CSV conversion
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T396469_PDF_to_Word_Cloud_via_Email.html">
+   PDF to WordCloud via Email
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T030890_Job_Scraping_and_Clustering.html">
+   Job scraping and clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T897054_Scene_Text_Recognition.html">
+   Scene Text Recognition
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T034809_Large_scale_Document_Retrieval_with_Elastic_Search.html">
+   Large-scale Document Retrieval with ElasticSearch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T467251_vowpal_wabbit_contextual_recommender.html">
+   Simulating a news personalization scenario using Contextual Bandits
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T686684_similar_product_recommender.html">
+   Similar Product Recommender system using Deep Learning for an online e-commerce store
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T132203_Retail_Product_Recommendations_using_Word2vec.html">
+   Retail Product Recommendations using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T501828_Recommender_Implicit_Negative_Feedback.html">
+   Retail Product Recommendation with Negative Implicit Feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T315965_Sequence_Aware_Recommenders_Music.html">
+   Sequence Aware Recommender Systems
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051777_image_similarity_recommendations.html">
+   Similar Product Recommendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990172_recobook_diversity_aware_book_recommender.html">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Diversity Aware Book Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T023535_Kafka_MongoDB_Real_time_Streaming.html">
+   Kafka MongoDB Real-time Streaming
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T622304_Session_based_Recommender_Using_Word2vec.html">
+   Session-based recommendation using word2vec
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T416854_bandit_based_recommender_using_thompson_sampling_app.html">
+   Bandit-based Online Learning using Thompson Sampling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T198578_Booking_dot_com_Trip_Recommendation.html">
+   Booking.com Trip Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T519734_Vowpal_Wabbit_Contextual_Bandit.html">
+   Vowpal Wabbit Contextual Bandit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T871537_Recommendation_Systems_using_Olist_Dataset.html">
+   Recommendation systems using Olist dataset
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T057885_Offline_Replayer_Evaluation.html">
+   Offline Replayer Evaluation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T915054_method_for_effective_online_testing.html">
+   Methods for effective online testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T513987_Recsys_2020_Feature_Engineering_Tutorial.html">
+   Recsys’20 Feature Engineering Tutorial
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T227901_amazon_personalize_batch_job.html">
+   Amazon Personalize Batch Job
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T022961_Amazon_Personalize_Workshop.html">
+   Amazon Personalize Workshop
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T424437_Collaborative_Filtering_on_ML_latest_small.html">
+   Collaborative Filtering on ML-latest-small
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T539160_Building_and_Deploying_ASOS_Fashion_Recommender.html">
+   Building and deploying ASOS fashion recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T757697_Simple_Similarity_based_Recommender.html">
+   Simple Similarity based Recommmendations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T051594_Analytics_Zoo.html">
+   Analytics Zoo
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T313645_A_B_Testing.html">
+   A/B Testing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T475711_PinSage_Graph_based_Recommender.html">
+   PinSage Graph-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T516490_Graph_Embeddings.html">
+   Learn Embeddings using Graph Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T822164_movielens_milvus_redis_efficient_retrieval.html">
+   Recommender with Redis and Milvus
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T845186_Anime_Recommender.html">
+   RekoNet Anime Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855843_kafka_spark_streaming_colab.html">
+   Kafka and Spark Streaming in Colab
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T460437_Building_Models_From_Scratch.html">
+   Building Models from scratch
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T855971_Conet_Model_for_Movie_Recommender.html">
+   CoNet model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T996996_content_based_and_collaborative_movielens.html">
+   Movie Recommendation with Content-Based and Collaborative Filtering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T239418_Simple_Movie_Recommenders.html">
+   Simple Movie Recommenders
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T138337_Simple_Movie_Recommender.html">
+   Simple movie recommender in implicit, explicit, and cold-start settings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T935440_The_importance_of_Rating_Normalization.html">
+   The importance of Rating Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T612622_cornac_examples.html">
+   Cornac Examples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T561435_Flower_Classification.html">
+   Flower classification
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T680910_Trivago_Session_based_Recommender.html">
+   Trivago Session-based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_ads_selection_using_bandits.html">
+   Best Ads detection using bandit methods
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_crossing_surprise_svd_nmf.html">
+   Book-Crossing Recommendation System
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_book_recommender_kubeflow.html">
+   Books recommendations with Kubeflow Pipelines on Scaleway Kapsule
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_build_a_kubeflow_pipeline.html">
+   Build a Kubeflow Pipeline
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_causal_inference.html">
+   Causal Inference
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_embedding_nlp.html">
+   Exploring Word Embeddings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_neural_net.html">
+   Neural Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_nlp_basics.html">
+   Natural Language Processing 101
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_concept_transformer_lm.html">
+   TransformerLM Quick Start and Guide
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_content_based_music_recommender_lyricsfreak.html">
+   Content-based method for song recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_evaluation_metrics_basics.html">
+   Recommender System Evaluations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_implicit_synthetic.html">
+   Comparing Implicit Models on Synthetic Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow.html">
+   Recommendation Systems with TensorFlow
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movie_recommender_tensorflow_sagemaker.html">
+   Movie recommender using Tensorflow in Sagemaker
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_movielens_eda_modeling.html">
+   Movielens EDA and Modeling
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_read_data_from_cassandra_into_pandas.html">
+   Read Cassandra Data Snapshot as DataFrame
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rl_in_action.html">
+   Reinforcement Learning fundamentals in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_rnn_cnn_basics.html">
+   Processing sequences using RNNs and CNNs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_tf_serving_in_action.html">
+   TF Serving in action
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990000_training_indexing_movie_recommender.html">
+   Training and indexing movie recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T207114_EduRec_MOOCCube_Course_Recommender.html">
+   EduRec MOOCCube Course Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T273184_Multi_Task_Learning.html">
+   Multi-task Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T661108_Book_Recommender_API.html">
+   Book Recommender API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T912764_Simple_Movie_Recommender_App.html">
+   Simple Movie Recommender App
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T964554_Career_Village_Questions_Recommendation.html">
+   CareerVillage Questions Recommendation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_amazon_women_apparel_tfidf_word2vec.html">
+   Amazon Product Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_anime_recommender_graph_network.html">
+   Anime Recommender with Bi-partite Graph Network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_concept_self_attention.html">
+   Self-Attention
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_course_recommender_svd_flask.html">
+   Course Recommender with SVD based similarity
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_data_mining_similarity_measures.html">
+   Concept - Data Mining Similarity Measures
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_jaccard_recommender.html">
+   Jaccard Similarity based Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_live_streamer_recommender.html">
+   Live Streamer Recommender with Implicit feedback
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_songs_embedding_skipgram_recommender.html">
+   Song Embeddings - Skipgram Recommender
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_toy_example_car_recommender_knn.html">
+   Toy example - Car Recommender using KNN method
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="T990001_wikirecs_recommender.html">
+   WikiRecs
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/sparsh-ai/reco-book/main?urlpath=tree/nbs/T488549_Goodreads_Diversity_Aware_Book_Recommender.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#util-functions">
+   Util functions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#non-personalized-recommendations">
+   Non-personalized recommendations
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#collaborative-filtering">
+   Collaborative filtering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#content-based-filtering">
+   Content-based filtering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#evaluations">
+   Evaluations
+  </a>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="diversity-aware-book-recommender">
+<h1>Diversity Aware Book Recommender<a class="headerlink" href="#diversity-aware-book-recommender" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>A tutorial on building an amazon-like book recommender and keeping diversity as an important factor</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">heapq</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">pairwise_distances</span><span class="p">,</span> <span class="n">cosine_similarity</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">books_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/books.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="n">books_tags_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/books_tags.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="n">users_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/users.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="n">ratings_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/ratings.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="n">tags_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/tags.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+<span class="n">test_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/sparsh-ai/reco-data/master/goodreads/test.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">books_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>goodreads_book_id</th>
+      <th>best_book_id</th>
+      <th>work_id</th>
+      <th>books_count</th>
+      <th>isbn</th>
+      <th>isbn13</th>
+      <th>authors</th>
+      <th>original_publication_year</th>
+      <th>original_title</th>
+      <th>title</th>
+      <th>language_code</th>
+      <th>image_url</th>
+      <th>small_image_url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2767052</td>
+      <td>2767052</td>
+      <td>2792775</td>
+      <td>272</td>
+      <td>439023483</td>
+      <td>9.780440e+12</td>
+      <td>Suzanne Collins</td>
+      <td>2008.0</td>
+      <td>The Hunger Games</td>
+      <td>The Hunger Games (The Hunger Games, #1)</td>
+      <td>eng</td>
+      <td>https://images.gr-assets.com/books/1447303603m...</td>
+      <td>https://images.gr-assets.com/books/1447303603s...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4640799</td>
+      <td>491</td>
+      <td>439554934</td>
+      <td>9.780440e+12</td>
+      <td>J.K. Rowling, Mary GrandPrÃÂÃÂ©</td>
+      <td>1997.0</td>
+      <td>Harry Potter and the Philosopher's Stone</td>
+      <td>Harry Potter and the Sorcerer's Stone (Harry P...</td>
+      <td>eng</td>
+      <td>https://images.gr-assets.com/books/1474154022m...</td>
+      <td>https://images.gr-assets.com/books/1474154022s...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>41865</td>
+      <td>41865</td>
+      <td>3212258</td>
+      <td>226</td>
+      <td>316015849</td>
+      <td>9.780320e+12</td>
+      <td>Stephenie Meyer</td>
+      <td>2005.0</td>
+      <td>Twilight</td>
+      <td>Twilight (Twilight, #1)</td>
+      <td>en-US</td>
+      <td>https://images.gr-assets.com/books/1361039443m...</td>
+      <td>https://images.gr-assets.com/books/1361039443s...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>2657</td>
+      <td>2657</td>
+      <td>3275794</td>
+      <td>487</td>
+      <td>61120081</td>
+      <td>9.780060e+12</td>
+      <td>Harper Lee</td>
+      <td>1960.0</td>
+      <td>To Kill a Mockingbird</td>
+      <td>To Kill a Mockingbird</td>
+      <td>eng</td>
+      <td>https://images.gr-assets.com/books/1361975680m...</td>
+      <td>https://images.gr-assets.com/books/1361975680s...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>4671</td>
+      <td>4671</td>
+      <td>245494</td>
+      <td>1356</td>
+      <td>743273567</td>
+      <td>9.780740e+12</td>
+      <td>F. Scott Fitzgerald</td>
+      <td>1925.0</td>
+      <td>The Great Gatsby</td>
+      <td>The Great Gatsby</td>
+      <td>eng</td>
+      <td>https://images.gr-assets.com/books/1490528560m...</td>
+      <td>https://images.gr-assets.com/books/1490528560s...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">books_df</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;book_id&#39;, &#39;goodreads_book_id&#39;, &#39;best_book_id&#39;, &#39;work_id&#39;,
+       &#39;books_count&#39;, &#39;isbn&#39;, &#39;isbn13&#39;, &#39;authors&#39;, &#39;original_publication_year&#39;,
+       &#39;original_title&#39;, &#39;title&#39;, &#39;language_code&#39;, &#39;image_url&#39;,
+       &#39;small_image_url&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">books_df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 5000 entries, 0 to 4999
+Data columns (total 14 columns):
+ #   Column                     Non-Null Count  Dtype  
+---  ------                     --------------  -----  
+ 0   book_id                    5000 non-null   int64  
+ 1   goodreads_book_id          5000 non-null   int64  
+ 2   best_book_id               5000 non-null   int64  
+ 3   work_id                    5000 non-null   int64  
+ 4   books_count                5000 non-null   int64  
+ 5   isbn                       4764 non-null   object 
+ 6   isbn13                     4794 non-null   float64
+ 7   authors                    5000 non-null   object 
+ 8   original_publication_year  4993 non-null   float64
+ 9   original_title             4831 non-null   object 
+ 10  title                      5000 non-null   object 
+ 11  language_code              4621 non-null   object 
+ 12  image_url                  5000 non-null   object 
+ 13  small_image_url            5000 non-null   object 
+dtypes: float64(2), int64(5), object(7)
+memory usage: 547.0+ KB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">books_tags_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>goodreads_book_id</th>
+      <th>tag_id</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>30574</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>11305</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>11557</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>8717</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>33114</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">users_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>location</th>
+      <th>age</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>North Dakota</td>
+      <td>69</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>California</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4</td>
+      <td>Missouri</td>
+      <td>98</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>6</td>
+      <td>Rhode Island</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>8</td>
+      <td>Hawaii</td>
+      <td>64</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ratings_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>book_id</th>
+      <th>rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>511</td>
+      <td>277</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2766</td>
+      <td>54</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2290</td>
+      <td>2499</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3920</td>
+      <td>1603</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2457</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tags_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tag_id</th>
+      <th>tag_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>--1-</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>--10-</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>--12-</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>--122-</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">test_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>user_id</th>
+      <th>book_id</th>
+      <th>rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2558</td>
+      <td>1660</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2694</td>
+      <td>1738</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>135</td>
+      <td>565</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1074</td>
+      <td>337</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>727</td>
+      <td>4394</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b_r_u_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">]],</span> <span class="n">ratings_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+<span class="n">b_r_u_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">b_r_u_df</span><span class="p">,</span> <span class="n">users_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+<span class="n">items_df</span> <span class="o">=</span> <span class="n">b_r_u_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">)</span>
+<span class="n">items_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>The Hunger Games (The Hunger Games, #1)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>To Kill a Mockingbird</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5</td>
+      <td>The Great Gatsby</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>8</td>
+      <td>The Catcher in the Rye</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>17</td>
+      <td>Catching Fire (The Hunger Games, #2)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="section" id="util-functions">
+<h2>Util functions<a class="headerlink" href="#util-functions" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Score for each book</span>
+<span class="k">def</span> <span class="nf">weighted_average_rating</span><span class="p">(</span><span class="n">counts_df</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">rating_all_mean</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">counts_df</span> <span class="o">/</span> <span class="p">(</span><span class="n">counts_df</span> <span class="o">+</span> <span class="n">m</span><span class="p">))</span> <span class="o">*</span> <span class="n">rating_mean_df</span> <span class="o">+</span> <span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="p">(</span><span class="n">counts_df</span> <span class="o">+</span> <span class="n">m</span><span class="p">))</span> <span class="o">*</span> <span class="n">rating_all_mean</span>
+
+
+<span class="c1"># To get the top k recommendations, the k books with the best score</span>
+<span class="k">def</span> <span class="nf">get_top_k_recommendations</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">counts_df</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">counts_df</span> <span class="o">&gt;=</span> <span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span>
+
+
+<span class="c1"># Get the top k recommendations: the k books with the best weighted average rating</span>
+<span class="k">def</span> <span class="nf">calculate_WAR_and_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weighted_average_rating</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">],</span> <span class="n">m</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;rating_mean&#39;</span><span class="p">],</span> <span class="n">rating_all_mean</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_top_k_recommendations</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+
+<span class="c1"># Gets a number and creates the range of ages as required in the task</span>
+<span class="k">def</span> <span class="nf">get_age_range</span><span class="p">(</span><span class="n">age</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">age</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">age</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">age</span> <span class="o">-</span> <span class="p">((</span><span class="n">age</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">age</span> <span class="o">+</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="p">(</span><span class="n">age</span> <span class="o">%</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span>
+
+
+<span class="c1"># Creates distribution of votes and ratings by book id and returns them</span>
+<span class="k">def</span> <span class="nf">merge_tables</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="c1"># Dataframe that contains distribution of votes by book ID</span>
+    <span class="n">nb_voters_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;book_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">nb_voters_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;book_id&#39;</span><span class="p">:</span> <span class="n">nb_voters_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;counts&#39;</span><span class="p">:</span> <span class="n">nb_voters_data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+
+    <span class="c1"># Dataframe that contains distribution of rate averages by book ID</span>
+    <span class="n">rating_mean_data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;book_id&#39;</span><span class="p">])[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">rating_mean_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;book_id&#39;</span><span class="p">:</span> <span class="n">rating_mean_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;rating_mean&#39;</span><span class="p">:</span> <span class="n">rating_mean_data</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+    
+    <span class="k">return</span> <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">rating_mean_data</span>
+
+
+<span class="c1"># m represents the minimum voters we need to count the rating and the score</span>
+<span class="c1"># We&#39;ll also need the total mean to caluculate the score (WR)</span>
+<span class="k">def</span> <span class="nf">get_voters_and_means</span><span class="p">(</span><span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">nb_voters_data</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.90</span><span class="p">)</span>
+    <span class="n">rating_all_mean</span> <span class="o">=</span> <span class="n">rating_mean_df</span><span class="p">[</span><span class="s1">&#39;rating_mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="non-personalized-recommendations">
+<h2>Non-personalized recommendations<a class="headerlink" href="#non-personalized-recommendations" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the WAR and get the k books with the best results</span>
+<span class="k">def</span> <span class="nf">get_simply_recommendation</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+
+    <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">rating_mean_data</span> <span class="o">=</span> <span class="n">merge_tables</span><span class="p">(</span><span class="n">b_r_u_df</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span> <span class="o">=</span> <span class="n">get_voters_and_means</span><span class="p">(</span><span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">items_df</span><span class="p">,</span> <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">calculate_WAR_and_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">])</span>
+
+
+<span class="n">recommendation_df</span> <span class="o">=</span> <span class="n">get_simply_recommendation</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">recommendation_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>title</th>
+      <th>weighted_average_rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>504</th>
+      <td>25</td>
+      <td>Harry Potter and the Deathly Hallows (Harry Po...</td>
+      <td>4.338028</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>To Kill a Mockingbird</td>
+      <td>4.299843</td>
+    </tr>
+    <tr>
+      <th>506</th>
+      <td>102</td>
+      <td>Where the Wild Things Are</td>
+      <td>4.273212</td>
+    </tr>
+    <tr>
+      <th>370</th>
+      <td>85</td>
+      <td>The Giving Tree</td>
+      <td>4.240309</td>
+    </tr>
+    <tr>
+      <th>364</th>
+      <td>50</td>
+      <td>Where the Sidewalk Ends</td>
+      <td>4.239724</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>31</td>
+      <td>The Help</td>
+      <td>4.238851</td>
+    </tr>
+    <tr>
+      <th>425</th>
+      <td>144</td>
+      <td>Unbroken: A World War II Story of Survival, Re...</td>
+      <td>4.221864</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>27</td>
+      <td>Harry Potter and the Half-Blood Prince (Harry ...</td>
+      <td>4.213906</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>The Hunger Games (The Hunger Games, #1)</td>
+      <td>4.187383</td>
+    </tr>
+    <tr>
+      <th>663</th>
+      <td>133</td>
+      <td>Anne of Green Gables (Anne of Green Gables, #1)</td>
+      <td>4.181489</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the WAR and get the k best books by a place</span>
+<span class="k">def</span> <span class="nf">get_simply_place_recommendation</span><span class="p">(</span><span class="n">place</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">b_r_u_df</span>
+    
+    <span class="n">b_r_u_place_df</span> <span class="o">=</span> <span class="n">b_r_u_df</span><span class="p">[</span><span class="n">b_r_u_df</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">place</span><span class="p">]</span>
+    
+    <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">rating_mean_data</span> <span class="o">=</span> <span class="n">merge_tables</span><span class="p">(</span><span class="n">b_r_u_place_df</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span> <span class="o">=</span> <span class="n">get_voters_and_means</span><span class="p">(</span><span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">items_df</span><span class="p">,</span> <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">calculate_WAR_and_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">])</span>
+
+
+<span class="n">place_recommendation_df</span> <span class="o">=</span> <span class="n">get_simply_place_recommendation</span><span class="p">(</span><span class="s1">&#39;Ohio&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">place_recommendation_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>title</th>
+      <th>weighted_average_rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>310</th>
+      <td>126</td>
+      <td>Dune (Dune Chronicles #1)</td>
+      <td>4.367963</td>
+    </tr>
+    <tr>
+      <th>602</th>
+      <td>143</td>
+      <td>All the Light We Cannot See</td>
+      <td>4.317786</td>
+    </tr>
+    <tr>
+      <th>356</th>
+      <td>144</td>
+      <td>Unbroken: A World War II Story of Survival, Re...</td>
+      <td>4.266087</td>
+    </tr>
+    <tr>
+      <th>190</th>
+      <td>24</td>
+      <td>Harry Potter and the Goblet of Fire (Harry Pot...</td>
+      <td>4.249728</td>
+    </tr>
+    <tr>
+      <th>424</th>
+      <td>102</td>
+      <td>Where the Wild Things Are</td>
+      <td>4.226877</td>
+    </tr>
+    <tr>
+      <th>889</th>
+      <td>490</td>
+      <td>Maus I: A Survivor's Tale: My Father Bleeds Hi...</td>
+      <td>4.213664</td>
+    </tr>
+    <tr>
+      <th>1191</th>
+      <td>1462</td>
+      <td>The Orphan Master's Son</td>
+      <td>4.213664</td>
+    </tr>
+    <tr>
+      <th>1554</th>
+      <td>983</td>
+      <td>Between the World and Me</td>
+      <td>4.213664</td>
+    </tr>
+    <tr>
+      <th>884</th>
+      <td>119</td>
+      <td>The Handmaid's Tale</td>
+      <td>4.199565</td>
+    </tr>
+    <tr>
+      <th>800</th>
+      <td>89</td>
+      <td>The Princess Bride</td>
+      <td>4.190062</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the WAR and get the k best books by a range of ages</span>
+<span class="k">def</span> <span class="nf">get_simply_age_recommendation</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">b_r_u_df</span>
+    
+    <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">get_age_range</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+    <span class="n">b_r_u_age_df</span> <span class="o">=</span> <span class="n">b_r_u_df</span><span class="p">[(</span><span class="n">b_r_u_df</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">b_r_u_df</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">)]</span>
+    
+    <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">rating_mean_data</span> <span class="o">=</span> <span class="n">merge_tables</span><span class="p">(</span><span class="n">b_r_u_age_df</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span> <span class="o">=</span> <span class="n">get_voters_and_means</span><span class="p">(</span><span class="n">nb_voters_data</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">)</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">items_df</span><span class="p">,</span> <span class="n">nb_voters_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">rating_mean_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">calculate_WAR_and_top_k</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">rating_all_mean</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">])</span>
+
+
+<span class="n">age_recommendation_df</span> <span class="o">=</span> <span class="n">get_simply_age_recommendation</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">age_recommendation_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span><span class="s1">&#39;title&#39;</span><span class="p">,</span><span class="s1">&#39;weighted_average_rating&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>title</th>
+      <th>weighted_average_rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>502</th>
+      <td>25</td>
+      <td>Harry Potter and the Deathly Hallows (Harry Po...</td>
+      <td>4.326251</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4</td>
+      <td>To Kill a Mockingbird</td>
+      <td>4.294203</td>
+    </tr>
+    <tr>
+      <th>368</th>
+      <td>85</td>
+      <td>The Giving Tree</td>
+      <td>4.289614</td>
+    </tr>
+    <tr>
+      <th>948</th>
+      <td>89</td>
+      <td>The Princess Bride</td>
+      <td>4.244702</td>
+    </tr>
+    <tr>
+      <th>659</th>
+      <td>133</td>
+      <td>Anne of Green Gables (Anne of Green Gables, #1)</td>
+      <td>4.224914</td>
+    </tr>
+    <tr>
+      <th>362</th>
+      <td>50</td>
+      <td>Where the Sidewalk Ends</td>
+      <td>4.216411</td>
+    </tr>
+    <tr>
+      <th>504</th>
+      <td>102</td>
+      <td>Where the Wild Things Are</td>
+      <td>4.204680</td>
+    </tr>
+    <tr>
+      <th>418</th>
+      <td>70</td>
+      <td>Ender's Game (Ender's Saga, #1)</td>
+      <td>4.204095</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>31</td>
+      <td>The Help</td>
+      <td>4.202891</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>21</td>
+      <td>Harry Potter and the Order of the Phoenix (Har...</td>
+      <td>4.196385</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="collaborative-filtering">
+<h2>Collaborative filtering<a class="headerlink" href="#collaborative-filtering" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get top K values from given array</span>
+<span class="k">def</span> <span class="nf">keep_top_k</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">smallest</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">array</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">array</span><span class="p">[</span><span class="n">array</span> <span class="o">&lt;</span> <span class="n">smallest</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">array</span>
+
+
+<span class="c1"># Similirity matrix according to the chosen similarity</span>
+<span class="k">def</span> <span class="nf">build_CF_prediction_matrix</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">ratings_diff</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">-</span><span class="n">pairwise_distances</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">sim</span><span class="p">)</span>
+
+
+<span class="c1"># Function that extracts user recommendations</span>
+<span class="c1"># Gets the highest rates indexes and returns book id and the title for that user</span>
+<span class="k">def</span> <span class="nf">get_CF_final_output</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">items_new_to_original</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">user_id</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">predicted_ratings_row</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span>
+    <span class="n">data_matrix_row</span> <span class="o">=</span> <span class="n">data_matrix</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span>
+    
+    <span class="n">predicted_ratings_unrated</span> <span class="o">=</span> <span class="n">predicted_ratings_row</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">predicted_ratings_unrated</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data_matrix_row</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">predicted_ratings_unrated</span><span class="p">)</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">k</span><span class="p">]</span>
+    
+    <span class="c1"># When getting the results, we map them back to original book ids</span>
+    <span class="n">books_original_indexes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;book_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">items_new_to_original</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">sim_scores</span><span class="p">]})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books_original_indexes_df</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the collaborative filtering recommendation according to the user</span>
+<span class="k">def</span> <span class="nf">get_CF_recommendation</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="c1"># Import global variables</span>
+    <span class="k">global</span> <span class="n">ratings_df</span>
+    <span class="k">global</span> <span class="n">items_df</span>
+
+    <span class="c1"># Declare of global variables</span>
+    <span class="k">global</span> <span class="n">users_original_to_new</span>
+    <span class="k">global</span> <span class="n">users_new_to_original</span>
+    <span class="k">global</span> <span class="n">items_original_to_new</span>
+    <span class="k">global</span> <span class="n">items_new_to_original</span>
+    <span class="k">global</span> <span class="n">data_matrix</span>
+    <span class="k">global</span> <span class="n">mean_user_rating</span>
+
+    <span class="c1"># Part 1</span>
+    <span class="n">unique_users</span> <span class="o">=</span> <span class="n">ratings_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">unique_items</span> <span class="o">=</span> <span class="n">ratings_df</span><span class="p">[</span><span class="s1">&#39;book_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">n_users</span> <span class="o">=</span> <span class="n">unique_users</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_items</span> <span class="o">=</span> <span class="n">unique_items</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Working on user data</span>
+    <span class="n">unique_users</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="c1"># Creating a dictionary that contains a mapping from original user id to a new user id</span>
+    <span class="n">users_original_to_new</span> <span class="o">=</span> <span class="p">{</span><span class="n">original_index</span><span class="p">:</span> <span class="n">new_index</span> <span class="k">for</span> <span class="n">original_index</span><span class="p">,</span> <span class="n">new_index</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_users</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_users</span><span class="p">))}</span>
+    <span class="c1"># Creating a dictionary that contains a mapping from new user id to a original user id</span>
+    <span class="n">users_new_to_original</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">users_original_to_new</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1"># Working on items data</span>
+    <span class="n">unique_items</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="c1"># Creating a dictionary that contains a mapping from original book id to a new book id</span>
+    <span class="n">items_original_to_new</span> <span class="o">=</span> <span class="p">{</span><span class="n">original_index</span><span class="p">:</span> <span class="n">new_index</span> <span class="k">for</span> <span class="n">original_index</span><span class="p">,</span> <span class="n">new_index</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_items</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_items</span><span class="p">))}</span>
+    <span class="c1"># Creating a dictionary that contains a mapping from new book id to a original book id</span>
+    <span class="n">items_new_to_original</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">items_original_to_new</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1"># Part 2</span>
+    <span class="n">data_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_users</span><span class="p">,</span> <span class="n">n_items</span><span class="p">))</span>
+    <span class="n">data_matrix</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ratings_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">users_original_to_new</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">items_original_to_new</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="n">rating</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">data_matrix</span><span class="p">[</span><span class="n">user</span><span class="p">,</span> <span class="n">book</span><span class="p">]</span> <span class="o">=</span> <span class="n">rating</span>
+
+    <span class="n">mean_user_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">data_matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">global</span> <span class="n">ratings_diff</span>
+    <span class="n">ratings_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_matrix</span> <span class="o">-</span> <span class="n">mean_user_rating</span><span class="p">)</span>
+    <span class="n">ratings_diff</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">user_similarity</span> <span class="o">=</span> <span class="n">build_CF_prediction_matrix</span><span class="p">(</span><span class="s1">&#39;cosine&#39;</span><span class="p">)</span>
+    <span class="n">user_similarity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">keep_top_k</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">user_similarity</span><span class="p">])</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">mean_user_rating</span> <span class="o">+</span> <span class="n">user_similarity</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">user_similarity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="c1"># Part 3</span>
+    <span class="k">return</span> <span class="n">get_CF_final_output</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">items_new_to_original</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">recommendations_by_user</span> <span class="o">=</span> <span class="n">get_CF_recommendation</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">recommendations_by_user</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>book_id</th>
+      <th>title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>101</td>
+      <td>Me Talk Pretty One Day</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>775</td>
+      <td>Just Kids</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>264</td>
+      <td>The Sun Also Rises</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>289</td>
+      <td>Watership Down (Watership Down, #1)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>335</td>
+      <td>James and the Giant Peach</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1084</td>
+      <td>To the Lighthouse</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>468</td>
+      <td>Their Eyes Were Watching God</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>184</td>
+      <td>Matilda</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>83</td>
+      <td>A Tale of Two Cities</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>344</td>
+      <td>Naked</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="content-based-filtering">
+<h2>Content-based filtering<a class="headerlink" href="#content-based-filtering" title="Permalink to this headline">¶</a></h2>
+<p>The features we used to work with are: language, tags, original title and authors.</p>
+<p>We tried different features to choose the best ones. It seems logical that if we want a recommendation for Twilight or Harry Potter, or The Hunger Games, it will recommend us the other books of the Saga. That’s why the title’s book is important.</p>
+<p>Moreover, usually, every author has its own writing style. We can see it through their different books. And if I liked a book of an author, I would like to get recommendations for its other books.</p>
+<p>Language has also its logical impact. The way it’s been written, the language the lector speaks and language can also mean culture. French books are different from American books.</p>
+<p>Tags give us some hints about the books: like the genre. It’s also important for the recommendation. We also tried with the publication year but it adds noises. It limits us. The year is taken as a string, so it’s either equal or different. That is not what we want.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preparing the dataframe for the algorithm</span>
+<span class="c1"># Reading the tags and the relevant features and preparing the features for the algorithm</span>
+<span class="n">bookreads_tags_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books_tags_df</span><span class="p">,</span> <span class="n">tags_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;tag_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+<span class="n">groupped_data</span> <span class="o">=</span> <span class="n">bookreads_tags_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;goodreads_book_id&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;tag_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">books_tags_row_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;goodreads_book_id&#39;</span><span class="p">:</span> <span class="n">groupped_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;tag_name&#39;</span><span class="p">:</span> <span class="n">groupped_data</span><span class="p">[</span><span class="s1">&#39;tag_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+
+<span class="n">content_based_filtering_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books_df</span><span class="p">[[</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;goodreads_book_id&#39;</span><span class="p">,</span>  <span class="s1">&#39;language_code&#39;</span><span class="p">,</span> <span class="s1">&#39;original_title&#39;</span><span class="p">]],</span> <span class="n">books_tags_row_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;goodreads_book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;outer&#39;</span><span class="p">)</span>
+<span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;tag_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;tag_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clean the data to get lower case letter and get rid of &#39;-&#39;</span>
+<span class="k">def</span> <span class="nf">clean_data</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Get all of our features together with a space in between. The choice of the features is explained in the report.</span>
+<span class="k">def</span> <span class="nf">create_soup</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;original_title&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;language_code&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;authors&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;tag_name&#39;</span><span class="p">]</span>
+
+
+<span class="c1"># Similarity matrix. We use cosine similarity</span>
+<span class="k">def</span> <span class="nf">build_contact_sim_metrix</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">count_matrix</span>
+    <span class="k">return</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">count_matrix</span><span class="p">,</span> <span class="n">count_matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We return the top k recommendation according to the content (The features of each book)</span>
+<span class="k">def</span> <span class="nf">get_content_recommendation</span><span class="p">(</span><span class="n">book_name</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">content_based_filtering_df</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;original_title&#39;</span><span class="p">,</span> <span class="s1">&#39;language_code&#39;</span><span class="p">,</span> <span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;tag_name&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+        <span class="n">content_based_filtering_df</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_based_filtering_df</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">clean_data</span><span class="p">)</span>
+
+    <span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;soup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_based_filtering_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">create_soup</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">global</span> <span class="n">count_matrix</span>
+    <span class="n">count_matrix</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;soup&#39;</span><span class="p">])</span>
+
+    <span class="n">cosine_sim</span> <span class="o">=</span> <span class="n">build_contact_sim_metrix</span><span class="p">()</span>
+
+    <span class="n">content_based_filtering_df</span> <span class="o">=</span> <span class="n">content_based_filtering_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">content_based_filtering_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">])</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">book_name</span><span class="p">]</span>
+
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">cosine_sim</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sim_scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sim_scores</span> <span class="o">=</span> <span class="n">sim_scores</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">book_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sim_scores</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">content_based_filtering_df</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">book_indices</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">content_based_filtering_result</span> <span class="o">=</span> <span class="n">get_content_recommendation</span><span class="p">(</span><span class="s1">&#39;Twilight (Twilight, #1)&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">content_based_filtering_result</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="evaluations">
+<h2>Evaluations<a class="headerlink" href="#evaluations" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter the data</span>
+<span class="c1"># We want only the books with ratings &gt;= 4 and the users that that ranked books at least 10 times</span>
+<span class="n">high_rate_test_df</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">user_value_counts</span> <span class="o">=</span> <span class="n">high_rate_test_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">user_value_counts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="n">user_value_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s1">&#39;appearances&#39;</span><span class="p">:</span> <span class="n">user_value_counts</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()})</span>
+<span class="n">user_value_counts_df</span> <span class="o">=</span> <span class="n">user_value_counts_df</span><span class="p">[</span><span class="n">user_value_counts_df</span><span class="p">[</span><span class="s1">&#39;appearances&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We get a weak precision_k for every similarity. The reason to this is that the test file is very small so it can’t give us a good precision. We don’t have enough information. We could have got better results for ARHR, but we didn’t for the same reasons. If we had more samples in our test file, the ARHR would be better. We still get better results than precision_k because we take into account the position of the books. Moreover, precision_k and ARHR, use only the top 10 recommendations that have been given. RMSE takes into account the predicted results and compare it to the actual one. Only the difference between the rankings matters. Those results show us that our rankings are good and that we succeeded to find the right rank of the recommendation (ARHR high).</p>
+<img src='https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F6bda19d0-541a-4dee-9a8d-6e4c2ae14843%2FUntitled.png?table=block&id=26e96ac0-a90d-4299-be71-f7ad6d902a63&spaceId=63b72b1f-0e90-4ab8-a6df-a060a6545a56&width=2000&userId=21ec183f-f0be-4b6b-9b3e-6f0d4e5c5469&cache=v2'><div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluation P@k for each similarity</span>
+<span class="k">def</span> <span class="nf">precision_k</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+    <span class="c1"># Importing global variables that has been assigned before to use them here</span>
+    <span class="k">global</span> <span class="n">items_df</span>
+    <span class="k">global</span> <span class="n">data_matrix</span>
+    <span class="k">global</span> <span class="n">ratings_diff</span>
+    <span class="k">global</span> <span class="n">mean_user_rating</span>
+    <span class="k">global</span> <span class="n">items_new_to_original</span>
+    
+    <span class="n">pk_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s1">&#39;jaccard&#39;</span><span class="p">]:</span>
+        <span class="n">calculations_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">user_similarity</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">pairwise_distances</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">user_similarity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">keep_top_k</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">user_similarity</span><span class="p">])</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">mean_user_rating</span> <span class="o">+</span> <span class="n">user_similarity</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">user_similarity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">for</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">user_value_counts_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">user_recommendations</span> <span class="o">=</span> <span class="n">get_CF_final_output</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">items_new_to_original</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">book_idx</span> <span class="ow">in</span> <span class="n">user_recommendations</span><span class="p">[</span><span class="s1">&#39;book_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="n">chosen_book</span> <span class="o">=</span> <span class="n">high_rate_test_df</span><span class="p">[(</span><span class="n">high_rate_test_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">high_rate_test_df</span><span class="p">[</span><span class="s1">&#39;book_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">book_idx</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="n">chosen_book</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">calculations_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counter</span> <span class="o">/</span> <span class="n">k</span><span class="p">)</span>
+
+        <span class="n">pk_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">calculations_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">user_value_counts_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pk_list</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">precision_k</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/sklearn/metrics/pairwise.py:1738: DataConversionWarning: Data was converted to boolean for metric jaccard
+  warnings.warn(msg, DataConversionWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.08, 0.008, 0.08]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluation ARHR</span>
+<span class="k">def</span> <span class="nf">ARHR</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+    <span class="c1"># Importing global variables that has been assigned before to use them here</span>
+    <span class="k">global</span> <span class="n">items_df</span>
+    <span class="k">global</span> <span class="n">data_matrix</span>
+    <span class="k">global</span> <span class="n">ratings_diff</span>
+    <span class="k">global</span> <span class="n">mean_user_rating</span>
+    <span class="k">global</span> <span class="n">items_new_to_original</span>
+    
+    <span class="n">arhr_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s1">&#39;jaccard&#39;</span><span class="p">]:</span>
+        <span class="n">calculations_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">user_similarity</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">pairwise_distances</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">user_similarity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">keep_top_k</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arr</span><span class="p">),</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">arr</span> <span class="ow">in</span> <span class="n">user_similarity</span><span class="p">])</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">mean_user_rating</span> <span class="o">+</span> <span class="n">user_similarity</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">user_similarity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">for</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">user_value_counts_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">user_recommendations</span> <span class="o">=</span> <span class="n">get_CF_final_output</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">items_new_to_original</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+            <span class="n">user_high_rate_df</span> <span class="o">=</span> <span class="n">high_rate_test_df</span><span class="p">[</span><span class="n">high_rate_test_df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">]</span>
+            <span class="n">user_rec_merged_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">user_recommendations</span><span class="p">,</span> <span class="n">user_high_rate_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;book_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">user_rec_merged_df</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">calculations_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">position</span><span class="p">)</span>
+
+        <span class="n">arhr_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">calculations_list</span><span class="p">)</span> <span class="o">/</span> <span class="n">user_value_counts_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">arhr_list</span>
+
+
+<span class="n">ARHR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/sklearn/metrics/pairwise.py:1738: DataConversionWarning: Data was converted to boolean for metric jaccard
+  warnings.warn(msg, DataConversionWarning)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.6466666666666666, 0.08, 0.6266666666666666]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Helper function to build the function RMSE. This time we wont filter the data.</span>
+<span class="k">def</span> <span class="nf">get_recommendations_RMSE</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">user_id</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">predicted_ratings_row</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span>
+    <span class="n">data_matrix_row</span> <span class="o">=</span> <span class="n">data_matrix</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span>
+
+    <span class="n">predicted_ratings_unrated</span> <span class="o">=</span> <span class="n">predicted_ratings_row</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">predicted_ratings_unrated</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data_matrix_row</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">book_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">predicted_ratings_unrated</span><span class="p">)</span>
+    <span class="n">books_rating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">predicted_ratings_unrated</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">rating</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">rating</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">book_ids</span><span class="p">,</span> <span class="n">books_rating</span><span class="p">)}</span>
+
+
+<span class="c1"># Evaluation RMSE.</span>
+<span class="k">def</span> <span class="nf">RMSE</span><span class="p">():</span>
+    <span class="c1"># Importing global variables that has been assigned before to use them here.</span>
+    <span class="k">global</span> <span class="n">ratings_diff</span>
+    <span class="k">global</span> <span class="n">mean_user_rating</span>
+    
+    <span class="n">rmse_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">,</span> <span class="s1">&#39;jaccard&#39;</span><span class="p">]:</span>
+        <span class="n">sum_error</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">count_lines</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">user_similarity</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">pairwise_distances</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">mean_user_rating</span> <span class="o">+</span> <span class="n">user_similarity</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ratings_diff</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">user_similarity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="k">for</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">test_user_data</span> <span class="ow">in</span> <span class="n">test_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">):</span>
+            <span class="n">user_recommendations</span> <span class="o">=</span> <span class="n">get_recommendations_RMSE</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">data_matrix</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">test_user_data</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">test_book_id</span><span class="p">,</span> <span class="n">rating</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                <span class="n">prediction</span> <span class="o">=</span> <span class="n">user_recommendations</span><span class="p">[</span><span class="n">test_book_id</span><span class="p">]</span> <span class="k">if</span> <span class="n">test_book_id</span> <span class="ow">in</span> <span class="n">user_recommendations</span> <span class="k">else</span> <span class="mi">0</span>
+
+                <span class="k">if</span> <span class="n">prediction</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">sum_error</span> <span class="o">+=</span> <span class="p">(</span><span class="n">prediction</span> <span class="o">-</span> <span class="n">rating</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">count_lines</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">rmse_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sum_error</span><span class="o">/</span><span class="n">count_lines</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">rmse_list</span>
+    
+    
+<span class="n">RMSE</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/sklearn/metrics/pairwise.py:1738: DataConversionWarning: Data was converted to boolean for metric jaccard
+  warnings.warn(msg, DataConversionWarning)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.9176794695882072, 0.9168899103744533, 0.9187216947055077]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./nbs"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="T990172_recobook_diversity_aware_book_recommender.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Diversity Aware Book Recommender</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="T023535_Kafka_MongoDB_Real_time_Streaming.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">Kafka MongoDB Real-time Streaming</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Sparsh A.<br/>
+        
+            &copy; Copyright 2021.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

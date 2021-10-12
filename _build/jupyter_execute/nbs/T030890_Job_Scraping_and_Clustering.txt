@@ -1,0 +1,180 @@
+!pip install -q requests beautifulsoup4
+!pip install -U sentence-transformers
+
+import time
+import csv
+import re
+
+import numpy as np
+import pandas as pd
+import requests
+import bs4
+import lxml.etree as xml
+
+import pprint
+from scipy.spatial.distance import cosine, cdist
+
+import nltk
+nltk.download('punkt')
+
+from spacy.lang.en import English
+nlp = English()
+sentencizer = nlp.create_pipe("sentencizer")
+nlp.add_pipe(sentencizer)
+
+from sentence_transformers import SentenceTransformer
+
+from sklearn.cluster import KMeans
+
+import warnings
+warnings.filterwarnings("ignore")
+
+%reload_ext google.colab.data_table
+
+URLs = ["https://www.flexjobs.com/blog/post/job-search-strategies-for-success-v2/",
+        "https://www.best-job-interview.com/job-search-strategy.html",
+        "https://content.wisestep.com/job-search-strategies/",
+        "https://www.thebalancecareers.com/top-strategies-for-a-successful-job-search-2060714",
+        "https://www.monster.com/career-advice/article/a-winning-job-search-strategy",
+        "https://interviewdoctor.com/testimonials/",
+        "https://www.telenor.com/10-tips-for-job-hunting-in-the-digital-age/",
+        "https://www.monster.com/career-advice/article/five-ps-of-job-search-progress",
+        ]
+
+requests.get(URLs[7])
+
+df = pd.DataFrame(columns=['title','text'])
+
+i = 0
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(name="article", attrs={"class": "single-post-page"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"h2","p"})])
+df.loc[i,'text'] = article
+
+i = 1
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"id": "ContentColumn"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"span","h2","p"})])
+df.loc[i,'text'] = article
+
+i = 2
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"class": "td-ss-main-content"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"span","h2","p"})])
+df.loc[i,'text'] = article
+
+i = 3
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"id": "list-sc_1-0"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"h2","p"})])
+df.loc[i,'text'] = article
+
+i = 4
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"id": "mainContent"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"h2","p"})])
+df.loc[i,'text'] = article
+
+i = 5
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"class": "site-inner"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"blockquote"})])
+df.loc[i,'text'] = article
+
+i = 6
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"id": "primary"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"p","ol"})])
+df.loc[i,'text'] = article
+
+i = 7
+web_page = bs4.BeautifulSoup(requests.get(URLs[i], {}).text, "lxml")
+df.loc[i,'title'] = web_page.head.title.text
+sub_web_page = web_page.find_all(attrs={"class": "article-content"})[0]
+article = '. '.join([wp.text for wp in sub_web_page.find_all({"p","h2"})])
+df.loc[i,'text'] = article
+
+df = df.dropna().reset_index(drop=True)
+df.info()
+
+df
+
+def tokenize(x):
+  return nltk.sent_tokenize(x)
+
+def spacy_tokenize(x):
+  doc = nlp(x)
+  return list(doc.sents)
+
+def sentenize(temp, col = 'text'):
+  s = temp.apply(lambda x: pd.Series(x[col]),axis=1).stack().reset_index(level=1, drop=True)
+  s.name = col
+  temp = temp.drop(col, axis=1).join(s)
+  return temp
+
+temp = df[['text']].copy()
+
+temp.loc[:,'text'] = temp.text.apply(lambda x: re.sub(r'\.+', ".", x))
+
+temp.loc[:,'text'] = temp['text'].apply(tokenize)
+temp = sentenize(temp,'text')
+temp.reset_index(inplace=True)
+temp.columns = ['para_id','text']
+
+temp.loc[:,'text'] = temp['text'].apply(spacy_tokenize)
+temp = sentenize(temp,'text')
+temp.reset_index(drop=True, inplace=True)
+
+temp = temp.dropna()
+
+temp.loc[:,'text'] = temp.text.apply(lambda x: x.text.lower())
+
+temp.loc[:,'text'] = temp['text'].str.replace("[^a-zA-Z0-9]", " ")
+
+temp.loc[:,'text'] = temp['text'].dropna()
+
+temp = temp[temp['text'].str.split().str.len().gt(3)]
+
+temp = temp.drop_duplicates(subset=['text'], keep='first')
+
+temp = temp.reset_index(drop=True)
+
+temp
+
+embedder = SentenceTransformer('distilbert-base-nli-mean-tokens')
+corpus = temp.text.tolist()
+corpus_embeddings = embedder.encode(corpus)
+
+queries = ['customize resume']
+query_embeddings = embedder.encode(queries)
+for query, query_embedding in zip(queries, query_embeddings):
+    distances = cdist([query_embedding], corpus_embeddings, "cosine")[0]
+    topn_index = distances.argsort()[:5][::-1]
+    print('Query:', query)
+    print('Top 5 most similar sentences in corpus:')
+    for i in topn_index:
+      pprint.pprint("{} (Score: {})".format(corpus[i], distances[i]))
+
+num_clusters = 20
+clustering_model = KMeans(n_clusters=num_clusters)
+clustering_model.fit(corpus_embeddings)
+cluster_assignment = clustering_model.labels_
+
+df = pd.DataFrame(data={"text":corpus, "cluster":cluster_assignment})
+df
+
+c = 0
+df.loc[df.cluster==c,:]
+
+c = 1
+df.loc[df.cluster==c,:]
+
+c = 6
+df.loc[df.cluster==c,:]

@@ -1,0 +1,221 @@
+%matplotlib inline
+%config InlineBackend.figure_formats = ['svg']
+
+import numpy as np
+import scipy
+import scipy.stats as stats
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_style('darkgrid')
+np.random.seed(42)
+
+# Define the multi-armed bandits
+nb_bandits = 3  # Number of bandits
+# True probability of winning for each bandit
+p_bandits = [0.45, 0.55, 0.60]
+
+
+def pull(i):
+    """Pull arm of bandit with index `i` and return 1 if win, 
+    else return 0."""
+    if np.random.rand() < p_bandits[i]:
+        return 1
+    else:
+        return 0
+
+plots = [1, 2, 5, 10, 25, 50, 100, 200, 500, 1000]
+
+
+def plot(priors, step, ax):
+    """Plot the priors for the current step."""
+    plot_x = np.linspace(0.001, .999, 100)
+    for prior in priors:
+        y = prior.pdf(plot_x)
+        p = ax.plot(plot_x, y)
+        ax.fill_between(plot_x, y, 0, alpha=0.2)
+    ax.set_xlim([0, 1])
+    ax.set_ylim(bottom=0)
+    ax.set_title(f'Priors at step {step:d}')
+
+# Simulate multi-armed bandit process and update posteriors
+
+# Setup plot
+fig, axs = plt.subplots(5, 2, figsize=(8, 10))
+axs = axs.flat
+
+# The number of trials and wins will represent the prior for each
+#  bandit with the help of the Beta distribution.
+trials = [0, 0, 0]  # Number of times we tried each bandit
+wins = [0, 0, 0]  # Number of wins for each bandit
+
+n = 1000
+# Run the trail for `n` steps
+for step in range(1, n+1):
+    # Define the prior based on current observations
+    bandit_priors = [
+        stats.beta(a=1+w, b=1+t-w) for t, w in zip(trials, wins)]
+    # plot prior 
+    if step in plots:
+        plot(bandit_priors, step, next(axs))
+    # Sample a probability theta for each bandit
+    theta_samples = [
+        d.rvs(1) for d in bandit_priors
+    ]
+    # choose a bandit
+    chosen_bandit = np.argmax(theta_samples)
+    # Pull the bandit
+    x = pull(chosen_bandit)
+    # Update trials and wins (defines the posterior)
+    trials[chosen_bandit] += 1
+    wins[chosen_bandit] += x
+
+plt.tight_layout()
+plt.show()
+
+# Print final outcome and number of test needed per bandit
+emperical_p_bandits = [(1+w) / (1+t) for t, w in zip(trials, wins)]
+for i in range(nb_bandits):
+    print((f'True prob={p_bandits[i]:.2f};  '
+           f'Emperical prob={emperical_p_bandits[i]:.2f};  '
+           f'Trials={trials[i]:d}'))
+
+p_bandits = [0.45, 0.55, 0.60]
+trials = [0, 0, 0]
+wins = [0, 0, 0]
+n = 10
+
+for step in range(1, n+1):
+    # Define the prior based on current observations
+    bandit_priors = [
+        stats.beta(a=1+w, b=1+t-w) for t, w in zip(trials, wins)]
+    # Sample a probability theta for each bandit
+    theta_samples = [
+        d.rvs(1) for d in bandit_priors
+    ]
+    # choose a bandit
+    chosen_bandit = np.argmax(theta_samples)
+    # Pull the bandit
+    x = pull(chosen_bandit)
+    # Update trials and wins (defines the posterior)
+    trials[chosen_bandit] += 1
+    wins[chosen_bandit] += x
+    print(p_bandits,trials,wins)
+
+!pip install -q dash dash-html-components dash-core-components dash_bootstrap_components jupyter-dash
+
+import numpy as np
+import pandas as pd
+import scipy
+import scipy.stats as stats
+import itertools
+from copy import deepcopy
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import dash_bootstrap_components as dbc
+from dash.dependencies import Input, Output
+from jupyter_dash import JupyterDash
+import plotly.express as px
+
+class THSimulationAdv():
+    def __init__(self, nb_bandits):
+        self.nb_bandits = nb_bandits
+        self.trials = [0] * self.nb_bandits
+        self.wins = [0] * self.nb_bandits
+    def pull(self, i, p_bandits):
+        if np.random.rand() < p_bandits[i]:
+            return 1
+        else:
+            return 0
+    def step(self, p_bandits):
+        # Define the prior based on current observations
+        bandit_priors = [stats.beta(a=1+w, b=1+t-w) for t, w in zip(self.trials, self.wins)]
+        # Sample a probability theta for each bandit
+        theta_samples = [d.rvs(1) for d in bandit_priors]
+        # choose a bandit
+        chosen_bandit = np.argmax(theta_samples)
+        # Pull the bandit
+        x = self.pull(chosen_bandit, p_bandits)
+        # Update trials and wins (defines the posterior)
+        self.trials[chosen_bandit] += 1
+        self.wins[chosen_bandit] += x
+        return self.trials, self.wins
+
+n_bandits = 10
+thsim = THSimulationAdv(nb_bandits=n_bandits)
+
+app = JupyterDash(__name__, external_stylesheets = [dbc.themes.BOOTSTRAP])
+
+white_button_style = {'background-color': 'white', 'color': 'black'}
+green_button_style = {'background-color': 'green', 'color': 'white'}
+red_button_style = {'background-color': 'red', 'color': 'white'}
+
+def create_row(nb=1, wd=1, pb='0.5'):
+    return dbc.Row(children=[
+        dbc.Col(dbc.Input(id='bandit{}_prob'.format(str(nb)), type="number", min=0, max=1, 
+                          step=0.01, value=pb), width=wd),
+        dbc.Col(dbc.Card(html.Div(id='bandit{}_hits'.format(str(nb))), color="success"),width=wd),
+        dbc.Col(dbc.Card(html.Div(id='bandit{}_miss'.format(str(nb))), color="danger"),width=wd),
+        dbc.Col(dbc.Card(html.Div(id='bandit{}_total'.format(str(nb))), color="light"),width=wd),
+    ], align="center", justify="start")
+
+def create_table():
+    row_list = [create_row(nb=i) for i in range(1,n_bandits+1)]
+    return html.Div(row_list)
+
+app.layout = html.Div(children=[
+    dbc.Button("Start Simulation", color="primary"),
+    create_table(),
+    dcc.Interval(
+            id='interval-component',
+            interval=1000, # in milliseconds
+            n_intervals=0
+        ),
+    html.Div(id='p_bandits'),
+])
+
+p_bandits = [np.random.rand() for i in range(n_bandits)]
+last_update = thsim.step(p_bandits)
+
+input_list = [eval(f"Input('bandit{i}_prob', 'value')") for i in range(1,n_bandits+1)]
+
+@app.callback(
+    Output('p_bandits', 'children'),
+    input_list)
+def update_probs(*args):
+    global p_bandits
+    p_bandits = [float(prob) for prob in args] 
+    return ""
+
+output_list_hits = [eval(f"Output('bandit{i}_hits', 'children')") for i in range(1,n_bandits+1)]
+output_list_miss = [eval(f"Output('bandit{i}_miss', 'children')") for i in range(1,n_bandits+1)]
+output_list_total = [eval(f"Output('bandit{i}_total', 'children')") for i in range(1,n_bandits+1)]
+output_list = list(itertools.chain(output_list_hits,
+                                   output_list_miss,
+                                   output_list_total)
+                  )
+
+@app.callback(
+    output_list,
+    Input('interval-component', 'n_intervals'))
+def update_metrics(n):
+    x = thsim.step(p_bandits)
+    totals = x[0]
+    hits = x[1]
+    global last_update
+    hitlist=[]; misslist=[]; totallist=[]
+    for i in range(n_bandits):
+        hit_style = green_button_style if hits[i]!=last_update[1][i] else white_button_style
+        miss_style = red_button_style if (totals[i]-hits[i])!=(last_update[0][i]-last_update[1][i]) else white_button_style
+        hitlist.append(html.Div(hits[i], style=hit_style))
+        misslist.append(html.Div(totals[i]-hits[i], style=miss_style))
+        totallist.append(totals[i])
+    last_update = deepcopy(x)
+    return list(itertools.chain(hitlist,misslist,totallist))
+
+app.run_server(mode='inline', port=8081)
+
+!kill -9 $(lsof -t -i:8081) # command to kill the dash once done

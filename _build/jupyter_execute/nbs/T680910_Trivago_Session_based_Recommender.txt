@@ -1,0 +1,975 @@
+!pip install -q git+https://github.com/sparsh-ai/recochef.git
+
+import math
+import pandas as pd
+import numpy as np
+
+from recochef.datasets.trivago import Trivago
+
+trivago = Trivago()
+
+df_train = trivago.load_train()
+df_train.head()
+
+df_test = trivago.load_test()
+df_test.head()
+
+GR_COLS = ["USERID", "SESSIONID", "TIMESTAMP", "STEP"]
+
+def get_submission_target(df):
+    """Identify target rows with missing click outs."""
+
+    mask = df["REFERENCE"].isnull() & (df["EVENTTYPE"] == "clickout item")
+    df_out = df[mask]
+
+    return df_out
+
+def get_popularity(df):
+    """Get number of clicks that each item received in the df."""
+
+    mask = df["EVENTTYPE"] == "clickout item"
+    df_clicks = df[mask]
+    df_item_clicks = (
+        df_clicks
+        .groupby("REFERENCE")
+        .size()
+        .reset_index(name="NCLICKS")
+        .transform(lambda x: x.astype(int))
+    )
+
+    return df_item_clicks
+
+def string_to_array(s):
+    """Convert pipe separated string to array."""
+
+    if isinstance(s, str):
+        out = s.split("|")
+    elif math.isnan(s):
+        out = []
+    else:
+        raise ValueError("Value must be either string of nan")
+    return out
+
+def explode(df_in, col_expl):
+    """Explode column col_expl of array type into multiple rows."""
+
+    df = df_in.copy()
+    df.loc[:, col_expl] = df[col_expl].apply(string_to_array)
+
+    df_out = pd.DataFrame(
+        {col: np.repeat(df[col].values,
+                        df[col_expl].str.len())
+         for col in df.columns.drop(col_expl)}
+    )
+
+    df_out.loc[:, col_expl] = np.concatenate(df[col_expl].values)
+    df_out.loc[:, col_expl] = df_out[col_expl].apply(int)
+
+    return df_out
+
+def group_concat(df, gr_cols, col_concat):
+    """Concatenate multiple rows into one."""
+
+    df_out = (
+        df
+        .groupby(gr_cols)[col_concat]
+        .apply(lambda x: ' '.join(x))
+        .to_frame()
+        .reset_index()
+    )
+
+    return df_out
+
+def calc_recommendation(df_expl, df_pop):
+    """Calculate recommendations based on popularity of items.
+    The final data frame will have an impression list sorted according to the number of clicks per item in a reference data frame.
+    :param df_expl: Data frame with exploded impression list
+    :param df_pop: Data frame with items and number of clicks
+    :return: Data frame with sorted impression list according to popularity in df_pop
+    """
+
+    df_expl_clicks = (
+        df_expl[GR_COLS + ["IMPRESSIONS"]]
+        .merge(df_pop,
+               left_on="IMPRESSIONS",
+               right_on="REFERENCE",
+               how="left")
+    )
+
+    df_out = (
+        df_expl_clicks
+        .assign(IMPRESSIONS=lambda x: x["IMPRESSIONS"].apply(str))
+        .sort_values(GR_COLS + ["NCLICKS"],
+                     ascending=[True, True, True, True, False])
+    )
+
+    df_out = group_concat(df_out, GR_COLS, "IMPRESSIONS")
+    df_out.rename(columns={'IMPRESSIONS': 'ITEM_RECOMMENDATIONS'}, inplace=True)
+
+    return df_out
+
+print("Get popular items...")
+df_popular = get_popularity(df_train)
+df_popular.sort_values(by='NCLICKS', ascending=False).head(10)
+
+print("Identify target rows...")
+df_target = get_submission_target(df_test)
+df_target.head(10)
+
+print("Get recommendations...")
+df_expl = explode(df_target, "IMPRESSIONS")
+df_out = calc_recommendation(df_expl, df_popular)
+df_out.head(10)
+
+!pip install -q git+https://github.com/sparsh-ai/recochef.git
+
+%load_ext autoreload
+%autoreload 2
+
+import sys
+import time
+import math
+import random
+import numpy as np
+import pandas as pd
+from scipy import sparse
+
+from sklearn.linear_model import LogisticRegression
+import lightgbm as lgb
+
+from recochef.datasets.trivago import Trivago
+from recochef.datasets.synthetic import Session
+
+trivago = Trivago()
+
+df_train = trivago.load_train()
+df_train.head()
+
+df_test = trivago.load_test()
+df_test.head()
+
+sample_session_data = Session(version='trivago')
+
+df_train = sample_session_data.train()
+df_train
+
+df_test = sample_session_data.test()
+df_test
+
+df_items = sample_session_data.items()
+df_items
+
+def explode(df, col_expl):
+    """Separate string in column col_expl and explode elements into multiple rows."""
+
+    s = df[col_expl].str.split('|', expand=True).stack()
+    i = s.index.get_level_values(0)
+    df2 = df.loc[i].copy()
+    df2[col_expl] = s.values
+
+    return df2
+
+
+def explode_mult(df_in, col_list):
+    """Explode each column in col_list into multiple rows."""
+
+    df = df_in.copy()
+
+    for col in col_list:
+        df.loc[:, col] = df.loc[:, col].str.split("|")
+
+    df_out = pd.DataFrame(
+        {col: np.repeat(df[col].to_numpy(),
+                        df[col_list[0]].str.len())
+         for col in df.columns.drop(col_list)}
+    )
+
+    for col in col_list:
+        df_out.loc[:, col] = np.concatenate(df.loc[:, col].to_numpy())
+
+    return df_out
+
+
+def group_concat(df, gr_cols, col_concat):
+    """Concatenate multiple rows into one."""
+
+    df_out = (
+        df
+        .groupby(gr_cols)[col_concat]
+        .apply(lambda x: ' '.join(x))
+        .to_frame()
+        .reset_index()
+    )
+
+    return df_out
+
+
+def get_target_rows(df):
+    """Restrict data frame to rows for which a prediction needs to be made."""
+    
+    df_target = df[
+        (df.action_type == "clickout item") & 
+        (df["reference"].isna())
+    ]
+
+    return df_target
+
+
+def summarize_recs(df, rec_col):
+    """Bring the data frame into submission format."""
+
+    df_rec = (
+        df
+        .sort_values(by=["user_id", "session_id", "timestamp", "step", rec_col],
+                        ascending=[True, True, True, True, False])
+        .groupby(["user_id", "session_id", "timestamp", "step"])["impressed_item"]
+        .apply(lambda x: ' '.join(x))
+        .to_frame()
+        .reset_index()
+        .rename(columns={'impressed_item': 'item_recommendations'})
+    )
+
+    return df_rec
+
+def print_time(s):
+    """Print string s and current time."""
+
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print(f"{current_time} | {s}")
+
+
+def print_header(s):
+    """Print a nice header for string s."""
+
+    print()
+    print(f"##{'#'*len(s)}##")
+    print(f"# {s} #")
+    print(f"##{'#'*len(s)}##")
+    print()
+
+
+def validate_model_name(model_name):
+    """Check if the inserted model name is valid."""
+
+    model_names = [
+        'gbm_rank', 'logistic_regression',
+        'nn_interaction', 'nn_item',
+        'pop_abs', 'pop_user', 
+        'position', 'random'
+    ]
+
+    try:
+        if model_name not in model_names: raise NameError
+    except NameError:
+        print("No such model. Please choose a valid one.")
+        sys.exit(1)
+
+def build_features(df):
+    """Build features for the lightGBM and logistic regression model."""
+
+    # Select columns that are of interest for this method
+    print_time("start")
+    cols = ['user_id', 'session_id', 'timestamp', 'step',
+            'action_type', 'reference', 'impressions', 'prices']
+    df_cols = df.loc[:, cols] 
+
+    # We are only interested in action types, for wich the reference is an item ID
+    print_time("filter interactions")
+    item_interactions = [
+        'clickout item', 'interaction item deals', 'interaction item image',
+        'interaction item info', 'interaction item rating', 'search for item'
+    ]
+    df_actions = (
+        df_cols
+        .loc[df_cols.action_type.isin(item_interactions), :]
+        .copy()
+        .rename(columns={'reference': 'referenced_item'})
+    )
+
+    print_time("cleaning")
+    # Clean of instances that have no reference
+    idx_rm = (df_actions.action_type != "clickout item") & (df_actions.referenced_item.isna())
+    df_actions = df_actions[~idx_rm]
+
+    # Get item ID of previous interaction of a user in a session
+    print_time("previous interactions")
+    df_actions.loc[:, "previous_item"] = (
+        df_actions
+        .sort_values(by=["user_id", "session_id", "timestamp", "step"],
+                        ascending=[True, True, True, True])
+        .groupby(["user_id"])["referenced_item"]
+        .shift(1)
+    )
+
+    # Combine the impressions and item column, they both contain item IDs
+    # and we can expand the impression lists in the next step to get the total
+    # interaction count for an item
+    print_time("combining columns - impressions")
+    df_actions.loc[:, "interacted_item"] = np.where(
+        df_actions.impressions.isna(),
+        df_actions.referenced_item,
+        df_actions.impressions
+    )
+    df_actions = df_actions.drop(columns="impressions")
+
+    # Price array expansion will get easier without NAs
+    print_time("combining columns - prices")
+    df_actions.loc[:, "prices"] = np.where(
+        df_actions.prices.isna(),
+        "",
+        df_actions.prices
+    )
+
+    # Convert pipe separated lists into columns
+    print_time("explode arrays")
+    df_items = explode_mult(df_actions, ["interacted_item", "prices"]).copy()
+
+    # Feature: Number of previous interactions with an item
+    print_time("interaction count")
+    df_items.loc[:, "interaction_count"] = (
+        df_items
+        .groupby(["user_id", "interacted_item"])
+        .cumcount()
+    )
+
+    # Reduce to impression level again 
+    print_time("reduce to impressions")
+    df_impressions = (
+        df_items[df_items.action_type == "clickout item"]
+        .copy()
+        .drop(columns="action_type")
+        .rename(columns={"interacted_item": "impressed_item"})
+    )
+
+    # Feature: Position of item in the original list.
+    # Items are in original order after the explode for each index
+    print_time("position feature")
+    df_impressions.loc[:, "position"] = (
+        df_impressions
+        .groupby(["user_id", "session_id", "timestamp", "step"])
+        .cumcount()+1
+    )
+
+    # Feature: Is the impressed item the last interacted item
+    print_time("last interacted item feature")
+    df_impressions.loc[:, "is_last_interacted"] = (
+        df_impressions["previous_item"] == df_impressions["impressed_item"]
+    ).astype(int)
+
+    print_time("change price datatype")
+    df_impressions.loc[:, "prices"] = df_impressions.prices.astype(int)
+
+    return_cols = [
+        "user_id",
+        "session_id",
+        "timestamp",
+        "step",
+        "position",
+        "prices",
+        "interaction_count",
+        "is_last_interacted",
+        "referenced_item",
+        "impressed_item",
+    ]
+
+    df_return = df_impressions[return_cols]
+
+    return df_return
+
+#collapse-hide
+class ModelRandom():
+    """
+    Model class for the random ordering model.
+    Methods
+        fit(df): Not needed. Only added for consistency with other model classes
+        predict(df): Calculate recommendations for test data        
+    """
+    def fit(self, _):
+        pass
+
+
+    def predict(self, df):
+        """Randomly sort the impressions list."""
+
+        # Target row, withheld item ID that needs to be predicted
+        print_time("target rows")
+        df_target = get_target_rows(df.copy())
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        random.seed(10121)
+        df_target.loc[:, "item_recs_list"] = (
+            df_target
+            .loc[:, "impressions"].str.split("|")
+            .map(lambda x: sorted(x, key=lambda k: random.random()))
+        )
+
+        df_target.loc[:, "item_recommendations"] = (
+           df_target["item_recs_list"]
+           .map(lambda arr: ' '.join(arr))
+        )
+
+        cols_rec = ["user_id", "session_id", "timestamp", "step", "item_recommendations"]
+        df_rec = df_target.loc[:, cols_rec]
+
+        return df_rec
+
+model = ModelRandom()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelPosition():
+    """
+    Model class for the model based on the original position in displayed list.
+    Methods
+        fit(df): Not needed. Only added for consistency with other model classes
+        predict(df): Calculate recommendations for test data        
+    """
+    def fit(self, _):
+        pass
+
+
+    def predict(self, df):
+        """Return items in impressions list in original order."""
+
+        # Target row, withheld item ID that needs to be predicted
+        print_time("target rows")
+        df_target = get_target_rows(df.copy())
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        df_target["item_recommendations"] = (
+            df_target
+            .apply(lambda x: x.impressions.replace("|", " "), axis=1)
+        )
+
+        cols_rec = ["user_id", "session_id", "timestamp", "step", "item_recommendations"]
+        df_rec = df_target.loc[:, cols_rec]
+
+        return df_rec
+
+model = ModelPosition()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelPopAbs():
+    """
+    Model class for the popularity model based on total number of clicks.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Count the number of clicks for each item."""
+
+        # Select columns that are of interest for this method
+        print_time("start")
+        cols = ['user_id', 'session_id', 'timestamp', 'step',
+                'action_type', 'reference']
+        df_cols = df.loc[:, cols] 
+
+        # We only need to count clickouts per item
+        print_time("clicks per item")
+        df_item_clicks = (
+            df_cols
+            .loc[df_cols["action_type"] == "clickout item", :]
+            .groupby("reference")
+            .size()
+            .reset_index(name="n_clicks")
+            .rename(columns={"reference": "item"})
+        )
+
+        self.df_pop = df_item_clicks
+
+
+    def predict(self, df):
+        """Sort the impression list by number of clicks in the training phase."""
+
+        # Select columns that are of interest for this method
+        print_time("start")
+        cols = ['user_id', 'session_id', 'timestamp', 'step',
+                'action_type', 'reference', "impressions"]
+        df_cols = df.loc[:, cols] 
+
+        # Target row, withheld item ID that needs to be predicted
+        print_time("target rows")
+        df_target = get_target_rows(df_cols)
+
+        # Explode to impression level
+        print_time("explode impression array")
+        df_impressions = (
+            explode(df_target, "impressions")
+            .rename(columns={"impressions": "impressed_item"})
+        )
+        df_impressions = (
+            df_impressions
+            .merge(
+                self.df_pop,
+                left_on="impressed_item",
+                right_on="item",
+                how="left"
+            )
+        )
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        df_rec = summarize_recs(df_impressions, "n_clicks")
+
+        return df_rec
+
+model = ModelPopAbs()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelPopUsers():
+    """
+    Model class for the popularity model based on distinct users.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Count the number of distinct users that click on an item."""
+
+        # Select columns that are of interest for this method
+        print_time("start")
+        cols = ['user_id', 'session_id', 'timestamp', 'step',
+                'action_type', 'reference']
+        df_cols = df.loc[:, cols] 
+
+        # We only need to count clickouts per item
+        print_time("clicks per item")
+        df_item_clicks = (
+            df_cols
+            .loc[df_cols["action_type"] == "clickout item", :]
+            .groupby("reference")
+            .user_id
+            .nunique()
+            .reset_index(name="n_users")
+            .rename(columns={"reference": "item"})
+        )
+
+        self.df_pop = df_item_clicks
+
+
+    def predict(self, df):
+        """Sort the impression list by number of distinct users in the training phase."""
+
+        # Select columns that are of interest for this method
+        print_time("start")
+        cols = ['user_id', 'session_id', 'timestamp', 'step',
+                'action_type', 'reference', "impressions"]
+        df_cols = df.loc[:, cols] 
+
+        # Target row, withheld item ID that needs to be predicted
+        print_time("target rows")
+        df_target = get_target_rows(df_cols)
+
+        # Explode to impression level
+        print_time("explode impression array")
+        df_impressions = (
+            explode(df_target, "impressions")
+            .rename(columns={"impressions": "impressed_item"})
+        )
+        df_impressions = (
+            df_impressions
+            .merge(
+                self.df_pop,
+                left_on="impressed_item",
+                right_on="item",
+                how="left"
+            )
+        )
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        df_rec = summarize_recs(df_impressions, "n_users")
+
+        return df_rec
+
+model = ModelPopUsers()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+def calc_item_sims(df, item_col, reference_col):
+    """Calculate similarity of items based on nearest neighbor algorithm.
+    The final data frame will have similarity scores for pairs of items.
+    :param df: Data frame of training data
+    :param item_col: Name of data frame column that contains the item ID
+    :param reference_col: Name of the reference column, depending on the model either
+        1. session_id for the similarity based on session co-occurrences
+        2. properties for the similarity based on item metadata
+    :return: Data frame with item pairs and similarity scores
+    """
+
+    # Create data frame with item and reference indices
+    print_time("item and reference indices")
+    unique_items = df[item_col].unique()
+    unique_refs = df[reference_col].unique()
+
+    d_items = {item_col: unique_items, 'item_idx': range(0, len(unique_items))}
+    d_refs = {reference_col: unique_refs, 'ref_idx': range(0, len(unique_refs))}
+
+    df_items = pd.DataFrame(data=d_items)
+    df_refs = pd.DataFrame(data=d_refs)
+
+    df = (
+        df
+        .merge(
+            df_items,
+            how="inner",
+            on=item_col
+        )
+        .merge(
+            df_refs,
+            how="inner",
+            on=reference_col
+        )
+    )
+
+    df_idx = (
+        df
+        .loc[:, ["item_idx", "ref_idx"]]
+        .assign(data=lambda x: 1.)
+        .drop_duplicates()
+    )
+
+    # Build item co-ooccurrence matrix
+    print_time("item co-occurrence matrix")
+    mat_coo = sparse.coo_matrix((df_idx.data, (df_idx.item_idx, df_idx.ref_idx)))
+    mat_item_coo = mat_coo.T.dot(mat_coo)
+
+    # Calculate Cosine similarities
+    print_time("Cosine similarity")
+    inv_occ = np.sqrt(1 / mat_item_coo.diagonal())
+    cosine_sim = mat_item_coo.multiply(inv_occ)
+    cosine_sim = cosine_sim.T.multiply(inv_occ)
+
+    # Create item similarity data frame
+    print_time("item similarity data frame")
+    idx_ref, idx_item, sim = sparse.find(cosine_sim)
+    d_item_sim = {'idx_ref': idx_ref, 'idx_item': idx_item, 'similarity': sim}
+    df_item_sim = pd.DataFrame(data=d_item_sim)
+
+    df_item_sim = (
+        df_item_sim
+        .merge(
+            df_items.assign(item_ref=df_items[item_col]),
+            how="inner",
+            left_on="idx_ref",
+            right_on="item_idx"
+        )
+        .merge(
+            df_items.assign(item_sim=df_items[item_col]),
+            how="inner",
+            left_on="idx_item",
+            right_on="item_idx"
+        )
+        .loc[:, ["item_ref", "item_sim", "similarity"]]
+    )
+
+    return df_item_sim
+
+
+def predict_nn(df, df_item_sim):
+    """Calculate predictions based on the item similarity scores."""
+
+    # Select columns that are of interest for this function
+    print_time("start")
+    cols = ['user_id', 'session_id', 'timestamp', 'step',
+            'action_type', 'reference', 'impressions']
+    df_cols = df.loc[:, cols] 
+
+    # Get previous reference per user
+    print_time("previous reference")
+    df_cols["previous_reference"] = (
+        df_cols
+        .sort_values(by=["user_id", "session_id", "timestamp"],
+                     ascending=[True, True, True])
+        .groupby(["user_id"])["reference"]
+        .shift(1)
+    )
+
+    # Target row, withheld item ID that needs to be predicted
+    print_time("target rows")
+    df_target = get_target_rows(df_cols)
+
+    # Explode to impression level
+    print_time("explode impression array")
+    df_impressions = explode(df_target, "impressions")
+
+    df_item_sim["item_ref"] = df_item_sim["item_ref"].astype(str)
+    df_item_sim["item_sim"] = df_item_sim["item_sim"].astype(str)
+
+    # Get similarities
+    print_time("get similarities")
+    df_impressions = (
+        df_impressions
+        .merge(
+            df_item_sim,
+            how="left",
+            left_on=["previous_reference", "impressions"],
+            right_on=["item_ref", "item_sim"]
+        )
+        .fillna(value={'similarity': 0})
+        .sort_values(by=["user_id", "timestamp", "step", "similarity"],
+                        ascending=[True, True, True, False])
+    )
+
+    # Summarize recommendations
+    print_time("summarize recommendations")
+    df_rec = group_concat(
+        df_impressions, ["user_id", "session_id", "timestamp", "step"], 
+        "impressions"
+    )
+
+    df_rec = (
+        df_rec
+        .rename(columns={'impressions': 'item_recommendations'})
+        .loc[:, ["user_id", "session_id", "timestamp", "step", "item_recommendations"]]
+    )
+
+    return df_rec
+
+#collapse-hide
+class ModelNNItem():
+    """
+    Model class for the item metadata nearest neighbor model.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Calculate item similarity based on item metadata."""
+
+        # Explode property arrays
+        print_time("explode properties")
+        df_properties = explode(df, "properties")
+
+        df_item_sim = calc_item_sims(df_properties, "item_id", "properties")
+
+        self.df_item_sim = df_item_sim
+
+
+    def predict(self, df):
+        """Sort impression list by similarity."""
+
+        df_rec = predict_nn(df, self.df_item_sim)
+
+        return df_rec
+
+model = ModelNNItem()
+model.fit(df_items)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelNNInteraction():
+    """
+    Model class for the session co-occurrence nearest neighbor model.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Calculate item similarity based on session co-occurrence."""
+
+        # Select columns that are of interest for this method
+        print_time("start")
+        cols = ['user_id', 'session_id', 'timestamp', 'step',
+                'action_type', 'reference']
+        df_cols = df.loc[:, cols] 
+
+        # We are only interested in action types, for wich the reference is an item ID
+        print_time("filter interactions")
+        item_interactions = [
+            'clickout item', 'interaction item deals', 'interaction item image',
+            'interaction item info', 'interaction item rating', 'search for item'
+        ]
+        df_actions = (
+            df_cols
+            .loc[df_cols.action_type.isin(item_interactions), :]
+            .rename(columns={'reference': 'item'})
+            .drop(columns='action_type')
+        )
+
+        df_item_sim = calc_item_sims(df_actions, "item", "session_id")
+
+        self.df_item_sim = df_item_sim
+
+
+    def predict(self, df):
+        """Sort impression list by similarity."""
+
+        df_rec = predict_nn(df, self.df_item_sim)
+
+        return df_rec
+
+model = ModelNNInteraction()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelLogReg():
+    """
+    Model class for the logistic regression model.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Train the logistic regression model."""
+
+        df_impressions = build_features(df)
+
+        # Target column, item that was clicked
+        print_time("target column")
+        df_impressions.loc[:, "is_clicked"] = (
+            df_impressions["referenced_item"] == df_impressions["impressed_item"]
+        ).astype(int)
+
+        features = [
+            "position",
+            "prices",
+            "interaction_count",
+            "is_last_interacted",
+        ]
+
+        X = df_impressions[features]
+        y = df_impressions.is_clicked
+
+        # Training the actual model
+        print_time("training logistic regression model")
+        self.logreg = LogisticRegression(solver="lbfgs", max_iter=100, tol=1e-11, C=1e10).fit(X, y)
+
+
+    def predict(self, df):
+        """Calculate click probability based on trained logistic regression model."""
+
+        df_impressions = build_features(df)
+
+        # Target row, withheld item ID that needs to be predicted
+        df_impressions = df_impressions[df_impressions.referenced_item.isna()]
+
+        features = [
+            "position",
+            "prices",
+            "interaction_count",
+            "is_last_interacted"
+        ]
+
+        # Predict clickout probabilities for each impressed item
+        print_time("predict clickout item")
+        df_impressions.loc[:, "click_probability"] = (
+            self
+            .logreg
+            .predict_proba(df_impressions[features])[:, 1]
+        )
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        df_rec = summarize_recs(df_impressions, "click_probability")
+
+        return df_rec
+
+model = ModelLogReg()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations
+
+#collapse-hide
+class ModelGbmRank():
+    """
+    Model class for the lightGBM model.
+    Methods
+        fit(df): Fit the model on training data
+        predict(df): Calculate recommendations for test data        
+    """
+
+    def fit(self, df):
+        """Train the lightGBM model."""
+
+        df_impressions = build_features(df)
+
+        # Target column, item that was clicked
+        print_time("target column")
+        df_impressions.loc[:, "is_clicked"] = (
+            df_impressions["referenced_item"] == df_impressions["impressed_item"]
+        ).astype(int)
+
+        features = [
+            "position",
+            "prices",
+            "interaction_count",
+            "is_last_interacted",
+        ]
+
+        # Bring to format suitable for lightGBM
+        print_time("lightGBM format")
+        X = df_impressions[features]
+        y = df_impressions.is_clicked
+
+        q = (
+            df_impressions
+            .groupby(["user_id", "session_id", "timestamp", "step"])
+            .size()
+            .reset_index(name="query_length")
+            .query_length
+        )
+
+        # Training the actual model
+        print_time("training lightGBM model")
+        self.gbm = lgb.LGBMRanker()
+        self.gbm.fit(X, y, group=q, verbose=True)
+
+
+    def predict(self, df):
+        """Calculate item ranking based on trained lightGBM model."""
+
+        df_impressions = build_features(df)
+
+        # Target row, withheld item ID that needs to be predicted
+        df_impressions = df_impressions[df_impressions.referenced_item.isna()]
+
+        features = [
+            "position",
+            "prices",
+            "interaction_count",
+            "is_last_interacted"
+        ]
+
+        df_impressions.loc[:, "click_propensity"] = self.gbm.predict(df_impressions[features])
+
+        # Summarize recommendations
+        print_time("summarize recommendations")
+        df_rec = summarize_recs(df_impressions, "click_propensity")
+         
+        return df_rec
+
+model = ModelGbmRank()
+model.fit(df_train)
+df_recommendations = model.predict(df_test)
+
+df_recommendations

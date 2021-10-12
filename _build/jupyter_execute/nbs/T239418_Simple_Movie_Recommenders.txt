@@ -1,0 +1,4222 @@
+!pip install -q pytorch-lightning
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import TensorDataset
+from tqdm.notebook import tqdm
+import pytorch_lightning as pl
+
+np.random.seed(123)
+
+!wget -q --show-progress https://files.grouplens.org/datasets/movielens/ml-25m.zip
+!unzip ml-25m.zip
+
+ratings = pd.read_csv('ml-25m/ratings.csv', infer_datetime_format=True)
+ratings.head()
+
+rand_userIds = np.random.choice(ratings['userId'].unique(), 
+                                size=int(len(ratings['userId'].unique())*0.2), 
+                                replace=False)
+
+ratings = ratings.loc[ratings['userId'].isin(rand_userIds)]
+
+print('There are {} rows of data from {} users'.format(len(ratings), len(rand_userIds)))
+
+ratings['rank_latest'] = ratings.groupby(['userId'])['timestamp'] \
+                                .rank(method='first', ascending=False)
+
+train_ratings = ratings[ratings['rank_latest'] != 1]
+test_ratings = ratings[ratings['rank_latest'] == 1]
+
+# drop columns that we no longer need
+train_ratings = train_ratings[['userId', 'movieId', 'rating']]
+test_ratings = test_ratings[['userId', 'movieId', 'rating']]
+
+train_ratings.loc[:, 'rating'] = 1
+
+train_ratings.sample(5)
+
+# Get a list of all movie IDs
+all_movieIds = ratings['movieId'].unique()
+
+# Placeholders that will hold the training data
+users, items, labels = [], [], []
+
+# This is the set of items that each user has interaction with
+user_item_set = set(zip(train_ratings['userId'], train_ratings['movieId']))
+
+# 4:1 ratio of negative to positive samples
+num_negatives = 4
+
+for (u, i) in tqdm(user_item_set):
+    users.append(u)
+    items.append(i)
+    labels.append(1) # items that the user has interacted with are positive
+    for _ in range(num_negatives):
+        # randomly select an item
+        negative_item = np.random.choice(all_movieIds) 
+        # check that the user has not interacted with this item
+        while (u, negative_item) in user_item_set:
+            negative_item = np.random.choice(all_movieIds)
+        users.append(u)
+        items.append(negative_item)
+        labels.append(0) # items not interacted with are negative
+
+class MovieLensTrainDataset(Dataset):
+    """MovieLens PyTorch Dataset for Training
+    
+    Args:
+        ratings (pd.DataFrame): Dataframe containing the movie ratings
+        all_movieIds (list): List containing all movieIds
+    
+    """
+
+    def __init__(self, ratings, all_movieIds):
+        self.users, self.items, self.labels = self.get_dataset(ratings, all_movieIds)
+
+    def __len__(self):
+        return len(self.users)
+  
+    def __getitem__(self, idx):
+        return self.users[idx], self.items[idx], self.labels[idx]
+
+    def get_dataset(self, ratings, all_movieIds):
+        users, items, labels = [], [], []
+        user_item_set = set(zip(ratings['userId'], ratings['movieId']))
+
+        num_negatives = 4
+        for u, i in user_item_set:
+            users.append(u)
+            items.append(i)
+            labels.append(1)
+            for _ in range(num_negatives):
+                negative_item = np.random.choice(all_movieIds)
+                while (u, negative_item) in user_item_set:
+                    negative_item = np.random.choice(all_movieIds)
+                users.append(u)
+                items.append(negative_item)
+                labels.append(0)
+
+        return torch.tensor(users), torch.tensor(items), torch.tensor(labels)
+
+class NCF(pl.LightningModule):
+    """ Neural Collaborative Filtering (NCF)
+    
+        Args:
+            num_users (int): Number of unique users
+            num_items (int): Number of unique items
+            ratings (pd.DataFrame): Dataframe containing the movie ratings for training
+            all_movieIds (list): List containing all movieIds (train + test)
+    """
+    
+    def __init__(self, num_users, num_items, ratings, all_movieIds):
+        super().__init__()
+        self.user_embedding = nn.Embedding(num_embeddings=num_users, embedding_dim=8)
+        self.item_embedding = nn.Embedding(num_embeddings=num_items, embedding_dim=8)
+        self.fc1 = nn.Linear(in_features=16, out_features=64)
+        self.fc2 = nn.Linear(in_features=64, out_features=32)
+        self.output = nn.Linear(in_features=32, out_features=1)
+        self.ratings = ratings
+        self.all_movieIds = all_movieIds
+        
+    def forward(self, user_input, item_input):
+        
+        # Pass through embedding layers
+        user_embedded = self.user_embedding(user_input)
+        item_embedded = self.item_embedding(item_input)
+
+        # Concat the two embedding layers
+        vector = torch.cat([user_embedded, item_embedded], dim=-1)
+
+        # Pass through dense layer
+        vector = nn.ReLU()(self.fc1(vector))
+        vector = nn.ReLU()(self.fc2(vector))
+
+        # Output layer
+        pred = nn.Sigmoid()(self.output(vector))
+
+        return pred
+    
+    def training_step(self, batch, batch_idx):
+        user_input, item_input, labels = batch
+        predicted_labels = self(user_input, item_input)
+        loss = nn.BCELoss()(predicted_labels, labels.view(-1, 1).float())
+        return loss
+
+    def configure_optimizers(self):
+        return torch.optim.Adam(self.parameters())
+
+    def train_dataloader(self):
+        return DataLoader(MovieLensTrainDataset(self.ratings, self.all_movieIds),
+                          batch_size=512, num_workers=2)
+
+num_users = ratings['userId'].max()+1
+num_items = ratings['movieId'].max()+1
+
+all_movieIds = ratings['movieId'].unique()
+
+model = NCF(num_users, num_items, train_ratings, all_movieIds)
+
+trainer = pl.Trainer(max_epochs=5, gpus=1, reload_dataloaders_every_epoch=True,
+                     progress_bar_refresh_rate=50, logger=False, checkpoint_callback=False)
+
+trainer.fit(model)
+
+# User-item pairs for testing
+test_user_item_set = set(zip(test_ratings['userId'], test_ratings['movieId']))
+
+# Dict of all items that are interacted with by each user
+user_interacted_items = ratings.groupby('userId')['movieId'].apply(list).to_dict()
+
+hits = []
+for (u,i) in tqdm(test_user_item_set):
+    interacted_items = user_interacted_items[u]
+    not_interacted_items = set(all_movieIds) - set(interacted_items)
+    selected_not_interacted = list(np.random.choice(list(not_interacted_items), 99))
+    test_items = selected_not_interacted + [i]
+    
+    predicted_labels = np.squeeze(model(torch.tensor([u]*100), 
+                                        torch.tensor(test_items)).detach().numpy())
+    
+    top10_items = [test_items[i] for i in np.argsort(predicted_labels)[::-1][0:10].tolist()]
+    
+    if i in top10_items:
+        hits.append(1)
+    else:
+        hits.append(0)
+        
+print("The Hit Ratio @ 10 is {:.2f}".format(np.average(hits)))
+
+import os
+import time
+import random
+import argparse
+import numpy as np 
+import pandas as pd 
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.utils.data as data
+from torch.utils.tensorboard import SummaryWriter
+
+DATA_URL = "https://raw.githubusercontent.com/sparsh-ai/rec-data-public/master/ml-1m-dat/ratings.dat"
+MAIN_PATH = '/content/'
+DATA_PATH = MAIN_PATH + 'ratings.dat'
+MODEL_PATH = MAIN_PATH + 'models/'
+MODEL = 'ml-1m_Neu_MF'
+
+!wget -q --show-progress https://raw.githubusercontent.com/sparsh-ai/rec-data-public/master/ml-1m-dat/ratings.dat
+
+def seed_everything(seed):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = True
+
+class Rating_Datset(torch.utils.data.Dataset):
+	def __init__(self, user_list, item_list, rating_list):
+		super(Rating_Datset, self).__init__()
+		self.user_list = user_list
+		self.item_list = item_list
+		self.rating_list = rating_list
+
+	def __len__(self):
+		return len(self.user_list)
+
+	def __getitem__(self, idx):
+		user = self.user_list[idx]
+		item = self.item_list[idx]
+		rating = self.rating_list[idx]
+		
+		return (
+			torch.tensor(user, dtype=torch.long),
+			torch.tensor(item, dtype=torch.long),
+			torch.tensor(rating, dtype=torch.float)
+			)
+
+class NCF_Data(object):
+	"""
+	Construct Dataset for NCF
+	"""
+	def __init__(self, args, ratings):
+		self.ratings = ratings
+		self.num_ng = args.num_ng
+		self.num_ng_test = args.num_ng_test
+		self.batch_size = args.batch_size
+
+		self.preprocess_ratings = self._reindex(self.ratings)
+
+		self.user_pool = set(self.ratings['user_id'].unique())
+		self.item_pool = set(self.ratings['item_id'].unique())
+
+		self.train_ratings, self.test_ratings = self._leave_one_out(self.preprocess_ratings)
+		self.negatives = self._negative_sampling(self.preprocess_ratings)
+		random.seed(args.seed)
+	
+	def _reindex(self, ratings):
+		"""
+		Process dataset to reindex userID and itemID, also set rating as binary feedback
+		"""
+		user_list = list(ratings['user_id'].drop_duplicates())
+		user2id = {w: i for i, w in enumerate(user_list)}
+
+		item_list = list(ratings['item_id'].drop_duplicates())
+		item2id = {w: i for i, w in enumerate(item_list)}
+
+		ratings['user_id'] = ratings['user_id'].apply(lambda x: user2id[x])
+		ratings['item_id'] = ratings['item_id'].apply(lambda x: item2id[x])
+		ratings['rating'] = ratings['rating'].apply(lambda x: float(x > 0))
+		return ratings
+
+	def _leave_one_out(self, ratings):
+		"""
+		leave-one-out evaluation protocol in paper https://www.comp.nus.edu.sg/~xiangnan/papers/ncf.pdf
+		"""
+		ratings['rank_latest'] = ratings.groupby(['user_id'])['timestamp'].rank(method='first', ascending=False)
+		test = ratings.loc[ratings['rank_latest'] == 1]
+		train = ratings.loc[ratings['rank_latest'] > 1]
+		assert train['user_id'].nunique()==test['user_id'].nunique(), 'Not Match Train User with Test User'
+		return train[['user_id', 'item_id', 'rating']], test[['user_id', 'item_id', 'rating']]
+
+	def _negative_sampling(self, ratings):
+		interact_status = (
+			ratings.groupby('user_id')['item_id']
+			.apply(set)
+			.reset_index()
+			.rename(columns={'item_id': 'interacted_items'}))
+		interact_status['negative_items'] = interact_status['interacted_items'].apply(lambda x: self.item_pool - x)
+		interact_status['negative_samples'] = interact_status['negative_items'].apply(lambda x: random.sample(x, self.num_ng_test))
+		return interact_status[['user_id', 'negative_items', 'negative_samples']]
+
+	def get_train_instance(self):
+		users, items, ratings = [], [], []
+		train_ratings = pd.merge(self.train_ratings, self.negatives[['user_id', 'negative_items']], on='user_id')
+		train_ratings['negatives'] = train_ratings['negative_items'].apply(lambda x: random.sample(x, self.num_ng))
+		for row in train_ratings.itertuples():
+			users.append(int(row.user_id))
+			items.append(int(row.item_id))
+			ratings.append(float(row.rating))
+			for i in range(self.num_ng):
+				users.append(int(row.user_id))
+				items.append(int(row.negatives[i]))
+				ratings.append(float(0))  # negative samples get 0 rating
+		dataset = Rating_Datset(
+			user_list=users,
+			item_list=items,
+			rating_list=ratings)
+		return torch.utils.data.DataLoader(dataset, batch_size=self.batch_size, shuffle=True, num_workers=2)
+
+	def get_test_instance(self):
+		users, items, ratings = [], [], []
+		test_ratings = pd.merge(self.test_ratings, self.negatives[['user_id', 'negative_samples']], on='user_id')
+		for row in test_ratings.itertuples():
+			users.append(int(row.user_id))
+			items.append(int(row.item_id))
+			ratings.append(float(row.rating))
+			for i in getattr(row, 'negative_samples'):
+				users.append(int(row.user_id))
+				items.append(int(i))
+				ratings.append(float(0))
+		dataset = Rating_Datset(
+			user_list=users,
+			item_list=items,
+			rating_list=ratings)
+		return torch.utils.data.DataLoader(dataset, batch_size=self.num_ng_test+1, shuffle=False, num_workers=2)
+
+def hit(ng_item, pred_items):
+	if ng_item in pred_items:
+		return 1
+	return 0
+
+
+def ndcg(ng_item, pred_items):
+	if ng_item in pred_items:
+		index = pred_items.index(ng_item)
+		return np.reciprocal(np.log2(index+2))
+	return 0
+
+
+def metrics(model, test_loader, top_k, device):
+	HR, NDCG = [], []
+
+	for user, item, label in test_loader:
+		user = user.to(device)
+		item = item.to(device)
+
+		predictions = model(user, item)
+		_, indices = torch.topk(predictions, top_k)
+		recommends = torch.take(
+				item, indices).cpu().numpy().tolist()
+
+		ng_item = item[0].item() # leave one-out evaluation has only one item per user
+		HR.append(hit(ng_item, recommends))
+		NDCG.append(ndcg(ng_item, recommends))
+
+	return np.mean(HR), np.mean(NDCG)
+
+class Generalized_Matrix_Factorization(nn.Module):
+    def __init__(self, args, num_users, num_items):
+        super(Generalized_Matrix_Factorization, self).__init__()
+        self.num_users = num_users
+        self.num_items = num_items
+        self.factor_num = args.factor_num
+
+        self.embedding_user = nn.Embedding(num_embeddings=self.num_users, embedding_dim=self.factor_num)
+        self.embedding_item = nn.Embedding(num_embeddings=self.num_items, embedding_dim=self.factor_num)
+
+        self.affine_output = nn.Linear(in_features=self.factor_num, out_features=1)
+        self.logistic = nn.Sigmoid()
+
+    def forward(self, user_indices, item_indices):
+        user_embedding = self.embedding_user(user_indices)
+        item_embedding = self.embedding_item(item_indices)
+        element_product = torch.mul(user_embedding, item_embedding)
+        logits = self.affine_output(element_product)
+        rating = self.logistic(logits)
+        return rating
+
+    def init_weight(self):
+        pass
+
+class Multi_Layer_Perceptron(nn.Module):
+    def __init__(self, args, num_users, num_items):
+        super(Multi_Layer_Perceptron, self).__init__()
+        self.num_users = num_users
+        self.num_items = num_items
+        self.factor_num = args.factor_num
+        self.layers = args.layers
+
+        self.embedding_user = nn.Embedding(num_embeddings=self.num_users, embedding_dim=self.factor_num)
+        self.embedding_item = nn.Embedding(num_embeddings=self.num_items, embedding_dim=self.factor_num)
+
+        self.fc_layers = nn.ModuleList()
+        for idx, (in_size, out_size) in enumerate(zip(self.layers[:-1], self.layers[1:])):
+            self.fc_layers.append(nn.Linear(in_size, out_size))
+
+        self.affine_output = nn.Linear(in_features=self.layers[-1], out_features=1)
+        self.logistic = nn.Sigmoid()
+
+    def forward(self, user_indices, item_indices):
+        user_embedding = self.embedding_user(user_indices)
+        item_embedding = self.embedding_item(item_indices)
+        vector = torch.cat([user_embedding, item_embedding], dim=-1)  # the concat latent vector
+        for idx, _ in enumerate(range(len(self.fc_layers))):
+            vector = self.fc_layers[idx](vector)
+            vector = nn.ReLU()(vector)
+            # vector = nn.BatchNorm1d()(vector)
+            # vector = nn.Dropout(p=0.5)(vector)
+        logits = self.affine_output(vector)
+        rating = self.logistic(logits)
+        return rating
+
+    def init_weight(self):
+        pass
+
+class NeuMF(nn.Module):
+    def __init__(self, args, num_users, num_items):
+        super(NeuMF, self).__init__()
+        self.num_users = num_users
+        self.num_items = num_items
+        self.factor_num_mf = args.factor_num
+        self.factor_num_mlp =  int(args.layers[0]/2)
+        self.layers = args.layers
+        self.dropout = args.dropout
+
+        self.embedding_user_mlp = nn.Embedding(num_embeddings=self.num_users, embedding_dim=self.factor_num_mlp)
+        self.embedding_item_mlp = nn.Embedding(num_embeddings=self.num_items, embedding_dim=self.factor_num_mlp)
+
+        self.embedding_user_mf = nn.Embedding(num_embeddings=self.num_users, embedding_dim=self.factor_num_mf)
+        self.embedding_item_mf = nn.Embedding(num_embeddings=self.num_items, embedding_dim=self.factor_num_mf)
+
+        self.fc_layers = nn.ModuleList()
+        for idx, (in_size, out_size) in enumerate(zip(args.layers[:-1], args.layers[1:])):
+            self.fc_layers.append(torch.nn.Linear(in_size, out_size))
+            self.fc_layers.append(nn.ReLU())
+
+        self.affine_output = nn.Linear(in_features=args.layers[-1] + self.factor_num_mf, out_features=1)
+        self.logistic = nn.Sigmoid()
+        self.init_weight()
+
+    def init_weight(self):
+        nn.init.normal_(self.embedding_user_mlp.weight, std=0.01)
+        nn.init.normal_(self.embedding_item_mlp.weight, std=0.01)
+        nn.init.normal_(self.embedding_user_mf.weight, std=0.01)
+        nn.init.normal_(self.embedding_item_mf.weight, std=0.01)
+        
+        for m in self.fc_layers:
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+                
+        nn.init.xavier_uniform_(self.affine_output.weight)
+
+        for m in self.modules():
+            if isinstance(m, nn.Linear) and m.bias is not None:
+                m.bias.data.zero_()
+
+    def forward(self, user_indices, item_indices):
+        user_embedding_mlp = self.embedding_user_mlp(user_indices)
+        item_embedding_mlp = self.embedding_item_mlp(item_indices)
+
+        user_embedding_mf = self.embedding_user_mf(user_indices)
+        item_embedding_mf = self.embedding_item_mf(item_indices)
+
+        mlp_vector = torch.cat([user_embedding_mlp, item_embedding_mlp], dim=-1)
+        mf_vector =torch.mul(user_embedding_mf, item_embedding_mf)
+
+        for idx, _ in enumerate(range(len(self.fc_layers))):
+            mlp_vector = self.fc_layers[idx](mlp_vector)
+
+        vector = torch.cat([mlp_vector, mf_vector], dim=-1)
+        logits = self.affine_output(vector)
+        rating = self.logistic(logits)
+        return rating.squeeze()
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--seed", 
+	type=int, 
+	default=42, 
+	help="Seed")
+parser.add_argument("--lr", 
+	type=float, 
+	default=0.001, 
+	help="learning rate")
+parser.add_argument("--dropout", 
+	type=float,
+	default=0.2,  
+	help="dropout rate")
+parser.add_argument("--batch_size", 
+	type=int, 
+	default=256, 
+	help="batch size for training")
+parser.add_argument("--epochs", 
+	type=int,
+	default=10,  
+	help="training epoches")
+parser.add_argument("--top_k", 
+	type=int, 
+	default=10, 
+	help="compute metrics@top_k")
+parser.add_argument("--factor_num", 
+	type=int,
+	default=32, 
+	help="predictive factors numbers in the model")
+parser.add_argument("--layers",
+    nargs='+', 
+    default=[64,32,16,8],
+    help="MLP layers. Note that the first layer is the concatenation of user \
+    and item embeddings. So layers[0]/2 is the embedding size.")
+parser.add_argument("--num_ng", 
+	type=int,
+	default=4, 
+	help="Number of negative samples for training set")
+parser.add_argument("--num_ng_test", 
+	type=int,
+	default=100, 
+	help="Number of negative samples for test set")
+parser.add_argument("--out", 
+	default=True,
+	help="save model or not")
+
+# set device and parameters
+args = parser.parse_args(args={})
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+writer = SummaryWriter()
+
+# seed for Reproducibility
+seed_everything(args.seed)
+
+# load data
+ml_1m = pd.read_csv(
+	DATA_PATH, 
+	sep="::", 
+	names = ['user_id', 'item_id', 'rating', 'timestamp'], 
+	engine='python')
+
+# set the num_users, items
+num_users = ml_1m['user_id'].nunique()+1
+num_items = ml_1m['item_id'].nunique()+1
+
+# construct the train and test datasets
+data = NCF_Data(args, ml_1m)
+train_loader = data.get_train_instance()
+test_loader = data.get_test_instance()
+
+# set model and loss, optimizer
+model = NeuMF(args, num_users, num_items)
+model = model.to(device)
+loss_function = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=args.lr)
+
+# train, evaluation
+best_hr = 0
+for epoch in range(1, args.epochs+1):
+	model.train() # Enable dropout (if have).
+	start_time = time.time()
+
+	for user, item, label in train_loader:
+		user = user.to(device)
+		item = item.to(device)
+		label = label.to(device)
+
+		optimizer.zero_grad()
+		prediction = model(user, item)
+		loss = loss_function(prediction, label)
+		loss.backward()
+		optimizer.step()
+		writer.add_scalar('loss/Train_loss', loss.item(), epoch)
+
+	model.eval()
+	HR, NDCG = metrics(model, test_loader, args.top_k, device)
+	writer.add_scalar('Perfomance/HR@10', HR, epoch)
+	writer.add_scalar('Perfomance/NDCG@10', NDCG, epoch)
+
+	elapsed_time = time.time() - start_time
+	print("The time elapse of epoch {:03d}".format(epoch) + " is: " + 
+			time.strftime("%H: %M: %S", time.gmtime(elapsed_time)))
+	print("HR: {:.3f}\tNDCG: {:.3f}".format(np.mean(HR), np.mean(NDCG)))
+
+	if HR > best_hr:
+		best_hr, best_ndcg, best_epoch = HR, NDCG, epoch
+		if args.out:
+			if not os.path.exists(MODEL_PATH):
+				os.mkdir(MODEL_PATH)
+			torch.save(model, 
+				'{}{}.pth'.format(MODEL_PATH, MODEL))
+
+writer.close()
+
+print("Best epoch {:03d}: HR = {:.3f}, NDCG = {:.3f}".format(
+									best_epoch, best_hr, best_ndcg))
+
+!pip install -U -q git+https://github.com/sparsh-ai/recochef.git
+
+import torch
+from torch import nn
+from torch import optim
+from torch.nn import functional as F 
+from torch.optim.lr_scheduler import _LRScheduler
+
+from recochef.datasets.movielens import MovieLens
+from recochef.preprocessing.encode import label_encode
+from recochef.utils.iterators import batch_generator
+from recochef.models.embedding import EmbeddingNet
+
+import math
+import copy
+import pickle
+import numpy as np
+import pandas as pd
+from textwrap import wrap
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+
+data = MovieLens()
+
+ratings_df = data.load_interactions()
+ratings_df.head()
+
+movies_df = data.load_items()
+movies_df.head()
+
+ratings_df, umap = label_encode(ratings_df, 'USERID')
+ratings_df, imap = label_encode(ratings_df, 'ITEMID')
+ratings_df.head()
+
+X = ratings_df[['USERID','ITEMID']]
+y = ratings_df[['RATING']]
+
+for _x_batch, _y_batch in batch_generator(X, y, bs=4):
+    print(_x_batch)
+    print(_y_batch)
+    break
+
+_x_batch[:, 1]
+
+netx = EmbeddingNet(
+    n_users=50, n_items=20, 
+    n_factors=10, hidden=[500], 
+    embedding_dropout=0.05, dropouts=[0.5])
+netx
+
+class CyclicLR(_LRScheduler):
+    
+    def __init__(self, optimizer, schedule, last_epoch=-1):
+        assert callable(schedule)
+        self.schedule = schedule
+        super().__init__(optimizer, last_epoch)
+
+    def get_lr(self):
+        return [self.schedule(self.last_epoch, lr) for lr in self.base_lrs]
+
+def triangular(step_size, max_lr, method='triangular', gamma=0.99):
+    
+    def scheduler(epoch, base_lr):
+        period = 2 * step_size
+        cycle = math.floor(1 + epoch/period)
+        x = abs(epoch/step_size - 2*cycle + 1)
+        delta = (max_lr - base_lr)*max(0, (1 - x))
+
+        if method == 'triangular':
+            pass  # we've already done
+        elif method == 'triangular2':
+            delta /= float(2 ** (cycle - 1))
+        elif method == 'exp_range':
+            delta *= (gamma**epoch)
+        else:
+            raise ValueError('unexpected method: %s' % method)
+            
+        return base_lr + delta
+        
+    return scheduler
+
+def cosine(t_max, eta_min=0):
+    
+    def scheduler(epoch, base_lr):
+        t = epoch % t_max
+        return eta_min + (base_lr - eta_min)*(1 + math.cos(math.pi*t/t_max))/2
+    
+    return scheduler
+
+def plot_lr(schedule):
+    ts = list(range(1000))
+    y = [schedule(t, 0.001) for t in ts]
+    plt.plot(ts, y)
+
+plot_lr(triangular(250, 0.005))
+
+plot_lr(triangular(250, 0.005, 'triangular2'))
+
+plot_lr(triangular(250, 0.005, 'exp_range', gamma=0.999))
+
+plot_lr(cosine(t_max=500, eta_min=0.0005))
+
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42)
+datasets = {'train': (X_train, y_train), 'val': (X_valid, y_valid)}
+dataset_sizes = {'train': len(X_train), 'val': len(X_valid)}
+
+minmax = ratings_df.RATING.astype(float).min(), ratings_df.RATING.astype(float).max()
+minmax
+
+n_users = ratings_df.USERID.nunique()
+n_movies = ratings_df.ITEMID.nunique()
+n_users, n_movies
+
+net = EmbeddingNet(
+    n_users=n_users, n_items=n_movies, 
+    n_factors=150, hidden=[500, 500, 500], 
+    embedding_dropout=0.05, dropouts=[0.5, 0.5, 0.25])
+
+lr = 1e-3
+wd = 1e-5
+bs = 50
+n_epochs = 100
+patience = 10
+no_improvements = 0
+best_loss = np.inf
+best_weights = None
+history = []
+lr_history = []
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+net.to(device)
+criterion = nn.MSELoss(reduction='sum')
+optimizer = optim.Adam(net.parameters(), lr=lr, weight_decay=wd)
+iterations_per_epoch = int(math.ceil(dataset_sizes['train'] // bs))
+scheduler = CyclicLR(optimizer, cosine(t_max=iterations_per_epoch * 2, eta_min=lr/10))
+
+for epoch in range(n_epochs):
+    stats = {'epoch': epoch + 1, 'total': n_epochs}
+    
+    for phase in ('train', 'val'):
+        training = phase == 'train'
+        running_loss = 0.0
+        n_batches = 0
+        
+        for batch in batch_generator(*datasets[phase], shuffle=training, bs=bs):
+            x_batch, y_batch = [b.to(device) for b in batch]
+            optimizer.zero_grad()
+        
+            # compute gradients only during 'train' phase
+            with torch.set_grad_enabled(training):
+                outputs = net(x_batch[:, 0], x_batch[:, 1], minmax)
+                loss = criterion(outputs, y_batch)
+                
+                # don't update weights and rates when in 'val' phase
+                if training:
+                    scheduler.step()
+                    loss.backward()
+                    optimizer.step()
+                    lr_history.extend(scheduler.get_lr())
+                    
+            running_loss += loss.item()
+            
+        epoch_loss = running_loss / dataset_sizes[phase]
+        stats[phase] = epoch_loss
+        
+        # early stopping: save weights of the best model so far
+        if phase == 'val':
+            if epoch_loss < best_loss:
+                print('loss improvement on epoch: %d' % (epoch + 1))
+                best_loss = epoch_loss
+                best_weights = copy.deepcopy(net.state_dict())
+                no_improvements = 0
+            else:
+                no_improvements += 1
+                
+    history.append(stats)
+    print('[{epoch:03d}/{total:03d}] train: {train:.4f} - val: {val:.4f}'.format(**stats))
+    if no_improvements >= patience:
+        print('early stopping after epoch {epoch:03d}'.format(**stats))
+        break
+
+ax = pd.DataFrame(history).drop(columns='total').plot(x='epoch')
+
+_ = plt.plot(lr_history[:2*iterations_per_epoch])
+
+net.load_state_dict(best_weights)
+
+# groud_truth, predictions = [], []
+
+# with torch.no_grad():
+#     for batch in batch_generator(*datasets['val'], shuffle=False, bs=bs):
+#         x_batch, y_batch = [b.to(device) for b in batch]
+#         outputs = net(x_batch[:, 1], x_batch[:, 0], minmax)
+#         groud_truth.extend(y_batch.tolist())
+#         predictions.extend(outputs.tolist())
+
+# groud_truth = np.asarray(groud_truth).ravel()
+# predictions = np.asarray(predictions).ravel()
+
+# final_loss = np.sqrt(np.mean((predictions - groud_truth)**2))
+# print(f'Final RMSE: {final_loss:.4f}')
+
+with open('best.weights', 'wb') as file:
+    pickle.dump(best_weights, file)
+
+with open('best.weights', 'rb') as file:
+    best_weights = pickle.load(file)
+net.load_state_dict(best_weights)
+
+def to_numpy(tensor):
+    return tensor.cpu().numpy()
+
+maps.keys()
+
+user_id_map = umap['USERID_TO_IDX']
+movie_id_map = imap['ITEMID_TO_IDX']
+embed_to_original = imap['IDX_TO_ITEMID']
+
+popular_movies = ratings_df.groupby('ITEMID').ITEMID.count().sort_values(ascending=False).values[:1000]
+
+embed = to_numpy(net.m.weight.data)
+pca = PCA(n_components=5)
+components = pca.fit(embed[popular_movies].T).components_
+components.shape
+
+movies = movies_df[['ITEMID','TITLE']].dropna()
+movies.shape
+
+components_df = pd.DataFrame(components.T, columns=[f'fc{i}' for i in range(pca.n_components_)])
+components_df.head()
+
+components_df.shape
+
+movie_ids = [embed_to_original[idx] for idx in components_df.index]
+meta = movies.set_index('ITEMID')
+components_df['ITEMID'] = movie_ids
+components_df['TITLE'] = meta.reindex(movie_ids).TITLE.values
+components_df.sample(4)
+
+def plot_components(components, component, ascending=False):
+    fig, ax = plt.subplots(figsize=(18, 12))
+    
+    subset = components.sort_values(by=component, ascending=ascending).iloc[:12]
+    columns = components_df.columns
+    features = columns[columns.str.startswith('fc')].tolist()
+    
+    fc = subset[features]
+    labels = ['\n'.join(wrap(t, width=10)) for t in subset.TITLE]
+    
+    fc.plot(ax=ax, kind='bar')
+    y_ticks = [f'{t:2.2f}' for t in ax.get_yticks()]
+    ax.set_xticklabels(labels, rotation=0, fontsize=14)
+    ax.set_yticklabels(y_ticks, fontsize=14)
+    ax.legend(loc='best', fontsize=14)
+    
+    plot_title = f"Movies with {['highest', 'lowest'][ascending]} '{component}' component values" 
+    ax.set_title(plot_title, fontsize=20)
+
+plot_components(components_df, 'fc0', ascending=False)
+
+plot_components(components_df, 'fc0', ascending=True)
+
+plot_components(components_df, 'fc1', ascending=False)
+
+plot_components(components_df, 'fc1', ascending=True)
+
+%%writefile utils.py
+
+import os
+import requests
+import zipfile
+
+import numpy as np
+import pandas as pd
+import scipy.sparse as sp
+
+"""
+Shamelessly stolen from
+https://github.com/maciejkula/triplet_recommendations_keras
+"""
+
+
+def train_test_split(interactions, n=10):
+    """
+    Split an interactions matrix into training and test sets.
+    Parameters
+    ----------
+    interactions : np.ndarray
+    n : int (default=10)
+        Number of items to select / row to place into test.
+
+    Returns
+    -------
+    train : np.ndarray
+    test : np.ndarray
+    """
+    test = np.zeros(interactions.shape)
+    train = interactions.copy()
+    for user in range(interactions.shape[0]):
+        if interactions[user, :].nonzero()[0].shape[0] > n:
+            test_interactions = np.random.choice(interactions[user, :].nonzero()[0],
+                                                 size=n,
+                                                 replace=False)
+            train[user, test_interactions] = 0.
+            test[user, test_interactions] = interactions[user, test_interactions]
+
+    # Test and training are truly disjoint
+    assert(np.all((train * test) == 0))
+    return train, test
+
+
+def _get_data_path():
+    """
+    Get path to the movielens dataset file.
+    """
+    data_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'data')
+    if not os.path.exists(data_path):
+        print('Making data path')
+        os.mkdir(data_path)
+    return data_path
+
+
+def _download_movielens(dest_path):
+    """
+    Download the dataset.
+    """
+
+    url = 'http://files.grouplens.org/datasets/movielens/ml-100k.zip'
+    req = requests.get(url, stream=True)
+
+    print('Downloading MovieLens data')
+
+    with open(os.path.join(dest_path, 'ml-100k.zip'), 'wb') as fd:
+        for chunk in req.iter_content(chunk_size=None):
+            fd.write(chunk)
+
+    with zipfile.ZipFile(os.path.join(dest_path, 'ml-100k.zip'), 'r') as z:
+        z.extractall(dest_path)
+
+
+def read_movielens_df():
+    path = _get_data_path()
+    zipfile = os.path.join(path, 'ml-100k.zip')
+    if not os.path.isfile(zipfile):
+        _download_movielens(path)
+    fname = os.path.join(path, 'ml-100k', 'u.data')
+    names = ['user_id', 'item_id', 'rating', 'timestamp']
+    df = pd.read_csv(fname, sep='\t', names=names)
+    return df
+
+
+def get_movielens_interactions():
+    df = read_movielens_df()
+
+    n_users = df.user_id.unique().shape[0]
+    n_items = df.item_id.unique().shape[0]
+
+    interactions = np.zeros((n_users, n_items))
+    for row in df.itertuples():
+        interactions[row[1] - 1, row[2] - 1] = row[3]
+    return interactions
+
+
+def get_movielens_train_test_split(implicit=False):
+    interactions = get_movielens_interactions()
+    if implicit:
+        interactions = (interactions >= 4).astype(np.float32)
+    train, test = train_test_split(interactions)
+    train = sp.coo_matrix(train)
+    test = sp.coo_matrix(test)
+    return train, test
+
+%%writefile metrics.py
+
+import numpy as np
+from sklearn.metrics import roc_auc_score
+from torch import multiprocessing as mp
+import torch
+
+
+def get_row_indices(row, interactions):
+    start = interactions.indptr[row]
+    end = interactions.indptr[row + 1]
+    return interactions.indices[start:end]
+
+
+def auc(model, interactions, num_workers=1):
+    aucs = []
+    processes = []
+    n_users = interactions.shape[0]
+    mp_batch = int(np.ceil(n_users / num_workers))
+
+    queue = mp.Queue()
+    rows = np.arange(n_users)
+    np.random.shuffle(rows)
+    for rank in range(num_workers):
+        start = rank * mp_batch
+        end = np.min((start + mp_batch,  n_users))
+        p = mp.Process(target=batch_auc,
+                       args=(queue, rows[start:end], interactions, model))
+        p.start()
+        processes.append(p)
+
+    while True:
+        is_alive = False
+        for p in processes:
+            if p.is_alive():
+                is_alive = True
+                break
+        if not is_alive and queue.empty():
+            break
+
+        while not queue.empty():
+            aucs.append(queue.get())
+
+    queue.close()
+    for p in processes:
+        p.join()
+    return np.mean(aucs)
+
+
+def batch_auc(queue, rows, interactions, model):
+    n_items = interactions.shape[1]
+    items = torch.arange(0, n_items).long()
+    users_init = torch.ones(n_items).long()
+    for row in rows:
+        row = int(row)
+        users = users_init.fill_(row)
+
+        preds = model.predict(users, items)
+        actuals = get_row_indices(row, interactions)
+
+        if len(actuals) == 0:
+            continue
+        y_test = np.zeros(n_items)
+        y_test[actuals] = 1
+        queue.put(roc_auc_score(y_test, preds.data.numpy()))
+
+
+def patk(model, interactions, num_workers=1, k=5):
+    patks = []
+    processes = []
+    n_users = interactions.shape[0]
+    mp_batch = int(np.ceil(n_users / num_workers))
+
+    queue = mp.Queue()
+    rows = np.arange(n_users)
+    np.random.shuffle(rows)
+    for rank in range(num_workers):
+        start = rank * mp_batch
+        end = np.min((start + mp_batch, n_users))
+        p = mp.Process(target=batch_patk,
+                       args=(queue, rows[start:end], interactions, model),
+                       kwargs={'k': k})
+        p.start()
+        processes.append(p)
+
+    while True:
+        is_alive = False
+        for p in processes:
+            if p.is_alive():
+                is_alive = True
+                break
+        if not is_alive and queue.empty():
+            break
+
+        while not queue.empty():
+            patks.append(queue.get())
+
+    queue.close()
+    for p in processes:
+        p.join()
+    return np.mean(patks)
+
+
+def batch_patk(queue, rows, interactions, model, k=5):
+    n_items = interactions.shape[1]
+
+    items = torch.arange(0, n_items).long()
+    users_init = torch.ones(n_items).long()
+    for row in rows:
+        row = int(row)
+        users = users_init.fill_(row)
+
+        preds = model.predict(users, items)
+        actuals = get_row_indices(row, interactions)
+
+        if len(actuals) == 0:
+            continue
+
+        top_k = np.argpartition(-np.squeeze(preds.data.numpy()), k)
+        top_k = set(top_k[:k])
+        true_pids = set(actuals)
+        if true_pids:
+            queue.put(len(top_k & true_pids) / float(k))
+
+%%writefile torchmf.py
+
+import collections
+import os
+
+import numpy as np
+from sklearn.metrics import roc_auc_score
+import torch
+from torch import nn
+import torch.multiprocessing as mp
+import torch.utils.data as data
+from tqdm import tqdm
+
+import metrics
+
+
+# Models
+# Interactions Dataset => Singular Iter => Singular Loss
+# Pairwise Datasets => Pairwise Iter => Pairwise Loss
+# Pairwise Iters
+# Loss Functions
+# Optimizers
+# Metric callbacks
+
+# Serve up users, items (and items could be pos_items, neg_items)
+# In this case, the iteration remains the same. Pass both items into a model
+# which is a concat of the base model. it handles the pos and neg_items
+# accordingly. define the loss after.
+
+
+class Interactions(data.Dataset):
+    """
+    Hold data in the form of an interactions matrix.
+    Typical use-case is like a ratings matrix:
+    - Users are the rows
+    - Items are the columns
+    - Elements of the matrix are the ratings given by a user for an item.
+    """
+
+    def __init__(self, mat):
+        self.mat = mat.astype(np.float32).tocoo()
+        self.n_users = self.mat.shape[0]
+        self.n_items = self.mat.shape[1]
+
+    def __getitem__(self, index):
+        row = self.mat.row[index]
+        col = self.mat.col[index]
+        val = self.mat.data[index]
+        return (row, col), val
+
+    def __len__(self):
+        return self.mat.nnz
+
+
+class PairwiseInteractions(data.Dataset):
+    """
+    Sample data from an interactions matrix in a pairwise fashion. The row is
+    treated as the main dimension, and the columns are sampled pairwise.
+    """
+
+    def __init__(self, mat):
+        self.mat = mat.astype(np.float32).tocoo()
+
+        self.n_users = self.mat.shape[0]
+        self.n_items = self.mat.shape[1]
+
+        self.mat_csr = self.mat.tocsr()
+        if not self.mat_csr.has_sorted_indices:
+            self.mat_csr.sort_indices()
+
+    def __getitem__(self, index):
+        row = self.mat.row[index]
+        found = False
+
+        while not found:
+            neg_col = np.random.randint(self.n_items)
+            if self.not_rated(row, neg_col, self.mat_csr.indptr,
+                              self.mat_csr.indices):
+                found = True
+
+        pos_col = self.mat.col[index]
+        val = self.mat.data[index]
+
+        return (row, (pos_col, neg_col)), val
+
+    def __len__(self):
+        return self.mat.nnz
+
+    @staticmethod
+    def not_rated(row, col, indptr, indices):
+        # similar to use of bsearch in lightfm
+        start = indptr[row]
+        end = indptr[row + 1]
+        searched = np.searchsorted(indices[start:end], col, 'right')
+        if searched >= (end - start):
+            # After the array
+            return False
+        return col != indices[searched]  # Not found
+
+    def get_row_indices(self, row):
+        start = self.mat_csr.indptr[row]
+        end = self.mat_csr.indptr[row + 1]
+        return self.mat_csr.indices[start:end]
+
+
+class BaseModule(nn.Module):
+    """
+    Base module for explicit matrix factorization.
+    """
+    
+    def __init__(self,
+                 n_users,
+                 n_items,
+                 n_factors=40,
+                 dropout_p=0,
+                 sparse=False):
+        """
+
+        Parameters
+        ----------
+        n_users : int
+            Number of users
+        n_items : int
+            Number of items
+        n_factors : int
+            Number of latent factors (or embeddings or whatever you want to
+            call it).
+        dropout_p : float
+            p in nn.Dropout module. Probability of dropout.
+        sparse : bool
+            Whether or not to treat embeddings as sparse. NOTE: cannot use
+            weight decay on the optimizer if sparse=True. Also, can only use
+            Adagrad.
+        """
+        super(BaseModule, self).__init__()
+        self.n_users = n_users
+        self.n_items = n_items
+        self.n_factors = n_factors
+        self.user_biases = nn.Embedding(n_users, 1, sparse=sparse)
+        self.item_biases = nn.Embedding(n_items, 1, sparse=sparse)
+        self.user_embeddings = nn.Embedding(n_users, n_factors, sparse=sparse)
+        self.item_embeddings = nn.Embedding(n_items, n_factors, sparse=sparse)
+        
+        self.dropout_p = dropout_p
+        self.dropout = nn.Dropout(p=self.dropout_p)
+
+        self.sparse = sparse
+        
+    def forward(self, users, items):
+        """
+        Forward pass through the model. For a single user and item, this
+        looks like:
+
+        user_bias + item_bias + user_embeddings.dot(item_embeddings)
+
+        Parameters
+        ----------
+        users : np.ndarray
+            Array of user indices
+        items : np.ndarray
+            Array of item indices
+
+        Returns
+        -------
+        preds : np.ndarray
+            Predicted ratings.
+
+        """
+        ues = self.user_embeddings(users)
+        uis = self.item_embeddings(items)
+
+        preds = self.user_biases(users)
+        preds += self.item_biases(items)
+        preds += (self.dropout(ues) * self.dropout(uis)).sum(dim=1, keepdim=True)
+
+        return preds.squeeze()
+    
+    def __call__(self, *args):
+        return self.forward(*args)
+
+    def predict(self, users, items):
+        return self.forward(users, items)
+
+
+def bpr_loss(preds, vals):
+    sig = nn.Sigmoid()
+    return (1.0 - sig(preds)).pow(2).sum()
+
+
+class BPRModule(nn.Module):
+    
+    def __init__(self,
+                 n_users,
+                 n_items,
+                 n_factors=40,
+                 dropout_p=0,
+                 sparse=False,
+                 model=BaseModule):
+        super(BPRModule, self).__init__()
+
+        self.n_users = n_users
+        self.n_items = n_items
+        self.n_factors = n_factors
+        self.dropout_p = dropout_p
+        self.sparse = sparse
+        self.pred_model = model(
+            self.n_users,
+            self.n_items,
+            n_factors=n_factors,
+            dropout_p=dropout_p,
+            sparse=sparse
+        )
+
+    def forward(self, users, items):
+        assert isinstance(items, tuple), \
+            'Must pass in items as (pos_items, neg_items)'
+        # Unpack
+        (pos_items, neg_items) = items
+        pos_preds = self.pred_model(users, pos_items)
+        neg_preds = self.pred_model(users, neg_items)
+        return pos_preds - neg_preds
+
+    def predict(self, users, items):
+        return self.pred_model(users, items)
+
+
+class BasePipeline:
+    """
+    Class defining a training pipeline. Instantiates data loaders, model,
+    and optimizer. Handles training for multiple epochs and keeping track of
+    train and test loss.
+    """
+
+    def __init__(self,
+                 train,
+                 test=None,
+                 model=BaseModule,
+                 n_factors=40,
+                 batch_size=32,
+                 dropout_p=0.02,
+                 sparse=False,
+                 lr=0.01,
+                 weight_decay=0.,
+                 optimizer=torch.optim.Adam,
+                 loss_function=nn.MSELoss(reduction='sum'),
+                 n_epochs=10,
+                 verbose=False,
+                 random_seed=None,
+                 interaction_class=Interactions,
+                 hogwild=False,
+                 num_workers=0,
+                 eval_metrics=None,
+                 k=5):
+        self.train = train
+        self.test = test
+
+        if hogwild:
+            num_loader_workers = 0
+        else:
+            num_loader_workers = num_workers
+        self.train_loader = data.DataLoader(
+            interaction_class(train), batch_size=batch_size, shuffle=True,
+            num_workers=num_loader_workers)
+        if self.test is not None:
+            self.test_loader = data.DataLoader(
+                interaction_class(test), batch_size=batch_size, shuffle=True,
+                num_workers=num_loader_workers)
+        self.num_workers = num_workers
+        self.n_users = self.train.shape[0]
+        self.n_items = self.train.shape[1]
+        self.n_factors = n_factors
+        self.batch_size = batch_size
+        self.dropout_p = dropout_p
+        self.lr = lr
+        self.weight_decay = weight_decay
+        self.loss_function = loss_function
+        self.n_epochs = n_epochs
+        if sparse:
+            assert weight_decay == 0.0
+        self.model = model(self.n_users,
+                           self.n_items,
+                           n_factors=self.n_factors,
+                           dropout_p=self.dropout_p,
+                           sparse=sparse)
+        self.optimizer = optimizer(self.model.parameters(),
+                                   lr=self.lr,
+                                   weight_decay=self.weight_decay)
+        self.warm_start = False
+        self.losses = collections.defaultdict(list)
+        self.verbose = verbose
+        self.hogwild = hogwild
+        if random_seed is not None:
+            if self.hogwild:
+                random_seed += os.getpid()
+            torch.manual_seed(random_seed)
+            np.random.seed(random_seed)
+
+        if eval_metrics is None:
+            eval_metrics = []
+        self.eval_metrics = eval_metrics
+        self.k = k
+
+    def break_grads(self):
+        for param in self.model.parameters():
+            # Break gradient sharing
+            if param.grad is not None:
+                param.grad.data = param.grad.data.clone()
+
+    def fit(self):
+        for epoch in range(1, self.n_epochs + 1):
+
+            if self.hogwild:
+                self.model.share_memory()
+                processes = []
+                train_losses = []
+                queue = mp.Queue()
+                for rank in range(self.num_workers):
+                    p = mp.Process(target=self._fit_epoch,
+                                   kwargs={'epoch': epoch,
+                                           'queue': queue})
+                    p.start()
+                    processes.append(p)
+                for p in processes:
+                    p.join()
+
+                while True:
+                    is_alive = False
+                    for p in processes:
+                        if p.is_alive():
+                            is_alive = True
+                            break
+                    if not is_alive and queue.empty():
+                        break
+
+                    while not queue.empty():
+                        train_losses.append(queue.get())
+                queue.close()
+                train_loss = np.mean(train_losses)
+            else:
+                train_loss = self._fit_epoch(epoch)
+
+            self.losses['train'].append(train_loss)
+            row = 'Epoch: {0:^3}  train: {1:^10.5f}'.format(epoch, self.losses['train'][-1])
+            if self.test is not None:
+                self.losses['test'].append(self._validation_loss())
+                row += 'val: {0:^10.5f}'.format(self.losses['test'][-1])
+                for metric in self.eval_metrics:
+                    func = getattr(metrics, metric)
+                    res = func(self.model, self.test_loader.dataset.mat_csr,
+                               num_workers=self.num_workers)
+                    self.losses['eval-{}'.format(metric)].append(res)
+                    row += 'eval-{0}: {1:^10.5f}'.format(metric, res)
+            self.losses['epoch'].append(epoch)
+            if self.verbose:
+                print(row)
+
+    def _fit_epoch(self, epoch=1, queue=None):
+        if self.hogwild:
+            self.break_grads()
+
+        self.model.train()
+        total_loss = torch.Tensor([0])
+        pbar = tqdm(enumerate(self.train_loader),
+                    total=len(self.train_loader),
+                    desc='({0:^3})'.format(epoch))
+        for batch_idx, ((row, col), val) in pbar:
+            self.optimizer.zero_grad()
+
+            row = row.long()
+            # TODO: turn this into a collate_fn like the data_loader
+            if isinstance(col, list):
+                col = tuple(c.long() for c in col)
+            else:
+                col = col.long()
+            val = val.float()
+
+            preds = self.model(row, col)
+            loss = self.loss_function(preds, val)
+            loss.backward()
+
+            self.optimizer.step()
+
+            total_loss += loss.item()
+            batch_loss = loss.item() / row.size()[0]
+            pbar.set_postfix(train_loss=batch_loss)
+        total_loss /= self.train.nnz
+        if queue is not None:
+            queue.put(total_loss[0])
+        else:
+            return total_loss[0]
+
+    def _validation_loss(self):
+        self.model.eval()
+        total_loss = torch.Tensor([0])
+        for batch_idx, ((row, col), val) in enumerate(self.test_loader):
+            row = row.long()
+            if isinstance(col, list):
+                col = tuple(c.long() for c in col)
+            else:
+                col = col.long()
+            val = val.float()
+
+            preds = self.model(row, col)
+            loss = self.loss_function(preds, val)
+            total_loss += loss.item()
+
+        total_loss /= self.test.nnz
+        return total_loss[0]
+
+%%writefile run.py
+
+import argparse
+import pickle
+
+import torch
+
+from torchmf import (BaseModule, BPRModule, BasePipeline,
+                     bpr_loss, PairwiseInteractions)
+import utils
+
+
+def explicit():
+    train, test = utils.get_movielens_train_test_split()
+    pipeline = BasePipeline(train, test=test, model=BaseModule,
+                            n_factors=10, batch_size=1024, dropout_p=0.02,
+                            lr=0.02, weight_decay=0.1,
+                            optimizer=torch.optim.Adam, n_epochs=40,
+                            verbose=True, random_seed=2017)
+    pipeline.fit()
+
+
+def implicit():
+    train, test = utils.get_movielens_train_test_split(implicit=True)
+
+    pipeline = BasePipeline(train, test=test, verbose=True,
+                           batch_size=1024, num_workers=4,
+                           n_factors=20, weight_decay=0,
+                           dropout_p=0., lr=.2, sparse=True,
+                           optimizer=torch.optim.SGD, n_epochs=40,
+                           random_seed=2017, loss_function=bpr_loss,
+                           model=BPRModule,
+                           interaction_class=PairwiseInteractions,
+                           eval_metrics=('auc', 'patk'))
+    pipeline.fit()
+
+
+def hogwild():
+    train, test = utils.get_movielens_train_test_split(implicit=True)
+
+    pipeline = BasePipeline(train, test=test, verbose=True,
+                            batch_size=1024, num_workers=4,
+                            n_factors=20, weight_decay=0,
+                            dropout_p=0., lr=.2, sparse=True,
+                            optimizer=torch.optim.SGD, n_epochs=40,
+                            random_seed=2017, loss_function=bpr_loss,
+                            model=BPRModule, hogwild=True,
+                            interaction_class=PairwiseInteractions,
+                            eval_metrics=('auc', 'patk'))
+    pipeline.fit()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='torchmf')
+    parser.add_argument('--example',
+                        help='explicit, implicit, or hogwild')
+    args = parser.parse_args()
+    if args.example == 'explicit':
+        explicit()
+    elif args.example == 'implicit':
+        implicit()
+    elif args.example == 'hogwild':
+        hogwild()
+    else:
+        print('example must be explicit, implicit, or hogwild')
+
+!python run.py --example explicit
+
+!python run.py --example implicit
+
+!pip install -q collie_recs
+!pip install -q git+https://github.com/sparsh-ai/recochef.git
+
+import os
+import joblib
+import numpy as np
+import pandas as pd
+
+from collie_recs.interactions import Interactions
+from collie_recs.interactions import ApproximateNegativeSamplingInteractionsDataLoader
+from collie_recs.cross_validation import stratified_split
+from collie_recs.metrics import auc, evaluate_in_batches, mapk, mrr
+from collie_recs.model import CollieTrainer, MatrixFactorizationModel, HybridPretrainedModel
+from collie_recs.movielens import get_recommendation_visualizations
+
+import torch
+from pytorch_lightning.utilities.seed import seed_everything
+
+from recochef.datasets.movielens import MovieLens
+from recochef.preprocessing.encode import label_encode as le
+
+from IPython.display import HTML
+
+# this handy PyTorch Lightning function fixes random seeds across all the libraries used here
+seed_everything(22)
+
+data_object = MovieLens()
+
+df = data_object.load_interactions()
+df.head()
+
+# drop duplicate user-item pair records, keeping recent ratings only
+df.drop_duplicates(subset=['USERID','ITEMID'], keep='last', inplace=True)
+
+# convert the explicit data to implicit by only keeping interactions with a rating ``>= 4``
+df = df[df.RATING>=4].reset_index(drop=True)
+df['RATING'] = 1
+
+# label encode
+df, umap = le(df, col='USERID')
+df, imap = le(df, col='ITEMID')
+
+df = df.astype('int64')
+
+df.head()
+
+user_counts = df.groupby(by='USERID')['ITEMID'].count()
+user_list = user_counts[user_counts>=3].index.tolist()
+df = df[df.USERID.isin(user_list)]
+
+df.head()
+
+interactions = Interactions(
+    users=df['USERID'],
+    items=df['ITEMID'],
+    ratings=df['RATING'],
+    allow_missing_ids=True,
+)
+
+interactions
+
+train_interactions, val_interactions = stratified_split(interactions, test_p=0.1, seed=42)
+train_interactions, val_interactions
+
+model = MatrixFactorizationModel(
+    train=train_interactions,
+    val=val_interactions,
+    embedding_dim=10,
+    lr=1e-2,
+)
+
+trainer = CollieTrainer(model, max_epochs=10, deterministic=True)
+
+trainer.fit(model)
+
+model.eval()  # set model to inference mode
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, model)
+
+print(f'MAP@10 Score: {mapk_score}')
+print(f'MRR Score:    {mrr_score}')
+print(f'AUC Score:    {auc_score}')
+
+# select a random user ID to look at recommendations for
+user_id = np.random.randint(10, train_interactions.num_users)
+
+display(
+    HTML(
+        get_recommendation_visualizations(
+            model=model,
+            user_id=user_id,
+            filter_films=True,
+            shuffle=True,
+            detailed=True,
+        )
+    )
+)
+
+# we can save the model with...
+os.makedirs('models', exist_ok=True)
+model.save_model('models/matrix_factorization_model.pth')
+
+# ... and if we wanted to load that model back in, we can do that easily...
+model_loaded_in = MatrixFactorizationModel(load_model_path='models/matrix_factorization_model.pth')
+
+model_loaded_in
+
+train_loader = ApproximateNegativeSamplingInteractionsDataLoader(train_interactions, batch_size=1024, shuffle=True)
+val_loader = ApproximateNegativeSamplingInteractionsDataLoader(val_interactions, batch_size=1024, shuffle=False)
+
+model = MatrixFactorizationModel(
+    train=train_loader,
+    val=val_loader,
+    embedding_dim=10,
+    lr=1e-2,
+)
+
+trainer = CollieTrainer(model, max_epochs=10, deterministic=True)
+
+trainer.fit(model)
+model.eval()
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, model)
+
+print(f'MAP@10 Score: {mapk_score}')
+print(f'MRR Score:    {mrr_score}')
+print(f'AUC Score:    {auc_score}')
+
+model = MatrixFactorizationModel(
+    train=train_interactions,
+    val=val_interactions,
+    embedding_dim=10,
+    lr=1e-2,
+    bias_lr=1e-1,
+    optimizer='adam',
+    bias_optimizer='sgd',
+)
+
+trainer = CollieTrainer(model, max_epochs=10, deterministic=True)
+
+trainer.fit(model)
+model.eval()
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, model)
+
+print(f'MAP@10 Score: {mapk_score}')
+print(f'MRR Score:    {mrr_score}')
+print(f'AUC Score:    {auc_score}')
+
+df_item = data_object.load_items()
+df_item.head()
+
+df_item = le(df_item, col='ITEMID', maps=imap)
+df_item.head()
+
+df_item.loc[df_item['TITLE'] == 'GoldenEye (1995)']
+
+# let's start by finding movies similar to GoldenEye (1995)
+item_similarities = model.item_item_similarity(item_id=160)
+
+item_similarities
+
+df_item.iloc[item_similarities.index][:5]
+
+df_item.columns[5:]
+
+metadata_df = df_item[df_item.columns[5:]]
+
+genres = (
+    torch.tensor(metadata_df.values)
+    .topk(1)
+    .indices
+    .view(-1)
+)
+
+genres
+
+model = MatrixFactorizationModel(
+    train=train_interactions,
+    val=val_interactions,
+    embedding_dim=10,
+    lr=1e-2,
+    metadata_for_loss={'genre': genres},
+    metadata_for_loss_weights={'genre': 0.4},
+)
+
+trainer = CollieTrainer(model=model, max_epochs=10, deterministic=True)
+
+trainer.fit(model)
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, model)
+
+print(f'MAP@10 Score: {mapk_score}')
+print(f'MRR Score:    {mrr_score}')
+print(f'AUC Score:    {auc_score}')
+
+user_id = np.random.randint(10, train_interactions.num_users)
+
+display(
+    HTML(
+        get_recommendation_visualizations(
+            model=model,
+            user_id=user_id,
+            filter_films=True,
+            shuffle=True,
+            detailed=True,
+        )
+    )
+)
+
+model = MatrixFactorizationModel(
+    train=train_interactions,
+    val=val_interactions,
+    embedding_dim=30,
+    lr=1e-2,
+)
+
+trainer = CollieTrainer(model=model, max_epochs=10, deterministic=True)
+
+trainer.fit(model)
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, model)
+
+print(f'Standard MAP@10 Score: {mapk_score}')
+print(f'Standard MRR Score:    {mrr_score}')
+print(f'Standard AUC Score:    {auc_score}')
+
+# we will apply a linear layer to the metadata with ``metadata_layers_dims`` and
+# a linear layer to the combined embeddings and metadata data with ``combined_layers_dims``
+hybrid_model = HybridPretrainedModel(
+    train=train_interactions,
+    val=val_interactions,
+    item_metadata=metadata_df,
+    trained_model=model,
+    metadata_layers_dims=[8],
+    combined_layers_dims=[16],
+    lr=1e-2,
+    freeze_embeddings=True,
+)
+
+hybrid_trainer = CollieTrainer(model=hybrid_model, max_epochs=10, deterministic=True)
+
+hybrid_trainer.fit(hybrid_model)
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc], val_interactions, hybrid_model)
+
+print(f'Hybrid MAP@10 Score: {mapk_score}')
+print(f'Hybrid MRR Score:    {mrr_score}')
+print(f'Hybrid AUC Score:    {auc_score}')
+
+hybrid_model_unfrozen = HybridPretrainedModel(
+    train=train_interactions,
+    val=val_interactions,
+    item_metadata=metadata_df,
+    trained_model=model,
+    metadata_layers_dims=[8],
+    combined_layers_dims=[16],
+    lr=1e-4,
+    freeze_embeddings=False,
+)
+
+hybrid_model.unfreeze_embeddings()
+hybrid_model_unfrozen.load_from_hybrid_model(hybrid_model)
+
+hybrid_trainer_unfrozen = CollieTrainer(model=hybrid_model_unfrozen, max_epochs=10, deterministic=True)
+
+hybrid_trainer_unfrozen.fit(hybrid_model_unfrozen)
+
+mapk_score, mrr_score, auc_score = evaluate_in_batches([mapk, mrr, auc],
+                                                       val_interactions,
+                                                       hybrid_model_unfrozen)
+
+print(f'Hybrid Unfrozen MAP@10 Score: {mapk_score}')
+print(f'Hybrid Unfrozen MRR Score:    {mrr_score}')
+print(f'Hybrid Unfrozen AUC Score:    {auc_score}')
+
+user_id = np.random.randint(10, train_interactions.num_users)
+
+display(
+    HTML(
+        get_recommendation_visualizations(
+            model=hybrid_model_unfrozen,
+            user_id=user_id,
+            filter_films=True,
+            shuffle=True,
+            detailed=True,
+        )
+    )
+)
+
+# we can save the model with...
+os.makedirs('models', exist_ok=True)
+hybrid_model_unfrozen.save_model('models/hybrid_model_unfrozen')
+
+# ... and if we wanted to load that model back in, we can do that easily...
+hybrid_model_loaded_in = HybridPretrainedModel(load_model_path='models/hybrid_model_unfrozen')
+
+
+hybrid_model_loaded_in
+
+import math
+import torch
+import heapq
+import pickle
+import argparse
+import numpy as np
+import pandas as pd
+from torch import nn
+import seaborn as sns
+from time import time
+import scipy.sparse as sp
+import matplotlib.pyplot as plt
+import torch.nn.functional as F
+from torch.autograd import Variable
+from torch.utils.data import Dataset, DataLoader
+
+np.random.seed(7)
+torch.manual_seed(0)
+
+_model = None
+_testRatings = None
+_testNegatives = None
+_topk = None
+
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda:0" if use_cuda else "cpu")
+
+!wget https://github.com/HarshdeepGupta/recommender_pytorch/raw/master/Data/movielens.train.rating
+!wget https://github.com/HarshdeepGupta/recommender_pytorch/raw/master/Data/movielens.test.rating
+!wget https://github.com/HarshdeepGupta/recommender_pytorch/raw/master/Data/u.data
+
+def evaluate_model(model, full_dataset: MovieLensDataset, topK: int):
+    """
+    Evaluate the performance (Hit_Ratio, NDCG) of top-K recommendation
+    Return: score of each test rating.
+    """
+    global _model
+    global _testRatings
+    global _testNegatives
+    global _topk
+    _model = model
+    _testRatings = full_dataset.testRatings
+    _testNegatives = full_dataset.testNegatives
+    _topk = topK
+
+    hits, ndcgs = [], []
+    for idx in range(len(_testRatings)):
+        (hr, ndcg) = eval_one_rating(idx, full_dataset)
+        hits.append(hr)
+        ndcgs.append(ndcg)
+    return (hits, ndcgs)
+
+
+def eval_one_rating(idx, full_dataset: MovieLensDataset):
+    rating = _testRatings[idx]
+    items = _testNegatives[idx]
+    u = rating[0]
+
+    gtItem = rating[1]
+    items.append(gtItem)
+    # Get prediction scores
+    map_item_score = {}
+    users = np.full(len(items), u, dtype='int32')
+
+    feed_dict = {
+        'user_id': users,
+        'item_id': np.array(items),
+    }
+    predictions = _model.predict(feed_dict)
+    for i in range(len(items)):
+        item = items[i]
+        map_item_score[item] = predictions[i]
+
+    # Evaluate top rank list
+    ranklist = heapq.nlargest(_topk, map_item_score, key=map_item_score.get)
+    hr = getHitRatio(ranklist, gtItem)
+    ndcg = getNDCG(ranklist, gtItem)
+    return (hr, ndcg)
+
+def getHitRatio(ranklist, gtItem):
+    for item in ranklist:
+        if item == gtItem:
+            return 1
+    return 0
+
+
+def getNDCG(ranklist, gtItem):
+    for i in range(len(ranklist)):
+        item = ranklist[i]
+        if item == gtItem:
+            return math.log(2) / math.log(i+2)
+    return 0
+
+class MovieLensDataset(Dataset):
+    'Characterizes the dataset for PyTorch, and feeds the (user,item) pairs for training'
+
+    def __init__(self, file_name, num_negatives_train=5, num_negatives_test=100):
+        'Load the datasets from disk, and store them in appropriate structures'
+
+        self.trainMatrix = self.load_rating_file_as_matrix(
+            file_name + ".train.rating")
+        self.num_users, self.num_items = self.trainMatrix.shape
+        # make training set with negative sampling
+        self.user_input, self.item_input, self.ratings = self.get_train_instances(
+            self.trainMatrix, num_negatives_train)
+        # make testing set with negative sampling
+        self.testRatings = self.load_rating_file_as_list(
+            file_name + ".test.rating")
+        self.testNegatives = self.create_negative_file(
+            num_samples=num_negatives_test)
+        assert len(self.testRatings) == len(self.testNegatives)
+
+    def __len__(self):
+        'Denotes the total number of rating in test set'
+        return len(self.user_input)
+
+    def __getitem__(self, index):
+        'Generates one sample of data'
+
+        # get the train data
+        user_id = self.user_input[index]
+        item_id = self.item_input[index]
+        rating = self.ratings[index]
+
+        return {'user_id': user_id,
+                'item_id': item_id,
+                'rating': rating}
+
+    def get_train_instances(self, train, num_negatives):
+        user_input, item_input, ratings = [], [], []
+        num_users, num_items = train.shape
+        for (u, i) in train.keys():
+            # positive instance
+            user_input.append(u)
+            item_input.append(i)
+            ratings.append(1)
+            # negative instances
+            for _ in range(num_negatives):
+                j = np.random.randint(1, num_items)
+                # while train.has_key((u, j)):
+                while (u, j) in train:
+                    j = np.random.randint(1, num_items)
+                user_input.append(u)
+                item_input.append(j)
+                ratings.append(0)
+        return user_input, item_input, ratings
+
+    def load_rating_file_as_list(self, filename):
+        ratingList = []
+        with open(filename, "r") as f:
+            line = f.readline()
+            while line != None and line != "":
+                arr = line.split("\t")
+                user, item = int(arr[0]), int(arr[1])
+                ratingList.append([user, item])
+                line = f.readline()
+        return ratingList
+
+    def create_negative_file(self, num_samples=100):
+        negativeList = []
+        for user_item_pair in self.testRatings:
+            user = user_item_pair[0]
+            item = user_item_pair[1]
+            negatives = []
+            for t in range(num_samples):
+                j = np.random.randint(1, self.num_items)
+                while (user, j) in self.trainMatrix or j == item:
+                    j = np.random.randint(1, self.num_items)
+                negatives.append(j)
+            negativeList.append(negatives)
+        return negativeList
+
+    def load_rating_file_as_matrix(self, filename):
+        '''
+        Read .rating file and Return dok matrix.
+        The first line of .rating file is: num_users\t num_items
+        '''
+        # Get number of users and items
+        num_users, num_items = 0, 0
+        with open(filename, "r") as f:
+            line = f.readline()
+            while line != None and line != "":
+                arr = line.split("\t")
+                u, i = int(arr[0]), int(arr[1])
+                num_users = max(num_users, u)
+                num_items = max(num_items, i)
+                line = f.readline()
+        # Construct matrix
+        mat = sp.dok_matrix((num_users+1, num_items+1), dtype=np.float32)
+        with open(filename, "r") as f:
+            line = f.readline()
+            while line != None and line != "":
+                arr = line.split("\t")
+                user, item, rating = int(arr[0]), int(arr[1]), float(arr[2])
+                if (rating > 0):
+                    mat[user, item] = 1.0
+                line = f.readline()
+        return mat
+
+def train_one_epoch(model, data_loader, loss_fn, optimizer, epoch_no, device, verbose = 1):
+    'trains the model for one epoch and returns the loss'
+    print("Epoch = {}".format(epoch_no))
+    # Training
+    # get user, item and rating data
+    t1 = time()
+    epoch_loss = []
+    # put the model in train mode before training
+    model.train()
+    # transfer the data to GPU
+    for feed_dict in data_loader:
+        for key in feed_dict:
+            if type(feed_dict[key]) != type(None):
+                feed_dict[key] = feed_dict[key].to(dtype = torch.long, device = device)
+        # get the predictions
+        prediction = model(feed_dict)
+        # print(prediction.shape)
+        # get the actual targets
+        rating = feed_dict['rating']
+        
+      
+        # convert to float and change dim from [batch_size] to [batch_size,1]
+        rating = rating.float().view(prediction.size())  
+        loss = loss_fn(prediction, rating)
+        # clear the gradients
+        optimizer.zero_grad()
+        # backpropagate
+        loss.backward()
+        # update weights
+        optimizer.step()
+        # accumulate the loss for monitoring
+        epoch_loss.append(loss.item())
+    epoch_loss = np.mean(epoch_loss)
+    if verbose:
+        print("Epoch completed {:.1f} s".format(time() - t1))
+        print("Train Loss: {}".format(epoch_loss))
+    return epoch_loss
+        
+
+def test(model, full_dataset : MovieLensDataset, topK):
+    'Test the HR and NDCG for the model @topK'
+    # put the model in eval mode before testing
+    if hasattr(model,'eval'):
+        # print("Putting the model in eval mode")
+        model.eval()
+    t1 = time()
+    (hits, ndcgs) = evaluate_model(model, full_dataset, topK)
+    hr, ndcg = np.array(hits).mean(), np.array(ndcgs).mean()
+    print('Eval: HR = %.4f, NDCG = %.4f [%.1f s]' % (hr, ndcg, time()-t1))
+    return hr, ndcg
+    
+
+def plot_statistics(hr_list, ndcg_list, loss_list, model_alias, path):
+    'plots and saves the figures to a local directory'
+    plt.figure()
+    hr = np.vstack([np.arange(len(hr_list)),np.array(hr_list)]).T
+    ndcg = np.vstack([np.arange(len(ndcg_list)),np.array(ndcg_list)]).T
+    loss = np.vstack([np.arange(len(loss_list)),np.array(loss_list)]).T
+    plt.plot(hr[:,0], hr[:,1],linestyle='-', marker='o', label = "HR")
+    plt.plot(ndcg[:,0], ndcg[:,1],linestyle='-', marker='v', label = "NDCG")
+    plt.plot(loss[:,0], loss[:,1],linestyle='-', marker='s', label = "Loss")
+
+    plt.xlabel("Epochs")
+    plt.ylabel("Value")
+    plt.legend()
+    plt.savefig(path+model_alias+".jpg")
+    return
+
+
+def get_items_interacted(user_id, interaction_df):
+    # returns a set of items the user has interacted with
+    userid_mask = interaction_df['userid'] == user_id
+    interacted_items = interaction_df.loc[userid_mask].courseid
+    return set(interacted_items if type(interacted_items) == pd.Series else [interacted_items])
+
+
+def save_to_csv(df,path, header = False, index = False, sep = '\t', verbose = False):
+    if verbose:
+        print("Saving df to path: {}".format(path))
+        print("Columns in df are: {}".format(df.columns.tolist()))
+
+    df.to_csv(path, header = header, index = index, sep = sep)
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run ItemPop")
+    parser.add_argument('--path', nargs='?', default='/content/',
+                        help='Input data path.')
+    parser.add_argument('--dataset', nargs='?', default='movielens',
+                        help='Choose a dataset.')
+    parser.add_argument('--num_neg_test', type=int, default=100,
+                        help='Number of negative instances to pair with a positive instance while testing')
+    
+    return parser.parse_args(args={})
+
+class ItemPop():
+    def __init__(self, train_interaction_matrix: sp.dok_matrix):
+        """
+        Simple popularity based recommender system
+        """
+        self.__alias__ = "Item Popularity without metadata"
+        # Sum the occurences of each item to get is popularity, convert to array and 
+        # lose the extra dimension
+        self.item_ratings = np.array(train_interaction_matrix.sum(axis=0, dtype=int)).flatten()
+
+    def forward(self):
+        pass
+
+    def predict(self, feeddict) -> np.array:
+        # returns the prediction score for each (user,item) pair in the input
+        items = feeddict['item_id']
+        output_scores = [self.item_ratings[itemid] for itemid in items]
+        return np.array(output_scores)
+
+    def get_alias(self):
+        return self.__alias__
+
+args = parse_args()
+path = args.path
+dataset = args.dataset
+num_negatives_test = args.num_neg_test
+print("Model arguments: %s " %(args))
+
+topK = 10
+
+# Load data
+
+t1 = time()
+full_dataset = MovieLensDataset(path + dataset, num_negatives_test=num_negatives_test)
+train, testRatings, testNegatives = full_dataset.trainMatrix, full_dataset.testRatings, full_dataset.testNegatives
+num_users, num_items = train.shape
+print("Load data done [%.1f s]. #user=%d, #item=%d, #train=%d, #test=%d"
+      % (time()-t1, num_users, num_items, train.nnz, len(testRatings)))
+
+model = ItemPop(train)
+test(model, full_dataset, topK)
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run MLP.")
+    parser.add_argument('--path', nargs='?', default='/content/',
+                        help='Input data path.')
+    parser.add_argument('--dataset', nargs='?', default='movielens',
+                        help='Choose a dataset.')
+    parser.add_argument('--epochs', type=int, default=30,
+                        help='Number of epochs.')
+    parser.add_argument('--batch_size', type=int, default=256,
+                        help='Batch size.')
+    parser.add_argument('--layers', nargs='?', default='[16,32,16,8]',
+                        help="Size of each layer. Note that the first layer is the concatenation of user and item embeddings. So layers[0]/2 is the embedding size.")
+    parser.add_argument('--weight_decay', type=float, default=0.00001,
+                        help="Regularization for each layer")
+    parser.add_argument('--num_neg_train', type=int, default=4,
+                        help='Number of negative instances to pair with a positive instance while training')
+    parser.add_argument('--num_neg_test', type=int, default=100,
+                        help='Number of negative instances to pair with a positive instance while testing')
+    parser.add_argument('--lr', type=float, default=0.001,
+                        help='Learning rate.')
+    parser.add_argument('--dropout', type=float, default=0,
+                        help='Add dropout layer after each dense layer, with p = dropout_prob')
+    parser.add_argument('--learner', nargs='?', default='adam',
+                        help='Specify an optimizer: adagrad, adam, rmsprop, sgd')
+    parser.add_argument('--verbose', type=int, default=1,
+                        help='Show performance per X iterations')
+    parser.add_argument('--out', type=int, default=1,
+                        help='Whether to save the trained model.')
+    return parser.parse_args(args={})
+
+class MLP(nn.Module):
+
+    def __init__(self, n_users, n_items, layers=[16, 8], dropout=False):
+        """
+        Simple Feedforward network with Embeddings for users and items
+        """
+        super().__init__()
+        assert (layers[0] % 2 == 0), "layers[0] must be an even number"
+        self.__alias__ = "MLP {}".format(layers)
+        self.__dropout__ = dropout
+
+        # user and item embedding layers
+        embedding_dim = int(layers[0]/2)
+        self.user_embedding = torch.nn.Embedding(n_users, embedding_dim)
+        self.item_embedding = torch.nn.Embedding(n_items, embedding_dim)
+
+        # list of weight matrices
+        self.fc_layers = torch.nn.ModuleList()
+        # hidden dense layers
+        for _, (in_size, out_size) in enumerate(zip(layers[:-1], layers[1:])):
+            self.fc_layers.append(torch.nn.Linear(in_size, out_size))
+        # final prediction layer
+        self.output_layer = torch.nn.Linear(layers[-1], 1)
+
+    def forward(self, feed_dict):
+        users = feed_dict['user_id']
+        items = feed_dict['item_id']
+        user_embedding = self.user_embedding(users)
+        item_embedding = self.item_embedding(items)
+        # concatenate user and item embeddings to form input
+        x = torch.cat([user_embedding, item_embedding], 1)
+        for idx, _ in enumerate(range(len(self.fc_layers))):
+            x = self.fc_layers[idx](x)
+            x = F.relu(x)
+            x = F.dropout(x,  p=self.__dropout__, training=self.training)
+        logit = self.output_layer(x)
+        rating = torch.sigmoid(logit)
+        return rating
+
+    def predict(self, feed_dict):
+        # return the score, inputs and outputs are numpy arrays
+        for key in feed_dict:
+            if type(feed_dict[key]) != type(None):
+                feed_dict[key] = torch.from_numpy(
+                    feed_dict[key]).to(dtype=torch.long, device=device)
+        output_scores = self.forward(feed_dict)
+        return output_scores.cpu().detach().numpy()
+
+    def get_alias(self):
+        return self.__alias__
+
+print("Device available: {}".format(device))
+
+args = parse_args()
+path = args.path
+dataset = args.dataset
+layers = eval(args.layers)
+weight_decay = args.weight_decay
+num_negatives_train = args.num_neg_train
+num_negatives_test = args.num_neg_test
+dropout = args.dropout
+learner = args.learner
+learning_rate = args.lr
+batch_size = args.batch_size
+epochs = args.epochs
+verbose = args.verbose
+
+topK = 10
+print("MLP arguments: %s " % (args))
+model_out_file = '%s_MLP_%s_%d.h5' %(args.dataset, args.layers, time())
+
+# Load data
+
+t1 = time()
+full_dataset = MovieLensDataset(
+    path + dataset, num_negatives_train=num_negatives_train, num_negatives_test=num_negatives_test)
+train, testRatings, testNegatives = full_dataset.trainMatrix, full_dataset.testRatings, full_dataset.testNegatives
+num_users, num_items = train.shape
+print("Load data done [%.1f s]. #user=%d, #item=%d, #train=%d, #test=%d"
+      % (time()-t1, num_users, num_items, train.nnz, len(testRatings)))
+
+training_data_generator = DataLoader(
+    full_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
+
+# Build model
+model = MLP(num_users, num_items, layers=layers, dropout=dropout)
+# Transfer the model to GPU, if one is available
+model.to(device)
+if verbose:
+    print(model)
+
+loss_fn = torch.nn.BCELoss()
+# Use Adam optimizer
+optimizer = torch.optim.Adam(model.parameters(), weight_decay=weight_decay)
+
+# Record performance
+hr_list = []
+ndcg_list = []
+BCE_loss_list = []
+
+# Check Init performance
+hr, ndcg = test(model, full_dataset, topK)
+hr_list.append(hr)
+ndcg_list.append(ndcg)
+BCE_loss_list.append(1)
+
+# do the epochs now
+
+for epoch in range(epochs):
+    epoch_loss = train_one_epoch( model, training_data_generator, loss_fn, optimizer, epoch, device)
+
+    if epoch % verbose == 0:
+        hr, ndcg = test(model, full_dataset, topK)
+        hr_list.append(hr)
+        ndcg_list.append(ndcg)
+        BCE_loss_list.append(epoch_loss)
+        if hr > max(hr_list):
+            if args.out > 0:
+                model.save(model_out_file, overwrite=True)
+
+print("hr for epochs: ", hr_list)
+print("ndcg for epochs: ", ndcg_list)
+print("loss for epochs: ", BCE_loss_list)
+plot_statistics(hr_list, ndcg_list, BCE_loss_list, model.get_alias(), "/content")
+with open("metrics", 'wb') as fp:
+    pickle.dump(hr_list, fp)
+    pickle.dump(ndcg_list, fp)
+
+best_iter = np.argmax(np.array(hr_list))
+best_hr = hr_list[best_iter]
+best_ndcg = ndcg_list[best_iter]
+print("End. Best Iteration %d:  HR = %.4f, NDCG = %.4f. " %
+      (best_iter, best_hr, best_ndcg))
+if args.out > 0:
+    print("The best MLP model is saved to %s" %(model_out_file))
+
+!pip install -q git+https://github.com/sparsh-ai/recochef.git
+
+import torch
+import torch.nn.functional as F
+
+from recochef.datasets.synthetic import Synthetic
+from recochef.datasets.movielens import MovieLens
+from recochef.preprocessing.split import chrono_split
+from recochef.preprocessing.encode import label_encode as le
+from recochef.models.factorization import MF, MF_bias
+from recochef.models.dnn import CollabFNet
+
+# # generate synthetic implicit data
+# synt = Synthetic()
+# df = synt.implicit()
+
+movielens = MovieLens()
+df = movielens.load_interactions()
+
+# changing rating colname to event following implicit naming conventions
+df = df.rename(columns={'RATING': 'EVENT'})
+
+# drop duplicates
+df = df.drop_duplicates()
+
+# chronological split
+df_train, df_valid = chrono_split(df, ratio=0.8, min_rating=10)
+print(f"Train set:\n\n{df_train}\n{'='*100}\n")
+print(f"Validation set:\n\n{df_valid}\n{'='*100}\n")
+
+# label encoding
+df_train, uid_maps = le(df_train, col='USERID')
+df_train, iid_maps = le(df_train, col='ITEMID')
+df_valid = le(df_valid, col='USERID', maps=uid_maps)
+df_valid = le(df_valid, col='ITEMID', maps=iid_maps)
+
+# # event implicit to rating conversion
+# event_weights = {'click':1, 'add':2, 'purchase':4}
+# event_maps = dict({'EVENT_TO_IDX':event_weights})
+# df_train = le(df_train, col='EVENT', maps=event_maps)
+# df_valid = le(df_valid, col='EVENT', maps=event_maps)
+
+print(f"Processed Train set:\n\n{df_train}\n{'='*100}\n")
+print(f"Processed Validation set:\n\n{df_valid}\n{'='*100}\n")
+
+# get number of unique users and items
+num_users = len(df_train.USERID.unique())
+num_items = len(df_train.ITEMID.unique())
+
+num_users_t = len(df_valid.USERID.unique())
+num_items_t = len(df_valid.ITEMID.unique())
+
+print(f"There are {num_users} users and {num_items} items in the train set.\n{'='*100}\n")
+print(f"There are {num_users_t} users and {num_items_t} items in the validation set.\n{'='*100}\n")
+
+# training and testing related helper functions
+def train_epocs(model, epochs=10, lr=0.01, wd=0.0, unsqueeze=False):
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
+    model.train()
+    for i in range(epochs):
+        users = torch.LongTensor(df_train.USERID.values) # .cuda()
+        items = torch.LongTensor(df_train.ITEMID.values) #.cuda()
+        ratings = torch.FloatTensor(df_train.EVENT.values) #.cuda()
+        if unsqueeze:
+            ratings = ratings.unsqueeze(1)
+        y_hat = model(users, items)
+        loss = F.mse_loss(y_hat, ratings)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        print(loss.item()) 
+    test_loss(model, unsqueeze)
+
+def test_loss(model, unsqueeze=False):
+    model.eval()
+    users = torch.LongTensor(df_valid.USERID.values) #.cuda()
+    items = torch.LongTensor(df_valid.ITEMID.values) #.cuda()
+    ratings = torch.FloatTensor(df_valid.EVENT.values) #.cuda()
+    if unsqueeze:
+        ratings = ratings.unsqueeze(1)
+    y_hat = model(users, items)
+    loss = F.mse_loss(y_hat, ratings)
+    print("test loss %.3f " % loss.item())
+
+# training MF model
+model = MF(num_users, num_items, emb_size=100) # .cuda() if you have a GPU
+print(f"Training MF model:\n")
+train_epocs(model, epochs=10, lr=0.1)
+print(f"\n{'='*100}\n")
+
+# training MF with bias model
+model = MF_bias(num_users, num_items, emb_size=100) #.cuda()
+print(f"Training MF+bias model:\n")
+train_epocs(model, epochs=10, lr=0.05, wd=1e-5)
+print(f"\n{'='*100}\n")
+
+# training MLP model
+model = CollabFNet(num_users, num_items, emb_size=100) #.cuda()
+print(f"Training MLP model:\n")
+train_epocs(model, epochs=15, lr=0.05, wd=1e-6, unsqueeze=True)
+print(f"\n{'='*100}\n")
+
+import numpy as np
+import pandas as pd
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+data = pd.read_csv("https://raw.githubusercontent.com/sparsh-ai/reco-data/master/MovieLens_LatestSmall_ratings.csv")
+data.head()
+
+data.shape
+
+np.random.seed(3)
+msk = np.random.rand(len(data)) < 0.8
+train = data[msk].copy()
+valid = data[~msk].copy()
+
+# here is a handy function modified from fast.ai
+def proc_col(col, train_col=None):
+    """Encodes a pandas column with continous ids. 
+    """
+    if train_col is not None:
+        uniq = train_col.unique()
+    else:
+        uniq = col.unique()
+    name2idx = {o:i for i,o in enumerate(uniq)}
+    return name2idx, np.array([name2idx.get(x, -1) for x in col]), len(uniq)
+
+def encode_data(df, train=None):
+    """ Encodes rating data with continous user and movie ids. 
+    If train is provided, encodes df with the same encoding as train.
+    """
+    df = df.copy()
+    for col_name in ["userId", "movieId"]:
+        train_col = None
+        if train is not None:
+            train_col = train[col_name]
+        _,col,_ = proc_col(df[col_name], train_col)
+        df[col_name] = col
+        df = df[df[col_name] >= 0]
+    return df
+
+# encoding the train and validation data
+df_train = encode_data(train)
+df_valid = encode_data(valid, train)
+
+df_train.head()
+
+df_train.shape
+
+df_valid.head()
+
+df_valid.shape
+
+class MF(nn.Module):
+    def __init__(self, num_users, num_items, emb_size=100):
+        super(MF, self).__init__()
+        self.user_emb = nn.Embedding(num_users, emb_size)
+        self.item_emb = nn.Embedding(num_items, emb_size)
+        self.user_emb.weight.data.uniform_(0, 0.05)
+        self.item_emb.weight.data.uniform_(0, 0.05)
+        
+    def forward(self, u, v):
+        u = self.user_emb(u)
+        v = self.item_emb(v)
+        return (u*v).sum(1)
+
+# unit testing the architecture
+sample = encode_data(train.sample(5))
+display(sample)
+
+num_users = 5
+num_items = 5
+emb_size = 3
+
+user_emb = nn.Embedding(num_users, emb_size)
+item_emb = nn.Embedding(num_items, emb_size)
+
+users = torch.LongTensor(sample.userId.values)
+items = torch.LongTensor(sample.movieId.values)
+
+U = user_emb(users)
+display(U)
+
+V = item_emb(items)
+display(V)
+
+display(U*V) # element wise multiplication
+
+display((U*V).sum(1))
+
+num_users = len(df_train.userId.unique())
+num_items = len(df_train.movieId.unique())
+print("{} users and {} items in the training set".format(num_users, num_items))
+
+model = MF(num_users, num_items, emb_size=100) # .cuda() if you have a GPU
+
+def train_epocs(model, epochs=10, lr=0.01, wd=0.0, unsqueeze=False):
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
+    model.train()
+    for i in range(epochs):
+        users = torch.LongTensor(df_train.userId.values) # .cuda()
+        items = torch.LongTensor(df_train.movieId.values) #.cuda()
+        ratings = torch.FloatTensor(df_train.rating.values) #.cuda()
+        if unsqueeze:
+            ratings = ratings.unsqueeze(1)
+        y_hat = model(users, items)
+        loss = F.mse_loss(y_hat, ratings)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        print(loss.item()) 
+    test_loss(model, unsqueeze)
+
+def test_loss(model, unsqueeze=False):
+    model.eval()
+    users = torch.LongTensor(df_valid.userId.values) #.cuda()
+    items = torch.LongTensor(df_valid.movieId.values) #.cuda()
+    ratings = torch.FloatTensor(df_valid.rating.values) #.cuda()
+    if unsqueeze:
+        ratings = ratings.unsqueeze(1)
+    y_hat = model(users, items)
+    loss = F.mse_loss(y_hat, ratings)
+    print("test loss %.3f " % loss.item())
+
+train_epocs(model, epochs=10, lr=0.1)
+
+train_epocs(model, epochs=10, lr=0.01)
+
+train_epocs(model, epochs=10, lr=0.01)
+
+class MF_bias(nn.Module):
+    def __init__(self, num_users, num_items, emb_size=100):
+        super(MF_bias, self).__init__()
+        self.user_emb = nn.Embedding(num_users, emb_size)
+        self.user_bias = nn.Embedding(num_users, 1)
+        self.item_emb = nn.Embedding(num_items, emb_size)
+        self.item_bias = nn.Embedding(num_items, 1)
+        self.user_emb.weight.data.uniform_(0,0.05)
+        self.item_emb.weight.data.uniform_(0,0.05)
+        self.user_bias.weight.data.uniform_(-0.01,0.01)
+        self.item_bias.weight.data.uniform_(-0.01,0.01)
+        
+    def forward(self, u, v):
+        U = self.user_emb(u)
+        V = self.item_emb(v)
+        b_u = self.user_bias(u).squeeze()
+        b_v = self.item_bias(v).squeeze()
+        return (U*V).sum(1) +  b_u  + b_v
+
+model = MF_bias(num_users, num_items, emb_size=100) #.cuda()
+
+train_epocs(model, epochs=10, lr=0.05, wd=1e-5)
+
+train_epocs(model, epochs=10, lr=0.01, wd=1e-5)
+
+train_epocs(model, epochs=10, lr=0.001, wd=1e-5)
+
+class CollabFNet(nn.Module):
+    def __init__(self, num_users, num_items, emb_size=100, n_hidden=10):
+        super(CollabFNet, self).__init__()
+        self.user_emb = nn.Embedding(num_users, emb_size)
+        self.item_emb = nn.Embedding(num_items, emb_size)
+        self.lin1 = nn.Linear(emb_size*2, n_hidden)
+        self.lin2 = nn.Linear(n_hidden, 1)
+        self.drop1 = nn.Dropout(0.1)
+        
+    def forward(self, u, v):
+        U = self.user_emb(u)
+        V = self.item_emb(v)
+        x = F.relu(torch.cat([U, V], dim=1))
+        x = self.drop1(x)
+        x = F.relu(self.lin1(x))
+        x = self.lin2(x)
+        return x
+
+model = CollabFNet(num_users, num_items, emb_size=100) #.cuda()
+
+train_epocs(model, epochs=15, lr=0.05, wd=1e-6, unsqueeze=True)
+
+train_epocs(model, epochs=10, lr=0.001, wd=1e-6, unsqueeze=True)
+
+train_epocs(model, epochs=10, lr=0.001, wd=1e-6, unsqueeze=True)
+
+import os
+import requests
+import zipfile
+import collections
+
+import numpy as np
+import pandas as pd
+import scipy.sparse as sp
+from sklearn.metrics import roc_auc_score
+
+import torch
+from torch import nn
+import torch.multiprocessing as mp
+import torch.utils.data as data
+from tqdm import tqdm
+
+def _get_data_path():
+    """
+    Get path to the movielens dataset file.
+    """
+    data_path = '/content/data'
+    if not os.path.exists(data_path):
+        print('Making data path')
+        os.mkdir(data_path)
+    return data_path
+
+
+def _download_movielens(dest_path):
+    """
+    Download the dataset.
+    """
+
+    url = 'http://files.grouplens.org/datasets/movielens/ml-100k.zip'
+    req = requests.get(url, stream=True)
+
+    print('Downloading MovieLens data')
+
+    with open(os.path.join(dest_path, 'ml-100k.zip'), 'wb') as fd:
+        for chunk in req.iter_content(chunk_size=None):
+            fd.write(chunk)
+
+    with zipfile.ZipFile(os.path.join(dest_path, 'ml-100k.zip'), 'r') as z:
+        z.extractall(dest_path)
+
+def read_movielens_df():
+    path = _get_data_path()
+    zipfile = os.path.join(path, 'ml-100k.zip')
+    if not os.path.isfile(zipfile):
+        _download_movielens(path)
+    fname = os.path.join(path, 'ml-100k', 'u.data')
+    names = ['user_id', 'item_id', 'rating', 'timestamp']
+    df = pd.read_csv(fname, sep='\t', names=names)
+    return df
+
+
+def get_movielens_interactions():
+    df = read_movielens_df()
+
+    n_users = df.user_id.unique().shape[0]
+    n_items = df.item_id.unique().shape[0]
+
+    interactions = np.zeros((n_users, n_items))
+    for row in df.itertuples():
+        interactions[row[1] - 1, row[2] - 1] = row[3]
+    return interactions
+
+
+def train_test_split(interactions, n=10):
+    """
+    Split an interactions matrix into training and test sets.
+    Parameters
+    ----------
+    interactions : np.ndarray
+    n : int (default=10)
+        Number of items to select / row to place into test.
+
+    Returns
+    -------
+    train : np.ndarray
+    test : np.ndarray
+    """
+    test = np.zeros(interactions.shape)
+    train = interactions.copy()
+    for user in range(interactions.shape[0]):
+        if interactions[user, :].nonzero()[0].shape[0] > n:
+            test_interactions = np.random.choice(interactions[user, :].nonzero()[0],
+                                                 size=n,
+                                                 replace=False)
+            train[user, test_interactions] = 0.
+            test[user, test_interactions] = interactions[user, test_interactions]
+
+    # Test and training are truly disjoint
+    assert(np.all((train * test) == 0))
+    return train, test
+
+
+def get_movielens_train_test_split(implicit=False):
+    interactions = get_movielens_interactions()
+    if implicit:
+        interactions = (interactions >= 4).astype(np.float32)
+    train, test = train_test_split(interactions)
+    train = sp.coo_matrix(train)
+    test = sp.coo_matrix(test)
+    return train, test
+
+%%writefile metrics.py
+
+import numpy as np
+from sklearn.metrics import roc_auc_score
+from torch import multiprocessing as mp
+import torch
+
+def get_row_indices(row, interactions):
+    start = interactions.indptr[row]
+    end = interactions.indptr[row + 1]
+    return interactions.indices[start:end]
+
+
+def auc(model, interactions, num_workers=1):
+    aucs = []
+    processes = []
+    n_users = interactions.shape[0]
+    mp_batch = int(np.ceil(n_users / num_workers))
+
+    queue = mp.Queue()
+    rows = np.arange(n_users)
+    np.random.shuffle(rows)
+    for rank in range(num_workers):
+        start = rank * mp_batch
+        end = np.min((start + mp_batch,  n_users))
+        p = mp.Process(target=batch_auc,
+                       args=(queue, rows[start:end], interactions, model))
+        p.start()
+        processes.append(p)
+
+    while True:
+        is_alive = False
+        for p in processes:
+            if p.is_alive():
+                is_alive = True
+                break
+        if not is_alive and queue.empty():
+            break
+
+        while not queue.empty():
+            aucs.append(queue.get())
+
+    queue.close()
+    for p in processes:
+        p.join()
+    return np.mean(aucs)
+
+
+def batch_auc(queue, rows, interactions, model):
+    n_items = interactions.shape[1]
+    items = torch.arange(0, n_items).long()
+    users_init = torch.ones(n_items).long()
+    for row in rows:
+        row = int(row)
+        users = users_init.fill_(row)
+
+        preds = model.predict(users, items)
+        actuals = get_row_indices(row, interactions)
+
+        if len(actuals) == 0:
+            continue
+        y_test = np.zeros(n_items)
+        y_test[actuals] = 1
+        queue.put(roc_auc_score(y_test, preds.data.numpy()))
+
+
+def patk(model, interactions, num_workers=1, k=5):
+    patks = []
+    processes = []
+    n_users = interactions.shape[0]
+    mp_batch = int(np.ceil(n_users / num_workers))
+
+    queue = mp.Queue()
+    rows = np.arange(n_users)
+    np.random.shuffle(rows)
+    for rank in range(num_workers):
+        start = rank * mp_batch
+        end = np.min((start + mp_batch, n_users))
+        p = mp.Process(target=batch_patk,
+                       args=(queue, rows[start:end], interactions, model),
+                       kwargs={'k': k})
+        p.start()
+        processes.append(p)
+
+    while True:
+        is_alive = False
+        for p in processes:
+            if p.is_alive():
+                is_alive = True
+                break
+        if not is_alive and queue.empty():
+            break
+
+        while not queue.empty():
+            patks.append(queue.get())
+
+    queue.close()
+    for p in processes:
+        p.join()
+    return np.mean(patks)
+
+
+def batch_patk(queue, rows, interactions, model, k=5):
+    n_items = interactions.shape[1]
+
+    items = torch.arange(0, n_items).long()
+    users_init = torch.ones(n_items).long()
+    for row in rows:
+        row = int(row)
+        users = users_init.fill_(row)
+
+        preds = model.predict(users, items)
+        actuals = get_row_indices(row, interactions)
+
+        if len(actuals) == 0:
+            continue
+
+        top_k = np.argpartition(-np.squeeze(preds.data.numpy()), k)
+        top_k = set(top_k[:k])
+        true_pids = set(actuals)
+        if true_pids:
+            queue.put(len(top_k & true_pids) / float(k))
+
+import metrics
+import importlib
+importlib.reload(metrics)
+
+class Interactions(data.Dataset):
+    """
+    Hold data in the form of an interactions matrix.
+    Typical use-case is like a ratings matrix:
+    - Users are the rows
+    - Items are the columns
+    - Elements of the matrix are the ratings given by a user for an item.
+    """
+
+    def __init__(self, mat):
+        self.mat = mat.astype(np.float32).tocoo()
+        self.n_users = self.mat.shape[0]
+        self.n_items = self.mat.shape[1]
+
+    def __getitem__(self, index):
+        row = self.mat.row[index]
+        col = self.mat.col[index]
+        val = self.mat.data[index]
+        return (row, col), val
+
+    def __len__(self):
+        return self.mat.nnz
+
+
+class PairwiseInteractions(data.Dataset):
+    """
+    Sample data from an interactions matrix in a pairwise fashion. The row is
+    treated as the main dimension, and the columns are sampled pairwise.
+    """
+
+    def __init__(self, mat):
+        self.mat = mat.astype(np.float32).tocoo()
+
+        self.n_users = self.mat.shape[0]
+        self.n_items = self.mat.shape[1]
+
+        self.mat_csr = self.mat.tocsr()
+        if not self.mat_csr.has_sorted_indices:
+            self.mat_csr.sort_indices()
+
+    def __getitem__(self, index):
+        row = self.mat.row[index]
+        found = False
+
+        while not found:
+            neg_col = np.random.randint(self.n_items)
+            if self.not_rated(row, neg_col, self.mat_csr.indptr,
+                              self.mat_csr.indices):
+                found = True
+
+        pos_col = self.mat.col[index]
+        val = self.mat.data[index]
+
+        return (row, (pos_col, neg_col)), val
+
+    def __len__(self):
+        return self.mat.nnz
+
+    @staticmethod
+    def not_rated(row, col, indptr, indices):
+        # similar to use of bsearch in lightfm
+        start = indptr[row]
+        end = indptr[row + 1]
+        searched = np.searchsorted(indices[start:end], col, 'right')
+        if searched >= (end - start):
+            # After the array
+            return False
+        return col != indices[searched]  # Not found
+
+    def get_row_indices(self, row):
+        start = self.mat_csr.indptr[row]
+        end = self.mat_csr.indptr[row + 1]
+        return self.mat_csr.indices[start:end]
+
+
+class BaseModule(nn.Module):
+    """
+    Base module for explicit matrix factorization.
+    """
+    
+    def __init__(self,
+                 n_users,
+                 n_items,
+                 n_factors=40,
+                 dropout_p=0,
+                 sparse=False):
+        """
+
+        Parameters
+        ----------
+        n_users : int
+            Number of users
+        n_items : int
+            Number of items
+        n_factors : int
+            Number of latent factors (or embeddings or whatever you want to
+            call it).
+        dropout_p : float
+            p in nn.Dropout module. Probability of dropout.
+        sparse : bool
+            Whether or not to treat embeddings as sparse. NOTE: cannot use
+            weight decay on the optimizer if sparse=True. Also, can only use
+            Adagrad.
+        """
+        super(BaseModule, self).__init__()
+        self.n_users = n_users
+        self.n_items = n_items
+        self.n_factors = n_factors
+        self.user_biases = nn.Embedding(n_users, 1, sparse=sparse)
+        self.item_biases = nn.Embedding(n_items, 1, sparse=sparse)
+        self.user_embeddings = nn.Embedding(n_users, n_factors, sparse=sparse)
+        self.item_embeddings = nn.Embedding(n_items, n_factors, sparse=sparse)
+        
+        self.dropout_p = dropout_p
+        self.dropout = nn.Dropout(p=self.dropout_p)
+
+        self.sparse = sparse
+        
+    def forward(self, users, items):
+        """
+        Forward pass through the model. For a single user and item, this
+        looks like:
+
+        user_bias + item_bias + user_embeddings.dot(item_embeddings)
+
+        Parameters
+        ----------
+        users : np.ndarray
+            Array of user indices
+        items : np.ndarray
+            Array of item indices
+
+        Returns
+        -------
+        preds : np.ndarray
+            Predicted ratings.
+
+        """
+        ues = self.user_embeddings(users)
+        uis = self.item_embeddings(items)
+
+        preds = self.user_biases(users)
+        preds += self.item_biases(items)
+        preds += (self.dropout(ues) * self.dropout(uis)).sum(dim=1, keepdim=True)
+
+        return preds.squeeze()
+    
+    def __call__(self, *args):
+        return self.forward(*args)
+
+    def predict(self, users, items):
+        return self.forward(users, items)
+
+
+def bpr_loss(preds, vals):
+    sig = nn.Sigmoid()
+    return (1.0 - sig(preds)).pow(2).sum()
+
+
+class BPRModule(nn.Module):
+    
+    def __init__(self,
+                 n_users,
+                 n_items,
+                 n_factors=40,
+                 dropout_p=0,
+                 sparse=False,
+                 model=BaseModule):
+        super(BPRModule, self).__init__()
+
+        self.n_users = n_users
+        self.n_items = n_items
+        self.n_factors = n_factors
+        self.dropout_p = dropout_p
+        self.sparse = sparse
+        self.pred_model = model(
+            self.n_users,
+            self.n_items,
+            n_factors=n_factors,
+            dropout_p=dropout_p,
+            sparse=sparse
+        )
+
+    def forward(self, users, items):
+        assert isinstance(items, tuple), \
+            'Must pass in items as (pos_items, neg_items)'
+        # Unpack
+        (pos_items, neg_items) = items
+        pos_preds = self.pred_model(users, pos_items)
+        neg_preds = self.pred_model(users, neg_items)
+        return pos_preds - neg_preds
+
+    def predict(self, users, items):
+        return self.pred_model(users, items)
+
+
+class BasePipeline:
+    """
+    Class defining a training pipeline. Instantiates data loaders, model,
+    and optimizer. Handles training for multiple epochs and keeping track of
+    train and test loss.
+    """
+
+    def __init__(self,
+                 train,
+                 test=None,
+                 model=BaseModule,
+                 n_factors=40,
+                 batch_size=32,
+                 dropout_p=0.02,
+                 sparse=False,
+                 lr=0.01,
+                 weight_decay=0.,
+                 optimizer=torch.optim.Adam,
+                 loss_function=nn.MSELoss(reduction='sum'),
+                 n_epochs=10,
+                 verbose=False,
+                 random_seed=None,
+                 interaction_class=Interactions,
+                 hogwild=False,
+                 num_workers=0,
+                 eval_metrics=None,
+                 k=5):
+        self.train = train
+        self.test = test
+
+        if hogwild:
+            num_loader_workers = 0
+        else:
+            num_loader_workers = num_workers
+        self.train_loader = data.DataLoader(
+            interaction_class(train), batch_size=batch_size, shuffle=True,
+            num_workers=num_loader_workers)
+        if self.test is not None:
+            self.test_loader = data.DataLoader(
+                interaction_class(test), batch_size=batch_size, shuffle=True,
+                num_workers=num_loader_workers)
+        self.num_workers = num_workers
+        self.n_users = self.train.shape[0]
+        self.n_items = self.train.shape[1]
+        self.n_factors = n_factors
+        self.batch_size = batch_size
+        self.dropout_p = dropout_p
+        self.lr = lr
+        self.weight_decay = weight_decay
+        self.loss_function = loss_function
+        self.n_epochs = n_epochs
+        if sparse:
+            assert weight_decay == 0.0
+        self.model = model(self.n_users,
+                           self.n_items,
+                           n_factors=self.n_factors,
+                           dropout_p=self.dropout_p,
+                           sparse=sparse)
+        self.optimizer = optimizer(self.model.parameters(),
+                                   lr=self.lr,
+                                   weight_decay=self.weight_decay)
+        self.warm_start = False
+        self.losses = collections.defaultdict(list)
+        self.verbose = verbose
+        self.hogwild = hogwild
+        if random_seed is not None:
+            if self.hogwild:
+                random_seed += os.getpid()
+            torch.manual_seed(random_seed)
+            np.random.seed(random_seed)
+
+        if eval_metrics is None:
+            eval_metrics = []
+        self.eval_metrics = eval_metrics
+        self.k = k
+
+    def break_grads(self):
+        for param in self.model.parameters():
+            # Break gradient sharing
+            if param.grad is not None:
+                param.grad.data = param.grad.data.clone()
+
+    def fit(self):
+        for epoch in range(1, self.n_epochs + 1):
+
+            if self.hogwild:
+                self.model.share_memory()
+                processes = []
+                train_losses = []
+                queue = mp.Queue()
+                for rank in range(self.num_workers):
+                    p = mp.Process(target=self._fit_epoch,
+                                   kwargs={'epoch': epoch,
+                                           'queue': queue})
+                    p.start()
+                    processes.append(p)
+                for p in processes:
+                    p.join()
+
+                while True:
+                    is_alive = False
+                    for p in processes:
+                        if p.is_alive():
+                            is_alive = True
+                            break
+                    if not is_alive and queue.empty():
+                        break
+
+                    while not queue.empty():
+                        train_losses.append(queue.get())
+                queue.close()
+                train_loss = np.mean(train_losses)
+            else:
+                train_loss = self._fit_epoch(epoch)
+
+            self.losses['train'].append(train_loss)
+            row = 'Epoch: {0:^3}  train: {1:^10.5f}'.format(epoch, self.losses['train'][-1])
+            if self.test is not None:
+                self.losses['test'].append(self._validation_loss())
+                row += 'val: {0:^10.5f}'.format(self.losses['test'][-1])
+                for metric in self.eval_metrics:
+                    func = getattr(metrics, metric)
+                    res = func(self.model, self.test_loader.dataset.mat_csr,
+                               num_workers=self.num_workers)
+                    self.losses['eval-{}'.format(metric)].append(res)
+                    row += 'eval-{0}: {1:^10.5f}'.format(metric, res)
+            self.losses['epoch'].append(epoch)
+            if self.verbose:
+                print(row)
+
+    def _fit_epoch(self, epoch=1, queue=None):
+        if self.hogwild:
+            self.break_grads()
+
+        self.model.train()
+        total_loss = torch.Tensor([0])
+        pbar = tqdm(enumerate(self.train_loader),
+                    total=len(self.train_loader),
+                    desc='({0:^3})'.format(epoch))
+        for batch_idx, ((row, col), val) in pbar:
+            self.optimizer.zero_grad()
+
+            row = row.long()
+            # TODO: turn this into a collate_fn like the data_loader
+            if isinstance(col, list):
+                col = tuple(c.long() for c in col)
+            else:
+                col = col.long()
+            val = val.float()
+
+            preds = self.model(row, col)
+            loss = self.loss_function(preds, val)
+            loss.backward()
+
+            self.optimizer.step()
+
+            total_loss += loss.item()
+            batch_loss = loss.item() / row.size()[0]
+            pbar.set_postfix(train_loss=batch_loss)
+        total_loss /= self.train.nnz
+        if queue is not None:
+            queue.put(total_loss[0])
+        else:
+            return total_loss[0]
+
+    def _validation_loss(self):
+        self.model.eval()
+        total_loss = torch.Tensor([0])
+        for batch_idx, ((row, col), val) in enumerate(self.test_loader):
+            row = row.long()
+            if isinstance(col, list):
+                col = tuple(c.long() for c in col)
+            else:
+                col = col.long()
+            val = val.float()
+
+            preds = self.model(row, col)
+            loss = self.loss_function(preds, val)
+            total_loss += loss.item()
+
+        total_loss /= self.test.nnz
+        return total_loss[0]
+
+def explicit():
+    train, test = get_movielens_train_test_split()
+    pipeline = BasePipeline(train, test=test, model=BaseModule,
+                            n_factors=10, batch_size=1024, dropout_p=0.02,
+                            lr=0.02, weight_decay=0.1,
+                            optimizer=torch.optim.Adam, n_epochs=40,
+                            verbose=True, random_seed=2017)
+    pipeline.fit()
+
+
+def implicit():
+    train, test = get_movielens_train_test_split(implicit=True)
+
+    pipeline = BasePipeline(train, test=test, verbose=True,
+                           batch_size=1024, num_workers=4,
+                           n_factors=20, weight_decay=0,
+                           dropout_p=0., lr=.2, sparse=True,
+                           optimizer=torch.optim.SGD, n_epochs=40,
+                           random_seed=2017, loss_function=bpr_loss,
+                           model=BPRModule,
+                           interaction_class=PairwiseInteractions,
+                           eval_metrics=('auc', 'patk'))
+    pipeline.fit()
+
+
+def hogwild():
+    train, test = get_movielens_train_test_split(implicit=True)
+
+    pipeline = BasePipeline(train, test=test, verbose=True,
+                            batch_size=1024, num_workers=4,
+                            n_factors=20, weight_decay=0,
+                            dropout_p=0., lr=.2, sparse=True,
+                            optimizer=torch.optim.SGD, n_epochs=40,
+                            random_seed=2017, loss_function=bpr_loss,
+                            model=BPRModule, hogwild=True,
+                            interaction_class=PairwiseInteractions,
+                            eval_metrics=('auc', 'patk'))
+    pipeline.fit()
+
+explicit()
+
+implicit()
+
+!pip install -q git+https://github.com/sparsh-ai/recochef
+
+import os
+import csv 
+import argparse
+import numpy as np
+import pandas as pd
+import random as rd
+from time import time
+from pathlib import Path
+import scipy.sparse as sp
+from datetime import datetime
+
+import torch
+from torch import nn
+import torch.nn.functional as F
+
+from recochef.preprocessing.split import chrono_split
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+torch.cuda.set_device(0)
+
+!wget http://files.grouplens.org/datasets/movielens/ml-100k.zip
+
+!unzip ml-100k.zip
+
+df = pd.read_csv('ml-100k/u.data', sep='\t', header=None, names=['USERID','ITEMID','RATING','TIMESTAMP'])
+df.head()
+
+df_train, df_test = chrono_split(df, ratio=0.8)
+
+userid = 4
+
+query = "USERID==@userid"
+display(df.query(query))
+display(df_train.query(query))
+display(df_test.query(query))
+
+def preprocess(data):
+  data = data.copy()
+  data = data.sort_values(by=['USERID','TIMESTAMP'])
+  data['USERID'] = data['USERID'] - 1
+  data['ITEMID'] = data['ITEMID'] - 1
+  data.drop(['TIMESTAMP','RATING'], axis=1, inplace=True)
+  data = data.groupby('USERID')['ITEMID'].apply(list).reset_index(name='ITEMID')
+  return data
+
+preprocess(df_train).head()
+
+def store(data, target_file='./data/movielens/train.txt'):
+  Path(target_file).parent.mkdir(parents=True, exist_ok=True)
+  with open(target_file, 'w+') as f:
+    writer = csv.writer(f, delimiter=' ')
+    for USERID, row in zip(data.USERID.values,data.ITEMID.values):
+      row = [USERID] + row
+      writer.writerow(row)
+
+store(preprocess(df_train), '/content/data/ml-100k/train.txt')
+store(preprocess(df_test), '/content/data/ml-100k/test.txt')
+
+!head /content/data/ml-100k/train.txt
+
+!head /content/data/ml-100k/test.txt
+
+Path('/content/results').mkdir(parents=True, exist_ok=True)
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run NGCF.")
+    parser.add_argument('--data_dir', type=str,
+                        default='./data/',
+                        help='Input data path.')
+    parser.add_argument('--dataset', type=str, default='ml-100k',
+                        help='Dataset name: Amazond-book, Gowella, ml-100k')
+    parser.add_argument('--results_dir', type=str, default='results',
+                        help='Store model to path.')
+    parser.add_argument('--n_epochs', type=int, default=400,
+                        help='Number of epoch.')
+    parser.add_argument('--reg', type=float, default=1e-5,
+                        help='l2 reg.')
+    parser.add_argument('--lr', type=float, default=0.0001,
+                        help='Learning rate.')
+    parser.add_argument('--emb_dim', type=int, default=64,
+                        help='number of embeddings.')
+    parser.add_argument('--layers', type=str, default='[64,64]',
+                        help='Output sizes of every layer')
+    parser.add_argument('--batch_size', type=int, default=512,
+                        help='Batch size.')
+    parser.add_argument('--node_dropout', type=float, default=0.,
+                        help='Graph Node dropout.')
+    parser.add_argument('--mess_dropout', type=float, default=0.1,
+                        help='Message dropout.')
+    parser.add_argument('--k', type=str, default=20,
+                        help='k order of metric evaluation (e.g. NDCG@k)')
+    parser.add_argument('--eval_N', type=int, default=5,
+                        help='Evaluate every N epochs')
+    parser.add_argument('--save_results', type=int, default=1,
+                        help='Save model and results')
+
+    return parser.parse_args(args={})
+
+def early_stopping(log_value, best_value, stopping_step, flag_step, expected_order='asc'):
+    """
+    Check if early_stopping is needed
+    Function copied from original code
+    """
+    assert expected_order in ['asc', 'des']
+    if (expected_order == 'asc' and log_value >= best_value) or (expected_order == 'des' and log_value <= best_value):
+        stopping_step = 0
+        best_value = log_value
+    else:
+        stopping_step += 1
+
+    if stopping_step >= flag_step:
+        print("Early stopping at step: {} log:{}".format(flag_step, log_value))
+        should_stop = True
+    else:
+        should_stop = False
+
+    return best_value, stopping_step, should_stop
+
+def train(model, data_generator, optimizer):
+    """
+    Train the model PyTorch style
+    Arguments:
+    ---------
+    model: PyTorch model
+    data_generator: Data object
+    optimizer: PyTorch optimizer
+    """
+    model.train()
+    n_batch = data_generator.n_train // data_generator.batch_size + 1
+    running_loss=0
+    for _ in range(n_batch):
+        u, i, j = data_generator.sample()
+        optimizer.zero_grad()
+        loss = model(u,i,j)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    return running_loss
+
+def split_matrix(X, n_splits=100):
+    """
+    Split a matrix/Tensor into n_folds (for the user embeddings and the R matrices)
+    Arguments:
+    ---------
+    X: matrix to be split
+    n_folds: number of folds
+    Returns:
+    -------
+    splits: split matrices
+    """
+    splits = []
+    chunk_size = X.shape[0] // n_splits
+    for i in range(n_splits):
+        start = i * chunk_size
+        end = X.shape[0] if i == n_splits - 1 else (i + 1) * chunk_size
+        splits.append(X[start:end])
+    return splits
+
+def compute_ndcg_k(pred_items, test_items, test_indices, k):
+    """
+    Compute NDCG@k
+    
+    Arguments:
+    ---------
+    pred_items: binary tensor with 1s in those locations corresponding to the predicted item interactions
+    test_items: binary tensor with 1s in locations corresponding to the real test interactions
+    test_indices: tensor with the location of the top-k predicted items
+    k: k'th-order 
+    Returns:
+    -------
+    NDCG@k
+    """
+    r = (test_items * pred_items).gather(1, test_indices)
+    f = torch.from_numpy(np.log2(np.arange(2, k+2))).float().cuda()
+    dcg = (r[:, :k]/f).sum(1)
+    dcg_max = (torch.sort(r, dim=1, descending=True)[0][:, :k]/f).sum(1)
+    ndcg = dcg/dcg_max
+    ndcg[torch.isnan(ndcg)] = 0
+    return ndcg
+
+def eval_model(u_emb, i_emb, Rtr, Rte, k):
+    """
+    Evaluate the model
+    
+    Arguments:
+    ---------
+    u_emb: User embeddings
+    i_emb: Item embeddings
+    Rtr: Sparse matrix with the training interactions
+    Rte: Sparse matrix with the testing interactions
+    k : kth-order for metrics
+    
+    Returns:
+    --------
+    result: Dictionary with lists correponding to the metrics at order k for k in Ks
+    """
+    # split matrices
+    ue_splits = split_matrix(u_emb)
+    tr_splits = split_matrix(Rtr)
+    te_splits = split_matrix(Rte)
+
+    recall_k, ndcg_k= [], []
+    # compute results for split matrices
+    for ue_f, tr_f, te_f in zip(ue_splits, tr_splits, te_splits):
+
+        scores = torch.mm(ue_f, i_emb.t())
+
+        test_items = torch.from_numpy(te_f.todense()).float().cuda()
+        non_train_items = torch.from_numpy(1-(tr_f.todense())).float().cuda()
+        scores = scores * non_train_items
+
+        _, test_indices = torch.topk(scores, dim=1, k=k)
+
+        # If you want to use a as the index in dim1 for t, this code should work:
+        #t[torch.arange(t.size(0)), a]
+
+        pred_items = torch.zeros_like(scores).float()
+        # pred_items.scatter_(dim=1,index=test_indices,src=torch.tensor(1.0).cuda())
+        pred_items.scatter_(dim=1,index=test_indices,src=torch.ones_like(test_indices, dtype=torch.float).cuda())
+
+        topk_preds = torch.zeros_like(scores).float()
+        # topk_preds.scatter_(dim=1,index=test_indices[:, :k],src=torch.tensor(1.0))
+        _idx = test_indices[:, :k]
+        topk_preds.scatter_(dim=1,index=_idx,src=torch.ones_like(_idx, dtype=torch.float))
+
+        TP = (test_items * topk_preds).sum(1)
+        rec = TP/test_items.sum(1)
+        ndcg = compute_ndcg_k(pred_items, test_items, test_indices, k)
+
+        recall_k.append(rec)
+        ndcg_k.append(ndcg)
+
+    return torch.cat(recall_k).mean(), torch.cat(ndcg_k).mean()
+
+class Data(object):
+    def __init__(self, path, batch_size):
+        self.path = path
+        self.batch_size = batch_size
+
+        train_file = path + '/train.txt'
+        test_file = path + '/test.txt'
+
+        #get number of users and items
+        self.n_users, self.n_items = 0, 0
+        self.n_train, self.n_test = 0, 0
+        self.neg_pools = {}
+
+        self.exist_users = []
+
+        # search train_file for max user_id/item_id
+        with open(train_file) as f:
+            for l in f.readlines():
+                if len(l) > 0:
+                    l = l.strip('\n').split(' ')
+                    items = [int(i) for i in l[1:]]
+                    # first element is the user_id, rest are items
+                    uid = int(l[0])
+                    self.exist_users.append(uid)
+                    # item/user with highest number is number of items/users
+                    self.n_items = max(self.n_items, max(items))
+                    self.n_users = max(self.n_users, uid)
+                    # number of interactions
+                    self.n_train += len(items)
+
+        # search test_file for max item_id
+        with open(test_file) as f:
+            for l in f.readlines():
+                if len(l) > 0:
+                    l = l.strip('\n')
+                    try:
+                        items = [int(i) for i in l.split(' ')[1:]]
+                    except Exception:
+                        continue
+                    if not items:
+                        print("empyt test exists")
+                        pass
+                    else:
+                        self.n_items = max(self.n_items, max(items))
+                        self.n_test += len(items)
+        # adjust counters: user_id/item_id starts at 0
+        self.n_items += 1
+        self.n_users += 1
+
+        self.print_statistics()
+
+        # create interactions/ratings matrix 'R' # dok = dictionary of keys
+        print('Creating interaction matrices R_train and R_test...')
+        t1 = time()
+        self.R_train = sp.dok_matrix((self.n_users, self.n_items), dtype=np.float32) 
+        self.R_test = sp.dok_matrix((self.n_users, self.n_items), dtype=np.float32)
+
+        self.train_items, self.test_set = {}, {}
+        with open(train_file) as f_train:
+            with open(test_file) as f_test:
+                for l in f_train.readlines():
+                    if len(l) == 0: break
+                    l = l.strip('\n')
+                    items = [int(i) for i in l.split(' ')]
+                    uid, train_items = items[0], items[1:]
+                    # enter 1 if user interacted with item
+                    for i in train_items:
+                        self.R_train[uid, i] = 1.
+                    self.train_items[uid] = train_items
+
+                for l in f_test.readlines():
+                    if len(l) == 0: break
+                    l = l.strip('\n')
+                    try:
+                        items = [int(i) for i in l.split(' ')]
+                    except Exception:
+                        continue
+                    uid, test_items = items[0], items[1:]
+                    for i in test_items:
+                        self.R_test[uid, i] = 1.0
+                    self.test_set[uid] = test_items
+        print('Complete. Interaction matrices R_train and R_test created in', time() - t1, 'sec')
+
+    # if exist, get adjacency matrix
+    def get_adj_mat(self):
+        try:
+            t1 = time()
+            adj_mat = sp.load_npz(self.path + '/s_adj_mat.npz')
+            print('Loaded adjacency-matrix (shape:', adj_mat.shape,') in', time() - t1, 'sec.')
+
+        except Exception:
+            print('Creating adjacency-matrix...')
+            adj_mat = self.create_adj_mat()
+            sp.save_npz(self.path + '/s_adj_mat.npz', adj_mat)
+        return adj_mat
+    
+    # create adjancency matrix
+    def create_adj_mat(self):
+        t1 = time()
+        
+        adj_mat = sp.dok_matrix((self.n_users + self.n_items, self.n_users + self.n_items), dtype=np.float32)
+        adj_mat = adj_mat.tolil()
+        R = self.R_train.tolil() # to list of lists
+
+        adj_mat[:self.n_users, self.n_users:] = R
+        adj_mat[self.n_users:, :self.n_users] = R.T
+        adj_mat = adj_mat.todok()
+        print('Complete. Adjacency-matrix created in', adj_mat.shape, time() - t1, 'sec.')
+
+        t2 = time()
+
+        # normalize adjacency matrix
+        def normalized_adj_single(adj):
+            rowsum = np.array(adj.sum(1))
+
+            d_inv = np.power(rowsum, -.5).flatten()
+            d_inv[np.isinf(d_inv)] = 0.
+            d_mat_inv = sp.diags(d_inv)
+
+            norm_adj = d_mat_inv.dot(adj).dot(d_mat_inv)
+            return norm_adj.tocoo()
+
+        print('Transforming adjacency-matrix to NGCF-adjacency matrix...')
+        ngcf_adj_mat = normalized_adj_single(adj_mat) + sp.eye(adj_mat.shape[0])
+
+        print('Complete. Transformed adjacency-matrix to NGCF-adjacency matrix in', time() - t2, 'sec.')
+        return ngcf_adj_mat.tocsr()
+
+    # create collections of N items that users never interacted with
+    def negative_pool(self):
+        t1 = time()
+        for u in self.train_items.keys():
+            neg_items = list(set(range(self.n_items)) - set(self.train_items[u]))
+            pools = [rd.choice(neg_items) for _ in range(100)]
+            self.neg_pools[u] = pools
+        print('refresh negative pools', time() - t1)
+
+    # sample data for mini-batches
+    def sample(self):
+        if self.batch_size <= self.n_users:
+            users = rd.sample(self.exist_users, self.batch_size)
+        else:
+            users = [rd.choice(self.exist_users) for _ in range(self.batch_size)]
+
+        def sample_pos_items_for_u(u, num):
+            pos_items = self.train_items[u]
+            n_pos_items = len(pos_items)
+            pos_batch = []
+            while True:
+                if len(pos_batch) == num: break
+                pos_id = np.random.randint(low=0, high=n_pos_items, size=1)[0]
+                pos_i_id = pos_items[pos_id]
+
+                if pos_i_id not in pos_batch:
+                    pos_batch.append(pos_i_id)
+            return pos_batch
+
+        def sample_neg_items_for_u(u, num):
+            neg_items = []
+            while True:
+                if len(neg_items) == num: break
+                neg_id = np.random.randint(low=0, high=self.n_items,size=1)[0]
+                if neg_id not in self.train_items[u] and neg_id not in neg_items:
+                    neg_items.append(neg_id)
+            return neg_items
+
+        def sample_neg_items_for_u_from_pools(u, num):
+            neg_items = list(set(self.neg_pools[u]) - set(self.train_items[u]))
+            return rd.sample(neg_items, num)
+
+        pos_items, neg_items = [], []
+        for u in users:
+            pos_items += sample_pos_items_for_u(u, 1)
+            neg_items += sample_neg_items_for_u(u, 1)
+
+        return users, pos_items, neg_items
+
+    def get_num_users_items(self):
+        return self.n_users, self.n_items
+
+    def print_statistics(self):
+        print('n_users=%d, n_items=%d' % (self.n_users, self.n_items))
+        print('n_interactions=%d' % (self.n_train + self.n_test))
+        print('n_train=%d, n_test=%d, sparsity=%.5f' % (self.n_train, self.n_test, (self.n_train + self.n_test)/(self.n_users * self.n_items)))
+
+class NGCF(nn.Module):
+    def __init__(self, n_users, n_items, emb_dim, layers, reg, node_dropout, mess_dropout,
+        adj_mtx):
+        super().__init__()
+
+        # initialize Class attributes
+        self.n_users = n_users
+        self.n_items = n_items
+        self.emb_dim = emb_dim
+        self.adj_mtx = adj_mtx
+        self.laplacian = adj_mtx - sp.eye(adj_mtx.shape[0])
+        self.reg = reg
+        self.layers = layers
+        self.n_layers = len(self.layers)
+        self.node_dropout = node_dropout
+        self.mess_dropout = mess_dropout
+
+        #self.u_g_embeddings = nn.Parameter(torch.empty(n_users, emb_dim+np.sum(self.layers)))
+        #self.i_g_embeddings = nn.Parameter(torch.empty(n_items, emb_dim+np.sum(self.layers)))
+
+        # Initialize weights
+        self.weight_dict = self._init_weights()
+        print("Weights initialized.")
+
+        # Create Matrix 'A', PyTorch sparse tensor of SP adjacency_mtx
+        self.A = self._convert_sp_mat_to_sp_tensor(self.adj_mtx)
+        self.L = self._convert_sp_mat_to_sp_tensor(self.laplacian)
+
+    # initialize weights
+    def _init_weights(self):
+        print("Initializing weights...")
+        weight_dict = nn.ParameterDict()
+
+        initializer = torch.nn.init.xavier_uniform_
+        
+        weight_dict['user_embedding'] = nn.Parameter(initializer(torch.empty(self.n_users, self.emb_dim).to(device)))
+        weight_dict['item_embedding'] = nn.Parameter(initializer(torch.empty(self.n_items, self.emb_dim).to(device)))
+
+        weight_size_list = [self.emb_dim] + self.layers
+
+        for k in range(self.n_layers):
+            weight_dict['W_gc_%d' %k] = nn.Parameter(initializer(torch.empty(weight_size_list[k], weight_size_list[k+1]).to(device)))
+            weight_dict['b_gc_%d' %k] = nn.Parameter(initializer(torch.empty(1, weight_size_list[k+1]).to(device)))
+            
+            weight_dict['W_bi_%d' %k] = nn.Parameter(initializer(torch.empty(weight_size_list[k], weight_size_list[k+1]).to(device)))
+            weight_dict['b_bi_%d' %k] = nn.Parameter(initializer(torch.empty(1, weight_size_list[k+1]).to(device)))
+           
+        return weight_dict
+
+    # convert sparse matrix into sparse PyTorch tensor
+    def _convert_sp_mat_to_sp_tensor(self, X):
+        """
+        Convert scipy sparse matrix to PyTorch sparse matrix
+        Arguments:
+        ----------
+        X = Adjacency matrix, scipy sparse matrix
+        """
+        coo = X.tocoo().astype(np.float32)
+        i = torch.LongTensor(np.mat([coo.row, coo.col]))
+        v = torch.FloatTensor(coo.data)
+        res = torch.sparse.FloatTensor(i, v, coo.shape).to(device)
+        return res
+
+    # apply node_dropout
+    def _droupout_sparse(self, X):
+        """
+        Drop individual locations in X
+        
+        Arguments:
+        ---------
+        X = adjacency matrix (PyTorch sparse tensor)
+        dropout = fraction of nodes to drop
+        noise_shape = number of non non-zero entries of X
+        """
+        
+        node_dropout_mask = ((self.node_dropout) + torch.rand(X._nnz())).floor().bool().to(device)
+        i = X.coalesce().indices()
+        v = X.coalesce()._values()
+        i[:,node_dropout_mask] = 0
+        v[node_dropout_mask] = 0
+        X_dropout = torch.sparse.FloatTensor(i, v, X.shape).to(X.device)
+
+        return  X_dropout.mul(1/(1-self.node_dropout))
+
+    def forward(self, u, i, j):
+        """
+        Computes the forward pass
+        
+        Arguments:
+        ---------
+        u = user
+        i = positive item (user interacted with item)
+        j = negative item (user did not interact with item)
+        """
+        # apply drop-out mask
+        A_hat = self._droupout_sparse(self.A) if self.node_dropout > 0 else self.A
+        L_hat = self._droupout_sparse(self.L) if self.node_dropout > 0 else self.L
+
+        ego_embeddings = torch.cat([self.weight_dict['user_embedding'], self.weight_dict['item_embedding']], 0)
+
+        all_embeddings = [ego_embeddings]
+
+        # forward pass for 'n' propagation layers
+        for k in range(self.n_layers):
+
+            # weighted sum messages of neighbours
+            side_embeddings = torch.sparse.mm(A_hat, ego_embeddings)
+            side_L_embeddings = torch.sparse.mm(L_hat, ego_embeddings)
+
+            # transformed sum weighted sum messages of neighbours
+            sum_embeddings = torch.matmul(side_embeddings, self.weight_dict['W_gc_%d' % k]) + self.weight_dict['b_gc_%d' % k]
+
+            # bi messages of neighbours
+            bi_embeddings = torch.mul(ego_embeddings, side_L_embeddings)
+            # transformed bi messages of neighbours
+            bi_embeddings = torch.matmul(bi_embeddings, self.weight_dict['W_bi_%d' % k]) + self.weight_dict['b_bi_%d' % k]
+
+            # non-linear activation 
+            ego_embeddings = F.leaky_relu(sum_embeddings + bi_embeddings)
+            # + message dropout
+            mess_dropout_mask = nn.Dropout(self.mess_dropout)
+            ego_embeddings = mess_dropout_mask(ego_embeddings)
+
+            # normalize activation
+            norm_embeddings = F.normalize(ego_embeddings, p=2, dim=1)
+
+            all_embeddings.append(norm_embeddings)
+
+        all_embeddings = torch.cat(all_embeddings, 1)
+        
+        # back to user/item dimension
+        u_g_embeddings, i_g_embeddings = all_embeddings.split([self.n_users, self.n_items], 0)
+
+        self.u_g_embeddings = nn.Parameter(u_g_embeddings)
+        self.i_g_embeddings = nn.Parameter(i_g_embeddings)
+        
+        u_emb = u_g_embeddings[u] # user embeddings
+        p_emb = i_g_embeddings[i] # positive item embeddings
+        n_emb = i_g_embeddings[j] # negative item embeddings
+
+        y_ui = torch.mul(u_emb, p_emb).sum(dim=1)
+        y_uj = torch.mul(u_emb, n_emb).sum(dim=1)
+        log_prob = (torch.log(torch.sigmoid(y_ui-y_uj))).mean()
+
+        # compute bpr-loss
+        bpr_loss = -log_prob
+        if self.reg > 0.:
+            l2norm = (torch.sum(u_emb**2)/2. + torch.sum(p_emb**2)/2. + torch.sum(n_emb**2)/2.) / u_emb.shape[0]
+            l2reg  = self.reg*l2norm
+            bpr_loss =  -log_prob + l2reg
+
+        return bpr_loss
+
+# read parsed arguments
+args = parse_args()
+data_dir = args.data_dir
+dataset = args.dataset
+batch_size = args.batch_size
+layers = eval(args.layers)
+emb_dim = args.emb_dim
+lr = args.lr
+reg = args.reg
+mess_dropout = args.mess_dropout
+node_dropout = args.node_dropout
+k = args.k
+
+# generate the NGCF-adjacency matrix
+data_generator = Data(path=data_dir + dataset, batch_size=batch_size)
+adj_mtx = data_generator.get_adj_mat()
+
+# create model name and save
+modelname =  "NGCF" + \
+    "_bs_" + str(batch_size) + \
+    "_nemb_" + str(emb_dim) + \
+    "_layers_" + str(layers) + \
+    "_nodedr_" + str(node_dropout) + \
+    "_messdr_" + str(mess_dropout) + \
+    "_reg_" + str(reg) + \
+    "_lr_"  + str(lr)
+
+# create NGCF model
+model = NGCF(data_generator.n_users, 
+              data_generator.n_items,
+              emb_dim,
+              layers,
+              reg,
+              node_dropout,
+              mess_dropout,
+              adj_mtx)
+if use_cuda:
+    model = model.cuda()
+
+# current best metric
+cur_best_metric = 0
+
+# Adam optimizer
+optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+
+# Set values for early stopping
+cur_best_loss, stopping_step, should_stop = 1e3, 0, False
+today = datetime.now()
+
+print("Start at " + str(today))
+print("Using " + str(device) + " for computations")
+print("Params on CUDA: " + str(next(model.parameters()).is_cuda))
+
+results = {"Epoch": [],
+            "Loss": [],
+            "Recall": [],
+            "NDCG": [],
+            "Training Time": []}
+
+for epoch in range(args.n_epochs):
+
+    t1 = time()
+    loss = train(model, data_generator, optimizer)
+    training_time = time()-t1
+    print("Epoch: {}, Training time: {:.2f}s, Loss: {:.4f}".
+        format(epoch, training_time, loss))
+
+    # print test evaluation metrics every N epochs (provided by args.eval_N)
+    if epoch % args.eval_N  == (args.eval_N - 1):
+        with torch.no_grad():
+            t2 = time()
+            recall, ndcg = eval_model(model.u_g_embeddings.detach(),
+                                      model.i_g_embeddings.detach(),
+                                      data_generator.R_train,
+                                      data_generator.R_test,
+                                      k)
+        print(
+            "Evaluate current model:\n",
+            "Epoch: {}, Validation time: {:.2f}s".format(epoch, time()-t2),"\n",
+            "Loss: {:.4f}:".format(loss), "\n",
+            "Recall@{}: {:.4f}".format(k, recall), "\n",
+            "NDCG@{}: {:.4f}".format(k, ndcg)
+            )
+
+        cur_best_metric, stopping_step, should_stop = \
+        early_stopping(recall, cur_best_metric, stopping_step, flag_step=5)
+
+        # save results in dict
+        results['Epoch'].append(epoch)
+        results['Loss'].append(loss)
+        results['Recall'].append(recall.item())
+        results['NDCG'].append(ndcg.item())
+        results['Training Time'].append(training_time)
+    else:
+        # save results in dict
+        results['Epoch'].append(epoch)
+        results['Loss'].append(loss)
+        results['Recall'].append(None)
+        results['NDCG'].append(None)
+        results['Training Time'].append(training_time)
+
+    if should_stop == True: break
+
+# save
+if args.save_results:
+    date = today.strftime("%d%m%Y_%H%M")
+
+    # save model as .pt file
+    if os.path.isdir("./models"):
+        torch.save(model.state_dict(), "./models/" + str(date) + "_" + modelname + "_" + dataset + ".pt")
+    else:
+        os.mkdir("./models")
+        torch.save(model.state_dict(), "./models/" + str(date) + "_" + modelname + "_" + dataset + ".pt")
+
+    # save results as pandas dataframe
+    results_df = pd.DataFrame(results)
+    results_df.set_index('Epoch', inplace=True)
+    if os.path.isdir("./results"):
+        results_df.to_csv("./results/" + str(date) + "_" + modelname + "_" + dataset + ".csv")
+    else:
+        os.mkdir("./results")
+        results_df.to_csv("./results/" + str(date) + "_" + modelname + "_" + dataset + ".csv")
+    # plot loss
+    results_df['Loss'].plot(figsize=(12,8), title='Loss')
+
+import numpy as np
+import pandas as pd
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras import models
+
+tf.random.set_seed(343)
+
+# Clean up the logdir if it exists
+import shutil
+shutil.rmtree('logs', ignore_errors=True)
+
+# Load TensorBoard extension for notebooks
+%load_ext tensorboard
+
+movielens_ratings_file = 'https://github.com/sparsh-ai/reco-data/blob/master/MovieLens_100K_ratings.csv?raw=true'
+df_raw = pd.read_csv(movielens_ratings_file)
+df_raw.head()
+
+df = df_raw.copy()
+df.columns = ['userId', 'movieId', 'rating', 'timestamp']
+user_ids = df['userId'].unique()
+user_encoding = {x: i for i, x in enumerate(user_ids)}   # {user_id: index}
+movie_ids = df['movieId'].unique()
+movie_encoding = {x: i for i, x in enumerate(movie_ids)} # {movie_id: index}
+
+df['user'] = df['userId'].map(user_encoding)    # Map from IDs to indices
+df['movie'] = df['movieId'].map(movie_encoding)
+
+n_users = len(user_ids)
+n_movies = len(movie_ids)
+
+min_rating = min(df['rating'])
+max_rating = max(df['rating'])
+
+print(f'Number of users: {n_users}\nNumber of movies: {n_movies}\nMin rating: {min_rating}\nMax rating: {max_rating}')
+
+# Shuffle the data
+df = df.sample(frac=1, random_state=42)
+
+class MatrixFactorization(models.Model):
+    def __init__(self, n_users, n_movies, n_factors, **kwargs):
+        super(MatrixFactorization, self).__init__(**kwargs)
+        self.n_users = n_users
+        self.n_movies = n_movies
+        self.n_factors = n_factors
+        
+        # We specify the size of the matrix,
+        # the initializer (truncated normal distribution)
+        # and the regularization type and strength (L2 with lambda = 1e-6)
+        self.user_emb = layers.Embedding(n_users, 
+                                         n_factors, 
+                                         embeddings_initializer='he_normal',
+                                         embeddings_regularizer=keras.regularizers.l2(1e-6),
+                                         name='user_embedding')
+        self.movie_emb = layers.Embedding(n_movies, 
+                                          n_factors, 
+                                          embeddings_initializer='he_normal',
+                                          embeddings_regularizer=keras.regularizers.l2(1e-6),
+                                          name='movie_embedding')
+        
+        # Embedding returns a 3D tensor with one dimension = 1, so we reshape it to a 2D tensor
+        self.reshape = layers.Reshape((self.n_factors,))
+        
+        # Dot product of the latent vectors
+        self.dot = layers.Dot(axes=1)
+
+    def call(self, inputs):
+        # Two inputs
+        user, movie = inputs
+        u = self.user_emb(user)
+        u = self.reshape(u)
+    
+        m = self.movie_emb(movie)
+        m = self.reshape(m)
+        
+        return self.dot([u, m])
+
+n_factors = 50
+model = MatrixFactorization(n_users, n_movies, n_factors)
+model.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=0.001),
+    loss=keras.losses.MeanSquaredError()
+)
+
+try:
+    model.summary()
+except ValueError as e:
+    print(e, type(e))
+
+_ = model([np.array([1, 2, 3]), np.array([2, 88, 5])])
+model.summary()
+
+callbacks = [
+    keras.callbacks.EarlyStopping(
+        # Stop training when `val_loss` is no longer improving
+        monitor='val_loss',
+        # "no longer improving" being defined as "no better than 1e-2 less"
+        min_delta=1e-2,
+        # "no longer improving" being further defined as "for at least 2 epochs"
+        patience=2,
+        verbose=1,
+    ),
+    keras.callbacks.TensorBoard(log_dir='logs')
+]
+
+history = model.fit(
+    x=(df['user'].values, df['movie'].values),  # The model has two inputs!
+    y=df['rating'],
+    batch_size=128,
+    epochs=20,
+    verbose=1,
+    validation_split=0.1,
+    callbacks=callbacks
+)
+
+# Run TensorBoard and specify the log dir
+%tensorboard --logdir logs
+
+df_raw.head()
+
+# Create a sparse tensor: at each user, movie location, we have a value, the rest is 0
+sparse_x = tf.sparse.SparseTensor(indices=df[['movie', 'user']].values, values=df['rating'], dense_shape=(n_movies, n_users))
+
+# Transform it to dense form and to float32 (good enough precision)
+dense_x = tf.cast(tf.sparse.to_dense(tf.sparse.reorder(sparse_x)), tf.float32)
+
+# Shuffle the data
+x = tf.random.shuffle(dense_x, seed=42)
+
+class Encoder(layers.Layer):
+    def __init__(self, **kwargs):
+        super(Encoder, self).__init__(**kwargs)
+        self.dense1 = layers.Dense(28, activation='selu', kernel_initializer='glorot_uniform')
+        self.dense2 = layers.Dense(56, activation='selu', kernel_initializer='glorot_uniform')
+        self.dense3 = layers.Dense(56, activation='selu', kernel_initializer='glorot_uniform')
+        self.dropout = layers.Dropout(0.3)
+        
+    def call(self, x):
+        d1 = self.dense1(x)
+        d2 = self.dense2(d1)
+        d3 = self.dense3(d2)
+        return self.dropout(d3)
+        
+        
+class Decoder(layers.Layer):
+    def __init__(self, n, **kwargs):
+        super(Decoder, self).__init__(**kwargs)
+        self.dense1 = layers.Dense(56, activation='selu', kernel_initializer='glorot_uniform')
+        self.dense2 = layers.Dense(28, activation='selu', kernel_initializer='glorot_uniform')
+        self.dense3 = layers.Dense(n, activation='selu', kernel_initializer='glorot_uniform')
+
+    def call(self, x):
+        d1 = self.dense1(x)
+        d2 = self.dense2(d1)
+        return self.dense3(d2)
+
+n = n_users
+inputs = layers.Input(shape=(n,))
+
+encoder = Encoder()
+decoder = Decoder(n)
+
+enc1 = encoder(inputs)
+dec1 = decoder(enc1)
+enc2 = encoder(dec1)
+dec2 = decoder(enc2)
+
+model = models.Model(inputs=inputs, outputs=dec2, name='DeepAutoencoder')
+model.summary()
+
+def masked_mse(y_true, y_pred):
+    mask = tf.not_equal(y_true, 0)
+    se = tf.boolean_mask(tf.square(y_true - y_pred), mask)
+    return tf.reduce_mean(se)
+
+model.compile(
+    loss=masked_mse,
+    optimizer=keras.optimizers.Adam()
+)
+
+callbacks = [
+    keras.callbacks.EarlyStopping(
+        monitor='val_loss',
+        min_delta=1e-2,
+        patience=5,
+        verbose=1,
+    ),
+    keras.callbacks.TensorBoard(log_dir='logs')
+]
+
+model.fit(
+    x, 
+    x, 
+    batch_size=16, 
+    epochs=100, 
+    validation_split=0.1,
+    callbacks=callbacks
+)
+
+%tensorboard --logdir logs
