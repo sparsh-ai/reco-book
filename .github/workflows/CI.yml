@@ -1,8 +1,5 @@
 name: CI
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:     
@@ -34,4 +31,10 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./_build/html
         publish_branch: gh-pages
-        
+    - name: Saving _build status
+    - run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "generated"
+        git push
