@@ -1,5 +1,10 @@
 name: CI
 on:
+  push:
+    branches:
+      - master # need to filter here so we only deploy when there is a push to master
+  # no filters on pull requests, so intentionally left blank
+  pull_request:
   workflow_dispatch:
 
 jobs:     
@@ -25,7 +30,7 @@ jobs:
     - name: Building HTML site
       run: |
         jupyter-book build .
-    - name: Saving _build status
+    - name: Saving build content
     - run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
