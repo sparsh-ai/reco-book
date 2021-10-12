@@ -1050,7 +1050,7 @@ GPU is available
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">datagen_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=.</span><span class="mi">20</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">datagen_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">.20</span><span class="p">)</span>
 <span class="n">dataflow_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">target_size</span><span class="o">=</span><span class="n">IMAGE_SIZE</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">BATCH_SIZE</span><span class="p">,</span>
                    <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">)</span>
 
@@ -1968,25 +1968,25 @@ imgs[1]
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">writefile</span> <span class="o">./</span><span class="n">ebsapp</span><span class="o">/</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">annoy</span><span class="o">==</span><span class="mf">1.16</span><span class="o">.</span><span class="mi">3</span>
-<span class="n">Pillow</span><span class="o">==</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">2</span>
-<span class="n">click</span><span class="o">==</span><span class="mf">7.1</span><span class="o">.</span><span class="mi">2</span>
-<span class="n">Flask</span><span class="o">==</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">2</span>
-<span class="n">itsdangerous</span><span class="o">==</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">Jinja2</span><span class="o">==</span><span class="mf">2.11</span><span class="o">.</span><span class="mi">2</span>
-<span class="n">MarkupSafe</span><span class="o">==</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">Werkzeug</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">numpy</span><span class="o">==</span><span class="mf">1.18</span><span class="o">.</span><span class="mi">5</span>
-<span class="n">pandas</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">5</span>
-<span class="n">pathlib</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">pip</span><span class="o">-</span><span class="n">tools</span><span class="o">==</span><span class="mf">4.5</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">requests</span><span class="o">==</span><span class="mf">2.23</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">scipy</span><span class="o">==</span><span class="mf">1.4</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">tensorflow</span><span class="o">==</span><span class="mf">2.0</span><span class="o">.</span><span class="mb">0b1</span>
-<span class="n">tensorflow</span><span class="o">-</span><span class="n">hub</span><span class="o">==</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">tqdm</span><span class="o">==</span><span class="mf">4.41</span><span class="o">.</span><span class="mi">1</span>
-<span class="n">urllib3</span><span class="o">==</span><span class="mf">1.24</span><span class="o">.</span><span class="mi">3</span>
-<span class="n">zipfile36</span><span class="o">==</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">annoy</span><span class="o">==</span><span class="mf">1.16.3</span>
+<span class="n">Pillow</span><span class="o">==</span><span class="mf">2.2.2</span>
+<span class="n">click</span><span class="o">==</span><span class="mf">7.1.2</span>
+<span class="n">Flask</span><span class="o">==</span><span class="mf">1.1.2</span>
+<span class="n">itsdangerous</span><span class="o">==</span><span class="mf">1.1.0</span>
+<span class="n">Jinja2</span><span class="o">==</span><span class="mf">2.11.2</span>
+<span class="n">MarkupSafe</span><span class="o">==</span><span class="mf">1.1.1</span>
+<span class="n">Werkzeug</span><span class="o">==</span><span class="mf">1.0.1</span>
+<span class="n">numpy</span><span class="o">==</span><span class="mf">1.18.5</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">1.0.5</span>
+<span class="n">pathlib</span><span class="o">==</span><span class="mf">1.0.1</span>
+<span class="n">pip</span><span class="o">-</span><span class="n">tools</span><span class="o">==</span><span class="mf">4.5.1</span>
+<span class="n">requests</span><span class="o">==</span><span class="mf">2.23.0</span>
+<span class="n">scipy</span><span class="o">==</span><span class="mf">1.4.1</span>
+<span class="n">tensorflow</span><span class="o">==</span><span class="mf">2.0.0</span><span class="n">b1</span>
+<span class="n">tensorflow</span><span class="o">-</span><span class="n">hub</span><span class="o">==</span><span class="mf">0.8.0</span>
+<span class="n">tqdm</span><span class="o">==</span><span class="mf">4.41.1</span>
+<span class="n">urllib3</span><span class="o">==</span><span class="mf">1.24.3</span>
+<span class="n">zipfile36</span><span class="o">==</span><span class="mf">0.1.3</span>
 </pre></div>
 </div>
 </div>
