@@ -22,20 +22,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install jupyter-book
         pip install ghp-import
-        pip install -U git+https://github.com/tensorflow/docs
-    - name: Notebook formatting and linting
-      run: |
-        python3 -m tensorflow_docs.tools.nbfmt nbs
-        python3 -m tensorflow_docs.tools.nblint --fix nbs
+    #     pip install -U git+https://github.com/tensorflow/docs
+    # - name: Notebook formatting and linting
+    #   run: |
+    #     python3 -m tensorflow_docs.tools.nbfmt nbs
+    #     python3 -m tensorflow_docs.tools.nblint --fix nbs
     - name: Building HTML site
       run: |
         jupyter-book build .
-    - name: Saving build
-      uses: actions/upload-artifact@v2
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v7
       with:
-        name: _build content
-        path: |
-          _build
+        author_name: github-actions
+        author_email: actions@github.com
+        message: 'commit _build changes'
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
