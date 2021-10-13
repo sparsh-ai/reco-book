@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Copy Repository Contents
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+    - name: Fetch main branch
+      run: git fetch -u origin main:main
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -22,7 +24,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install jupyter-book
         pip install ghp-import
-        git status
     #     pip install -U git+https://github.com/tensorflow/docs
     # - name: Notebook formatting and linting
     #   run: |
@@ -31,7 +32,7 @@ jobs:
     - name: Building HTML site
       run: |
         # Only check notebooks modified in this pull request.
-        readarray -t changed_notebooks < <(git diff --name-only master | grep '\.ipynb$' || true)
+        readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' || true)
         if [[ ${#changed_notebooks[@]} == 0 ]]; then
           echo "No notebooks modified in this pull request."
           exit 0
