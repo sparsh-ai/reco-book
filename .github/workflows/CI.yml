@@ -29,7 +29,17 @@ jobs:
     #     python3 -m tensorflow_docs.tools.nblint --fix nbs
     - name: Building HTML site
       run: |
-        jupyter-book build .
+        # Only check notebooks modified in this pull request.
+        readarray -t changed_notebooks < <(git diff --name-only main | grep '\.ipynb$' || true)
+        if [[ ${#changed_notebooks[@]} == 0 ]]; then
+          echo "No notebooks modified in this pull request."
+          exit 0
+        else
+          echo "Building HTML:"
+          jupyter-book build "${changed_notebooks[@]}"
+        fi
+      # run: |
+      #   jupyter-book build .
     - name: Commit changes
       uses: EndBug/add-and-commit@v7
       with:
