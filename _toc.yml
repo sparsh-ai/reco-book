@@ -130,3 +130,4 @@ parts:
   - file: nbs/T990001_songs_embedding_skipgram_recommender
   - file: nbs/T990001_toy_example_car_recommender_knn
   - file: nbs/T990001_wikirecs_recommender
+  - file: nbs/T990002_rating_predictions_TFRS
